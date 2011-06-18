@@ -67,9 +67,7 @@ for /r %DestFolder% %%R in (.svn) do if exist "%%R" (rd /s /q "%%R")
 RENAME %DestFolder%\Source\Game\PROJECTNAMEGame.cpp  %ProjectName%Game.cpp
 RENAME %DestFolder%\Source\Game\PROJECTNAMEGame.h  %ProjectName%Game.h
 RENAME %DestFolder%\Build\iOS\PROJECTNAME.xcodeproj  %ProjectName%.xcodeproj
-RENAME %DestFolder%\Build\iOS\PROJECTNAME-Info.plist  %ProjectName%-Info.plist
 RENAME %DestFolder%\Build\MacOS\PROJECTNAME.xcodeproj  %ProjectName%.xcodeproj
-RENAME %DestFolder%\Build\MacOS\PROJECTNAME-Info.plist  %ProjectName%-Info.plist
 RENAME %DestFolder%\Build\Windows\PROJECTNAME.vcproj  %ProjectName%.vcproj
 
 :: Replace all the ProjectName strings in the project & source files
