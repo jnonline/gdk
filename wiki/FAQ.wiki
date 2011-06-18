@@ -10,7 +10,7 @@
   * [FAQ#Shipped_games? Shipped games?]
 
 ===What is the GDK?===
-The GDK is a "Game SDK" or Software Development Kit for games. GDK is broken into two parts, the first is an automated content pipeline that takes game content (images, fonts, models, etc) from easy to manage formats and optimizes it for use in GDK. Secondly the GDK is a library of cross platform C++ classes and functions for managing input, displaying graphics, and performing most of the functions most used by developers when building a game. The output of the content pipeline works hand in hand with the C++ classes and functions to deliver high performance and quick responsiveness in your games.
+The GDK is a "Game SDK" or Software Development Kit for games. It is composed of two distinct parts, the first is an automated content pipeline that takes game assets (images, fonts, models, etc) and optimizes them for use in the GDK. The second part of the GDK is a library of cross platform C++ code (API) for managing input, displaying graphics, and performing many of the functions most used by developers when building a game. The output of the automated content pipeline works hand in hand with the C++ API to deliver high performance and quick responsiveness in games developed with the GDK.
 
 ===Why should I use it?===
 The primary purpose of the GDK, is to get a game project running from scratch *as fast as possible*.  By simply downloading the GDK package & running a quick command line tool, you will have a building/running game on multiple platforms in under five minutes.  
