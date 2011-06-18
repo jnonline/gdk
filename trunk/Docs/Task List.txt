@@ -7,13 +7,7 @@ Priority	System			Task
 ----------	--------------	----------------------------
 1			Docs			Make a ClassModel.txt file..  with the heirarchies & descriptions & usages for the classes
 								 DOxygen?
-1			Docs			Code comments..  Readable through Visual Studio & XCode intellisense
-							
-1			OpenSource		MakeItMine.cmd  - do eet	 
-1			OpenSource		Review all borrowed code, add licenses, add references
-1			OpenSource		Create google code project
-1			OpenSource		Release v0.1
-1			OpenSource		Wiki explaining the thing...
+1			Docs			Code comments..  Readable through Visual Studio & XCode intellisens				
 
 1			Math			Perlin Noise
 1			Math			Polar Coordinates
@@ -215,5 +209,40 @@ Pri 3
 		<LOD-Rule-MinLOD> 0.4 
 		
 
+-------------------------------------------------
+Docs to write
 
+Info
+	What is it
+	What does it do
+	Supported Platforms
+
+Getting Started
+	Syncing
+	Build & Ren Samples
+	Making your own Project
+
+Content
+	Types of assets
+	Creating Assets
+	Building Assets
+	Atlases
+	Bundles
+
+Coding
+	System / Math / IO
+	Application
+	Input
+	Assets 
+	Graphics
+		Coordinate spaces & projection transforms
+		2D
+		3D
+	
+
+	
+
+
+API Reference…
+	Doxygen or somthing
 
