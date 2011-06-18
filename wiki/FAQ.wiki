@@ -58,9 +58,9 @@ For Running:
 ===Shipped games?===
 Finished Games: 
 
-  * *[http://itunes.apple.com/us/app/little-soldiers-hd/id388360005?mt=8 Little Soldiers HD]*
-  * *[http://itunes.apple.com/us/app/the-incredible-machine/id440297659?mt=8 The Incredible Machine]*
+  * *[http://itunes.apple.com/us/app/little-soldiers-hd/id388360005?mt=8 Little Soldiers HD]* - (iPhone & iPod)
+  * *[http://itunes.apple.com/us/app/the-incredible-machine/id440297659?mt=8 The Incredible Machine]* - (iPad, iPhone, & iPod)
 
 Miscellaneous Projects:
 
-  * *[http://www.youtube.com/watch?v=5sK4S-WxsCQ GunHack]* - Made in 72-hours - Ludum Dare #20 JAM Entry
+  * *[http://www.youtube.com/watch?v=5sK4S-WxsCQ GunHack]* - Made in 72-hours - Ludum Dare #20 JAM Entry   (Windows, Mac, iOS 3.2)
