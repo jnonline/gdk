@@ -1,0 +1,16 @@
+
+----------------------------------------------------
+File Format:	.gdkImage
+----------------------------------------------------
+
+	TYPE / SIZE		NAME				NOTES
+	-------------	-------------		-------------------------------
+	byte[4]			GDK Tag				"GDKI"
+	short			Version			
+	short			PixelFormat			GdkPixelFormats::Enum value
+	short			ImageSize			Size of the image (Width & Height, because texture MUST be square power of 2)
+	int				DataSize			Size of the image data in bytes
+	int				CompressedSize		Size of the compressed image data in bytes
+	byte[]			CompressedData		The compressed image data
+
+

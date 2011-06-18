@@ -1,0 +1,219 @@
+
+==================================================
+== Tasks
+==================================================
+
+Priority	System			Task
+----------	--------------	----------------------------
+1			Docs			Make a ClassModel.txt file..  with the heirarchies & descriptions & usages for the classes
+								 DOxygen?
+1			Docs			Code comments..  Readable through Visual Studio & XCode intellisense
+							
+1			OpenSource		MakeItMine.cmd  - do eet	 
+1			OpenSource		Review all borrowed code, add licenses, add references
+1			OpenSource		Create google code project
+1			OpenSource		Release v0.1
+1			OpenSource		Wiki explaining the thing...
+
+1			Math			Perlin Noise
+1			Math			Polar Coordinates
+								 
+2			Platforms		android
+3			Platforms		NaCl	
+3			Platforms		Linux
+
+2			System			memory manager
+2			System			Allocators:  Block, stack, pool, etc
+2			System			DateTime
+2			System			File/IO to ZIP compressed file store - Consider a ZIPped content blob,  (CompressedSize + ExpandedSize + Blob)
+2			System			memory mapped files
+
+2			Assets			Default Instances (for use when async is busy)
+2			Assets			Async / Background load (Using GL Shared Pools..  so it work on iOS, etc)
+
+2			Net			tcp/ip
+2			Net			HttpRequest
+
+2			Input\Gamepad		Need gamepad support
+2			Input\Camera		Camera Support!..  load into a texture!.. video?  update thread perhaps...
+2			Input\Mouse		CaptureMouse() - lock the mouse into the client region of the window...
+3			Input\Mouse		Add support for multi-mouse, multi-KB
+
+1			Game			State management
+1			Game			Entity/Component model
+1			Game			Simple Components
+
+2			Externals		sqllite
+2			Externals		XML
+
+1			Graphics		Skeletal animated models, with multiple meshes / materials
+1			Graphics		Billboard Rendering - Sprites & Quads & Text
+1			Graphics		Billboard Rendering - 2D Primitives
+1			Graphcis		3D Primitive Generation (SPhere, Cube, Cone, Cylinder)
+1			Graphics		Viewports
+1			Graphics		View space management...  Coordinate systems, etc  (2d, 3d, cameras, etc)
+1			Graphics		Render-To-Texture system
+1			Graphics		Framebuffers
+
+2	-		Graphics		Materials
+2			Graphics		Dynamic/Procedural Textures
+2			Graphics		Video/Animated Textures
+2			Graphics		PostProcess System!
+2			Graphics		Cube Textures
+2			Graphics		Texture saving (screenshots)
+
+1			Sound			Load & Play wav data
+1			Sound			OGG decompression
+1			Sound			Streaming, background thread..
+1			Sound			Multiple channels
+1			Sound			Pause, Play, Stop, Loop
+2			Sound			Effects - Pitch shifting
+3			Sound			Advanced Effects - Vibrato, Chorus, Flanger, Echo, Delay, Reverb,...
+
+==================================================
+== Focus!!!
+==================================================
+
+2D platformer / schump
+2D Hidden object game
+3D rpg
+SSH!
+
+==================================================
+== Bugs
+==================================================
+
+Renderer2D, flush the batch if Quads > max Quads
+
+==================================================
+== Work Item notes
+==================================================
+
+	Project deployment fixes
+		iOS & MAC builds 
+			Build to /Bin sub folder
+			Remove all the project dependencies
+			Move all Gdk files to the GDK.lib...
+			Remove nibs?? :D
+
+
+	Unit Tests
+		iOS support
+	
+	Shaders..
+		Model (Simplified per-vertex & per-pixel lighting..
+
+	Code to Revise:
+x		Renderer2D
+x		Sprite
+x		2D Particles
+		
+		Billboards
+		Billboard sprite
+		billboard particles..
+		
+	Renderer2D::
+		Clipping Rect...
+		
+	Shaders
+		Model/Mesh/ Textured.shader
+
+- Ideas
+	Device class
+	- IsPhone();
+	- PhoneNumber
+	- GetNumCameras();
+	- GetNumMicrophones();
+	- IsMultitouch
+	- GetNumberOfMice();
+
+
+-----------------------
+DCRs From GunHack Jam
+
+Pri 1
+		
+	Shaders:  Heuristic based technique selection
+	
+	Model.Draw()    [instead of ModelInstance.Draw()]
+		instance just passes it's transform & materials in...
+			
+Pri 2
+	- Tools::ModelProcessor
+		Support for no-material  <triangles> node is missing a "Material" attribute
+		Combine meshes with same node transform & material...
+
+	- Tools::ContentStudio
+		- double click to build..		
+
+	- AtlasProcessor
+		Make File* processing ignore files its already processed
+		so i can do
+			<Image Path="Sprite\ABC.png" Width="10">
+			<Image Path="Sprite\*" />
+
+	- Atlas Content tool
+		build & manage atlases in a UI!!!  along with anims
+
+Pri 3
+
+	Multi-mouse..  just do it...
+	
+	MSAA - is it easy?
+	
+	Compressed Textures...  can we do it now???  maybe another PFormat..
+
+
+
+------------------------------------------------
+-- LOD based technique selection
+-------------------------------------------------
+	
+	TEchnique
+		- LOD Level.. [0.4 - 0.8].. etc
+		
+	LOD Biasing
+		By FPS
+		By Bounding Volume
+		By # pixels 
+		By device type
+		By App (Render this model with +0.4 bias, cause i WANT it to use pixel lighting)
+			
+
+	Technique Heurisitics..
+		FPS Based
+			T1:  > 55 FPS
+			T2:	 > 25 FPS
+			T3:	 Fallback 		
+			
+		Device Based:
+			T1:  PC/Mac/Linux
+			T2:  Mobile G2 (iPad2, iPhone 4)
+			T3:  Mobile G1 (iPad, 3gs, android)
+			
+		BVolume..  
+			T1:  > 20% screen
+			T2:  > 1% screen
+			T3:  Fallback
+			
+		LOD Based
+			- Shader has LOD Value..  from 0-1
+			T1:  > 0.7
+			T2:  > 0.4
+			T3:  Fallback 
+			
+			- Biasing?   
+				FPS ( < 30fps = *-0.5f)		scalar biasing
+				Device  (iPad = -0.4f)		linear biasing
+			
+		
+		<LODScheme>
+		<LOD-FPS-Bias MinFPS="30" MaxFPS="60" BiasFactor="0.2" />
+			- at framerates from 30-60 lerp the bias up by a factor of 0.2
+			
+		<LOD-Rule-FPSLimit Min="20" Max="30" />
+		<LOD-Rule-MinLOD> 0.4 
+		
+
+
+

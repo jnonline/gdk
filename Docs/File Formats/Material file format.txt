@@ -1,0 +1,51 @@
+
+
+===================================================================================
+File Format:	.material
+===================================================================================
+
+<Material Name="NAME">
+
+	<Shader Ref="Shaders/MyShader" />
+	
+	<ShaderParameters>						-- provides shader parameters on top of the default in the shader
+		<Parameter Name="worldCenter" BindToShared="worldCenter" />
+		<Parameter Name="diffuse" Value="128,0,0,255" />
+	</ShaderParameters>
+
+	<Texture
+		Sampler="[Sampler Uniform Name]"
+		Texture="Asset Path"
+		/>
+	
+</Material>
+
+	
+===================================================================================
+File Format:	.gdkmaterial	(binary)
+===================================================================================
+
+	TYPE / SIZE		NAME				NOTES
+	-------------	-------------		-------------------------------
+	
+	UInt16			Version				1
+	UInt16			Flags				
+	
+	// Shader
+	string			ShaderAsset
+	
+	// Default Parameters
+	UInt16			NumParams
+	-- foreach Parameter
+		UInt16			Flags
+								0x0001 - IsBinding
+		string			Name
+		string			Value
+	
+	// Textures
+	UInt16			NumTextures
+	-- foreach Texture
+		string			Sampler
+		string			TextureAsset
+	
+	

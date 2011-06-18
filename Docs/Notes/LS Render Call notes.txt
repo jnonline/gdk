@@ -1,0 +1,71 @@
+
+VertexBatch
+	- Buffer
+	- State data (blend mode, texture, etc)
+	- Growable
+
+	+ AddVertex()  (inline)
+	+ Reset
+
+LevelRenderer
+	- global quad IB
+	batches
+	  - cubeBatch
+	  - backgroundBatch
+	  - spriteBatches [textureId]   - map
+	
+	+ FlushSprites()
+		set MVP (camera)
+		set state (cull, depth, vertexformat)
+		foreach( spriteBatch )
+			set texture
+			set vertexPtrs   (spriteBatch->Buffer)
+			set state (spriteBatch->Blend)
+			glDrawElements()
+			spriteBatch->Reset();
+	+ FlushCubes()
+		set MVP (camera)
+		set state (cull, depth, vertexformat)
+		set texture
+		set vertexPtrs   (cubeBatch->Buffer)
+		glDrawElements()
+		cubeBatch-Reset()
+
+	+ GetSpriteBatch(texture, blend)   
+		- looks up in the map
+	
+	+ DrawSprite( sprite)
+		Recurse- DrawSprite (on-top child sprites)
+		GetSpriteBatch( sprite->texture, sprite->blend)
+		spriteBatch->AddVertex(X)  x4
+		Recurse- DrawSprite (on-bottom child sprites)
+
+	+ DrawImageXXX ( params: rect, pt, scale, rotate, etc)
+		apply transforms to DestPoints[] & SrcPoints[]
+		GetSpriteBatch()
+		spriteBatch->ddVertex(XX) x4
+
+	+ DrawText( font, text, transforms, color, blend, etc)
+		do xForms
+		foreach(char)
+			calculate destPos
+			DrawImage (font[char], destPos)
+
+	+ DrawCube( position, images, color, etc)
+		do transforms
+		cubeBatch->AddVertex() x4 x6
+
+	+ DrawBackground (data)
+		backGroundBatch->AddVertex() x4
+		-inline flush-
+			set state, texture, vertexPtrs
+			glDrawElements
+		
+Model
+
+	+ Draw( color )
+		set state
+		set texture
+		set VB & IB
+		set vertex channel ptrs
+		glDrawElements()

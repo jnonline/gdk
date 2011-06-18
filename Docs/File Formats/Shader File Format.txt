@@ -1,0 +1,192 @@
+===================================================================================
+File Format:	.glsl
+===================================================================================
+
+--- Notes:
+	
+	Supports all GLSL code..
+	
+	Can optionally have 1 "void main()"   which is mapped to a VShader or FShader in the .shader file
+
+--- Extensions:
+
+	#include "path"
+		- adds the given file to the complete text of the shader code
+		
+	#define IDENTIFIER   any other text
+		- does a string replacement of the given IDENFITIER with the replacement text
+
+===================================================================================
+File Format:	.shader
+===================================================================================
+
+<Shader Name="">
+
+	<RenderState>
+		<Blending Enabled="true" [ConstantColor="Color"]
+			[BlendMode="Normal"] 
+			OR [SourceFactor=] [DestFactor=] [BlendEquation=]
+			OR [SourceRGBFactor=] [DestRGBFactor=] [RGBBlendEquation=] [SourceAlphaFactor=] [DestAlphaFactor=] [AlphaBlendEquation=]
+			/>
+		<ColorMask
+			RedWriteEnabled=[bool]
+			GreenWriteEnabled=[bool]
+			BlueWriteEnabled=[bool]
+			AlphaWriteEnabled=[bool]
+			/>
+		<Depth
+			WriteEnabled=[bool]
+			TestEnabled=[bool]
+			TestFunction=[CompareFunction]
+			BiasEnabled=[bool]
+			BiasFactor=[float]
+			BiasUnits=[float]
+			/>
+		<Culling CullMode=[CullingMode] />
+	</RenderState>
+	
+	<AttributeBindings>
+		<Attribute	Name="a_position"	Location="0" />
+		<Attribute	Name="a_normal"		Location="1" />
+		<Attribute	Name="a_texCoord"	Location="2" />
+	</AttributeBindings>
+  
+	<Techniques
+		SelectionMethod="FPS | Device | BVSize"
+		>
+		
+		<Technique
+			Name=""
+			>
+			
+			-- Tells the GDK not to include this technique on this platform/device
+			<ExcludedPlatform Name="Android" />			-- These are defined in the PlatformType::Enum
+			<ExcludedDevice Name="iPad1" />				-- These are defined in the DeviceType::Enum
+			
+			-- Tells the GDK to include the technique on this platform.  If none of these are listed, all platforms will be supported
+			<SupportedPlatform Name="iOS" />
+			<SupportedDevice Name="iPad2" />
+			
+				
+			<VertexShader>
+				<![CDATA[
+					...  Shader Code ...
+				]]>
+			</VertexShader>
+			
+			<FragmentShader File="myFragShader.glsl" />
+		</Technique>
+		
+	</Techniques>
+		
+	<Parameters>     // One of these should exist for every uniform exposed by the shaders
+		<Parameter Name="myTexture"		Value="0" />
+		<Parameter Name="worldCenter"	Value="0,1,2" />
+		<Parameter Name="wvp"			BindToGlobal="WorldViewProjection" />
+		<Parameter Name="ambient"		BindToGlobal="Color" />
+	</Parameters>
+	
+</Shader>
+
+===================================================================================
+File Format:	.gdkshader		(binary)
+===================================================================================
+
+	TYPE / SIZE		NAME				NOTES
+	-------------	-------------		-------------------------------
+	
+	
+	UInt16			Version				1
+	UInt16			Flags				0x0001 = Shader format: (0)Binary | (1)Text
+	
+	// -------------------------- Render State --------------------------
+	UInt32			RenderStateFlags	
+										0x00000001 = Has ColorMask Renderstate Data
+										0x00000002 = Has Blending Renderstate Data
+										0x00000004 = Has Depth Renderstate Data
+										0x00000008 = Has Culling Renderstate Data
+										
+										0x00000100 = ColorMask Red Enabled
+										0x00000200 = ColorMask Green Enabled
+										0x00000400 = ColorMask Blue Enabled
+										0x00000800 = ColorMask Alpha Enabled
+										
+										0x00001000 = Blending Enabled
+										0x00002000 = Has Simple Blend Mode	 
+										0x00004000 = Depth Test Enabled
+										0x00008000 = Depth Write Enabled
+										0x00010000 = Depth Bias Enabled
+		
+	Color(U32)		BlendConstantColor
+	UInt16			SimpleBlendMode     - Used in Simple mode
+	UInt16			SourceRGBFactor		- Used in Non-simple mode ... 
+	UInt16			DestRGBFactor
+	UInt16			RGBBlendEquation
+	UInt16			SourceAlphaFactor
+	UInt16			DestAlphaFactor
+	UInt16			AlphaBlendEquation
+	
+	UInt16			DepthTestFunction
+	float			DepthBiasFactor
+	float			DepthBiasUnits
+	UInt16			CullingMode
+	
+	// -------------------------- Attributes --------------------------
+	UInt16			NumAttributes
+	-- foreach Atribute
+		string		Attr.Name
+		UInt16		Attr.Type
+		UInt16		Attr.Size
+		UInt16		Attr.Location
+	--
+	
+	// -------------------------- Parameters --------------------------
+	UInt16			NumParams
+	-- foreach Parameter
+		UInt16			Param.Flags
+								0x0001 - IsBinding
+		string			Param.Name
+		UInt16			Param.Type
+		UInt16			Param.Size
+		
+		if( is binding)
+			string		Param.BindingName
+		else
+			byte[]		Param.Value  (# bytes = sizeof(Param.Type) * Param.Size)
+	--
+	
+	// -------------------------- Techniques --------------------------
+	UInt16			NumTechniques
+	-- foreach Technique
+	
+		UInt16			NumSupportedPlatforms
+		-- foreach SupportedPlatform
+			UInt16			PlatformType
+			
+		UInt16			NumSupportedDevices
+		-- foreach SupportedDevice
+			UInt16			DeviceType
+			
+		UInt16			NumExcludedPlatforms
+		-- foreach ExcludedPlatform
+			UInt16			PlatformType
+			
+		UInt16			NumExcludedDevices
+		-- foreach ExcludedDevice
+			UInt16			DeviceType
+		
+		string			Technique.Name
+		
+		// Vertex shader
+		UInt32			VShaderSize			Size (in bytes) of the vertex shader data
+		BYTE[]			VShaderData			Vertex Shader Text or Binary data
+
+		// Fragment shader
+		UInt32			FShaderSize			Size (in bytes) of the fragment shader data
+		BYTE[]			FShaderData			Fragment Shader Text or Binary data	
+	-- 
+	
+	
+	
+	
+	
