@@ -17,6 +17,8 @@ The primary purpose of the GDK, is to get a game project running from scratch *a
 
 The secondary purpose of the GDK is to streamline the process of getting content into a game and rendered on screen *as easy as possible*.  The GDK's Content Studio tool provides a simple interface for managing, configuring, and building your game assets (Images, Textures, Fonts, Animations, Models, Shaders, Materials, etc).   The GDK C++ layer provides classes for loading & displaying these assets. 
 
+Lastly GDK is licensed under the *[http://www.opensource.org/licenses/mit-license.php MIT License]* meaning it is free for personal or commercial use.
+
 ===What platforms are supported?===
 Fully functional
   * Windows XP / Vista / 7
