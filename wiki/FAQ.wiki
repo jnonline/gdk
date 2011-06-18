@@ -1,0 +1,55 @@
+#summary GDK FAQs
+
+=GDK FAQ=
+
+[FAQ#What_is_the_GDK?]
+[FAQ#Why_should_I_use_it?]
+
+===What is the GDK?===
+The GDK (short for Game Development Kit) is a set of Project Files, Code, Tools, and Assets for jump starting a game or graphical application in C++.   GDK based projects run on all supported platforms out of the box. 
+
+===Why should I use it?===
+The primary purpose of the GDK, is to get a game project running from scratch *as fast as possible*.  By simply downloading the GDK package & running a quick command line tool, you will have a building/running game on multiple platforms in under a minute.  
+
+The secondary purpose of the GDK is to streamline the process of getting content into a game and rendered on screen as easy as possible.  The GDK's Content Studio tool provides a simple interface for managing, configuring, and building your game assets (Images, Textures, Fonts, Animations, Models, Shaders, Materials, etc).   The GDK C++ layer provides classes for loading & displaying these assets. 
+
+===What platforms does the GDK support?===
+Fully functional
+  * Windows XP / Vista / 7
+  * MAC OS X 10.5+
+  * iOS 3.2+   (iPhone / iPad / iPod)
+
+In the works
+  * Android   (Phone & Tablet)
+  * Google NaCl
+  
+===Feature Set?===
+Content:
+  * Full suite of content management / configuration / building tools
+  * *All popular image formats.*  Images are processed & compressed in their native texture pixel formats for super fast decompression & loading.
+  * *Atlased sprite sheets:*  Put loads of images onto 1 sheet , create animations from them, and use custom pixel formats, image scaling, etc.   All configurable in easy-to-understand xml .atlas files.
+  * *COLLADA Mesh support*.   (Currently only static meshes are supported, skinning & more are in works)
+  * *BM Fonts:*  convert true type fonts into bitmap fonts and use them into your game.
+
+C++ Layer
+  * *Platform Projects:*   Pre-configured projects for every supported platform.
+  * *Core Systems:*  Multithreading, C++ Multicast Delegates, File IO,  OS Interfaces
+  * *Math Library* (2D & 3D), Transforms, Shapes, Intersection Tests, Collision Tests, etc
+  * *Debugging tools:*   Logging, Memory tracking, Assertions, Debug breaks, etc
+  * *Localizable:*  UTF8 / UTF16 logging, text rendering, and font support.
+  * *2D Graphics:*  Images, Animations, Sprites, Primitives (circles, rects, lines, etc), Font Text, etc
+  * *3D Graphics:*  Models, Meshes, Textures, primtiives (spheres, cones, boxes, etc).
+  * *Input: *   Keyboard, Mouse, Touch, Gestures, Motion, Vibration, Accelerometers, Device interfaces, etc
+  * *Asset Management:*  Background loading, Compressed assets, Asset Pools, etc
+
+
+===Requirements?===
+For Development: 
+  * *Windows:*   Visual Studio 2008+ (Express will work just fine) 
+  * *MAC / iOS:*   XCode 4
+
+For Running:
+  * OpenGL 2.1 or OpenGL ES 2.0
+
+===Is it really completely, utterly, no-strings-attached free???===
+Yup!!!  Have fun :D
