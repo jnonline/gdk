@@ -7,10 +7,8 @@ Priority	System			Task
 ----------	--------------	----------------------------
 1			Docs			Make a ClassModel.txt file..  with the heirarchies & descriptions & usages for the classes
 								 DOxygen?
-1			Docs			Code comments..  Readable through Visual Studio & XCode intellisens				
-
-1			Math			Perlin Noise
-1			Math			Polar Coordinates
+1			Docs			Code comments..  Readable through Visual Studio & XCode intellisense				
+1			Docs			Write the wiki
 								 
 2			Platforms		android
 3			Platforms		NaCl	
@@ -212,10 +210,9 @@ Pri 3
 -------------------------------------------------
 Docs to write
 
-Info
-	What is it
-	What does it do
-	Supported Platforms
+
+Whats New
+	release notes…
 
 Getting Started
 	Syncing
@@ -239,10 +236,16 @@ Coding
 		2D
 		3D
 	
-
-	
-
-
 API Reference…
 	Doxygen or somthing
+
+--------------------------------
+Work Items
+
+Gdk/Docs folder..   
+	Clean this up..
+	API docs here
+	clearly separate the 'notes'
+
+Adding copyright to all source..
 
