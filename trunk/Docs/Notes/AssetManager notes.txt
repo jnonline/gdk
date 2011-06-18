@@ -1,0 +1,631 @@
+
+
+Asset Manager
+===============================================
+
+Todo:
+x	RemoveAll() - needs to respect dependent child assets...
+x		still broken...
+x	Pooling..
+x	Tests for Async
+x	Implement background threads
+	Cleanup Atlas::FromFile & Atlas::FromAsset..  is there any way to combine em?
+		maybe a "LoadSheet()" child method that takes the sheet name & builds the sheet path...
+	
+Goals:
+	--Simple--
+	
+		Load a resource (and hand out a reference to it)
+		share resource Ptrs
+		Release a resource
+		
+	--Advanced--
+	
+		Pooling
+			a set of resource references
+			used for quick releasing of all assets in a pool
+			ex: a level, hud element, etc
+			
+		Bundles
+			Default to base bundle
+			Attach "X" bundle, with priority Y
+
+		Depenencies
+			Atlas -> Images[]
+			Model -> Images[] & Materials[]
+			Font -> Images[]
+	
+		Background loading
+			provide a handle
+			callback on load
+			check if loaded yet..
+			provide a substitute (loading) asset..
+			
+			BG Load into Pool
+			Pool::IsLoaded() ??  (checks if all the BG load assets in the pool are loaded)
+			
+-------------
+Example 1 - TIM AtlasManager
+
+	AtlasManager am;
+	Atlas* atlas = am.LoadAtlas("Player\Player.gdkatlas");
+	
+	am.Release(); // Frees all the atlases
+	am.Release("Player\Player.gdkatlas"
+	
+	- global data calls GdkAtlas::FromFile() directly
+	- 1 in the HUD
+	- 1 in the Level
+	
+Example 2 - LittleSoldiers
+
+	- everything is loaded via ResourceClass::FromFile();
+	
+	- GlobalResources
+		- named ptrs to all assets
+		
+	- LocalResources
+		- named ptrs to all level resources
+		
+Usage Scenario 1:  basic sync load/reload
+	game start
+		Load() - core game assets (UI, hud, etc)
+	game level load
+		Load() - all level assets
+	game level exit
+		Release() - all level assets
+	game end
+		Release() - core assets
+		
+Usage Scenario 2:	basic async load
+	Level Load
+		Load Asset(progress bar)
+		LoadBG Assets(level assets)
+		while(assetsLoaded == false)
+			Update (progress)
+			Draw (progress)
+		
+Usage Scenario 3:   running async load
+	-- Requirements:
+		- All assets in LEVEL pool
+		- Prioritized asset loading
+		- Pause while P1 & P2 load..  
+		- Add/Queue load with priority on the fly
+		
+		- Asset sharing..
+			- multiple references
+			- ref counting?
+			- usage state / data / last-renderer / cleanup after X minute of un-use and memory is low?
+		
+	Level Load
+		LoadBG(UI & HUD, pri 1)
+		LoadBG(Terrain + player, pri 2)
+		LoadBG(Actors, pri3)
+		LoadBG(Obstacles, pri4)
+		
+		while(pri1 & pri2, not done)
+			Show Load screen
+			
+		Render Game world
+			if(asset.loaded == false)
+				render asset::default
+		
+	Runtime
+		Create / spawn game object
+			LoadBG( assets, priX )
+		Render/Update
+			if(asset.loaded == false)
+				render asset::default
+			else 
+				render asset
+		Delete / destroy game object
+			Asset->Release...  
+		
+-----------------------
+) Attempt 1 - everything in AssetManager class
+
+
+AssetManager
+
+	--- Asset loading
+	- LoadAtlas(path, pool)
+	- LoadFont(path, pool)
+	- LoadXX(path, pool)
+		- May internally call LoadXX with a path & the same pool
+		
+	--- Bundles
+	- AddAssetLocation ( path )			// Path::CommonPath(Assets) is in by default
+	- AddAssetBundle ( bundleName )		// "Base" is in by default
+	- GetAssetFile(relPath)				// Finds the highest priority bundle version of the requested file
+	
+	--- Cleanup
+	- ReleasePool( pool )
+	- ReleaseAsset( path )		// Dont call this if you have the asset in a pool....
+	- ReleaseAll()				// Only call this at shutdown..
+	
+
+	-- background
+	LoadAtlas
+	
+--------
+) Attempt 2 - templated Asset baseclass
+
+
+Asset<Texture2D> 
+	- RefCount
+	- State		(Loading, LoadFailed, Ready)
+	- Instance
+	Release()
+
+AssetManager
+	Load(path, type, provider);
+		- path:			path/name of the asset
+		- type:			type of the asset  (a value of the AssetType::Enum, but uses int for custom overrides) 
+		- provider:		provider that contains the asset.	default = NULL: search all, by priority
+		
+		if(LookupAsset) 
+			return asset;
+		Asset* asset = CreateAssetForType(type)
+							returns new Asset<T> where T is type
+		asset.path = path;
+		asset.state = Loading;
+		asset.provider = provider;
+		
+		return InternalLoad(asset);
+			
+	InternalLoad(asset)
+		Stream assetStream = provider.GetStream(asset.path);
+		Asset::LoadFromStream(assetStream)
+		asset.state = Loaded
+		map[asset.type][asset.path.hash] = asset
+		
+	LoadTexture2D<
+		
+	LoadAsync<Texture2D>(path, priority, provider)
+		- path:			path/name of the asset
+		- priority:		lower priority items are loaded first (the priority queue is auto sorted)
+		- provider:		provider that contains the asset.	default = search all, by priority
+		
+		Asset<Type> asset = new Asset()
+		asset.source = provider.GetSource(path, type);
+		... later  ...
+		Stream assetStream = source.GetStream();
+		Type::FromStream(assetStream)
+		
+	ReleaseAll() - frees all resources currently loaded
+	
+	// Statistics
+	GetActivePriorityCounts();
+	
+	// Providers
+	RegisterProvider(AssetProvider*, int priority, bool autoLookup)
+	vector<AssetProvider*> Providers;
+	
+AssetPool
+	- map<asset*, int> ReferencesPerAsset
+	Add( Asset* )
+	Release()
+	
+AssetProvider
+	ctor()
+	
+	// Bundles
+	RegisterBundle(AssetBundle*, int priority);
+	vector<AssetBundle*> Bundles
+	
+AssetBundle
+	ctor()
+	
+	
+----------------------------------------
+) Attempt 3 - custom/dynamic asset types
+
+AssetType
+	-Name
+	-ID
+	+get (AssetTYPENAME*) From (Type)
+	+get (Instance*) From (Stream)
+	
+AssetTYPENAME : Asset
+	+GetTYPENAME()
+	+InternalLoad(stream)  - loads the instance from the given stream
+	
+	static AssetTYPENAME* Load(path, async, assetmanager, provider)
+	static AssetTYPENAME* LoadAsync(path, assetmanager, provider)
+	
+Asset
+	-Type  (texture, atlas, other?)
+	-Instance
+	-State
+	-RefCount
+	+GetInstance()
+	
+AssetManager
+	-map<type, map<name, Asset*>> - Assets, ByType, ByName
+	-Providers
+	-AssetTypes
+	
+	+Asset* Load(path, type, provider)
+	+Asset* LoadAsync(path, type, provider, priority)
+	
+AssetPool
+	-map<Asset*, refCount> - map of all the assets & number of refs per asset
+	-Manager
+	
+AssetProvider
+	-Name
+	-Bundles
+	+Stream  GetStream(path, type)
+	
+AssetBundle
+	-Name
+	
+==========
+Foreach Asset Type:
+	Derived class:  AssetTYPE : Asset
+		+GetTYPENAME()
+		
+	AM.RegisterType
+		("atlas", 123, 
+		
+
+
+Atlas* atlas = Atlas::FromStream(str);
+
+Asset<Atlas> atlasAsset = assetManager.Load<Atlas>("Atlases/Player1");
+
+AssetAtlas atlasAsset = assetManager.Load("Atlases/Player1", AssetType::Atlas);
+
+Asset<Atlas>* atlas = Atlas::Load("Atlases/Player1", assetManager, false);
+Asset<Atlas>* atlas = Atlas::Load("Atlases/Player1", assetManager, false, fileSystemProvider);
+
+
+
+------------------------
+High level usage:
+
+	Source Asset
+		- a blob of data containing an asset
+		- EX:  Texture, Atlas, Level, Xml, Font, Sound, MusicStream
+
+	Asset
+		- contains a loaded 'in-memory' asset
+		- EX:  Texture, Atlas, Font, etc
+		- SourceAsset -> STREAM -> Asset
+		- reference counted, for multiple 'instances' of an asset
+
+	Asset Providers
+		- Source of assets
+		+ INPUT:  path & type of the requested asset
+			IE: "atlases/player1" : "Atlas"
+			IE: "levels/levelB4"  : "Level"
+		- EX:  
+			FileSystem (Base directory)
+			ZIPFile (zip file path)
+			network resource (http request with path/type)
+		- Bundles!
+		
+	Manager - of some sort...
+		INPUT:		Get me asset PATH of TYPE)
+		OUTPUT:		Asset
+		- background loading support (X threads)
+		  - priority queue
+		- asset cache (by name)
+		
+	Pool
+		list of assets grouped under a common umbrella, for quick n easy release
+		manage lifetimes..
+		even if assetref == 0, keep assets around..
+		
+		
+	
+		
+AssetPool playerImagesPool;
+AssetPool uiPool;
+AssetManager assetManager;
+
+-Startup
+	AssetProvider *fileProvider = assetManager.GetProvider("AssetsFolder");
+	fileProvider->RegisterBundle("HiRez");
+	
+	AssetProvider *onlineSource = HttpAssetProvider::Create(some network settings)
+	assetManager->RegisterProvider(onlineSource);
+	
+-LevelLoad()
+	Asset<Atlas>* hudAssets = assetManager.Load<Atlas>("Atlases/HUD", uiPool);
+	Asset<Texture2D>* playerPicAsset = assetManager.LoadAsync<Texture2D>("Player_12345/profilepic", playerImagesPool);
+	
+-LevelDisplay
+	drawHud( hudAssets );
+	if(playerPicAsset.loaded == false)
+		drawText("loading...");
+	else
+		drawImage(playerPicAsset->GetTexture2D());
+		
+-NextPlayer.Button
+	playerPicAsset = assetManager.LoadAsync<Texture2D>("Player_12345/profilepic", playerImagesPool);
+	
+	if(pool.count > 10)
+		remove(last);
+
+	
+	
+	
+=== Adding a new asset..
+	new enum value - AssetType::Font
+	
+	
+-- TO DO:
+Asset<Atlas>* atlasAsset = assetManager.Load<Atlas>("Atlases/Player1", provider, pool);
+
+-- WE NEED:
+
+	// Do we already have this asset?
+	if(assetMap.Contains(Type::TYPEID, path))
+		return asset;
+		
+	// Create Asset<T> instance..
+	Asset<T>* asset = GdkNew Asset<T>(path, provider);
+			asset.state = "Loading"
+			asset.provider = provider
+			asset.instance = NULL
+			asset.TypeID = <TYPE OVERRIDES THIS PER TYPE>
+	
+	// Add to pool
+	if(pool)
+		pool.Add(asset);
+		
+	//	Async here..  queue the asset (with provider) & return
+	
+	// Find a provider that has the asset
+	if(provider == NULL)
+		loop through providers by priority
+			if(provider.HasAsset(asset.path))
+				use provider
+		if provider is still NULL
+			fail
+	else
+		if(provider.HasAsset() == false)
+			fail;
+			
+	// Get the stream from the provider
+	Stream assetStream = provider.GetStream(asset.path);
+	
+	// Load from stream
+	asset.instance = T::FromStream(assetStream);
+
+
+	// Finished
+	asset.state = Loaded
+	assetMap.Add(asset.TypeID, asset.path, asset)
+	
+-- Type Specific Code
+
+	AssetTypeId  Type::TYPEID				- unique int ID of the type
+	T* Type::FromStream(stream)	
+	
+	
+	
+----------------------------------------------------
+Multithreaded AssetManager
+
+-> Asset<T>*  Load<T>( name )
+
+	lock(assetsMutex)
+	{
+		if( asset exists )
+		{
+			if(asset.state == ready)
+				asset.addref()
+				return asset
+				
+			if(asset.state == loading)
+				// some other thread is currently loading the asset
+				wait until asset.state = ready
+				return asset
+				
+			// Asset exists, but it not yet loaded or loading, so we'll load it
+			workItem.state = "Loading"
+		}
+		else
+		{
+			// Create the asset & put it in the map
+			create asset
+			asset.state = "Loading..."
+			assetsMap[name] = asset	
+		}
+	}
+	
+	InternalLoad(workItem);
+
+	
+-> Asset<T>* LoadAsync<T>( name )
+
+	lock(assetsMutex)
+	{
+		if(asset exists)
+		{
+			// Return the asset, dont care about state (created, loading, ready)
+			return asset;
+		}
+		
+		// Create the asset & put it in the map
+		create asset
+		asset.state = created
+		assetsMap[name] = asset	
+
+		// Add the asset to the work item priority map
+		workItems.add_sorted(priority, asset);
+	}
+	
+	
+- BG Worker thread
+
+	lock(assetsMutex)
+	{
+		// Get the next work item off the queue
+		workItem = workItems.pop();
+		
+		// Has this asset already been processed?  [usually by a main thread calling Load()]
+		if(workItem.state != Created)
+			return workItem;
+			
+		// Set the state to "loading"
+		workItem.state = "Loading"
+	}
+	
+	InternalLoad(workItem);
+	
+	
+- void InternalLoad( workItem )
+	{
+		find provider
+		get stream
+		workItem.instnace = fromstream()
+		workItem.state = "Ready"
+	}
+	
+	
+	
+===============================
+Dependencies
+
+Assets
+	Base
+		Atlases
+			player.gdkatlas
+			player_0.gdkimage
+			player_1.gdkimage
+
+		Models
+			soldier.gdkmodel
+			
+		Materials
+			camo.gdkmaterial
+			camo1.gdkimage
+			camo2.gdkimage
+
+----
+player					- Atlas
+	player_sheet_0		- Texture2D
+	player_sheet_1		- Texture2D
+
+----
+soldier					- Model
+	Material\camo				- Material
+		camo1			- Texture2D	
+		camo2			- Texture2D
+		
+---------------
+
+What does a dependency have...
+	- absolute paths:		/Material/camo
+	  | relative paths:		player_sheet_0
+	- type					T2d, material, etc
+	- use the same provider as the parent
+
+
+Load( "Atlases/Player" )
+- stream = FileSystemProvider( name )
+  - stream.path = "assets/base/atlases/player"
+- Atlas::FromStream()
+  - Load<Texture2D>(name + "_0");
+  
+  FromFile
+	loads all dependents internally... as direct TYPE instances...
+
+  FromStream()
+	
+  Load(name, provider, assetmanager)
+	dependents are loaded through the asset manager..  as Asset<T> instances..
+	use same provider..
+	use same assetmanager
+  
+ 
+-----------------------
+Atlas::FromFile(  fullPath  )
+
+atlas.folder = GetDirectory( fullPath )
+atlas.name = FileNameWithoutExt( fullPath )
+stream = File::Open(fullPath);
+
+foreach sheet
+	sheet.path = atlas.Folder + atlasNAme + "_sheet_" + sheetIndex
+	sheet.Texture = Texture2D::FromFile(  sheet.path  )
+
+-----------------------------
+
+AssetLoadContext(stream, name, manager, provider)
+
+Atlas::LoadAsset(assetLoadContext)
+
+atlas.Name = name;
+provider.GetStream(name);
+
+foreach sheet
+	sheet.path = name + "_sheet_" + sheetIndex
+	sheet.textureAsset = manager.Load<Texture2D>(sheet.path, provider)
+	sheet.texture = sheet.texturAsset.Texture
+	
+====================================================
+=== Background Async Loading
+
+- ConfigureBackgroundThreads
+	- Set the number of threads to use for loading..
+	
+BGworker
+
+	// Get a workitem/asset & load it
+	lock()
+	{
+		get workitem
+		workItem.state = Loading
+	}
+	InternalLoad(workItem)
+	
+
+Idea 1)
+	- All BG threads waiting for "doWork" signal
+	- LoadAsync sets signal
+	- thread, gets work item, if no work item, reset event, go back to waiting.
+	
+		
+	- BGWorker
+		while(1)
+		{
+			lock(bgmutex)
+			wait(bgcond)
+			unlock(mutex)
+			
+			if(stopRequest)
+				unlock mutex
+				thread.exit
+			unlock(bgmutex)
+			
+			lock(workitemsmutex)
+				get work item
+			unlock()
+			InternalLoad
+		}
+		
+	- Stop
+		maxThreads = 0
+		broadcast signal
+		Join() all threads
+		
+==============================================================
+
+Model
+	VBuffer
+	IBuffer
+	Meshes
+		VStart/VEnd
+		IStart/IEnd
+		PrimType
+		[Material]			- Asset<Material>
+			[Shader]		- Asset<Shader>
+			[Texture]		- Asset<Texture2D>
+				
+AssetProvider
+	GetStream(name, type)
+

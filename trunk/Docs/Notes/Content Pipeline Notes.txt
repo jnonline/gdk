@@ -1,0 +1,115 @@
+
+=====================================
+Types of Content
+
+	Source				Output
+	------------		--------------------------------
+	Image				gdkimage
+	Model				gdkmodel, gdkimage(s)
+	Atlas				gdkatlas, gdkimage(s)
+	Material			gdkmaterial, gdkimage(s)
+	Font				gdkfont, gdkimage(s)
+	Sound				gdksound
+	
+======================================
+Content Processors
+
+	Image:
+		PixelFormat:		RGB565, RGB888, RGBA4444, RGBA5551, RGBA8888, LUM, LUMALPHA, ALPHA
+		Scale:				Percentage (50%) or Specific Pixel Size (256x256)
+		ColorReplace:		Replace color A with B
+		
+	Atlas:
+		Images 
+			Name
+			Path
+			Size
+			CroppedSize
+			TexCoords
+			RefPoint
+			ChildPoints
+			
+		Animations 
+			Name
+			Images
+			FPS
+			
+	Model
+		VFormat
+		VertexData
+		IndexData
+		Meshes
+			Material
+			IBStart
+			IBEnd
+		
+		
+======================================
+Content Source Bundle
+
+\Assets
+	MyGame.content
+	MyGame.content.build    - intermediate file
+	\Atlas
+		player.atlas
+		\Player
+			p1_img_00.png
+			p2_img_00.png
+	\Materials
+		wood.material
+	\Models
+		soldier.model
+	
+-- Content File	
+<Content>
+	<Bundles>
+		<Bundle Name="HighRez" />
+		<Bundle Name="GoodSounds" />
+	</Bundles>
+	
+	<Assets>
+		<Asset File="Atlas/player.atlas" Processor="Atlas" >
+			<Parameters>
+				<Parameter Name="ImageScale">2</Parameter>
+				<Parameter Name="ForceRGB888">true</Parameter>
+				<Parameter Name="ForceRGBA8888">true</Parameter>
+			</Parameters>
+			<Bundle Name="HiRez">
+				<Parameters Bundle="HiRez" >
+					<Parameter Name="ImageScale">4</Parameter>
+				</Parameters>
+			</Bundle>
+		</Asset>
+		
+		<Asset File="Textures/metal.png" Processor="Image" />
+	</Assets>
+</Content>
+
+======================================
+Ship Bundle
+
+	Binaries
+		arm6
+		arm7
+		arm6+7 (universal)
+		
+	Assets
+		Base			-- all resources
+		LowRes			-- only bundle specific asset builds
+		HighRes			-- "
+		XRes			-- "
+		
+
+=====================================
+TODO:
+
+
+
+Binary Tree based atlas..  
+
+- root
+
+- root = CreateNode(images[0])
+
+- AddImage()
+	if(root

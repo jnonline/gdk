@@ -1,0 +1,51 @@
+﻿
+===========================================
+== Input XML Format
+
+<Atlas>
+
+	<Images
+		PixelFormat="RGBA_4444 | RGBA_8888 | RGBA_5551 | RGB_565 | RGB_888"
+		ColorKey="0, 0, 0"
+		RefPointX="Left | Right | Center | pixel#"
+		RefPointY="Top | Bottom | Center | pixel#"
+		RefPointColor="125, 125, 125"
+		ChildPoint1="pixelX, pixelY"
+		ChildPointColor1="125,125,125"
+		ImageScale="1.0, 1.0"
+		>
+	
+		<Image
+			Name="Foo\Bar1"					\\ If not specified, the path is used (without the file extension)
+			Path="Foo\Bar1.png"				\\ Path supports wildcards. 
+			--- any of the Images element attributes ---
+			/>
+	</Images>
+	
+	<Animation
+	  Name="Blah"
+	  FPS="10"
+	  >
+		<Frame Image="Foo\Bar1" />
+		<Frame Image="Foo\Bar2*" />    \\ Image supports Wildcards: *
+	</Animation>
+
+<Atlas>
+
+=======================================
+== Animated GIF / PNG support
+
+	If an image file is an animated PNG or GIF, the file will be turned into multiple images (1 per frame)
+	with the names:  IMAGENAME_0001
+	
+	An animation will be created with IMAGENAME as the animation name, and all appropriate frames attached
+
+
+=======================================
+== Output formats
+
+.gdkatlas	- Contains all the image & animation meta data
+
+.gdkimage	- at least 1 per pixel format
+			- There may be multiple sheets if not all the images for a particular pixel format will fit into a single sheet
+	

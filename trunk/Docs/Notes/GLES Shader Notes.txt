@@ -1,0 +1,21 @@
+
+Notes to remember when building GLES Shaders...
+---------------------------------------------------
+
+Precision:
+	Set a precision for all floating point types..
+	
+	highp	= 32-bit	Use for positions, matrices, lighting calculations, skinning calcs, etc)
+	mediump	= 16-bit	Use for varying texture coordinates.
+	lowp	= 10-bit	Use for colors or data from low-precision textures (Normal maps, etc)
+	
+Coordinate Spaces:
+	Q: What coordinate space should we do lighting / transforms / etc in?
+	A: Whichever space requires the least amount of calculations  
+		IE: pre transform a light to model space, then do lighting, then transform from model straight to projected space.
+			VS xForm everything to world, then do calcs, then xform to projected..
+	
+	
+Static VS Dynamic branching
+	Static	= Branching based on parameters from uniforms.	IE: if(Numlights == 0)
+	Dynamic	= Branching based on calculated values.			IE: if(position.X > 0)

@@ -1,0 +1,172 @@
+
+#include "BasePCH.h"
+#include "Device.h"
+
+using namespace Gdk;
+
+// Static Instantiations
+DeviceType::Enum			Device::deviceType = DeviceType::Unknown;
+PlatformType::Enum			Device::platformType = PlatformType::Unknown;  
+PlatformVersion				Device::platformVersion;
+DeviceOrientation::Enum		Device::deviceOrientation = DeviceOrientation::Unknown;
+wstring						Device::deviceDisplayName;
+string						Device::deviceUniqueId;
+
+// Events
+Device::MediaControlActionHandler	Device::MediaControlAction;
+Device::DeviceOrientationHandler	Device::OrientationChanged;
+
+// ===================================================================================
+const char* DeviceType::ToString(DeviceType::Enum value)
+{
+	static const char* pc = "PC";
+	static const char* web = "Web";
+	static const char* iPad1 = "iPad1";
+	static const char* iPad2 = "iPad2";
+	static const char* iPhone3GS = "iPhone3GS";
+	static const char* iPhone4 = "iPhone4";
+	static const char* iPod3 = "iPod3";
+	static const char* iPod4 = "iPod4";
+	static const char* androidPhone = "AndroidPhone";
+	static const char* androidTablet = "AndroidTablet";
+
+	switch(value)
+	{
+		case DeviceType::PC:				return pc;
+		case DeviceType::Web:				return web;
+		case DeviceType::iPad1:				return iPad1;
+		case DeviceType::iPad2:				return iPad2;
+		case DeviceType::iPhone3GS:			return iPhone3GS;
+		case DeviceType::iPhone4:			return iPhone4;
+		case DeviceType::iPod3:				return iPod3;
+		case DeviceType::iPod4:				return iPod4;
+		case DeviceType::AndroidPhone:		return androidPhone;
+		case DeviceType::AndroidTablet:		return androidTablet;
+	};
+
+	return StringUtilities::Unknown;
+}
+
+// ===================================================================================
+const char* PlatformType::ToString(PlatformType::Enum value)
+{
+	static const char* windows = "Windows";
+	static const char* mac = "Mac";
+	static const char* linux = "Linux";
+	static const char* iOS = "iOS";
+	static const char* android = "Android";
+	static const char* naCl = "NaCl";
+
+	switch(value)
+	{
+		case PlatformType::Windows:		return windows;
+		case PlatformType::Mac:			return mac;
+		case PlatformType::Linux:		return linux;
+		case PlatformType::iOS:			return iOS;
+		case PlatformType::Android:		return android;
+		case PlatformType::NaCl:		return naCl;
+	};
+
+	return StringUtilities::Unknown;
+}
+
+// ===================================================================================
+bool Device::IsHandheld()
+{
+	return
+		deviceType == DeviceType::iPhone3GS ||
+		deviceType == DeviceType::iPhone4 ||
+		deviceType == DeviceType::iPod3 ||
+		deviceType == DeviceType::iPod4 ||
+		deviceType == DeviceType::AndroidPhone;
+}
+
+// ===================================================================================
+bool Device::IsTablet()
+{
+	return 
+		deviceType == DeviceType::iPad1 ||
+		deviceType == DeviceType::iPad2 ||
+		deviceType == DeviceType::AndroidTablet;
+}
+
+// ===================================================================================
+void Device::Init()
+{
+	// Call the external platform interfaces to get the device/plaform details
+	deviceType = _Gdk_Platform_Device_GetDeviceType();
+	platformType = _Gdk_Platform_Device_GetPlatformType();
+	platformVersion = _Gdk_Platform_Device_GetPlatformVersion();
+
+	// Get the device name & unique id
+	deviceDisplayName = _Gdk_Platform_Device_GetDeviceDisplayName();
+    deviceUniqueId = _Gdk_Platform_Device_GetDeviceUniqueId();
+
+	// Verify we got platform details..
+	ASSERT(deviceType != DeviceType::Unknown, L"The device type for the platform could not been determined");
+	ASSERT(platformType != PlatformType::Unknown, L"The platform type could not been determined");
+
+	// Log the device details
+	LOG_SYSTEM(
+		L"Device Type: %hs", 
+		DeviceType::ToString(deviceType)
+		);
+
+	// Log the platform details
+	LOG_SYSTEM(
+		L"Platform Type: %hs  [Version=%d.%d.%d]", 
+		PlatformType::ToString(platformType), 
+		platformVersion.MajorVersion,
+		platformVersion.MinorVersion,
+		platformVersion.Revision
+		);
+    
+    LOG_SYSTEM(
+        L"Device Name: %ls",
+        GetDeviceDisplayName().c_str()
+        );
+
+	LOG_SYSTEM(
+        L"Device UniqueId: %hs",
+        GetDeviceUniqueId().c_str()
+        );
+}
+
+// ===================================================================================
+DeviceBatteryState::Enum Device::GetBatteryState()
+{
+	return _Gdk_Platform_Device_GetBatteryState();
+}
+
+// ===================================================================================
+float Device::GetBatteryLevel()
+{
+	return _Gdk_Platform_Device_GetBatteryLevel();
+}
+
+// ===================================================================================
+void Device::Vibrate()
+{
+	return _Gdk_Platform_Device_Vibrate();
+}
+
+// ===================================================================================
+void Device::Platform_ProcessMediaControlAction(MediaControlActions::Enum action)
+{
+    // Fire the MediaControlAction event
+    MediaControlAction.Invoke(action);
+}
+
+// ===================================================================================
+void Device::Platform_SetDeviceOrientation(DeviceOrientation::Enum orientation)
+{
+	// Is this orientation different then what we already had?
+	if(orientation != deviceOrientation)
+	{
+		// Update the orientation
+		deviceOrientation = orientation;
+
+		// Fire an event for the orientation change
+		OrientationChanged.Invoke(orientation);
+	}
+}

@@ -1,0 +1,452 @@
+
+Work Items
+
+	Shaders - make shaderparameters detect changes, and only update uniforms on changes
+	
+	Materials
+	Material Instances
+	Material / Shader compiler from Asset side
+	
+====================================
+-- Types of Render Data
+
+	Textures
+	AtlasImage
+	Sprite
+	Mesh
+	Material
+	Shaders
+	2D Primitives
+		Points,
+		Lines
+		Tris (Rects, Circles, etc)
+		Fans
+		Strips
+	Particles
+	
+====================================
+-- Types of Render Calls
+
+	DrawImage
+		position, rotation, color, animation, blend mode, material
+		multi-texture, shader effect, etc
+		DrawTexturedQuad()
+
+	DrawSprite
+		DrawImage
+	DrawText
+		DrawImage
+	
+	DrawQuad()
+	DrawTexturedQuad()
+	
+	DrawCircle
+	DrawLine
+	DrawTexturedLine
+	DrawTexturedCircle
+	
+	DrawMesh
+	DrawModel
+	
+	Draw******
+	
+	
+===================================
+-- Tasks that draws perform
+
+	CheckBufferSpace( X )
+	Flush()
+	
+	Setup Material
+		Set VShader
+		Set PShader
+		Set Shader Params / Uniforms
+		Set Texture (material defaults)
+		Set Cull state, depth state, blend state
+		
+	Set Texture (used by the material)
+	
+	Set Matrix  (worldView, proj)
+	Set Viewport 
+	
+	Set VB / IB / vertex data
+	DrawElements | DrawArrays
+	
+Optional:
+	Buffered / Queued batches
+	batch Sorting..  (ZOrder, TextureID, etc)
+	
+=============================================
+-- Goals
+	
+	
+	
+2d Images
+	Sprites / images, 
+	Scaling, rotation, color blend
+	multi-textured
+	shader access (for effects)
+	
+2D primitives
+	textures & un-textured
+	circle, rect, diamond, polyline, polygon, wide-lines, etc
+	
+3D primitives
+	textures & un-textured
+	sphere, cube, cylinder, etc
+	
+Post-processing
+	multi-layer
+	blend, bloom, mosaic, etc
+	
+3D Billboards
+	Up-Axis oriented
+	Camera oriented
+
+3D Models
+	skeletal
+	mesh / submesh
+	customizable materials (hot swap textures, etc)
+	bone bind points
+	
+Custom 3D Rendering
+	SSH World Toroid...				(Custom Shaders, custom mesh data)
+	SSH screen oriented sprites..	(Custom Shader)
+	SSH fog..  alpha sprites.. etc..
+	
+	SSH space models..
+	
+	
+=============================================
+--) Interface Proposal 1
+
+Graphics
+	= performs state management (only set state A to X if different)
+	= stores global rendering state
+	= pure immediate mode interface, everything is RENDER NOW
+	= hides most gl** calls
+	
+	
+	SetMaterial()
+		SetTexture(state, textureId)
+		SetVShader()
+		SetPShader()
+		SetShaderParam()
+		SetUniform()
+	SetViewPort()
+	
+	Common Uniforms...
+		WorldView matrix
+		Projection matrix
+		camera pos
+		lights[N]
+	
+Model::Draw
+	boneTree.Update();
+	glSetUniform(bones)
+	foreach(mesh in model.meshes)
+		mesh.Draw()
+	
+Mesh::Draw	
+	glSetVB(mesh.vb)
+	glSetIB(mesh.ib)
+	foreach(submesh in mesh.submeshes)
+		Graphics::SetMaterial(submesh)
+		glDrawElements(mesh.startIB, mesh.vertexcount, mesh.facecount)
+
+RendererBatch3D
+	
+RendererBatch2D
+
+	batching...
+	
+	DrawImage()
+	DrawSprite()
+	
+	DrawTexturedQuad
+	Draw***
+	DrawTextured***
+	
+===========================================
+- Shader Model
+
+- Shader
+	- VShader Code
+		- attributes - input vertex streams (pos, tc, color, normal, weights, bitangents, etc)
+		- varying - output (pshader input)
+		- uniforms - Textures, WVP, Fog, etc
+	- PShader Code
+		- varying - input (vshader output)
+		- uniforms - Textures, WVP, Fog, etc
+		- output: gl_fragColor	
+	- Uniforms[]
+		= parsed from the shader program, via glGetActiveUniforms()
+		Name - const char*
+		Type - GLenum  (Ex:  GL_FLOAT_VEC3, GL_FLOAT_MAT4, GL_SAMPLER_2D)
+		Location - GLint, comes from glGetUniformLocation()
+		[Name, Type, Location]
+	- Attributes
+		= parsed after binding
+		- Name, Type, Index
+		- table of common attributes..
+		- GetAttributeByCommonName(Position)->Index;
+	- Render State		
+		- CullMode
+		- Depth
+		- Blend
+	- CreateParameterSet()
+		= creates a set of parameters for this shader, with zero'd out values
+			
+ShaderUniformValue
+	CTor(type, size)
+		alloc valueBuffer
+	DTor()
+		dealloc
+	- Set***
+	- Get***
+	
+ShaderParameter : ShaderUniformValue
+	- Uniform
+		- type, size, name, location
+	- Value  (type dependent, size=array))
+	- Optional : Bind to Global Parameter
+			
+SharedShaderParameter : ShaderUniformValue
+	Param
+		Name, Type, Size
+		Value
+					
+					
+			
+================================= 
+OGRE's Material System
+
+		- Material Properties
+n			- LOD levels / strategies	
+n			- casts shadows
+n			- recieves shadows
+n			- texture aliases..				- base material calls it "DiffuseTexture", but i also call it "SpriteTexture"
+			
+n			- shadow caster material		- alternate material that is used during a shadow cast pass..
+n			- shadow receiver material 
+			
+y			- blend state (factors & equations)
+y			- depth
+y			- depth Bias!!					- glPolygonOffset & glEnable(GL_POLYGON_OFFSET_FILL)
+y			- culling
+			
+n			- iterations..					- run the draw pass multiple times.  (X times per light, X times, etc)
+			
+y			- VS inline or Reference to .vs file
+y				- attach/include other .vs file
+			
+			- texture_unit 0
+				- texture file
+				- filtering
+				
+			- point sprites
+				enabled
+				size / min / max
+				attentuation factors
+			
+			- inheritance..	
+				- SpriteMaterial
+					Shader
+					RenderState
+					defaults
+						diffuse = 0,1,0
+					
+				- MyCustomSpriteMaterial : SpriteMaterial
+					defaults
+						diffuse = 1,0,0
+			
+		- Shaders
+			- VS Code
+			- PS Code
+			- Default Uniform Values
+				- Ex: time = 0
+				- Ex: baseTextureSampler = 0   (which 'texture-unit' to use)
+			- Default Uniform Bindings
+				- Ex: wvp = BindGlobal("WVP")
+			
+		- declare a shared-parameter from a material..
+			- any materials declaring the same param, will share them :D... interesting!
+			
+		- vertex data support statements..
+			- Uses vertex blending / skeletal animation
+			- Uses bitangents / tangents.
+			
+			
+		- Imports
+			= allows a mat file to inherit from materials in another file
+			- mymaterialfile.mat:   import "basematerials.mat"   
+			
+=========================
+Posible Impl of OGREs model
+
+x Shader
+x	- VShader
+x	- PShader
+x	- Attributes
+x	- Uniforms
+x		- samplers, transforms, user data
+x		- other material data, diffuse, ambient, gloss, specular, etc
+x	- ParameterSet - DefaultParams
+		Uniform Name = Value
+		BindTo XXX
+				
+x ShaderParams
+x	- Uniform TO Value map
+	
+Material
+	Name
+	Shader
+		DefaultParams
+	Render state
+		blending
+		depth
+		cull
+		masks
+	TextureBindings
+		 Sampler = I
+		 TextureUnitI = textureId
+		 
+	private vector<Asset<Texture2D>> textures...
+	
+	-any property, texture, or shader param can be changed at run time..
+	-Apply() sets all the current shader & bindings & settings & textures
+	-materials can be Clone()'d at run time to make variations...
+	
+	+Load()
+		load textures
+		update default shader params
+		
+
+- Derived Materials
+	- Use same shader
+	- Use 
+	
+- Create material in memory..
+- Create shader in memory..
+	
+===================================================
+
+Shader
+	ShaderProgram
+	Attributes
+	Uniforms
+	DefaultParameters
+	
+	+ CreateParametersSet()
+	+ Apply(paramSet)
+	
+	ShaderParameterSet <- effectively an INSTANCE of the shader
+	
+Effect		- Entire set of render state, minus textures applied to samplers. (if it uses textures)
+	Name
+	Index
+	Name
+	Shader*
+	ShaderParameters			- Parameters for the shader, all bound to 
+	Render State settings
+	  Blending
+	  Culling
+	  Depth
+	  WriteMask
+	Apply()
+	
+MaterialLibrary
+	MaterialDefinitions[]
+	
+MaterialDefinition
+	Effect Name					- Name of the effect
+	ShaderParameters			- Custom parameters for the effect shader (not a full set, can be bindings)
+	Texture Names				- Names of textures to apply to various effect uniform samplers...
+	
+MaterialInstance
+	Effect*
+	ShaderParameters
+	map<Sampler, Texture*>
+	
+	- Create( )											
+		= links to the effect, copies its params, no textures are bound yet.. (up to the user)
+	- CreateFromDefinition( MaterialDefinition* )
+		= first calls: Create()
+		= Loads textures from the definition & maps them to samplers
+		= applies extra parameters
+	
+	
+	
+=====================================
+IDEA:  Shader = GPU setup  |  Material = shader settings & textures
+Shader
+	ShaderProgram
+	Attributes
+	Uniforms
+	DefaultParameters
+	Render State
+	
+	+ CreateParametersSet()
+	+ Apply(paramSet)
+	
+	ShaderParameterSet <- effectively an INSTANCE of the shader
+	
+	
+Material
+	Shader ref
+	Shader Params  (customizations)
+	Textures for the shader (mapped to samplers)
+	
+MaterialLibrary
+	bunch of materials, 
+	loaded as many assets, 
+	from 1 stream...
+	
+------------------------
+Usage:
+
+	Sprites / Quads
+		Shaders
+			: Quad/SimpleTexturedQuad
+			: Quad/GlowingQuad
+			: Quad/SwirlyQuad
+		
+		Materials 
+			dont need, just use the shader, and set the texture
+	
+	Meshes
+		Shaders
+			: Mesh/TexturedBumpedMesh
+			: Mesh/TexturedMesh
+			: Mesh/WoodProceduralMesh
+			
+		Materials
+			Wood
+			DarkWood
+			Checkered
+			etc...
+			
+	Models
+		Shaders
+			: Skeletal/TexturedBumped
+			: Skeletal/Simple
+			: Skeletal/BumpedGloss (4 textures..  diffuse, spec, bump, gloss)
+			
+		Materials
+			SamuraiSkin1 : SkeletalBumpedGloss + 4 Textures
+			SamuraiSkin2 : SkeletalBumpedGloss + 4 Textures
+			
+			
+	Particles
+		Shaders
+			: Particle/Simple
+			: Particle/FullGPU_UpdatePass
+			: Particle/FullGPU_RenderPass
+			
+		Materials
+			- probly dont have any, particle scripts would use the shaders directly
+			
+			
+			
+			
+		

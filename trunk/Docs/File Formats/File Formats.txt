@@ -1,0 +1,22 @@
+----------------------------------------------------
+GDK File Types
+----------------------------------------------------
+
+Asset / PreBuild Input Files:
+
+	NAME					EXTENSION(S)					PURPOSE / NOTES
+	--------------------	----------------------------	-------------------------------------------------
+	Atlas File				atlas							XML based atlas definition
+	Image / Texture			png, jpg, bmp					Images
+	Sound / Music			ogg								Music & Sound files
+
+
+Gdk Runtime Files
+
+	NAME					EXTENSION(S)					PURPOSE / NOTES
+	--------------------	----------------------------	-------------------------------------------------
+	
+	Texture					.gdkimage						Square^2 Texture Image in Native Device Pixel Format  (RBG565, RGBA8888, etc)
+	Atlas					.gdkatlas						Binary Atlas format
+	Sounds / Music			.ogg							Ogg file :D
+

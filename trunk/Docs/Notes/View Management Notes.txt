@@ -1,0 +1,85 @@
+
+------------------------------------
+-- Thinking Object Model
+------------------------------------
+
+Screen (Application)
+	- Width
+	- Height
+	+ Resize()
+
+FrameBuffer
+	- Color
+	- Depth
+	- Stencil
+	
+Renderbuffer
+	= bound to FB: C,D, | S
+	= offscreen buffer	
+	= color, depth, or stencil, + format
+	
+Texture2D
+	= bound to FB: C | D
+	
+Viewport
+	= coords within active framebuffer's color binding  (screen.. or renderbuffer.. or texture2d)
+	= glViewport / glScissor
+	- x, y, width, height
+	
+Camera
+	= matrix transform, applied to SharedParam: WVP / Proj
+
+Compositor
+	- ViewPort
+		- x,y,w,h
+	- Layers
+		- Input:  
+		
+		
+) Composition Examples:
+	1) 
+		Texture: A (dest.size, dest.pf)
+		Texture: B, C (128w 128h 32b)
+		
+		
+		Draw full scene to texture C
+		Draw texture C to texture A: Bloom shader 1
+		Draw texture A to texture B: Bloom shader 2
+		Draw texture A & C to output: Blend Bloom,
+		
+
+
+		
+
+		
+------------------------------------
+-- OGRE post-process class model
+
+Compositor
+	Technique
+		--- intermediate objects
+		- Texture [name] [width] [height] [format]
+		
+		passes[]
+		{
+			source [texture]
+			op [draw_quad, clear, render_scene, render_custom]
+				- shader to use, etc
+			target [texture | renderbuffer | screen]
+		}
+		
+	
+
+
+
+
+
+1			Graphics		Viewports
+1			Graphics		View space management...  Coordinate systems, etc  (2d, 3d, cameras, etc)
+
+2			Graphics		Render-To-Texture system
+2			Graphics		Framebuffers
+2			Graphics		PostProcess
+2	x		Graphics		Texture::Ctor(w,h,format)
+2			Graphics		Cube Textures
+2			Graphics		Texture saving (screenshots)
