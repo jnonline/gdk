@@ -9,11 +9,11 @@
 // GDKPLATFORM_WINDOWS		: Microsoft Windows (2000, XP, Vista, 7, etc)
 //
 // GDKPLATFORM_APPLE		: Apple 
-//   GDKPLATFORM_MACOSX		: Apple \ Macintosh OS X
+//   GDKPLATFORM_MACOSX		: Apple \ Mac OS X
 //   GDKPLATFORM_IOS		: Apple \ iOS
 //
 // TODO:
-// GDKPLATFORM_LINUX
+//	 GDKPLATFORM_LINUX		: Linux OS
 //   GDKPLATFORM_NACL		: Google NaCl
 //   GDKPLATFORM_ANDROID	: Android phones
 //
@@ -51,6 +51,39 @@
 	
 	// Pthreads
     #include "pthread/pthread.h"
+
+	// Map framebuffer extensions to OpenGL ES equivalents
+	#undef glBindFramebuffer
+	#undef glBindRenderbuffer
+	#undef glCheckFramebufferStatus
+	#undef glDeleteFramebuffers
+	#undef glDeleteRenderbuffers
+	#undef glFramebufferRenderbuffer
+	#undef glFramebufferTexture2D
+	#undef glGenFramebuffers
+	#undef glGenRenderbuffers
+	#undef glGenerateMipmap
+	#undef glGetFramebufferAttachmentParameteriv
+	#undef glGetRenderbufferParameteriv 
+	#undef glIsFramebuffer
+	#undef glIsRenderbuffer
+	#undef glRenderbufferStorage
+
+	#define glBindFramebuffer						glBindFramebufferEXT
+	#define glBindRenderbuffer						glBindRenderbufferEXT
+	#define glCheckFramebufferStatus				glCheckFramebufferStatusEXT
+	#define glDeleteFramebuffers					glDeleteFramebuffersEXT
+	#define glDeleteRenderbuffers					glDeleteRenderbuffersEXT					
+	#define glFramebufferRenderbuffer				glFramebufferRenderbufferEXT
+	#define glFramebufferTexture2D					glFramebufferTexture2DEXT
+	#define glGenFramebuffers						glGenFramebuffersEXT
+	#define glGenRenderbuffers						glGenRenderbuffersEXT
+	#define glGenerateMipmap						glGenerateMipmapEXT
+	#define glGetFramebufferAttachmentParameteriv	glGetFramebufferAttachmentParameterivEXT
+	#define glGetRenderbufferParameteriv			glGetRenderbufferParameterivEXT
+	#define glIsFramebuffer							glIsFramebufferEXT
+	#define glIsRenderbuffer						glIsRenderbufferEXT
+	#define glRenderbufferStorage					glRenderbufferStorageEXT
 
 #endif
 

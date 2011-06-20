@@ -189,6 +189,14 @@
 			<Filter
 				Name="Gdk"
 				>
+				<File
+					RelativePath="..\..\..\Source\Gdk\Gdk.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\Source\Gdk\GdkLIB.h"
+					>
+				</File>
 				<Filter
 					Name="Application"
 					>
@@ -866,76 +874,76 @@
 					>
 				</File>
 			</Filter>
-		</Filter>
-		<Filter
-			Name="SampleGame"
-			>
-			<File
-				RelativePath="..\..\Source\Module.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Source\Module.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Source\SampleGame.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Source\SampleGame.h"
-				>
-			</File>
 			<Filter
-				Name="Samples"
+				Name="Game"
 				>
-				<Filter
-					Name="Tanks3D"
+				<File
+					RelativePath="..\..\Source\Module.cpp"
 					>
-					<File
-						RelativePath="..\..\Source\Samples\Tanks3D\Tanks3DModule.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\Source\Samples\Tanks3D\Tanks3DModule.h"
-						>
-					</File>
-				</Filter>
-			</Filter>
-			<Filter
-				Name="Tests"
-				>
-				<Filter
-					Name="UnitTests"
+				</File>
+				<File
+					RelativePath="..\..\Source\Module.h"
 					>
-					<File
-						RelativePath="..\..\Source\Tests\UnitTests\TestMath.cpp"
+				</File>
+				<File
+					RelativePath="..\..\Source\SampleGame.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\SampleGame.h"
+					>
+				</File>
+				<Filter
+					Name="Samples"
+					>
+					<Filter
+						Name="Tanks3D"
 						>
-					</File>
-					<File
-						RelativePath="..\..\Source\Tests\UnitTests\TestSystem.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\Source\Tests\UnitTests\UnitTestsModule.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\Source\Tests\UnitTests\UnitTestsModule.h"
-						>
-					</File>
+						<File
+							RelativePath="..\..\Source\Samples\Tanks3D\Tanks3DModule.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Source\Samples\Tanks3D\Tanks3DModule.h"
+							>
+						</File>
+					</Filter>
 				</Filter>
 				<Filter
-					Name="Test2D"
+					Name="Tests"
 					>
-					<File
-						RelativePath="..\..\Source\Tests\Test2D\Test2DModule.cpp"
+					<Filter
+						Name="UnitTests"
 						>
-					</File>
-					<File
-						RelativePath="..\..\Source\Tests\Test2D\Test2DModule.h"
+						<File
+							RelativePath="..\..\Source\Tests\UnitTests\TestMath.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Source\Tests\UnitTests\TestSystem.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Source\Tests\UnitTests\UnitTestsModule.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Source\Tests\UnitTests\UnitTestsModule.h"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="Test2D"
 						>
-					</File>
+						<File
+							RelativePath="..\..\Source\Tests\Test2D\Test2DModule.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Source\Tests\Test2D\Test2DModule.h"
+							>
+						</File>
+					</Filter>
 				</Filter>
 			</Filter>
 		</Filter>
