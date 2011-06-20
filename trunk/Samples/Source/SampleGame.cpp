@@ -41,6 +41,9 @@ bool SampleGame::OnInit()
 	TouchInput::TouchBegan.AddHandlerMethod(this, &SampleGame::OnTouchBegan);
 	Mouse::MouseButtonDown.AddHandlerMethod(this, &SampleGame::OnMouseDown);
 
+    // Register all the sample/test modules
+    Module::Init();
+    
 	// Init the first module
 	ASSERT(Module::GetRegistrations().size() > 0, L"No Registered Modules!");
 	this->activeModuleIndex = this->changeToModuleIndex = 0;

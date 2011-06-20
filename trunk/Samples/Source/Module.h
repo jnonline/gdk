@@ -6,6 +6,47 @@
 
 using namespace Gdk;
 
+// *******************************************************************
+namespace ModuleCategory
+{
+	enum Enum
+	{
+		Samples,
+		Tests
+	};
+}
+
+// *******************************************************************
+class ModuleRegistration
+{
+public:
+	// Properties
+	wstring					Name;
+	ModuleCategory::Enum	Category;
+    
+	// Methods
+	ModuleRegistration(const wchar_t* name, ModuleCategory::Enum category) : Name(name), Category(category) {}
+	virtual class Module* CreateModule() = 0;
+};
+
+// *******************************************************************
+template <typename TModule>
+class ModuleRegistrationT : public ModuleRegistration
+{
+public:
+	// CTor
+	ModuleRegistrationT(const wchar_t* name, ModuleCategory::Enum category) : ModuleRegistration(name, category)
+	{
+	}
+    
+	// CreateModule
+	virtual Module* CreateModule()
+	{
+		return GdkNew TModule();
+	}
+};
+
+
 // A Module is an encapsulated chunk of game code that runs within the sample game.
 // Modules are used to test functionality, demonstrate effects, and be general how-to samples
 
@@ -22,50 +63,32 @@ public:
 	virtual void OnUpdate(float elapsedSeconds) = 0;
 	virtual void OnDraw() = 0;
 
-	// *******************************************************************
-	static vector<class ModuleRegistrationBase*>& GetRegistrations();
+	// =====================================================
+    // Module registration access
+    static void Init();
+    static vector<class ModuleRegistration*>& GetRegistrations()
+    {
+        return registeredModules;
+    }
+    
+private:
+
+    // =====================================================
+    // Internals
+    
+    // Properties
+    static vector<class ModuleRegistration*> registeredModules;
+    
+    // Methods
+    template <typename TModule>
+    static void RegisterModule(const wchar_t* name, ModuleCategory::Enum category)
+    {
+        registeredModules.push_back(GdkNew ModuleRegistrationT<TModule>(name, category));
+    }
+    
+	
 };
 
 
 
 
-// *******************************************************************
-namespace ModuleCategory
-{
-	enum Enum
-	{
-		Samples,
-		Tests
-	};
-}
-
-// *******************************************************************
-class ModuleRegistrationBase
-{
-public:
-	// Properties
-	wstring					Name;
-	ModuleCategory::Enum	Category;
-
-	// Methods
-	ModuleRegistrationBase(const wchar_t* name, ModuleCategory::Enum category) : Name(name), Category(category) {}
-	virtual class Module* CreateModule() = 0;
-};
-
-// *******************************************************************
-template <typename TModule>
-class ModuleRegistration : public ModuleRegistrationBase
-{
-public:
-	// CTor
-	ModuleRegistration(const wchar_t* name, ModuleCategory::Enum category) : ModuleRegistrationBase(name, category)
-	{
-		Module::GetRegistrations().push_back(this);
-	}
-
-	// CreateModule
-	virtual Module* CreateModule()
-	{
-		return GdkNew TModule();
-	}
-};

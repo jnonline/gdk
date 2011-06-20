@@ -94,6 +94,7 @@
 		D004C2FA13AC899D00797055 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = D004C2F313AC899C00797055 /* main.mm */; };
 		D004C2FB13AC899D00797055 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = D004C2F413AC899C00797055 /* MainMenu.xib */; };
 		D004C2FC13AC899D00797055 /* PlatformImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = D004C2F513AC899C00797055 /* PlatformImpl.mm */; };
+		D004C32013AED3F000797055 /* InputTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D004C31E13AED3F000797055 /* InputTests.cpp */; };
 		D00663A813A025AF00981CC2 /* libz.1.2.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D00663A713A025AF00981CC2 /* libz.1.2.3.dylib */; };
 		D06312F413A81BC100BCB383 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D06312F313A81BC100BCB383 /* IOKit.framework */; };
 /* End PBXBuildFile section */
@@ -279,6 +280,8 @@
 		D004C2F313AC899C00797055 /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
 		D004C2F413AC899C00797055 /* MainMenu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainMenu.xib; sourceTree = "<group>"; };
 		D004C2F513AC899C00797055 /* PlatformImpl.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PlatformImpl.mm; sourceTree = "<group>"; };
+		D004C31E13AED3F000797055 /* InputTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InputTests.cpp; sourceTree = "<group>"; };
+		D004C31F13AED3F000797055 /* InputTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InputTests.h; sourceTree = "<group>"; };
 		D00663A713A025AF00981CC2 /* libz.1.2.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.2.3.dylib; path = usr/lib/libz.1.2.3.dylib; sourceTree = SDKROOT; };
 		D06312F313A81BC100BCB383 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -402,6 +405,7 @@
 		D004C1E113AC898100797055 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				D004C31D13AED3F000797055 /* Input */,
 				D004C1E213AC898100797055 /* Test2D */,
 				D004C1E513AC898100797055 /* UnitTests */,
 			);
@@ -747,6 +751,15 @@
 			path = ../../../Source/Platform/MacOS;
 			sourceTree = "<group>";
 		};
+		D004C31D13AED3F000797055 /* Input */ = {
+			isa = PBXGroup;
+			children = (
+				D004C31E13AED3F000797055 /* InputTests.cpp */,
+				D004C31F13AED3F000797055 /* InputTests.h */,
+			);
+			path = Input;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -909,6 +922,7 @@
 				D004C2F713AC899D00797055 /* GdkGLView.mm in Sources */,
 				D004C2FA13AC899D00797055 /* main.mm in Sources */,
 				D004C2FC13AC899D00797055 /* PlatformImpl.mm in Sources */,
+				D004C32013AED3F000797055 /* InputTests.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

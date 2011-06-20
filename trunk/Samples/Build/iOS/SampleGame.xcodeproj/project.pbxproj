@@ -100,6 +100,7 @@
 		D004C1CD13AC884D00797055 /* TestSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D004C1C513AC884D00797055 /* TestSystem.cpp */; };
 		D004C1CE13AC884D00797055 /* UnitTestsModule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D004C1C613AC884D00797055 /* UnitTestsModule.cpp */; };
 		D06312A513A42BF800BCB383 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D06312A413A42BF800BCB383 /* AudioToolbox.framework */; };
+		D063A04613AFED2E002E8586 /* InputTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D063A04413AFED2E002E8586 /* InputTests.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -287,6 +288,8 @@
 		D004C1C613AC884D00797055 /* UnitTestsModule.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UnitTestsModule.cpp; sourceTree = "<group>"; };
 		D004C1C713AC884D00797055 /* UnitTestsModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UnitTestsModule.h; sourceTree = "<group>"; };
 		D06312A413A42BF800BCB383 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		D063A04413AFED2E002E8586 /* InputTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InputTests.cpp; sourceTree = "<group>"; };
+		D063A04513AFED2E002E8586 /* InputTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InputTests.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -722,6 +725,7 @@
 		D004C1BF13AC884D00797055 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				D063A04313AFED2E002E8586 /* Input */,
 				D004C1C013AC884D00797055 /* Test2D */,
 				D004C1C313AC884D00797055 /* UnitTests */,
 			);
@@ -746,6 +750,15 @@
 				D004C1C713AC884D00797055 /* UnitTestsModule.h */,
 			);
 			path = UnitTests;
+			sourceTree = "<group>";
+		};
+		D063A04313AFED2E002E8586 /* Input */ = {
+			isa = PBXGroup;
+			children = (
+				D063A04413AFED2E002E8586 /* InputTests.cpp */,
+				D063A04513AFED2E002E8586 /* InputTests.h */,
+			);
+			path = Input;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -909,6 +922,7 @@
 				D004C1CC13AC884D00797055 /* TestMath.cpp in Sources */,
 				D004C1CD13AC884D00797055 /* TestSystem.cpp in Sources */,
 				D004C1CE13AC884D00797055 /* UnitTestsModule.cpp in Sources */,
+				D063A04613AFED2E002E8586 /* InputTests.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

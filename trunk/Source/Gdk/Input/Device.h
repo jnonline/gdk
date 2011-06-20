@@ -87,9 +87,11 @@ namespace Gdk
 			Unknown,
 			Portrait,
 			PortraitUpsideDown,
-			LandscapeLeft,			// Bottom of the device is on the left side
-			LandscapeRight			// Bottom of the device is on the right side
+			LandscapeLeft,			// Top of the device is on the left side
+			LandscapeRight			// Top of the device is on the right side
 		};
+        
+        const char* ToString(DeviceOrientation::Enum value);
 	}
 
 	// ============================================================================
@@ -102,6 +104,8 @@ namespace Gdk
 			Charging,
 			Unplugged,
 		};
+        
+        const char* ToString(DeviceBatteryState::Enum value);
 	}
     
 	// ============================================================================
@@ -124,6 +128,8 @@ namespace Gdk
             BeginSeekBackward,
             EndSeekBackward,
 		};
+        
+        const char* ToString(MediaControlActions::Enum value);
 	}
     
 	// ============================================================================
