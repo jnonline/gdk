@@ -143,10 +143,17 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		return 0;
 	}
 
-	// Verify GL 3.3 is supported
-	if (glewIsSupported("GL_VERSION_3_3") == 0)
+	// Verify GL 2.1 is supported
+	if (glewIsSupported("GL_VERSION_2_1") == 0)
 	{
-		MessageBox(g_hWnd, L"OpenGL 3.3 Not Supported", L"OpenGL Init Failed", MB_OK);
+		MessageBox(g_hWnd, L"OpenGL 2.1 Not Supported", L"OpenGL Init Failed", MB_OK);
+		return 0;
+	}
+
+	// Verify the necessary GL extensions are supported
+	if(!GLEW_EXT_framebuffer_object)
+	{
+		MessageBox(g_hWnd, L"OpenGL Framebuffers Extension Not Supported", L"OpenGL Init Failed", MB_OK);
 		return 0;
 	}
 
