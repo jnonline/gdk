@@ -2,8 +2,6 @@
 // Includes
 #include "Tanks3DModule.h"
 
-ModuleRegistration<Tanks3DModule> tankGameModule(L"Tanks 3D", ModuleCategory::Samples);
-
 // ***********************************************************************
 Tanks3DModule::Tanks3DModule ()
 {

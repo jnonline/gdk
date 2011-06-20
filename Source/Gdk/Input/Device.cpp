@@ -71,6 +71,71 @@ const char* PlatformType::ToString(PlatformType::Enum value)
 }
 
 // ===================================================================================
+const char* DeviceOrientation::ToString(DeviceOrientation::Enum value)
+{
+	static const char* portrait = "Portrait";
+	static const char* portraitUpsideDown = "PortraitUpsideDown";
+	static const char* landscapeLeft = "LandscapeLeft";
+	static const char* landscapeRight = "LandscapeRight";
+    
+	switch(value)
+	{
+		case DeviceOrientation::Portrait:               return portrait;
+		case DeviceOrientation::PortraitUpsideDown:		return portraitUpsideDown;
+		case DeviceOrientation::LandscapeLeft:          return landscapeLeft;
+		case DeviceOrientation::LandscapeRight:			return landscapeRight;
+	};
+    
+	return StringUtilities::Unknown;
+}
+
+// ===================================================================================
+const char* DeviceBatteryState::ToString(DeviceBatteryState::Enum value)
+{
+	static const char* charging = "Charging";
+	static const char* unplugged = "Unplugged";
+    
+	switch(value)
+	{
+		case DeviceBatteryState::Charging:      return charging;
+		case DeviceBatteryState::Unplugged:     return unplugged;
+	};
+    
+	return StringUtilities::Unknown;
+}
+
+// ===================================================================================
+const char* MediaControlActions::ToString(MediaControlActions::Enum value)
+{
+	static const char* play = "Play";
+	static const char* pause = "Pause";
+    static const char* stop = "Stop";
+    static const char* togglePlayPause = "TogglePlayPause";
+    static const char* nextTrack = "v";
+    static const char* previousTrack = "PreviousTrack";
+    static const char* beginSeekForward = "BeginSeekForward";
+    static const char* endSeekForward = "EndSeekForward";
+    static const char* beginSeekBackward = "BeginSeekBackward";
+    static const char* endSeekBackward = "EndSeekBackward";
+    
+	switch(value)
+	{
+		case MediaControlActions::Play:                 return play;
+		case MediaControlActions::Pause:                return pause;
+        case MediaControlActions::Stop:                 return stop;
+        case MediaControlActions::TogglePlayPause:      return togglePlayPause;
+        case MediaControlActions::NextTrack:            return nextTrack;
+        case MediaControlActions::PreviousTrack:        return previousTrack;
+        case MediaControlActions::BeginSeekForward:     return beginSeekForward;
+        case MediaControlActions::EndSeekForward:       return endSeekForward;
+        case MediaControlActions::BeginSeekBackward:    return beginSeekBackward;
+        case MediaControlActions::EndSeekBackward:      return endSeekBackward;
+	};
+    
+	return StringUtilities::Unknown;
+}
+
+// ===================================================================================
 bool Device::IsHandheld()
 {
 	return

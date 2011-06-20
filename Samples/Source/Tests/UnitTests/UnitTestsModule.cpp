@@ -2,8 +2,6 @@
 // Includes
 #include "UnitTestsModule.h"
 
-ModuleRegistration<UnitTestsModule> unitTestsModule(L"Unit Tests", ModuleCategory::Tests);
-
 // ***********************************************************************
 UnitTestsModule::UnitTestsModule ()
 {

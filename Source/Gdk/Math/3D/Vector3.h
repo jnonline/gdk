@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GdkLIB.h"
+#include "../2D/Vector2.h"
 
 namespace Gdk
 {
@@ -13,6 +14,7 @@ namespace Gdk
 		// Constructors
 		Vector3 ();
 		Vector3 (float x, float y, float z);
+        Vector3 (const Vector2& xy, float z);
 		Vector3 (const Vector3& input);
 
 		// Asssignment Operator
@@ -35,6 +37,11 @@ namespace Gdk
 		inline Vector3& operator*= (float scalar);
 		inline Vector3& operator/= (float scalar);
 
+        // Vector2 accessor functions
+        inline Vector2 GetXY()    { return Vector2(X,Y); }
+        inline Vector2 GetYZ()    { return Vector2(Y,Z); }
+        inline Vector2 GetXZ()    { return Vector2(X,Z); }
+        
 		// Vector functions
 		inline float Length () const;
 		inline float LengthSquared () const;

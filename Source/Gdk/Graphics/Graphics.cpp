@@ -250,7 +250,7 @@ Vector2 Graphics::ScreenToSymmetric(Vector2 screenCoordinate)
 	// Convert the pixel coordinate to (-1 to 1) symmetric space
 	return Vector2(
 		2.0f * screenCoordinate.X / Application::GetWidth() - 1.0f,
-		2.0f * screenCoordinate.Y / Application::GetHeight() - 1.0f
+		2.0f * (1.0f - screenCoordinate.Y / Application::GetHeight()) - 1.0f
 		);
 }
 

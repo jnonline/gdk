@@ -2,8 +2,6 @@
 // Includes
 #include "Test2DModule.h"
 
-ModuleRegistration<Test2DModule> test2DModule(L"2D Rendering Tests", ModuleCategory::Tests);
-
 // ***********************************************************************
 Test2DModule::Test2DModule()
 {

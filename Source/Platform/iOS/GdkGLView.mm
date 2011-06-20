@@ -84,12 +84,16 @@
     {
         case UIDeviceOrientationPortrait:
             Gdk::Device::Platform_SetDeviceOrientation(Gdk::DeviceOrientation::Portrait);
+            break;
         case UIDeviceOrientationPortraitUpsideDown:
             Gdk::Device::Platform_SetDeviceOrientation(Gdk::DeviceOrientation::PortraitUpsideDown);
+            break;
         case UIDeviceOrientationLandscapeLeft:
             Gdk::Device::Platform_SetDeviceOrientation(Gdk::DeviceOrientation::LandscapeLeft);
+            break;
         case UIDeviceOrientationLandscapeRight:
             Gdk::Device::Platform_SetDeviceOrientation(Gdk::DeviceOrientation::LandscapeRight);
+            break;
     }
            
 }
