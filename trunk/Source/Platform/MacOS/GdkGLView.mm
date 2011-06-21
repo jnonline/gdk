@@ -125,25 +125,6 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
     
     [pixFormat release];
     
-    // Setup input tracking
-    // --------------------
-
-	// Setup the tracking options
-    NSTrackingAreaOptions trackingOptions =
-        NSTrackingEnabledDuringMouseDrag |
-        NSTrackingMouseMoved |
-        NSTrackingMouseEnteredAndExited |
-        NSTrackingActiveAlways |
-        NSTrackingInVisibleRect;
-    
-    // Create a tracking area
-	trackingArea = [[NSTrackingArea alloc]
-                      initWithRect: [self bounds] // in our case track the entire view
-                      options: trackingOptions
-                      owner: self
-                      userInfo: nil];
-	[self addTrackingArea: trackingArea];
-    
     // Done
 	return self;
 }
@@ -164,6 +145,26 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
     int numBytes = wcslen(title) * sizeof(wchar_t);
     NSString* newTitle = [[NSString alloc] initWithBytes:title length:numBytes encoding:NSUTF32LittleEndianStringEncoding];
     [self window].title = newTitle;
+    
+    // Setup input tracking
+    // --------------------
+    
+	// Setup the tracking options
+    NSTrackingAreaOptions trackingOptions =
+        NSTrackingEnabledDuringMouseDrag |
+        NSTrackingMouseMoved |
+        NSTrackingMouseEnteredAndExited |
+        NSTrackingActiveAlways |
+        NSTrackingInVisibleRect;
+        
+    // Create a tracking area
+	trackingArea = [[NSTrackingArea alloc]
+                    initWithRect: [self bounds] // in our case track the entire view
+                    options: trackingOptions
+                    owner: self
+                    userInfo: nil];
+	[self addTrackingArea: trackingArea];
+
 }
 
 // ********************************************************************
@@ -260,10 +261,12 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
     NSRect viewBounds = [self bounds];
     localPoint.y = viewBounds.size.height - localPoint.y;
     
+    // In case the GDK thinks the mouse is outside the app, correct it :D
+    if(Gdk::Mouse::IsMouseOverApp() == false)
+        Gdk::Mouse::Platform_ProcessMouseEnterApp();
+    
     // Pass the mouse move to the GDK
     Gdk::Mouse::Platform_ProcessMouseMove(localPoint.x, localPoint.y);
-    
-    //NSLog(@"MouseMove: %f, %f", localPoint.x, localPoint.y);
 }
 
 // ********************************************************************
@@ -274,7 +277,6 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
         [NSCursor hide];
     
     Gdk::Mouse::Platform_ProcessMouseEnterApp();
-    //NSLog(@"Mouse Enter");
 }
 
 // ********************************************************************
@@ -285,7 +287,6 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
         [NSCursor unhide];
     
     Gdk::Mouse::Platform_ProcessMouseLeaveApp();
-    //NSLog(@"Mouse Leave");
 }
 
 // ********************************************************************
@@ -377,6 +378,20 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
         unichar ch = [chars characterAtIndex:i];
         Gdk::Keyboard::Platform_ProcessChar((wchar_t) ch);
     }
+}
+
+// ********************************************************************
+-(void)flagsChanged:(NSEvent *)theEvent
+{  
+    // Get the GDK key associated with this keyCode
+    unsigned short keyCode = [theEvent keyCode];
+    Gdk::Keys::Enum key = Gdk::Keyboard::Platform_ConvertScanCodeToKey((UInt8)keyCode);
+    
+    // Is this key currently down?
+    if(Gdk::Keyboard::IsKeyDown(key))
+        Gdk::Keyboard::Platform_ProcessKeyUp(key);
+    else
+        Gdk::Keyboard::Platform_ProcessKeyDown(key);
 }
 
 /// Touch Input Handlers
