@@ -69,19 +69,27 @@ void Mouse::Platform_ProcessMouseWheelScroll(float deltaX, float deltaY)
 // ***********************************************************************
 void Mouse::Platform_ProcessMouseEnterApp()
 {
-	mouseIsOverApp = true;
+    // Are we not currently in the app?
+    if(mouseIsOverApp == false)
+    {
+        mouseIsOverApp = true;
 
-	// Call the event
-	MouseEnter.Invoke();
+        // Call the event
+        MouseEnter.Invoke();
+    }
 }
 
 // ***********************************************************************
 void Mouse::Platform_ProcessMouseLeaveApp()
 {
-	mouseIsOverApp = false;
+    // Are we currently in the app?
+    if(mouseIsOverApp == true)
+    {
+        mouseIsOverApp = false;
 
-	// Call the event
-	MouseLeave.Invoke();
+        // Call the event
+        MouseLeave.Invoke();
+    }
 }
 
 

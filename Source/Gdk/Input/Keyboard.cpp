@@ -418,12 +418,12 @@ void Keyboard::InitScanCodeToKeyTable()
     scanCodeToKeyTable[kVK_Option]          = (UInt8) Keys::LeftAlt;
     scanCodeToKeyTable[kVK_RightOption]     = (UInt8) Keys::RightAlt;
     scanCodeToKeyTable[kVK_Command]         = (UInt8) Keys::LeftGUI;
-    //scanCodeToKeyTable[kVK_Command]        = (UInt8) Keys::RightGUI;
+    scanCodeToKeyTable[0x36]                = (UInt8) Keys::RightGUI;
     scanCodeToKeyTable[kVK_Function]        = (UInt8) Keys::Function;
     
     // KB State / Lock buttons
     scanCodeToKeyTable[kVK_CapsLock]        = (UInt8) Keys::CapsLock;
-    //scanCodeToKeyTable[]                  = (UInt8) Keys::NumLock;
+    scanCodeToKeyTable[kVK_ANSI_KeypadClear]= (UInt8) Keys::NumLock;
     scanCodeToKeyTable[kVK_F13]             = (UInt8) Keys::ScrollLock;         // On some MAC Keyboards, F13 functions as the scroll lock
     
     // Editing      
@@ -437,7 +437,7 @@ void Keyboard::InitScanCodeToKeyTable()
     scanCodeToKeyTable[kVK_PageDown]        = (UInt8) Keys::PageDown;
     scanCodeToKeyTable[kVK_End]             = (UInt8) Keys::End;
     scanCodeToKeyTable[kVK_Home]            = (UInt8) Keys::Home;
-    //scanCodeToKeyTable[]                  = (UInt8) Keys::Insert;
+    scanCodeToKeyTable[kVK_Help]            = (UInt8) Keys::Insert;
     scanCodeToKeyTable[kVK_ForwardDelete]   = (UInt8) Keys::Delete;
     
     // Directional Pad
