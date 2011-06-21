@@ -944,6 +944,18 @@
 							>
 						</File>
 					</Filter>
+					<Filter
+						Name="Input"
+						>
+						<File
+							RelativePath="..\..\Source\Tests\Input\InputTests.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Source\Tests\Input\InputTests.h"
+							>
+						</File>
+					</Filter>
 				</Filter>
 			</Filter>
 		</Filter>

@@ -5,8 +5,6 @@
 #include "../Math/2D/Vector2.h"
 #include "../System/Delegates.h"
 
-#define GDK_MOUSE_MAX_MICE 4
-
 namespace Gdk
 {
 	// ============================================================================
@@ -93,6 +91,7 @@ namespace Gdk
 		static MouseWheelEventHandler	MouseWheelScroll;
 		static MouseEventHandler		MouseEnter;
 		static MouseEventHandler		MouseLeave;
+
 	};
 
 } // namespace Gdk

@@ -7,7 +7,10 @@ InputTestsModule::InputTestsModule()
 {
     shakingTimer = 0.0f;
     
-    // Bind to events from the touch input system
+	// Bind to mouse events
+	Mouse::MouseWheelScroll.AddHandlerMethod(this, &InputTestsModule::OnWheelScroll);
+
+    // Bind to touch events
     TouchInput::TouchBegan.AddHandlerMethod(this, &InputTestsModule::OnTouchBegan);
     TouchInput::TouchEnded.AddHandlerMethod(this, &InputTestsModule::OnTouchEnded);
     
@@ -22,7 +25,10 @@ InputTestsModule::InputTestsModule()
 // ***********************************************************************
 InputTestsModule::~InputTestsModule()
 {
-    // Un-Bind from the touch events
+	// Un-Bind mouse events
+	Mouse::MouseWheelScroll.RemoveHandlerMethod(this, &InputTestsModule::OnWheelScroll);
+
+    // Un-Bind touch events
     TouchInput::TouchBegan.RemoveHandlerMethod(this, &InputTestsModule::OnTouchBegan);
     TouchInput::TouchEnded.RemoveHandlerMethod(this, &InputTestsModule::OnTouchEnded);
     
@@ -278,6 +284,15 @@ void InputTestsModule::DrawMouseButtonStatusBox(MouseButton::Enum button, Rectan
 }
 
 // ***********************************************************************
+void InputTestsModule::OnWheelScroll(float deltaX, float deltaY)
+{
+	// Write a log entry for this event
+	wchar_t temp[64];
+	swprintf(temp, 64, L"Mouse Wheel Scroll: %.3f%", deltaY);
+    WriteLog(temp, Color(80,224,224));
+}
+
+// ***********************************************************************
 void InputTestsModule::OnTouchBegan(Gdk::Touch *touch)
 {
     // Add a log entry for this touch event
@@ -295,7 +310,7 @@ void InputTestsModule::OnTouchEnded(Gdk::Touch *touch)
 void InputTestsModule::OnShakingBegan()
 {
     // Add a log entry for this touch event
-    WriteLog(L"Shaking Began", Color(200,80,80));
+    WriteLog(L"Shaking Began", Color(224,120,80));
     shakingTimer = 0.21f;   // Continue displaying the 'shaking' effect for a bit of time
 }
 
@@ -303,7 +318,7 @@ void InputTestsModule::OnShakingBegan()
 void InputTestsModule::OnShakingEnded()
 {
     // Add a log entry for this touch event
-    WriteLog(L"Shaking Ended", Color(200,80,80));
+    WriteLog(L"Shaking Ended", Color(224,120,80));
 }
 
 // ***********************************************************************
