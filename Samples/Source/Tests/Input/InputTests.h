@@ -36,6 +36,7 @@ protected:
 	
     // Mouse Utilities
     void DrawMouseButtonStatusBox(MouseButton::Enum button, Rectangle2 rect, wchar_t* name);
+	void OnWheelScroll(float deltaX, float deltaY);
     
     // Touch Utilities
     void OnTouchBegan(Touch* touch);
