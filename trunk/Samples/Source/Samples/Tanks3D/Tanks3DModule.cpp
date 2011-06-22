@@ -144,9 +144,9 @@ void Tanks3DModule::OnUpdate(float elapsedSeconds)
 }
 
 // ***********************************************************************
-void Tanks3DModule::OnMouseMove(int x, int y)
+void Tanks3DModule::OnMouseMove(MouseMoveArgs* args)
 {
-    chopper->Position = Vector2((float)x, (float)y);
+    chopper->Position = Vector2((float)args->NewX, (float)args->NewY);
 }
 
 // ***********************************************************************

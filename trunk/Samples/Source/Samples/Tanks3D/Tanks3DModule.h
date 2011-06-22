@@ -23,7 +23,7 @@ public:
 protected:
     
     // Event Handlers
-    void OnMouseMove(int x, int y);
+    void OnMouseMove(MouseMoveArgs* args);
     
 	// Gameplay Assets
 	// --------------------
