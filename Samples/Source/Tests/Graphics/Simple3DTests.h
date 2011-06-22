@@ -1,3 +1,7 @@
+/* 
+ * Copyright (c) 2011, Raincity Games LLC
+ * Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
+ */
 
 #pragma once
 
@@ -17,19 +21,20 @@ public:
 	virtual void OnDraw();
 
 protected:
-	// View
-	Vector2 ViewCenter;
-	Vector2 ViewExtents;
     
-	// Animation timers
-    float totalElapsedSeconds;
-	float rectTimer;
-	float circleTimer;
-	float diamondTimer;
-	float textScaleTimer;
-	float textSpinTimer;
-
-	Sprite* sprite1;
-	Sprite* sprite2;
-
+	// Camera/View properties
+    float viewLongitudeAngle;
+    float viewLatitudeAngle;
+    float viewDistance;
+    
+    // calculated camera values
+    Vector3 cameraPosition;
+    Vector3 cameraLookAt;
+    Vector3 cameraDirection;
+    Matrix3D projection;
+    Matrix3D view;
+    
+	// Input event handlers
+    void OnTouchMoved(Touch* touch);
+    void OnMouseMoved(MouseMoveArgs* args);
 };
