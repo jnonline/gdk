@@ -56,12 +56,7 @@
 // ****************************************************************************
 -(void) queueNextUpdateLoop
 {
-    [[NSRunLoop mainRunLoop] performSelector:@selector(updateLoop) 
-                             target:self 
-                             argument:nil 
-                             order:1 
-                             modes:[NSArray arrayWithObject:NSDefaultRunLoopMode] ];
-    
+    [self performSelectorOnMainThread:@selector(updateLoop) withObject:nil waitUntilDone:NO];
 }
 
 // ****************************************************************************
@@ -132,66 +127,6 @@
         [EAGLContext setCurrentContext:nil];
 	self.context = nil;	
 }
-
-/*
-// ****************************************************************************
-- (NSInteger)animationFrameInterval
-{
-    return animationFrameInterval;
-}
-
-// ****************************************************************************
-- (void)setAnimationFrameInterval:(NSInteger)frameInterval
-{
-    
-	// Frame interval defines how many display frames must pass between each time the display link fires.
-	// The display link will only fire 30 times a second when the frame internal is two on a display that refreshes 60 times a second
-    // The default frame interval setting of one will fire 60 times a second when the display refreshes at 60 times a second. A frame
-    // interval setting of less than one results in undefined behavior.
-    
-    if (frameInterval >= 1) 
-    {
-        animationFrameInterval = frameInterval;
-        
-        if (animating) 
-        {
-            [self stopAnimation];
-            [self startAnimation];
-        }
-    }
-}
-
-// ****************************************************************************
-- (void)startAnimation
-{
-    // Make sure we arent currently animating
-    if (!animating) 
-    {
-        // Get a DisplayLink from the main UI screen
-        CADisplayLink *aDisplayLink = [[UIScreen mainScreen] displayLinkWithTarget:self selector:@selector(drawFrame)];
-        
-        // Setup the display link
-        [aDisplayLink setFrameInterval:animationFrameInterval];
-        [aDisplayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-        self.displayLink = aDisplayLink;
-        
-        animating = TRUE;
-    }
-}
-
-// ****************************************************************************
-- (void)stopAnimation
-{
-    // Make sure we are currently animating
-    if (animating) 
-    {
-        // Release our DisplayLink
-        [self.displayLink invalidate];
-        self.displayLink = nil;
-        animating = FALSE;
-    }
-}
- */
 
 // ****************************************************************************
 - (void)startUpdateLoop

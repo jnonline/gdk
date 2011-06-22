@@ -13,7 +13,6 @@
 		D004C1EA13AC898100797055 /* Module.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D004C1D913AC898100797055 /* Module.cpp */; };
 		D004C1EB13AC898100797055 /* SampleGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D004C1DB13AC898100797055 /* SampleGame.cpp */; };
 		D004C1EC13AC898100797055 /* Tanks3DModule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D004C1DF13AC898100797055 /* Tanks3DModule.cpp */; };
-		D004C1ED13AC898100797055 /* Test2DModule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D004C1E313AC898100797055 /* Test2DModule.cpp */; };
 		D004C1EE13AC898100797055 /* TestMath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D004C1E613AC898100797055 /* TestMath.cpp */; };
 		D004C1EF13AC898100797055 /* TestSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D004C1E713AC898100797055 /* TestSystem.cpp */; };
 		D004C1F013AC898100797055 /* UnitTestsModule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D004C1E813AC898100797055 /* UnitTestsModule.cpp */; };
@@ -97,6 +96,8 @@
 		D004C32013AED3F000797055 /* InputTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D004C31E13AED3F000797055 /* InputTests.cpp */; };
 		D00663A813A025AF00981CC2 /* libz.1.2.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D00663A713A025AF00981CC2 /* libz.1.2.3.dylib */; };
 		D06312F413A81BC100BCB383 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D06312F313A81BC100BCB383 /* IOKit.framework */; };
+		D0C8121B13B290CB0091274F /* Simple2DTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0C8121713B290CB0091274F /* Simple2DTests.cpp */; };
+		D0C8121C13B290CB0091274F /* Simple3DTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0C8121913B290CB0091274F /* Simple3DTests.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -113,8 +114,6 @@
 		D004C1DC13AC898100797055 /* SampleGame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SampleGame.h; sourceTree = "<group>"; };
 		D004C1DF13AC898100797055 /* Tanks3DModule.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Tanks3DModule.cpp; sourceTree = "<group>"; };
 		D004C1E013AC898100797055 /* Tanks3DModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tanks3DModule.h; sourceTree = "<group>"; };
-		D004C1E313AC898100797055 /* Test2DModule.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Test2DModule.cpp; sourceTree = "<group>"; };
-		D004C1E413AC898100797055 /* Test2DModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Test2DModule.h; sourceTree = "<group>"; };
 		D004C1E613AC898100797055 /* TestMath.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestMath.cpp; sourceTree = "<group>"; };
 		D004C1E713AC898100797055 /* TestSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestSystem.cpp; sourceTree = "<group>"; };
 		D004C1E813AC898100797055 /* UnitTestsModule.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UnitTestsModule.cpp; sourceTree = "<group>"; };
@@ -284,6 +283,10 @@
 		D004C31F13AED3F000797055 /* InputTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InputTests.h; sourceTree = "<group>"; };
 		D00663A713A025AF00981CC2 /* libz.1.2.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.2.3.dylib; path = usr/lib/libz.1.2.3.dylib; sourceTree = SDKROOT; };
 		D06312F313A81BC100BCB383 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		D0C8121713B290CB0091274F /* Simple2DTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Simple2DTests.cpp; sourceTree = "<group>"; };
+		D0C8121813B290CB0091274F /* Simple2DTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Simple2DTests.h; sourceTree = "<group>"; };
+		D0C8121913B290CB0091274F /* Simple3DTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Simple3DTests.cpp; sourceTree = "<group>"; };
+		D0C8121A13B290CB0091274F /* Simple3DTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Simple3DTests.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -405,20 +408,11 @@
 		D004C1E113AC898100797055 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				D0C8121613B290CB0091274F /* Graphics */,
 				D004C31D13AED3F000797055 /* Input */,
-				D004C1E213AC898100797055 /* Test2D */,
 				D004C1E513AC898100797055 /* UnitTests */,
 			);
 			path = Tests;
-			sourceTree = "<group>";
-		};
-		D004C1E213AC898100797055 /* Test2D */ = {
-			isa = PBXGroup;
-			children = (
-				D004C1E313AC898100797055 /* Test2DModule.cpp */,
-				D004C1E413AC898100797055 /* Test2DModule.h */,
-			);
-			path = Test2D;
 			sourceTree = "<group>";
 		};
 		D004C1E513AC898100797055 /* UnitTests */ = {
@@ -760,6 +754,17 @@
 			path = Input;
 			sourceTree = "<group>";
 		};
+		D0C8121613B290CB0091274F /* Graphics */ = {
+			isa = PBXGroup;
+			children = (
+				D0C8121713B290CB0091274F /* Simple2DTests.cpp */,
+				D0C8121813B290CB0091274F /* Simple2DTests.h */,
+				D0C8121913B290CB0091274F /* Simple3DTests.cpp */,
+				D0C8121A13B290CB0091274F /* Simple3DTests.h */,
+			);
+			path = Graphics;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -846,7 +851,6 @@
 				D004C1EA13AC898100797055 /* Module.cpp in Sources */,
 				D004C1EB13AC898100797055 /* SampleGame.cpp in Sources */,
 				D004C1EC13AC898100797055 /* Tanks3DModule.cpp in Sources */,
-				D004C1ED13AC898100797055 /* Test2DModule.cpp in Sources */,
 				D004C1EE13AC898100797055 /* TestMath.cpp in Sources */,
 				D004C1EF13AC898100797055 /* TestSystem.cpp in Sources */,
 				D004C1F013AC898100797055 /* UnitTestsModule.cpp in Sources */,
@@ -923,6 +927,8 @@
 				D004C2FA13AC899D00797055 /* main.mm in Sources */,
 				D004C2FC13AC899D00797055 /* PlatformImpl.mm in Sources */,
 				D004C32013AED3F000797055 /* InputTests.cpp in Sources */,
+				D0C8121B13B290CB0091274F /* Simple2DTests.cpp in Sources */,
+				D0C8121C13B290CB0091274F /* Simple3DTests.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
