@@ -25,7 +25,7 @@ Create the project
      - Param 1:   Path to your new project..  can be absolute or relative (IE: ../MonkeyFight)
      - Param 2:   Name of your Game Project.  Must be alphanumeric and not contain any spaces. like a standard C++ identifier  (IE: MonkeyFight)
 	
-    Example:   CreateNewProject-MAC  "../MonkeyFight"  MonkeyFight	
+    Example:   ./CreateNewProject-MAC.sh  "../MonkeyFight"  MonkeyFight	
 
 
 Building & Running
