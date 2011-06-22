@@ -1,8 +1,7 @@
-//
-// WinMain & Window classes and code for a Windows based GDK application.
-//
-// WARNING: NO NOT EDIT this file directly for creating a game.
-//
+/* 
+ * Copyright (c) 2011, Raincity Games LLC
+ * Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
+ */
 
 
 // Includes

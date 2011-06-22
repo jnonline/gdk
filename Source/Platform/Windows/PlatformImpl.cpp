@@ -1,8 +1,8 @@
-//
-// PlatformImpl.cpp - Contains implementations of platform-specific GDK interfaces
-//
-// WARNING: NO NOT EDIT this file directly for creating a game.
-//
+/* 
+ * Copyright (c) 2011, Raincity Games LLC
+ * Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
+ */
+
 
 // Includes
 #include "BasePCH.h"
