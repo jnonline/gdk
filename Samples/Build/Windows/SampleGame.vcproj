@@ -933,14 +933,22 @@
 						</File>
 					</Filter>
 					<Filter
-						Name="Test2D"
+						Name="Graphics"
 						>
 						<File
-							RelativePath="..\..\Source\Tests\Test2D\Test2DModule.cpp"
+							RelativePath="..\..\Source\Tests\Graphics\Simple2DTests.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\..\Source\Tests\Test2D\Test2DModule.h"
+							RelativePath="..\..\Source\Tests\Graphics\Simple2DTests.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Source\Tests\Graphics\Simple3DTests.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Source\Tests\Graphics\Simple3DTests.h"
 							>
 						</File>
 					</Filter>
