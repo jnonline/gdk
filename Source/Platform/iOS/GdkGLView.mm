@@ -31,6 +31,10 @@
     self = [super initWithCoder:coder];
 	if (self) 
     {
+        // Setup our scale (to handle retina displays)
+        CGFloat screenScale = [[UIScreen mainScreen] scale];
+        [self setContentScaleFactor:screenScale];
+        
         // Get the GLLayer
         CAEAGLLayer *eaglLayer = (CAEAGLLayer *)self.layer;
         
@@ -246,7 +250,7 @@
 // ****************************************************************************
 -(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    NSLog(@"Touch Began");
+    //NSLog(@"Touch Began");
     
     float scaleFactor = [self contentScaleFactor];
     
@@ -288,7 +292,7 @@
 // ****************************************************************************
 -(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    NSLog(@"Touch Ended");
+    //NSLog(@"Touch Ended");
     
     float scaleFactor = [self contentScaleFactor];
     
@@ -310,7 +314,7 @@
 // ****************************************************************************
 -(void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    NSLog(@"Touch Cancelled");
+    //NSLog(@"Touch Cancelled");
     
     float scaleFactor = [self contentScaleFactor];
     

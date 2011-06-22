@@ -9,8 +9,9 @@
 
 #include "Samples/Tanks3D/Tanks3DModule.h"
 
-#include "Tests/Test2D/Test2DModule.h"
 #include "Tests/Input/InputTests.h"
+#include "Tests/Graphics/Simple2DTests.h"
+#include "Tests/Graphics/Simple3DTests.h"
 #include "Tests/UnitTests/UnitTestsModule.h"
 
 
@@ -27,7 +28,8 @@ void Module::Init()
 
     // Tests
     RegisterModule<InputTestsModule>(L"Input Tests", ModuleCategory::Tests);
-    RegisterModule<Test2DModule>(L"2D Rendering Tests", ModuleCategory::Tests);
+    RegisterModule<Simple2DTests>(L"Simple 2D Tests", ModuleCategory::Tests);
+    RegisterModule<Simple3DTests>(L"Simple 3D Tests", ModuleCategory::Tests);
     RegisterModule<UnitTestsModule>(L"Unit Tests", ModuleCategory::Tests);
 }
 
