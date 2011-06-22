@@ -205,6 +205,9 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 // ********************************************************************
 - (void) dealloc
 {	
+    // Release the display link
+	CVDisplayLinkRelease(displayLink);
+    
     // Shutdown the GDK Game
     Gdk::Application::Platform_ShutdownGame();
 	
@@ -215,9 +218,6 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 		[trackingArea release];
 		trackingArea = nil;
 	}    
-    
-	// Release the display link
-	CVDisplayLinkRelease(displayLink);
     
 	[super dealloc];
 }
