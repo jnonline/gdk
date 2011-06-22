@@ -1,3 +1,9 @@
+/* 
+ * Copyright (c) 2011, Raincity Games LLC
+ * Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
+ */
+
+
 //
 // DelegateX:			Encapsulation class for a function point or class method pointer
 // MulticastDelegateX:  Encapsulates binding of multiple delegates

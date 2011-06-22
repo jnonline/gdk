@@ -1,6 +1,5 @@
 
 
-
 ---	Process for resizing:
 
 	Window Drag:
