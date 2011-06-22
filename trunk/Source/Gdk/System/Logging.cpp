@@ -68,14 +68,18 @@ void Log::Write(LogLevel::Enum logLevel, const char* file, int line, const wchar
 		// Add the custom message to the log  (using variable args)
 		va_list args;
 		va_start (args, format);
-		offset = offset + vswprintf(offset, 2048, format, args);
+		int charsWritten2 = vswprintf(offset, 2048, format, args);
 		va_end (args);
+        offset += charsWritten2;
 
 		// Is there a file & line number?
+        int charsWritten3 = 0;
 		if(file != NULL)
-			offset = offset + swprintf(offset, 2048, L"  [File: %hs][Line: %d]\n", file, line);
+			charsWritten3 = swprintf(offset, 2048, L"  [File: %hs][Line: %d]\n", file, line);
 		else // No file & line
-			offset = offset + swprintf(offset, 2048, L"\n");
+			charsWritten3 = swprintf(offset, 2048, L"\n");
+        
+        offset += charsWritten3;
 
 		// For errors & warnings, put the message in the debug output
 		if( logLevel <= LogLevel::Info )

@@ -138,7 +138,7 @@ void InputTestsModule::OnDraw()
     // Get all the active touches
     vector<Touch>& touches = TouchInput::GetAllTouches();
     
-    // Draw a string for the number of active touches
+    // Display the number of active touches
     swprintf(temp, 256, L"Active Touches: %d", touches.size());
     Renderer2D::DrawText(SharedAssets::Fonts.Arial20, temp, Vector2(0.0f, 2.8f), Color(255,224,160), Vector2(0.04f, -0.04f));
     
@@ -195,7 +195,7 @@ void InputTestsModule::OnDraw()
     Renderer2D::DrawText(SharedAssets::Fonts.Arial20, temp, Vector2(-9.8f, -2.4f), Color(255,224,160), Vector2(0.03f, -0.03f));
     
     // Display the battery state
-    swprintf(temp, 256, L"Battery: %hs (%d%)", 
+    swprintf(temp, 256, L"Battery: %hs (%d%%)", 
         DeviceBatteryState::ToString(Device::GetBatteryState()), 
         (int)(Device::GetBatteryLevel() * 100.0f)
         );

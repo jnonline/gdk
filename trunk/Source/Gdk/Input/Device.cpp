@@ -21,12 +21,9 @@ const char* DeviceType::ToString(DeviceType::Enum value)
 {
 	static const char* pc = "PC";
 	static const char* web = "Web";
-	static const char* iPad1 = "iPad1";
-	static const char* iPad2 = "iPad2";
-	static const char* iPhone3GS = "iPhone3GS";
-	static const char* iPhone4 = "iPhone4";
-	static const char* iPod3 = "iPod3";
-	static const char* iPod4 = "iPod4";
+	static const char* iPad = "iPad";
+	static const char* iPhone = "iPhone";
+	static const char* iPodTouch = "iPodTouch";
 	static const char* androidPhone = "AndroidPhone";
 	static const char* androidTablet = "AndroidTablet";
 
@@ -34,12 +31,9 @@ const char* DeviceType::ToString(DeviceType::Enum value)
 	{
 		case DeviceType::PC:				return pc;
 		case DeviceType::Web:				return web;
-		case DeviceType::iPad1:				return iPad1;
-		case DeviceType::iPad2:				return iPad2;
-		case DeviceType::iPhone3GS:			return iPhone3GS;
-		case DeviceType::iPhone4:			return iPhone4;
-		case DeviceType::iPod3:				return iPod3;
-		case DeviceType::iPod4:				return iPod4;
+		case DeviceType::iPad:				return iPad;
+		case DeviceType::iPhone:			return iPhone;
+		case DeviceType::iPodTouch:			return iPodTouch;
 		case DeviceType::AndroidPhone:		return androidPhone;
 		case DeviceType::AndroidTablet:		return androidTablet;
 	};
@@ -139,10 +133,8 @@ const char* MediaControlActions::ToString(MediaControlActions::Enum value)
 bool Device::IsHandheld()
 {
 	return
-		deviceType == DeviceType::iPhone3GS ||
-		deviceType == DeviceType::iPhone4 ||
-		deviceType == DeviceType::iPod3 ||
-		deviceType == DeviceType::iPod4 ||
+		deviceType == DeviceType::iPhone ||
+		deviceType == DeviceType::iPodTouch ||
 		deviceType == DeviceType::AndroidPhone;
 }
 
@@ -150,8 +142,7 @@ bool Device::IsHandheld()
 bool Device::IsTablet()
 {
 	return 
-		deviceType == DeviceType::iPad1 ||
-		deviceType == DeviceType::iPad2 ||
+		deviceType == DeviceType::iPad ||
 		deviceType == DeviceType::AndroidTablet;
 }
 
