@@ -34,7 +34,7 @@
     // Tell the Gdk about the suspension
     Gdk::Application::Platform_OnSuspend();
     
-    [self.viewController stopAnimation];
+    [self.viewController stopUpdateLoop];
 }
 
 // ****************************************************************************
@@ -64,7 +64,7 @@
     // Tell the Gdk about the resume
     Gdk::Application::Platform_OnResume();
     
-    [self.viewController startAnimation];
+    [self.viewController startUpdateLoop];
 }
 
 // ****************************************************************************
@@ -75,7 +75,7 @@
      Save data if appropriate.
      See also applicationDidEnterBackground:.
      */
-    [self.viewController stopAnimation];
+    [self.viewController stopUpdateLoop];
 }
 
 // ****************************************************************************

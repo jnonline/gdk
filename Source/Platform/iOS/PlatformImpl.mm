@@ -113,35 +113,24 @@ void _Gdk_Platform_Mouse_SetPosition(int x, int y)
 Gdk::DeviceType::Enum _Gdk_Platform_Device_GetDeviceType()
 {
 	// Determine the device type!
-	NSString* deviceModel = [[UIDevice currentDevice] model];
+    UIDevice* device = [UIDevice currentDevice];
+	NSString* deviceModel = [device model];
     
-    // iPhones
-    if([deviceModel isEqualToString:IPHONE_3_NAMESTRING])
-        return DeviceType::iPhone3GS;
-    else if([deviceModel isEqualToString:IPHONE_4_NAMESTRING])
-        return DeviceType::iPhone4;
+    // iPhone
+    if([deviceModel isEqualToString:@"iPhone"] || [deviceModel isEqualToString:@"iPhone Simulator"])
+        return DeviceType::iPhone;
+       
+    // iPod Touch
+    else if([deviceModel isEqualToString:@"iPod touch"] || [deviceModel isEqualToString:@"iPod Touch"])
+        return DeviceType::iPodTouch;
     
-    // iPods
-    else if([deviceModel isEqualToString:IPOD_3_NAMESTRING])
-        return DeviceType::iPod3;
-    else if([deviceModel isEqualToString:IPOD_4_NAMESTRING])
-        return DeviceType::iPod4;
-    
-    // iPads
-    else if([deviceModel isEqualToString:IPAD_1_NAMESTRING])
-        return DeviceType::iPad1;
-    else if([deviceModel isEqualToString:IPAD_2_NAMESTRING])
-        return DeviceType::iPad2;
-    
-    // Simulators
-    else if([deviceModel isEqualToString:SIMULATOR_IPHONE_NAMESTRING])
-        return DeviceType::iPhone4;
-    else if([deviceModel isEqualToString:SIMULATOR_IPAD_NAMESTRING])
-        return DeviceType::iPad2;
+    // iPad
+    else if([deviceModel isEqualToString:@"iPad"] || [deviceModel isEqualToString:@"iPad Simulator"])
+        return DeviceType::iPad;
 
  
-    NSLog(@"GDK WARNING!!!!  Unrecognized iOS device %@.  [defaulting as iPhone 4]", deviceModel);
-    return DeviceType::iPhone4;  // Fallback to iPhone 4
+    NSLog(@"GDK WARNING!!!!  Unrecognized iOS device %@.  [defaulting as iPhone]", deviceModel);
+    return DeviceType::iPhone;  // Fallback to iPhone 4
 }
 
 // ***************************************************************

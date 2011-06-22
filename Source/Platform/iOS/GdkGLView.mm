@@ -53,6 +53,12 @@
 }
 
 // ****************************************************************************
+-(void) awakeFromNib
+{
+    
+}
+
+// ****************************************************************************
 -(BOOL) canBecomeFirstResponder
 {
     return YES;
@@ -239,6 +245,8 @@
 // ****************************************************************************
 -(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
+    NSLog(@"Touch Began");
+    
     float scaleFactor = [self contentScaleFactor];
     
     // Enumerate through the touches
@@ -279,6 +287,8 @@
 // ****************************************************************************
 -(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
+    NSLog(@"Touch Ended");
+    
     float scaleFactor = [self contentScaleFactor];
     
     // Enumerate through the touches
@@ -299,6 +309,8 @@
 // ****************************************************************************
 -(void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
 {
+    NSLog(@"Touch Cancelled");
+    
     float scaleFactor = [self contentScaleFactor];
     
     // Enumerate through the touches

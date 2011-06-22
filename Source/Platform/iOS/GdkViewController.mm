@@ -11,12 +11,11 @@
 
 @interface GdkViewController ()
 @property (nonatomic, retain) EAGLContext *context;
-@property (nonatomic, assign) CADisplayLink *displayLink;
 @end
 
 @implementation GdkViewController
 
-@synthesize animating, context, displayLink;
+@synthesize updateLoopEnabled, context;
 
 // ****************************************************************************
 - (void)awakeFromNib
@@ -40,9 +39,7 @@
     [glView ensureGLContextReady];
     
     // Start with animation/updating disabled
-    animating = FALSE;
-    animationFrameInterval = 1;
-    self.displayLink = nil;
+    updateLoopEnabled = false;
     
     // Turn on remote control events
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
@@ -52,6 +49,17 @@
     
     // Init the GDK Graphics & Game
     Gdk::Application::Platform_InitGame();
+}
+
+// ****************************************************************************
+-(void) queueNextUpdateLoop
+{
+    [[NSRunLoop mainRunLoop] performSelector:@selector(updateLoop) 
+                             target:self 
+                             argument:nil 
+                             order:1 
+                             modes:[NSArray arrayWithObject:NSDefaultRunLoopMode] ];
+    
 }
 
 // ****************************************************************************
@@ -94,8 +102,8 @@
     // The view is becoming active
     Gdk::Application::Platform_OnActive();
 
-    // Start the animation cycle
-    [self startAnimation];
+    // Start the update loop
+    [self startUpdateLoop];
     
     [super viewWillAppear:animated];
 }
@@ -107,7 +115,7 @@
     Gdk::Application::Platform_OnDeactive();
     
     // Stop the animation cycle 
-    [self stopAnimation];
+    [self stopUpdateLoop];
     
     [super viewWillDisappear:animated];
 }
@@ -123,6 +131,7 @@
 	self.context = nil;	
 }
 
+/*
 // ****************************************************************************
 - (NSInteger)animationFrameInterval
 {
@@ -132,10 +141,12 @@
 // ****************************************************************************
 - (void)setAnimationFrameInterval:(NSInteger)frameInterval
 {
-    /*
-	 Frame interval defines how many display frames must pass between each time the display link fires.
-	 The display link will only fire 30 times a second when the frame internal is two on a display that refreshes 60 times a second. The default frame interval setting of one will fire 60 times a second when the display refreshes at 60 times a second. A frame interval setting of less than one results in undefined behavior.
-	 */
+    
+	// Frame interval defines how many display frames must pass between each time the display link fires.
+	// The display link will only fire 30 times a second when the frame internal is two on a display that refreshes 60 times a second
+    // The default frame interval setting of one will fire 60 times a second when the display refreshes at 60 times a second. A frame
+    // interval setting of less than one results in undefined behavior.
+    
     if (frameInterval >= 1) 
     {
         animationFrameInterval = frameInterval;
@@ -178,12 +189,42 @@
         animating = FALSE;
     }
 }
+ */
 
 // ****************************************************************************
-- (void)drawFrame
+- (void)startUpdateLoop
 {
-    // This is the Main Update loop method that is kicked by the DisplayLink (every screen refresh (60 hz))
-    //
+    // Is the update loop not currently enabled?
+    if (updateLoopEnabled == false) 
+    {
+        // Start up the update loop
+        updateLoopEnabled = true;
+        [self queueNextUpdateLoop];
+    }
+}
+
+// ****************************************************************************
+- (void)stopUpdateLoop
+{
+    // Is the update loop currently enabled?
+    if (updateLoopEnabled) 
+    {
+        // Stop the update loop
+        updateLoopEnabled = false;
+        [[NSRunLoop mainRunLoop] cancelPerformSelector:@selector(updateLoop) target:self argument:nil];
+    }
+}
+
+
+// ****************************************************************************
+- (void)updateLoop
+{
+    // Pump the event loop
+    while(CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0, TRUE) == kCFRunLoopRunHandledSource);
+    
+    // Make sure the update loop is enabled
+    if(updateLoopEnabled == false)
+        return;
     
     // Setup GL Context
     [(GdkGLView *)self.view ensureGLContextReady];
@@ -193,6 +234,9 @@
     
     // Present the frame buffer
     [(GdkGLView *)self.view presentFramebuffer];
+    
+    // Queue up the next update loop
+    [self queueNextUpdateLoop];
 }
 
 

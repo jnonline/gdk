@@ -55,7 +55,7 @@ double HighResTimer::GetSeconds()
 #endif
 
 // ===================================================================================
-#ifdef __LINUX__
+#ifdef GDKPLATFORM_LINUX
 
 double HighResTimer::GetSeconds()
 {

@@ -13,17 +13,13 @@
 @interface GdkViewController : UIViewController {
 @private
     EAGLContext *context;
-    GLuint program;
-    
-    BOOL animating;
-    NSInteger animationFrameInterval;
-    CADisplayLink *displayLink;
+    bool updateLoopEnabled;
 }
 
-@property (readonly, nonatomic, getter=isAnimating) BOOL animating;
-@property (nonatomic) NSInteger animationFrameInterval;
+@property (readonly, nonatomic, getter=isUpdateLoopEnabled) bool updateLoopEnabled;
 
-- (void)startAnimation;
-- (void)stopAnimation;
+- (void)queueNextUpdateLoop;
+- (void)startUpdateLoop;
+- (void)stopUpdateLoop;
 
 @end
