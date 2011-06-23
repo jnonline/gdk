@@ -89,13 +89,12 @@ void Application::Update(float elapsedSeconds)
     if(DebugStatsVisible == true)
     {
 		// Setup a 2D projection matrix to draw in screen coordinates
-		Matrix3D proj;
         int w = Application::GetWidth();
         int h = Application::GetHeight();
-		proj.OrthoOffCenter(
-			0, (float) w,					// left / right
-			(float) h, 0,				// bottom / top
-			-1.0f, 1.0f											// far / near
+		Matrix3D proj = Matrix3D::CreateOrthoOffCenter(
+			0, (float) w,	// left / right
+			(float) h, 0,	// bottom / top
+			-1.0f, 1.0f		// far / near
 			);
 		Graphics::GlobalUniforms.Projection->SetMatrix4(proj);
 

@@ -23,6 +23,9 @@ Simple3DTests::Simple3DTests()
 // ***********************************************************************
 Simple3DTests::~Simple3DTests()
 {
+    // UnBind to input events
+    TouchInput::TouchMoved.RemoveHandlerMethod(this, &Simple3DTests::OnTouchMoved);
+    Mouse::MouseMove.RemoveHandlerMethod(this, &Simple3DTests::OnMouseMoved);
 }
 
 // ***********************************************************************
@@ -43,16 +46,14 @@ void Simple3DTests::OnUpdate(float elapsedSeconds)
     cameraDirection.Normalize();
     
     // Calculate the projection matrix
-	projection.MakeIdentity();
-	projection.PerspectiveFOV(
+	projection = Matrix3D::CreatePerspectiveFOV(
         Math::PI * 0.4f,
         Application::GetWidth() / (float)Application::GetHeight(),
         1.0f, 100.0f
         );
     
 	// Calculate the view matrix
-	view.MakeIdentity();
-	view.LookAt(cameraPosition, cameraLookAt, Vector3::UNIT_Y);
+	view = Matrix3D::CreateLookAt(cameraPosition, cameraLookAt, Vector3::UNIT_Y);
 }
 
 // ***********************************************************************
@@ -100,6 +101,11 @@ void Simple3DTests::OnDraw()
 	Matrix3D world;
 	Graphics::GlobalUniforms.World->SetMatrix4(world);
     SharedAssets::Models.TestAxis->Draw();
+    
+    // Draw several models with cumulative transforms
+    world.Translate(3.0f, 0.0f, 0.0f);
+    //world.RotateY()
+    
 }
 
 // ***********************************************************************

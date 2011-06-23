@@ -31,6 +31,21 @@ namespace Gdk
 		};
 	}
 
+    // ============================================================================
+
+    struct MouseMoveArgs
+    {
+        int NewX;
+        int NewY;
+        int PreviousX;
+        int PreviousY;
+        
+        // CTor
+        MouseMoveArgs(int newX, int newY, int previousX, int previousY) 
+            : NewX(newX), NewY(newY), PreviousX(previousX), PreviousY(previousY)
+        {}
+    };
+    
 	// ============================================================================
 
 	class Mouse
@@ -84,7 +99,7 @@ namespace Gdk
 
 		// Delegates
 		typedef Gdk::MulticastDelegate0<void>						MouseEventHandler;
-		typedef Gdk::MulticastDelegate2<void, int, int>				MouseMoveEventHandler;
+		typedef Gdk::MulticastDelegate1<void, MouseMoveArgs*>		MouseMoveEventHandler;
 		typedef Gdk::MulticastDelegate1<void, MouseButton::Enum>	MouseButtonEventHandler;
 		typedef Gdk::MulticastDelegate2<void, float, float>			MouseWheelEventHandler;
 

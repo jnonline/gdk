@@ -53,26 +53,25 @@ namespace Gdk
 		Matrix2D& MakeIdentity();
 		Matrix2D& Multiply(const Matrix2D& input);
 		Matrix2D& Multiply(float m11, float m12, float m13, float m21, float m22, float m23, float m31, float m32, float m33);
+        Matrix2D& PreMultiply(const Matrix2D& input);
+		Matrix2D& PreMultiply(float m11, float m12, float m13, float m21, float m22, float m23, float m31, float m32, float m33);
 
-		Matrix2D& Translate(float tx, float ty);
+		Matrix2D& Translate(const Vector2& translation);
+        Matrix2D& Translate(float tx, float ty);
+		Matrix2D& Scale(float scale);
 		Matrix2D& Scale(float sx, float sy);
 		Matrix2D& Rotate(float angle);
 		Matrix2D& ScaleRotateTranslate(float sx, float sy, float tx, float ty, float angle);
 		Matrix2D& RotateScaleTranslate(float sx, float sy, float tx, float ty, float angle);
 
 		// Static Creation Methods
-		static Matrix2D CreateTranslation(float tx, float ty);
+		static Matrix2D CreateTranslation(const Vector2& translation);
+        static Matrix2D CreateTranslation(float tx, float ty);
+		static Matrix2D CreateScale(float scale);
 		static Matrix2D CreateScale(float sx, float sy);
 		static Matrix2D CreateRotation(float angle);
 		static Matrix2D CreateScaleRotateTranslate(float sx, float sy, float tx, float ty, float angle);
 		static Matrix2D CreateRotateScaleTranslate(float sx, float sy, float tx, float ty, float angle);
-
-		// Static In-Place Creation Methods
-		static void CreateTranslation(float tx, float ty, Matrix2D& result);
-		static void CreateScale(float sx, float sy, Matrix2D& result);
-		static void CreateRotation(float angle, Matrix2D& result);
-		static void CreateScaleRotateTranslate(float sx, float sy, float tx, float ty, float angle, Matrix2D& result);
-		static void CreateRotateScaleTranslate(float sx, float sy, float tx, float ty, float angle, Matrix2D& result);
 
 		// Extra Matrix Methods
 		Matrix2D GetTranspose();

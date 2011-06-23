@@ -28,9 +28,9 @@ namespace Gdk
 		// Constructors
 		Matrix3D(bool identity = true);
 		Matrix3D(float m11, float m12, float m13, float m14, 
-					float m21, float m22, float m23, float m24, 
-					float m31, float m32, float m33, float m34, 
-					float m41, float m42, float m43, float m44);
+                 float m21, float m22, float m23, float m24, 
+                 float m31, float m32, float m33, float m34, 
+                 float m41, float m42, float m43, float m44);
 		Matrix3D(float *components);
 		Matrix3D(const Matrix3D& input);
 
@@ -63,9 +63,15 @@ namespace Gdk
 		Matrix3D& MakeIdentity();
 		Matrix3D& Multiply(const Matrix3D& input);
 		Matrix3D& Multiply(float m11, float m12, float m13, float m14, 
-					float m21, float m22, float m23, float m24, 
-					float m31, float m32, float m33, float m34, 
-					float m41, float m42, float m43, float m44);
+                           float m21, float m22, float m23, float m24, 
+                           float m31, float m32, float m33, float m34, 
+                           float m41, float m42, float m43, float m44);
+        Matrix3D& PreMultiply(const Matrix3D& input);
+        Matrix3D& PreMultiply(float m11, float m12, float m13, float m14, 
+                              float m21, float m22, float m23, float m24, 
+                              float m31, float m32, float m33, float m34, 
+                              float m41, float m42, float m43, float m44);
+        
 		Matrix3D& Translate(const Vector3& translation);
 		Matrix3D& Translate(float x, float y, float z);
 		Matrix3D& Scale(float scalar);
@@ -76,12 +82,22 @@ namespace Gdk
 		Matrix3D& RotateOnAxis(const Vector3& axis, float angle);
 		Matrix3D& RotateQuaternion(const class Quaternion& quat);
 		Matrix3D& Reflect(const class Plane3& plane);
-
-		// In-Place View / Projection Methods
-		Matrix3D& LookAt(const Vector3& position, const Vector3& target, const Vector3& up);
-		Matrix3D& PerspectiveFOV(float fov, float aspectRatio, float near, float far);
-		Matrix3D& Ortho(float width, float height, float nearPlane, float farPlane);
-		Matrix3D& OrthoOffCenter(float left, float right, float bottom, float top, float nearPlane, float farPlane);
+        
+        // Static Creation Methods
+		static Matrix3D CreateTranslation(const Vector3& translation);
+		static Matrix3D CreateTranslation(float x, float y, float z);
+		static Matrix3D CreateScale(float scalar);
+		static Matrix3D CreateScale(float sx, float sy, float sz);
+		static Matrix3D CreateRotationX(float angle);
+		static Matrix3D CreateRotationY(float angle);
+		static Matrix3D CreateRotationZ(float angle);
+		static Matrix3D CreateRotationOnAxis(const Vector3& axis, float angle);
+		static Matrix3D CreateRotationFromQuaternion(const class Quaternion& quat);
+		static Matrix3D CreateReflection(const class Plane3& plane);
+		static Matrix3D CreateLookAt(const Vector3& position, const Vector3& target, const Vector3& up);
+		static Matrix3D CreatePerspectiveFOV(float fov, float aspectRatio, float near, float far);
+		static Matrix3D CreateOrtho(float width, float height, float nearPlane, float farPlane);
+		static Matrix3D CreateOrthoOffCenter(float left, float right, float bottom, float top, float nearPlane, float farPlane);
 
 		// Extra Matrix Methods
 		Matrix3D GetTranspose();

@@ -48,8 +48,7 @@ InputTestsModule::~InputTestsModule()
 void InputTestsModule::OnUpdate(float elapsedSeconds)
 {
     // Calculate the projection matrix of the view
-    proj.MakeIdentity();
-	proj.OrthoOffCenter(
+    proj = Matrix3D::CreateOrthoOffCenter(
         -10,10,				// left / right
         -10,10,				// bottom / top
         -1.0f, 1.0f				// far / near

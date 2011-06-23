@@ -166,21 +166,19 @@ void Tanks3DModule::OnDraw()
 	// -------------------------------------------------------------------
 
 	// Calculate the projection matrix
-	Matrix3D proj;
-	proj.PerspectiveFOV(
-		Math::PI * 0.5f,
+	Matrix3D proj = Matrix3D::CreatePerspectiveFOV(
+        Math::PI * 0.5f,
 		Application::GetWidth() / (float)Application::GetHeight(),
 		0.1f, 100.0f
 		);
 	Graphics::GlobalUniforms.Projection->SetMatrix4(proj);
 
 	// Calculate the view matrix (behind the player tank)
-	Matrix3D view;
 	Vector3 cameraTarget(playerPosition.X, 0.0f, playerPosition.Y);
 	Vector2 viewDirection = Vector2::FromAngle(playerDirection);
 	float cameraZoom = 2.0f;
 	Vector3 cameraPosition = cameraTarget + Vector3(-viewDirection.X * cameraZoom, 2.5f * cameraZoom, -viewDirection.Y * cameraZoom);
-	view.LookAt(cameraPosition, cameraTarget, Vector3::UNIT_Y);
+	Matrix3D view = Matrix3D::CreateLookAt(cameraPosition, cameraTarget, Vector3::UNIT_Y);
     Vector3 worldUp(0,1,0);
 	Graphics::GlobalUniforms.View->SetMatrix4(view);
 	Graphics::GlobalUniforms.WorldUp->SetFloat3(worldUp);
@@ -222,8 +220,7 @@ void Tanks3DModule::OnDraw()
 	// -------------------------------------------------------------------
 
 	// Setup a 2D projection matrix to draw in screen coordinates
-    proj.MakeIdentity();
-	proj.OrthoOffCenter(
+    proj = Matrix3D::CreateOrthoOffCenter(
 		0, (float) Application::GetWidth(),					// left / right
 		(float) Application::GetHeight(), 0,				// bottom / top
 		-1.0f, 1.0f											// far / near
