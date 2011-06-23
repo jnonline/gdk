@@ -101,6 +101,56 @@ Matrix2D& Matrix2D::Multiply(float m11, float m12, float m13, float m21, float m
 }
 
 // ***********************************************************************
+Matrix2D& Matrix2D::PreMultiply(const Matrix2D& input)
+{
+    float m11 = input.M11 * M11 + input.M12 * M21 + input.M13 * M31;
+	float m12 = input.M11 * M12 + input.M12 * M22 + input.M13 * M32;
+	float m13 = input.M11 * M13 + input.M12 * M23 + input.M13 * M33;
+	float m21 = input.M21 * M11 + input.M22 * M21 + input.M23 * M31;
+	float m22 = input.M21 * M12 + input.M22 * M22 + input.M23 * M32;
+	float m23 = input.M21 * M13 + input.M22 * M23 + input.M23 * M33;
+	float m31 = input.M31 * M11 + input.M32 * M21 + input.M33 * M31;
+	float m32 = input.M31 * M12 + input.M32 * M22 + input.M33 * M32;
+	float m33 = input.M31 * M13 + input.M32 * M23 + input.M33 * M33;
+	
+	M11 = m11; M12 = m12; M13 = m13;
+	M21 = m21; M22 = m22; M23 = m23;
+	M31 = m31; M32 = m32; M33 = m33;
+	return *this;
+}
+
+// ***********************************************************************
+Matrix2D& Matrix2D::PreMultiply(float m11, float m12, float m13, float m21, float m22, float m23, float m31, float m32, float m33)
+{
+    float finalM11 = m11 * M11 + m12 * M21 + m13 * M31;
+	float finalM12 = m11 * M12 + m12 * M22 + m13 * M32;
+	float finalM13 = m11 * M13 + m12 * M23 + m13 * M33;
+	float finalM21 = m21 * M11 + m22 * M21 + m23 * M31;
+	float finalM22 = m21 * M12 + m22 * M22 + m23 * M32;
+	float finalM23 = m21 * M13 + m22 * M23 + m23 * M33;
+	float finalM31 = m31 * M11 + m32 * M21 + m33 * M31;
+	float finalM32 = m31 * M12 + m32 * M22 + m33 * M32;
+	float finalM33 = m31 * M13 + m32 * M23 + m33 * M33;
+	
+	M11 = finalM11; M12 = finalM12; M13 = finalM13;
+	M21 = finalM21; M22 = finalM22; M23 = finalM23;
+	M31 = finalM31; M32 = finalM32; M33 = finalM33;
+	return *this;
+}
+
+
+// ***********************************************************************
+Matrix2D& Matrix2D::Translate(const Vector2& translation)
+{
+	Multiply(
+             1.0f, 0.0f, 0.0f,
+             0.0f, 1.0f, 0.0f,
+             translation.X, translation.Y, 1.0f
+             );
+	return *this;
+}
+
+// ***********************************************************************
 Matrix2D& Matrix2D::Translate(float x, float y)
 {
 	Multiply(
@@ -108,6 +158,17 @@ Matrix2D& Matrix2D::Translate(float x, float y)
 		0.0f, 1.0f, 0.0f,
 		x, y, 1.0f
 		);
+	return *this;
+}
+
+// ***********************************************************************
+Matrix2D& Matrix2D::Scale(float scale)
+{
+	Multiply(
+             scale,   0.0f, 0.0f,
+             0.0f, scale,   0.0f,
+             0.0f, 0.0f, 1.0f
+             );
 	return *this;
 }
 
@@ -169,63 +230,39 @@ Matrix2D& Matrix2D::RotateScaleTranslate(float sx, float sy, float tx, float ty,
 // ===================================================================================
 
 // ***********************************************************************
-Matrix2D Matrix2D::CreateTranslation(float tx, float ty)
+Matrix2D Matrix2D::CreateTranslation(const Vector2& translation)
 {
-	Matrix2D result(false);
-	CreateTranslation(tx, ty, result);
-	return result;
+	return Matrix2D(
+		1.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f,
+		translation.X, translation.Y, 1.0f
+		);
+}
+
+// ***********************************************************************
+Matrix2D Matrix2D::CreateTranslation(float x, float y)
+{
+	return Matrix2D(
+        1.0f, 0.0f, 0.0f,
+        0.0f, 1.0f, 0.0f,
+        x,    y,    1.0f
+        );
+}
+
+// ***********************************************************************
+Matrix2D Matrix2D::CreateScale(float scale)
+{
+	return Matrix2D(
+        scale, 0.0f,  0.0f,
+        0.0f,  scale, 0.0f,
+        0.0f,  0.0f,  1.0f
+        );
 }
 
 // ***********************************************************************
 Matrix2D Matrix2D::CreateScale(float sx, float sy)
 {
-	Matrix2D result(false);
-	CreateScale(sx, sy, result);
-	return result;
-}
-
-// ***********************************************************************
-Matrix2D Matrix2D::CreateRotation(float angle)
-{
-	Matrix2D result(false);
-	CreateRotation(angle, result);
-	return result;
-}
-
-// ***********************************************************************
-Matrix2D Matrix2D::CreateScaleRotateTranslate(float sx, float sy, float tx, float ty, float angle)
-{
-	Matrix2D result(false);
-	CreateRotateScaleTranslate(sx, sy, tx, ty, angle, result);
-	return result;
-}
-
-// ***********************************************************************
-Matrix2D Matrix2D::CreateRotateScaleTranslate(float sx, float sy, float tx, float ty, float angle)
-{
-	Matrix2D result(false);
-	CreateRotateScaleTranslate(sx, sy, tx, ty, angle, result);
-	return result;
-}
-
-// ===================================================================================
-// Static In-Place Creation Methods
-// ===================================================================================
-
-// ***********************************************************************
-void Matrix2D::CreateTranslation(float x, float y, Matrix2D& result)
-{
-	result.Set(
-		1.0f, 0.0f, 0.0f,
-		0.0f, 1.0f, 0.0f,
-		x, y, 1.0f
-		);
-}
-
-// ***********************************************************************
-void Matrix2D::CreateScale(float sx, float sy, Matrix2D& result)
-{
-	result.Set(
+	return Matrix2D(
 		sx,   0.0f, 0.0f,
 		0.0f, sy,   0.0f,
 		0.0f, 0.0f, 1.0f
@@ -233,12 +270,12 @@ void Matrix2D::CreateScale(float sx, float sy, Matrix2D& result)
 }
 
 // ***********************************************************************
-void Matrix2D::CreateRotation(float angle, Matrix2D& result)
+Matrix2D Matrix2D::CreateRotation(float angle)
 {
 	float sinTheta = Math::Sin(angle);
 	float cosTheta = Math::Cos(angle);
 
-	result.Set(
+	return Matrix2D(
 		cosTheta, sinTheta, 0.0f,
 		-sinTheta, cosTheta, 0.0f,
 		0.0f, 0.0f, 1.0f
@@ -246,12 +283,12 @@ void Matrix2D::CreateRotation(float angle, Matrix2D& result)
 }
 
 // ***********************************************************************
-void Matrix2D::CreateScaleRotateTranslate(float sx, float sy, float tx, float ty, float angle, Matrix2D& result)
+Matrix2D Matrix2D::CreateScaleRotateTranslate(float sx, float sy, float tx, float ty, float angle)
 {
 	float sinTheta = Math::Sin(angle);
 	float cosTheta = Math::Cos(angle);
 
-	result.Set(
+	return Matrix2D(
 		sx * cosTheta,	sx * sinTheta,	0.0f,
 		sy * -sinTheta, sy * cosTheta,	0.0f,
 		tx,				ty,				1.0f
@@ -259,12 +296,12 @@ void Matrix2D::CreateScaleRotateTranslate(float sx, float sy, float tx, float ty
 }
 
 // ***********************************************************************
-void Matrix2D::CreateRotateScaleTranslate(float sx, float sy, float tx, float ty, float angle, Matrix2D& result)
+Matrix2D Matrix2D::CreateRotateScaleTranslate(float sx, float sy, float tx, float ty, float angle)
 {
 	float sinTheta = Math::Sin(angle);
 	float cosTheta = Math::Cos(angle);
 
-	result.Set(
+	return Matrix2D(
 		sx * cosTheta,	sy * sinTheta,	0.0f,
 		sx * -sinTheta, sy * cosTheta,	0.0f,
 		tx,				ty,				1.0f

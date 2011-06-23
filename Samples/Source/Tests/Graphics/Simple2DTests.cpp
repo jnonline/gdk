@@ -109,8 +109,7 @@ void Simple2DTests::OnDraw()
 	// ----------------------------------------------------
 
 	// Setup a 2D projection matrix where a 20x20 square is centered on the screen center
-    Matrix3D proj;
-	proj.OrthoOffCenter(
+    Matrix3D proj = Matrix3D::CreateOrthoOffCenter(
 		this->ViewCenter.X - this->ViewExtents.X, this->ViewCenter.X + this->ViewExtents.X,		// left / right
 		this->ViewCenter.Y - this->ViewExtents.Y, this->ViewCenter.Y + this->ViewExtents.Y,		// bottom / top
 		-1.0f, 1.0f				// far / near

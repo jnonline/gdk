@@ -38,11 +38,14 @@ void Mouse::Update(float elapsedSeconds)
 // ***********************************************************************
 void Mouse::Platform_ProcessMouseMove(int x, int y)
 {
-	mouseX = x;
+    MouseMoveArgs args(x, y, mouseX, mouseY);
+
+    // Set the new mouse position
+    mouseX = x;
 	mouseY = y;
 
 	// Call the event
-	MouseMove.Invoke(x,y);
+    MouseMove.Invoke(&args);
 }
 
 // ***********************************************************************

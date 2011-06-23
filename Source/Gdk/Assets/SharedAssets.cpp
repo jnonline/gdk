@@ -25,6 +25,26 @@ void SharedAssets::Init()
 {
 	AssetManager* assetManager = AssetManager::GetSingleton();
 
+    // Shaders   (Note: These must be first)
+	// --------------------------------
+    
+	// Renderer2D
+	{
+		SharedAssets::Shaders.Renderer2D.NonTextured = assetManager->Load<Shader>("Shaders/Renderer2D/NonTextured", &Pool, NULL);
+		SharedAssets::Shaders.Renderer2D.Textured = assetManager->Load<Shader>("Shaders/Renderer2D/Textured", &Pool, NULL);
+	}
+    
+	// Billboard
+	{
+		SharedAssets::Shaders.Billboard.Textured = assetManager->Load<Shader>("Shaders/Billboard/Textured", &Pool, NULL);
+	}
+    
+	// Models
+	{
+		SharedAssets::Shaders.Model.Mesh.DiffuseTextured = assetManager->Load<Shader>("Shaders/Model/Mesh/DiffuseTextured", &Pool, NULL);
+		SharedAssets::Shaders.Model.Mesh.NonTextured = assetManager->Load<Shader>("Shaders/Model/Mesh/NonTextured", &Pool, NULL);
+	}
+
 	// Models
 	// ------------------------------------
 
@@ -46,26 +66,6 @@ void SharedAssets::Init()
 	SharedAssets::AtlasImages.Particle2 = SharedAssets::Atlases.Test->GetImage("Test\\Particle2");
 	SharedAssets::AtlasImages.Fence = SharedAssets::Atlases.Test->GetImage("Test\\Fence");
 	SharedAssets::AtlasAnimations.Chopper = SharedAssets::Atlases.Test->GetAnimation("Chopper");
-	
-	// Shaders
-	// --------------------------------
-
-	// Renderer2D
-	{
-		SharedAssets::Shaders.Renderer2D.NonTextured = assetManager->Load<Shader>("Shaders/Renderer2D/NonTextured", &Pool, NULL);
-		SharedAssets::Shaders.Renderer2D.Textured = assetManager->Load<Shader>("Shaders/Renderer2D/Textured", &Pool, NULL);
-	}
-
-	// Billboard
-	{
-		SharedAssets::Shaders.Billboard.Textured = assetManager->Load<Shader>("Shaders/Billboard/Textured", &Pool, NULL);
-	}
-
-	// Models
-	{
-		SharedAssets::Shaders.Model.Mesh.DiffuseTextured = assetManager->Load<Shader>("Shaders/Model/Mesh/DiffuseTextured", &Pool, NULL);
-		SharedAssets::Shaders.Model.Mesh.NonTextured = assetManager->Load<Shader>("Shaders/Model/Mesh/NonTextured", &Pool, NULL);
-	}
 	
 	// Shared Buffers
 	// ---------------------------------
