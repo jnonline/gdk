@@ -64,6 +64,10 @@ namespace Gdk
 		static Vector2 Parse(const char *str);
 		string ToString();
 
+		// Stream Utilities
+		static Vector2 ReadFromStream(class Stream* stream);
+		void WriteToStream(class Stream* stream);
+
 		// special vectors
 		static const Vector2 ZERO;    // (0,0)
 		static const Vector2 UNIT_X;  // (1,0)

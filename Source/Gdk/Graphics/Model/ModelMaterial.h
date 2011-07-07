@@ -29,31 +29,33 @@ namespace Gdk
 		// Public Properties
 		// --------------------
 
-		ModelMaterialFlags::Enum	 Flags;
-
         // Simple Properties
-        float	Emissive[4];
+        string	Id;
+		float	Emissive[4];
         float	Ambient[4];
         float	Diffuse[4];
         float	Specular[4];
         float	Shininess;
        
+		ModelMaterialFlags::Enum	 Flags;
+
         // Textures
         Texture2D*	DiffuseTexture;
         Texture2D*	BumpTexture;
 
 		// Shaders
-		Shader*		MeshShader;
+		//Shader*		MeshShader;
 		//Shader*		SkinnedMeshShader;
 
 		// Public Methods
 		// --------------------
 
-		// CTor
+		// CTor / DTor
 		ModelMaterial();
+		~ModelMaterial();
 
 		// Clones this material & it's values
-		ModelMaterial* Clone();
+		//ModelMaterial* Clone();
 	};
 
 } // namespace

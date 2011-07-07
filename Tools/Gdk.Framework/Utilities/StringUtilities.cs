@@ -36,14 +36,49 @@ namespace Gdk
         }
 
         /// <summary>
-        /// Writes a string, in a gdk readable format
+        /// Parse a list of ints from a string
         /// </summary>
-        /// <param name="writer"></param>
-        /// <param name="value"></param>
-        static public void WriteString(BinaryWriter writer, string value)
+        static public List<int> ParseInts(string input, char seperator)
         {
-            writer.Write((ushort)value.Length);
-            writer.Write((char[])value.ToCharArray());
+            List<int> results = new List<int>();
+
+            // Split the string by the seperator
+            string[] stringValues = input.Split(seperator);
+
+            // Loop through the string values
+            foreach (string stringValue in stringValues)
+            {
+                // Trim all white space from the value
+                stringValue.Trim();
+                int intValue = 0;
+                if (int.TryParse(stringValue, out intValue) == true)
+                    results.Add(intValue);
+            }
+
+            return results;
+        }
+
+        /// <summary>
+        /// Parse a list of floats from a string
+        /// </summary>
+        static public List<float> ParseFloats(string input, char seperator)
+        {
+            List<float> results = new List<float>();
+
+            // Split the string by the seperator
+            string[] stringValues = input.Split(seperator);
+                
+            // Loop through the string values
+            foreach (string stringValue in stringValues)
+            {
+                // Trim all white space from the value
+                stringValue.Trim();
+                float floatValue = 0.0f;
+                if (float.TryParse(stringValue, out floatValue) == true)
+                    results.Add(floatValue);
+            }
+
+            return results;
         }
 
         /// <summary>

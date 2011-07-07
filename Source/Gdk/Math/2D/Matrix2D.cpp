@@ -369,3 +369,21 @@ bool Matrix2D::IsIdentity()
 		return true;
 	return false;
 }
+
+// ===================================================================================
+// Stream Utilities
+// ===================================================================================
+
+// ***********************************************************************
+Matrix2D Matrix2D::ReadFromStream(Stream* stream)
+{
+	Matrix2D result;
+	stream->Read(&result, sizeof(float[9]));
+	return result;
+}
+
+// ***********************************************************************
+void Matrix2D::WriteToStream(Stream* stream)
+{
+	stream->Write(this, sizeof(float[9]));
+}

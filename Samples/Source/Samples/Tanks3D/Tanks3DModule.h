@@ -28,8 +28,8 @@ protected:
 	// Gameplay Assets
 	// --------------------
 
-	ModelInstance* tank;
-	ModelInstance* ground;
+	Model* tank;
+	Model* ground;
 
 	// Pool for our assets
 	AssetPool assetsPool;

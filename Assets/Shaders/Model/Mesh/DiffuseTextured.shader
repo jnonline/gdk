@@ -1,10 +1,17 @@
 <Shader>
+  
   <RenderState>
     <Blending Enabled="true" BlendMode="Normal" />
     <Depth WriteEnabled="true" TestEnabled="true" TestFunction="Less" />
     <Culling CullMode="CW" />
   </RenderState>
 
+  <AttributeBindings>
+    <Attribute Name="a_position" Location="0" />
+    <Attribute Name="a_normal" Location="1" />
+    <Attribute Name="a_texCoord" Location="3" />
+  </AttributeBindings>
+  
   <Techniques>
 
     <Technique Name="FragmentLighting">
@@ -228,12 +235,6 @@
     </Technique>
     
   </Techniques>
-  
-  <AttributeBindings>
-    <Attribute Name="a_position" Location="0" />
-    <Attribute Name="a_normal" Location="1" />
-    <Attribute Name="a_texCoord" Location="2" />
-  </AttributeBindings>
 
   <Parameters>
     <Parameter Name="u_World" BindToGlobal="World" />

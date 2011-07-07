@@ -1311,7 +1311,7 @@ namespace Gdk.Content
                 ShaderAttribute attribute = attributeByName.Value;
 
                 // Write the attribute name
-                StringUtilities.WriteString(writer, attribute.Name);
+                BinaryWriterUtilities.WriteString(writer, attribute.Name);
 
                 // Write the attribute type, size, and location
                 writer.Write((UInt16)attribute.AttrType);
@@ -1337,7 +1337,7 @@ namespace Gdk.Content
                 writer.Write((UInt16)parameterFlags);
 
                 // Write the parameter name
-                StringUtilities.WriteString(writer, parameter.Name);
+                BinaryWriterUtilities.WriteString(writer, parameter.Name);
 
                 // Write the parameter size & type
                 writer.Write((UInt16)parameter.UniformType);
@@ -1347,7 +1347,7 @@ namespace Gdk.Content
                 if (parameter.IsBindToGlobal)
                 {
                     // Write the binding
-                    StringUtilities.WriteString(writer, parameter.Value);
+                    BinaryWriterUtilities.WriteString(writer, parameter.Value);
                 }
                 else
                 {
@@ -1395,7 +1395,7 @@ namespace Gdk.Content
                     writer.Write((UInt16)deviceType);
 
                 // Write the technique name
-                StringUtilities.WriteString(writer, technique.Name);
+                BinaryWriterUtilities.WriteString(writer, technique.Name);
 
                 // Write the Vertex Shader
                 writer.Write((UInt32)technique.VertexShaderText.Length);

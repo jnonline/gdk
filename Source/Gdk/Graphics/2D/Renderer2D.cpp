@@ -213,7 +213,10 @@ void Renderer2D::Flush()
 	Graphics::EnableVertexAttribArray(0, true);
 	Graphics::EnableVertexAttribArray(1, true);
 	//Graphics::EnableVertexAttribArray(2, false);   // not necessary (this is done below)
-	Graphics::EnableVertexAttribArray(3, false);
+	
+	// Disable the rest of the attribute arrays
+	for(int attributeIndex=3; attributeIndex<Graphics::MAX_VERTEX_ATTRIBUTES; attributeIndex++)
+		Graphics::EnableVertexAttribArray(attributeIndex, false);
 
 	// Loop through the batches
 	for(Renderer2DBatchSetIterator batchIter = batches.begin(); batchIter != batches.end(); batchIter++)

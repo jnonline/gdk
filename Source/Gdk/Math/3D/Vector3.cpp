@@ -153,6 +153,24 @@ Vector3 Vector3::Barycentric(const Vector3& point1, const Vector3& point2, const
 		);
 }
 
+// ===================================================================================
+// Stream Utilities
+// ===================================================================================
+
+// ***********************************************************************
+Vector3 Vector3::ReadFromStream(Stream* stream)
+{
+	Vector3 result;
+	stream->Read(&result, sizeof(float[3]));
+	return result;
+}
+
+// ***********************************************************************
+void Vector3::WriteToStream(Stream* stream)
+{
+	stream->Write(this, sizeof(float[3]));
+}
+
 
 
  

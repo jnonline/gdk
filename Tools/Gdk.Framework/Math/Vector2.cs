@@ -63,6 +63,15 @@ namespace Gdk
         #region Instance Methods
 
         /// <summary>
+        /// Equals()
+        /// </summary>
+        public bool Equals(Vector2 v)
+        {
+            return v.X == this.X
+                && v.Y == this.Y;
+        } 
+
+        /// <summary>
         /// Returns the length of the vector
         /// </summary>
         /// <returns></returns>

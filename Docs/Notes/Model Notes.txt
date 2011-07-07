@@ -1,6 +1,6 @@
 
 ----------------------------------------------
-Model Data:
+-- Gdk Model - V1
 
 	Skeleton
 		- heirarchy of bones
@@ -96,7 +96,7 @@ Animation
 
 
 -------------------------------------
--- Gdk Models
+-- Gdk Models - v2
 
 Model
 
@@ -128,11 +128,11 @@ Model
 				- Other params...
 	
 	Nodes
-		Nodes...
-		Transform
+		- Nodes...
+		- Transform
 			
 	Animations
-		Animation
+		- Animation
 			- name
 			- total time
 			- Keyframes (time, Node, transform, etc)
@@ -149,45 +149,61 @@ ModelInstance - instanced data for a model...
 	- Materials - instanced materials.. copies of the base materials
 	
 	
------------------------------
+-------------------------------------
+-- Gdk Model - Runtime format - v3 
 
-- Load
+	Model
+		- RootNode
+		- Materials[]
+		- Meshes[]
+		- MeshInstances[]
 	
-		open .gdkmodel
-		parse materials settings into a material definition..
-			grep flags, determine shader to use
-			copy shader ref & create shader params
-			apply material settings to shader params 
-			...  ^^ asset pipe should do all this!
-			
-- model processor:
+	Node					[COLLADA:  node]
+		- Name
+		- ChildNodes
+		- Transform
+		
+	Material				[COLLADA:  material]
+		- Name
+		- Flags				[define the material type & shader to use...]
+		- Ambient, Diffuse, Specular, Emissive
+		- Textures   
+			(Diffuse, Bump, etc)
+		
+	Mesh					[COLLADA:  geometry / mesh]
+		- Name
+		- Flags				[vertex attributes / channels]
+		- Vertices
+		- Indices
+		- Parts[]									
 
-	materials..
-		determine shader to use
-			Mesh/Simple
-			Mesh/DiffuseTextured
-			Mesh/DiffuseBumpTextured
-			Mesh/WoodProcedural
-			etc
+	MeshPart				[COLLADA:  mesh / trangles [tristrips, trifans, ...]
+		// - Flags				[type? triagles, fans, strips, etc?]
+		- Start Indices
+		- End Indices
+		- MatSymbol			[this ID is bound to a model.material through the mesh instance]
+		
+	MeshInstance			[COLLADA:  node / instance_geometry]
+		- Mesh Ref
+		- Node Ref
+		- MaterialBinding	[COLLADA:  instance_geometry / bind_material]
+			- MaterialRef	[binds a Model.Material to a MeshPart.MatSymbol]
+			- MatSymbol	
+		
+	
 			
+	Animations
+		 - todo
+
+
+
+	ModelInstance - instanced data for a model...
+		- Model Ref
 		
+		- CurrentAnimation
+		- AnimationTime
 		
-- Load
-	
-	// Load the model...
-	treeModel = Assets.Load<Model>("Tree");
-			(contains the meshes, materials, animations, bone structures, etc)
-			(material definitions
+		- Nodes	- instanced node tree, with updated transforms for the animation
 			
-	ModelInstance* myTree = Tree.CreateInstance();
-			(references the base model, copies the materials, instantiates the bone heirarchy, CurrentAnimation)
+		- Material swapping..  <param> driven material bindings (between mesh parts & materials)
 	
-	... Setup Graphics::GlobalParameters.World (world matrix)
-	
-	myTree->Render();
-	
-	
-	GdkDelete(myTree);
-			
-		
-		

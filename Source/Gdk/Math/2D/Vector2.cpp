@@ -189,5 +189,23 @@ Vector2 Vector2::Barycentric(const Vector2& point1, const Vector2& point2, const
 		);
 }
 
+// ===================================================================================
+// Stream Utilities
+// ===================================================================================
+
+// ***********************************************************************
+Vector2 Vector2::ReadFromStream(Stream* stream)
+{
+	Vector2 result;
+	stream->Read(&result, sizeof(float[2]));
+	return result;
+}
+
+// ***********************************************************************
+void Vector2::WriteToStream(Stream* stream)
+{
+	stream->Write(this, sizeof(float[2]));
+}
+
 
  

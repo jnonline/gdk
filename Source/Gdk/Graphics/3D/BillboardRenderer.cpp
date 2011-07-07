@@ -112,6 +112,10 @@ void BillboardRenderer::Flush()
 	Graphics::EnableVertexAttribArray(2, true);
 	Graphics::EnableVertexAttribArray(3, true);
 
+	// Disable the rest of the attribute arrays
+	for(int attributeIndex=4; attributeIndex<Graphics::MAX_VERTEX_ATTRIBUTES; attributeIndex++)
+		Graphics::EnableVertexAttribArray(attributeIndex, false);
+
 	// Turn on the shader
 	SharedAssets::Shaders.Billboard.Textured->Apply();
 

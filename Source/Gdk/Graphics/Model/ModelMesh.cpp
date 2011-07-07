@@ -9,6 +9,32 @@
 using namespace Gdk;
 
 // ***********************************************************************
+size_t ModelMeshFlags::GetVertexStrideFromFlags(UInt16 flags)
+{
+	// All mesh vertices are assumed to have a float[3] Position + float[3] Normal
+	size_t vertexStride = sizeof(float[6]);
+
+	// Add more stride for the other vertex attribute
+	if((flags & ModelMeshFlags::VertexHasColor) > 0)
+		vertexStride += sizeof(UInt8[4]);
+	if((flags & ModelMeshFlags::VertexHasTexCoords) > 0)
+		vertexStride += sizeof(float[2]);
+	if((flags & ModelMeshFlags::VertexHasTexCoords2) > 0)
+		vertexStride += sizeof(float[2]);
+
+	UInt16 skinningType = flags & ModelMeshFlags::SKINNING_TYPE_MASK;
+	if(skinningType == ModelMeshFlags::VertexHasSingleBone)
+		vertexStride += sizeof(UInt16);
+	else if(skinningType == ModelMeshFlags::VertexHas2WeightedBones)
+		vertexStride += sizeof(UInt16[2]) + sizeof(float[2]);
+	else if(skinningType == ModelMeshFlags::VertexHas4WeightedBones)
+		vertexStride += sizeof(UInt16[4]) + sizeof(float[4]);
+	// else:   ModelMeshFlags::VertexHasNoSkinning
+
+	return vertexStride;
+}
+
+// ***********************************************************************
 ModelMesh::ModelMesh()
 {
 	VertexBuffer = 0;
