@@ -98,14 +98,11 @@ void Simple3DTests::OnDraw()
 	// ----------------------------------------------------
 
     // Draw the TestAxis model at the origin
-	Matrix3D world;
-	Graphics::GlobalUniforms.World->SetMatrix4(world);
+	SharedAssets::Models.TestAxis->World = Matrix3D::IDENTITY;
     SharedAssets::Models.TestAxis->Draw();
     
     // Draw several models with cumulative transforms
-    world.Translate(3.0f, 0.0f, 0.0f);
-    //world.RotateY()
-    
+    // TODO(P1) more tests
 }
 
 // ***********************************************************************

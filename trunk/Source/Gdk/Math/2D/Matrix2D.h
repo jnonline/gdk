@@ -79,6 +79,10 @@ namespace Gdk
 		float GetDeterminant();
 		bool IsIdentity();
 
+		// Stream Utilities
+		static Matrix2D ReadFromStream(class Stream* stream);
+		void WriteToStream(class Stream* stream);
+
 		// Special matrices
 		static const Matrix2D ZERO;
 		static const Matrix2D IDENTITY;

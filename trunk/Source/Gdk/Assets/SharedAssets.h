@@ -62,7 +62,7 @@ namespace Gdk
 
 		static struct _Models
 		{
-			class ModelInstance* TestAxis;
+			class Model* TestAxis;
 		} Models;
 
 		// Shaders

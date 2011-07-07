@@ -53,6 +53,7 @@ namespace Gdk
 		}
 	};
 
+	/*
 	// ============================================================================
 	struct VertexP3N3T2
 	{
@@ -60,5 +61,13 @@ namespace Gdk
 		GLfloat NX, NY, NZ;
 		GLfloat TX, TY;
 	};
+
+	// ============================================================================
+	struct VertexP3N3
+	{
+		GLfloat X, Y, Z;
+		GLfloat NX, NY, NZ;
+	};
+	*/
 
 } // namespace Gdk

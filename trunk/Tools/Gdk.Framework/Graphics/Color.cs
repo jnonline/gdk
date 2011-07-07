@@ -101,6 +101,39 @@ namespace Gdk
         #region Methods
 
         /// <summary>
+        /// GetHashCode()
+        /// </summary>
+        public override int GetHashCode()
+        {
+            return (Int32)((this.R << 24) + (this.G << 16) + (this.B << 8) + this.A);
+        }
+
+        /// <summary>
+        /// Equals(object)
+        /// </summary>
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+            Color c = (Color)obj;
+            if (c == null)
+                return false;
+
+            return this.Equals(c);
+        }
+
+        /// <summary>
+        /// Equals(Color)
+        /// </summary>
+        public bool Equals(Color c)
+        {
+            return this.R == c.R
+                && this.G == c.G
+                && this.B == c.B
+                && this.A == c.A;
+        } 
+
+        /// <summary>
         /// Parses a Color value from an input string.
         /// </summary>
         /// <param name="input">Color values in the format (R, G, B [, A]) (0-255)  </param>
@@ -156,6 +189,14 @@ namespace Gdk
         static public Color FromSystemColor(System.Drawing.Color color)
         {
             return new Color(color.R, color.G, color.B, color.A);
+        }
+
+        /// <summary>
+        /// Returns a the color that corresponds to the given normalized (0-1) float color values
+        /// </summary>
+        static public Color FromNormalized(float r, float g, float b, float a)
+        {
+            return new Color((byte)(255 * r), (byte)(255 * g), (byte)(255 * b), (byte)(255 * a));
         }
 
 

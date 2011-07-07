@@ -13,15 +13,15 @@
 		<Asset Path="Models/Tank.dae" Processor="ModelProcessor">
 			<Parameters />
 		</Asset>
+		<Asset Path="Models/Tank2.dae" Processor="ModelProcessor">
+			<Parameters />
+		</Asset>
 		<Asset Path="Models/TestAxis.dae" Processor="ModelProcessor">
 			<Parameters>
 				<Parameter Name="Scale">0.5</Parameter>
 			</Parameters>
 		</Asset>
 		<Asset Path="Shaders/Billboard/Textured.shader" Processor="ShaderProcessor">
-			<Parameters />
-		</Asset>
-		<Asset Path="Shaders/Model/Mesh/DiffuseBumpTextured.shader" Processor="ShaderProcessor">
 			<Parameters />
 		</Asset>
 		<Asset Path="Shaders/Model/Mesh/DiffuseTextured.shader" Processor="ShaderProcessor">

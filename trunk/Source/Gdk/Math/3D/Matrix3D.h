@@ -104,6 +104,10 @@ namespace Gdk
 		Matrix3D GetInverse();
 		float GetDeterminant();
 
+		// Stream Utilities
+		static Matrix3D ReadFromStream(class Stream* stream);
+		void WriteToStream(class Stream* stream);
+
 		// Special matrices
 		static const Matrix3D ZERO;
 		static const Matrix3D IDENTITY;

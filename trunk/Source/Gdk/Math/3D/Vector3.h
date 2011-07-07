@@ -66,6 +66,10 @@ namespace Gdk
 		static Vector3 Parse(const char *str);
 		string ToString();
 
+		// Stream Utilities
+		static Vector3 ReadFromStream(class Stream* stream);
+		void WriteToStream(class Stream* stream);
+
 		// special vectors
 		static const Vector3 ZERO;    // (0,0,0)
 		static const Vector3 UNIT_X;  // (1,0,0)

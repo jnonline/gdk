@@ -24,7 +24,7 @@ vector<class ModuleRegistration*> Module::registeredModules;
 void Module::Init()
 {
     // Samples
-    //RegisterModule<Tanks3DModule>(L"Tanks 3D", ModuleCategory::Samples);
+    RegisterModule<Tanks3DModule>(L"Tanks 3D", ModuleCategory::Samples);
 
     // Tests
     RegisterModule<InputTestsModule>(L"Input Tests", ModuleCategory::Tests);

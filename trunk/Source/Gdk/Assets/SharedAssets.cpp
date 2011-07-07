@@ -48,7 +48,7 @@ void SharedAssets::Init()
 	// Models
 	// ------------------------------------
 
-	SharedAssets::Models.TestAxis = assetManager->Load<Model>("Models/TestAxis", &Pool, NULL)->CreateInstance();
+	SharedAssets::Models.TestAxis = assetManager->Load<Model>("Models/TestAxis", &Pool, NULL);
 	
 	// Fonts
 	// --------------------------------
@@ -93,9 +93,6 @@ void SharedAssets::Shutdown()
 	if(QuadIndexBuffer != NULL)
 		GdkFree(QuadIndexBuffer);
 	QuadIndexBuffer = NULL;
-
-	// Delete the model instances
-	GdkDelete(SharedAssets::Models.TestAxis);
 
 	// Release the assets pool
 	Pool.Release();

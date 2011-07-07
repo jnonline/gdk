@@ -47,6 +47,8 @@ namespace Gdk
         /// </summary>
         static public string GetAttribute(XmlNode xmlNode, string attributeName, string defaultValue)
         {
+            if (xmlNode == null)
+                return defaultValue;
             XmlAttribute attribute = xmlNode.Attributes[attributeName];
             if (attribute == null)
                 return defaultValue;
@@ -58,6 +60,8 @@ namespace Gdk
         /// </summary>
         static public bool GetAttribute(XmlNode xmlNode, string attributeName, bool defaultValue)
         {
+            if (xmlNode == null)
+                return defaultValue;
             XmlAttribute attribute = xmlNode.Attributes[attributeName];
             if (attribute == null)
                 return defaultValue;
@@ -69,6 +73,8 @@ namespace Gdk
         /// </summary>
         static public int GetAttribute(XmlNode xmlNode, string attributeName, int defaultValue)
         {
+            if (xmlNode == null)
+                return defaultValue;
             XmlAttribute attribute = xmlNode.Attributes[attributeName];
             if (attribute == null)
                 return defaultValue;
@@ -80,6 +86,8 @@ namespace Gdk
         /// </summary>
         static public int[] GetAttribute(XmlNode xmlNode, string attributeName, int[] defaultValues)
         {
+            if (xmlNode == null)
+                return defaultValues;
             XmlAttribute attribute = xmlNode.Attributes[attributeName];
             if (attribute == null)
                 return defaultValues;
@@ -99,6 +107,8 @@ namespace Gdk
         /// </summary>
         static public byte[] GetAttribute(XmlNode xmlNode, string attributeName, byte[] defaultValues)
         {
+            if (xmlNode == null)
+                return defaultValues;
             XmlAttribute attribute = xmlNode.Attributes[attributeName];
             if (attribute == null)
                 return defaultValues;
@@ -118,6 +128,8 @@ namespace Gdk
         /// </summary>
         static public float GetAttribute(XmlNode xmlNode, string attributeName, float defaultValue)
         {
+            if (xmlNode == null)
+                return defaultValue;
             XmlAttribute attribute = xmlNode.Attributes[attributeName];
             if (attribute == null)
                 return defaultValue;
@@ -127,8 +139,23 @@ namespace Gdk
         /// <summary>
         /// Retrieves the value of the given attribute or the default value if specified
         /// </summary>
+        static public double GetAttributeDouble(XmlNode xmlNode, string attributeName, double defaultValue)
+        {
+            if (xmlNode == null)
+                return defaultValue;
+            XmlAttribute attribute = xmlNode.Attributes[attributeName];
+            if (attribute == null)
+                return defaultValue;
+            return double.Parse(attribute.Value);
+        }
+
+        /// <summary>
+        /// Retrieves the value of the given attribute or the default value if specified
+        /// </summary>
         static public Color GetAttribute(XmlNode xmlNode, string attributeName, Color defaultValue)
         {
+            if (xmlNode == null)
+                return defaultValue;
             XmlAttribute attribute = xmlNode.Attributes[attributeName];
             if (attribute == null)
                 return defaultValue;
@@ -163,6 +190,8 @@ namespace Gdk
         /// </summary>
         static public Vector3 GetAttribute(XmlNode xmlNode, string attributeName, Vector3 defaultValue)
         {
+            if (xmlNode == null)
+                return defaultValue;
             XmlAttribute attribute = xmlNode.Attributes[attributeName];
             if (attribute == null)
                 return defaultValue;
@@ -187,6 +216,8 @@ namespace Gdk
         /// </summary>
         static public Vector2 GetAttribute(XmlNode xmlNode, string attributeName, Vector2 defaultValue)
         {
+            if (xmlNode == null)
+                return defaultValue;
             XmlAttribute attribute = xmlNode.Attributes[attributeName];
             if (attribute == null)
                 return defaultValue;

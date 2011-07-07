@@ -2,8 +2,9 @@
 
   <AttributeBindings>
     <Attribute Name="a_position" Location="0" />
-    <Attribute Name="a_texCoord" Location="1" />
+    <Attribute Name="a_normal" Location="1" />
     <Attribute Name="a_color" Location="2" />
+    <Attribute Name="a_texCoord" Location="3" />
   </AttributeBindings>
   
   <Techniques>

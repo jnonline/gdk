@@ -30,6 +30,17 @@ namespace Gdk
             M41 = m41; M42 = m42; M43 = m43; M44 = m44;
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public Matrix(float[] values)
+        {
+            M11 = values[0]; M12 = values[1]; M13 = values[2]; M14 = values[3];
+            M21 = values[4]; M22 = values[5]; M23 = values[6]; M24 = values[7];
+            M31 = values[8]; M32 = values[9]; M33 = values[10]; M34 = values[11];
+            M41 = values[12]; M42 = values[13]; M43 = values[14]; M44 = values[15];
+        }
+
         #region Properties & Accessors
         
         // Named Cell accessors

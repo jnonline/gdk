@@ -695,3 +695,21 @@ float Matrix3D::GetDeterminant()
 
     return ( a0*b5-a1*b4+a2*b3+a3*b2-a4*b1+a5*b0 );
 }
+
+// ===================================================================================
+// Stream Utilities
+// ===================================================================================
+
+// ***********************************************************************
+Matrix3D Matrix3D::ReadFromStream(Stream* stream)
+{
+	Matrix3D result;
+	stream->Read(&result, sizeof(float[16]));
+	return result;
+}
+
+// ***********************************************************************
+void Matrix3D::WriteToStream(Stream* stream)
+{
+	stream->Write(this, sizeof(float[16]));
+}

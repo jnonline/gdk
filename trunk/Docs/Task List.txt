@@ -1,4 +1,14 @@
 
+AssetManager - 
+	Get rid of 'ignore child assets'.... somehow...
+
+Post-Build PC
+	Add " " around paths
+
+Is it possible to hook VC-Clean operation, and delete the Assets folder..
+
+
+
 ==================================================
 == Tasks
 ==================================================
@@ -161,7 +171,9 @@ Pri 3
 ------------------------------------------------
 -- LOD based technique selection
 -------------------------------------------------
-	
+
+!!! Pick techniques like COLLADA PROFILES!  GLSL 2.1,  GLSL 4.0,  GLES 2.0, ...
+
 	TEchnique
 		- LOD Level.. [0.4 - 0.8].. etc
 		

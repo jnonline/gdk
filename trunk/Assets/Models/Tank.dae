@@ -10,16 +10,19 @@
         <unit meter="1.000000" name="meter" />
         <up_axis>Y_UP</up_axis>
     </asset>
+  
     <library_images>
         <image id="Metal1-image" name="Metal1-image">
             <init_from>Metal1.jpg</init_from>
         </image>
     </library_images>
+  
     <library_materials>
         <material id="Metal1" name="Metal1">
             <instance_effect url="#Metal1-effect" />
         </material>
     </library_materials>
+  
     <library_effects>
         <effect id="Metal1-effect" name="Metal1-effect">
             <profile_COMMON>
@@ -73,7 +76,9 @@
             </profile_COMMON>
         </effect>
     </library_effects>
+  
     <library_geometries>
+      
         <geometry id="Body-geometry" name="Body-geometry">
             <mesh>
                 <source id="Body-positions" name="position">
@@ -116,6 +121,7 @@
                 </triangles>
             </mesh>
         </geometry>
+      
         <geometry id="Turret-geometry" name="Turret-geometry">
             <mesh>
                 <source id="Turret-positions" name="position">
@@ -201,6 +207,7 @@
             </mesh>
         </geometry>
     </library_geometries>
+  
     <library_visual_scenes>
         <visual_scene id="SceneRoot" name="SceneRoot">
             <node id="Body" name="Body" type="NODE">
@@ -232,7 +239,9 @@
             </node>
         </visual_scene>
     </library_visual_scenes>
+  
     <scene>
         <instance_visual_scene url="#SceneRoot" />
     </scene>
+  
 </COLLADA>

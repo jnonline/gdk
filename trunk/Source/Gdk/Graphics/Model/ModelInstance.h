@@ -14,12 +14,18 @@ namespace Gdk
 	{
 	public:
 		// Properties
-		class Model*					ParentModel;
-		vector<class ModelMaterial*>	Materials;
+		class Model*			ParentModel;
+
+		// Instanced Properties
+		Matrix3D				World;
+		vector<Matrix3D>		AbsoluteTransforms;
+		
+
+		//vector<class ModelMaterial*>	Materials;
 
 		// Methods
-		~ModelInstance();
 		void Draw();
+		~ModelInstance();
 
 	private:
 		

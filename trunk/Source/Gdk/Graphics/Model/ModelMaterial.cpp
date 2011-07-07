@@ -14,9 +14,14 @@ ModelMaterial::ModelMaterial()
 	Flags = (ModelMaterialFlags::Enum) 0;
 	DiffuseTexture = NULL;
 	BumpTexture = NULL;
-	MeshShader = NULL;
 }
 
+// ***********************************************************************
+ModelMaterial::~ModelMaterial()
+{
+}
+
+/*
 // ***********************************************************************
 ModelMaterial* ModelMaterial::Clone()
 {
@@ -39,3 +44,4 @@ ModelMaterial* ModelMaterial::Clone()
 	// Return the clone
 	return newMaterial;
 }
+*/

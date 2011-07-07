@@ -15,8 +15,8 @@ Tanks3DModule::Tanks3DModule ()
 	AssetManager* assetManager = AssetManager::GetSingleton();
 
 	// Load our test models
-	ground = assetManager->Load<Model>("Models/Ground", &assetsPool, NULL)->CreateInstance();
-	tank = assetManager->Load<Model>("Models/Tank", &assetsPool, NULL)->CreateInstance();
+	ground = assetManager->Load<Model>("Models/Ground", &assetsPool, NULL);
+	tank = assetManager->Load<Model>("Models/Tank", &assetsPool, NULL);
 
 	// Setup the game objects
 	playerDirection = 0.0f;
@@ -49,10 +49,6 @@ Tanks3DModule::~Tanks3DModule()
 
 	// Delete the sprite
 	GdkDelete(chopper);
-
-	// Delete the test model instances
-	GdkDelete(tank);
-	GdkDelete(ground);
 
 	// Release any assets in our pool
 	assetsPool.Release();
@@ -193,26 +189,20 @@ void Tanks3DModule::OnDraw()
 	Graphics::GlobalUniforms.LightColors->SetFloat3(1.0f, 1.0f, 0.0f, 0);
     
 	// Draw the Ground
-	Matrix3D world;
-	world.Translate(0.0f, -0.3f, 0.0f);
-	Graphics::GlobalUniforms.World->SetMatrix4(world);
+	ground->World = Matrix3D::CreateTranslation(0.0f, -0.3f, 0.0f);
 	ground->Draw();
     
 	// Draw the Player Tank
-	world.MakeIdentity();
-	world.RotateY(-playerDirection - Math::PI * 0.5f);   // We invert the angle here, as the 2D to 3D conversion has Y = -Z (see Matrix3D.h for 3d coordinate orientations)
-	world.Translate(playerPosition.X, 0.0f, playerPosition.Y);
-	Graphics::GlobalUniforms.World->SetMatrix4(world);
+	tank->World = Matrix3D::CreateRotationY(-playerDirection - Math::PI * 0.5f);  // We invert the angle here, as the 2D to 3D conversion has Y = -Z (see Matrix3D.h for 3d coordinate orientations)
+	tank->World.Translate(playerPosition.X, 0.0f, playerPosition.Y);
 	tank->Draw();
     
 	// Draw the Enemy tanks
 	for(size_t i=0; i<enemies.size(); i++)
 	{
 		EnemyTank& enemy = enemies[i];
-		world.MakeIdentity();
-		world.RotateY(-enemy.Direction - Math::PI * 0.5f);
-		world.Translate(enemy.Position.X, 0.0f, enemy.Position.Y);
-		Graphics::GlobalUniforms.World->SetMatrix4(world);
+		tank->World = Matrix3D::CreateRotationY(-enemy.Direction - Math::PI * 0.5f);  // We invert the angle here, as the 2D to 3D conversion has Y = -Z (see Matrix3D.h for 3d coordinate orientations)
+		tank->World.Translate(enemy.Position.X, 0.0f, enemy.Position.Y);
 		tank->Draw();
 	}
     

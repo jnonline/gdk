@@ -62,6 +62,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Content\Atlas\AtlasProcessor.cs" />
+    <Compile Include="Content\COLLADA\Collada.cs" />
+    <Compile Include="Content\COLLADA\Animation.cs" />
+    <Compile Include="Content\COLLADA\Controller.cs" />
+    <Compile Include="Content\COLLADA\Transform.cs" />
+    <Compile Include="Content\COLLADA\Scene.cs" />
+    <Compile Include="Content\COLLADA\Rendering.cs" />
+    <Compile Include="Content\COLLADA\Parameters.cs" />
+    <Compile Include="Content\COLLADA\Effects.cs" />
+    <Compile Include="Content\COLLADA\Materials.cs" />
+    <Compile Include="Content\COLLADA\Texturing.cs" />
+    <Compile Include="Content\COLLADA\DataFlow.cs" />
+    <Compile Include="Content\COLLADA\Geometry.cs" />
     <Compile Include="Content\DOM\Content.cs" />
     <Compile Include="Content\Atlas\Atlas.cs" />
     <Compile Include="Content\Atlas\AtlasAnimation.cs" />
@@ -71,6 +83,7 @@
     <Compile Include="Content\DOM\Asset.cs" />
     <Compile Include="Content\DOM\Bundle.cs" />
     <Compile Include="Content\DOM\PlatformType.cs" />
+    <Compile Include="Content\Model\ModelDOM.cs" />
     <Compile Include="Content\Processors\BMFontProcessor.cs" />
     <Compile Include="Content\Model\ModelProcessor.cs" />
     <Compile Include="Content\Shader\ShaderContent.cs" />
@@ -128,6 +141,7 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
+    <Compile Include="Utilities\BinaryWriterUtilities.cs" />
     <Compile Include="Utilities\ExceptionUtilities.cs" />
     <Compile Include="Utilities\StringUtilities.cs" />
     <Compile Include="Utilities\XmlUtilities.cs" />
