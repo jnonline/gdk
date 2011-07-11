@@ -33,8 +33,13 @@ protected:
     Vector3 cameraDirection;
     Matrix3D projection;
     Matrix3D view;
+
+	// Assets
+	AssetPool assetsPool;
+	Model* skeletalModel;
     
 	// Input event handlers
     void OnTouchMoved(Touch* touch);
-    void OnMouseMoved(MouseMoveArgs* args);
+    void OnMouseMove(MouseMoveArgs* args);
+	void OnMouseWheelScroll(float deltaX, float deltaY);
 };

@@ -65,6 +65,7 @@
     <Compile Include="Content\COLLADA\Collada.cs" />
     <Compile Include="Content\COLLADA\Animation.cs" />
     <Compile Include="Content\COLLADA\Controller.cs" />
+    <Compile Include="Content\COLLADA\Metadata.cs" />
     <Compile Include="Content\COLLADA\Transform.cs" />
     <Compile Include="Content\COLLADA\Scene.cs" />
     <Compile Include="Content\COLLADA\Rendering.cs" />

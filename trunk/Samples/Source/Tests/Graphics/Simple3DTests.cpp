@@ -11,21 +11,29 @@ Simple3DTests::Simple3DTests()
 {
 	// Setup the camera properties
     viewLongitudeAngle = Math::PI * 0.35f;
-    viewLatitudeAngle = Math::PI * 0.2;
+    viewLatitudeAngle = Math::PI * 0.2f;
     viewDistance = 10.0f;
     
     // Bind to input events
     TouchInput::TouchMoved.AddHandlerMethod(this, &Simple3DTests::OnTouchMoved);
-    Mouse::MouseMove.AddHandlerMethod(this, &Simple3DTests::OnMouseMoved);
+    Mouse::MouseMove.AddHandlerMethod(this, &Simple3DTests::OnMouseMove);
+	Mouse::MouseWheelScroll.AddHandlerMethod(this, &Simple3DTests::OnMouseWheelScroll);
     
+	// Load a test model
+	AssetManager* assetManager = AssetManager::GetSingleton();
+	//skeletalModel = assetManager->Load<Model>("Models/SkeletonWarrior", &assetsPool, NULL);
 }
 
 // ***********************************************************************
 Simple3DTests::~Simple3DTests()
 {
+	// Release the assets
+	assetsPool.Release();
+
     // UnBind to input events
     TouchInput::TouchMoved.RemoveHandlerMethod(this, &Simple3DTests::OnTouchMoved);
-    Mouse::MouseMove.RemoveHandlerMethod(this, &Simple3DTests::OnMouseMoved);
+    Mouse::MouseMove.RemoveHandlerMethod(this, &Simple3DTests::OnMouseMove);
+	Mouse::MouseWheelScroll.RemoveHandlerMethod(this, &Simple3DTests::OnMouseWheelScroll);
 }
 
 // ***********************************************************************
@@ -100,6 +108,10 @@ void Simple3DTests::OnDraw()
     // Draw the TestAxis model at the origin
 	SharedAssets::Models.TestAxis->World = Matrix3D::IDENTITY;
     SharedAssets::Models.TestAxis->Draw();
+
+	// Draw the Skeletal model slightly to the right
+	//skeletalModel->World = Matrix3D::CreateTranslation(2.0f, 0.0f, 2.0f);
+	//skeletalModel->Draw();
     
     // Draw several models with cumulative transforms
     // TODO(P1) more tests
@@ -121,13 +133,13 @@ void Simple3DTests::OnTouchMoved(Gdk::Touch *touch)
 }
 
 // ***********************************************************************
-void Simple3DTests::OnMouseMoved(MouseMoveArgs* args)
+void Simple3DTests::OnMouseMove(MouseMoveArgs* args)
 {
     // Is the mouse down?
     if(Mouse::IsButtonDown(MouseButton::Left))
     {
         // Get the mouse movement (in pixels)
-        Vector2 mouseDelta(args->NewX - args->PreviousX, args->NewY - args->PreviousY);
+        Vector2 mouseDelta((float)args->NewX - args->PreviousX, (float)args->NewY - args->PreviousY);
         
         // Convert the distance from pixel coordinates to screen symmetric coordinates
         mouseDelta.X /= Graphics::GetScreenWidth();
@@ -139,4 +151,11 @@ void Simple3DTests::OnMouseMoved(MouseMoveArgs* args)
     }
 }
 
+// ***********************************************************************
+void Simple3DTests::OnMouseWheelScroll(float deltaX, float deltaY)
+{
+	// zoom/unzoom the camera
+	this->viewDistance -= deltaY * 0.5f;
+	this->viewDistance = Math::Clamp(this->viewDistance, 2.0f, 100.0f);
+}
 

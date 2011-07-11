@@ -129,12 +129,19 @@ namespace Gdk.Content.COLLADA
 
             // <bind_shape_matrix>
             XmlNode xmlBindShapeMatrix = xmlSkin.SelectSingleNode("bind_shape_matrix");
-            if(xmlBindShapeMatrix != null)
+            if (xmlBindShapeMatrix != null)
             {
                 // Get the float values & build a matrix from them
-                List<float> floatValues = StringUtilities.ParseFloats(xmlBindShapeMatrix.InnerText, ' ');
-                this.BindShapeMatrix = new Gdk.Matrix(floatValues.ToArray());
+                List<float> values = StringUtilities.ParseFloats(xmlBindShapeMatrix.InnerText, ' ');
+                this.BindShapeMatrix = new Gdk.Matrix(
+                    values[0], values[4], values[8], values[12],
+                    values[1], values[5], values[9], values[13],
+                    values[2], values[6], values[10], values[14],
+                    values[3], values[7], values[11], values[15]
+                    );
             }
+            else
+                this.BindShapeMatrix = Gdk.Matrix.Identity;
 
             // <source>
             foreach (XmlNode xmlSource in xmlSkin.SelectNodes("source"))
@@ -159,7 +166,7 @@ namespace Gdk.Content.COLLADA
     {
 
         // Child Objects
-        List<Input> Inputs = new List<Input>();
+        public List<Input> Inputs = new List<Input>();
 
         /// <summary>
         /// CTor
@@ -192,9 +199,9 @@ namespace Gdk.Content.COLLADA
         public int Count;
 
         // Child Objects
-        List<SharedInput> Inputs = new List<SharedInput>();
-        List<int> VCount = new List<int>();
-        List<int> V = new List<int>();
+        public List<SharedInput> Inputs = new List<SharedInput>();
+        public List<int> VCount = new List<int>();
+        public List<int> V = new List<int>();
 
         /// <summary>
         /// CTor

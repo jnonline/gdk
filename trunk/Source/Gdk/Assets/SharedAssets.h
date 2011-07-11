@@ -88,6 +88,12 @@ namespace Gdk
 					class Shader* DiffuseTextured;
 					class Shader* NonTextured;
 				} Mesh;
+
+				struct
+				{
+					class Shader* DiffuseTextured;
+				} SkeletalMeshB4;
+
 			} Model;
 		} Shaders;
 

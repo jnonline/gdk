@@ -41,8 +41,12 @@ void SharedAssets::Init()
     
 	// Models
 	{
+		// Mesh
 		SharedAssets::Shaders.Model.Mesh.DiffuseTextured = assetManager->Load<Shader>("Shaders/Model/Mesh/DiffuseTextured", &Pool, NULL);
 		SharedAssets::Shaders.Model.Mesh.NonTextured = assetManager->Load<Shader>("Shaders/Model/Mesh/NonTextured", &Pool, NULL);
+
+		// SkeletalMesh B4
+		SharedAssets::Shaders.Model.SkeletalMeshB4.DiffuseTextured = assetManager->Load<Shader>("Shaders/Model/SkeletalMeshB4/DiffuseTextured", &Pool, NULL);
 	}
 
 	// Models

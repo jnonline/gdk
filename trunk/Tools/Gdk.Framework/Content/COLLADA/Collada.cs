@@ -21,8 +21,10 @@ namespace Gdk.Content.COLLADA
         // Child objects
         // ----------------------------------------------------
 
+        public Asset Asset;
         public Scene Scene;
 
+        // Libraries
         public Dictionary<string, Geometry> Geometries = new Dictionary<string, Geometry>();
         public Dictionary<string, Image> Images = new Dictionary<string, Image>();
         public Dictionary<string, Material> Materials = new Dictionary<string, Material>();
@@ -31,8 +33,9 @@ namespace Gdk.Content.COLLADA
         public Dictionary<string, Animation> Animations = new Dictionary<string, Animation>();
         public Dictionary<string, AnimationClip> AnimationClips = new Dictionary<string, AnimationClip>();
         public Dictionary<string, Controller> Controllers = new Dictionary<string, Controller>();
+        public Dictionary<string, Node> Nodes = new Dictionary<string, Node>();
 
-        // Objects With Id lookup table
+        // Object / Id lookup table
         private Dictionary<string, IColladaObjectWithId> objectsById = new Dictionary<string, IColladaObjectWithId>();
         public Dictionary<string, IColladaObjectWithId> ObjectsById { get { return objectsById; } }
 
@@ -77,6 +80,13 @@ namespace Gdk.Content.COLLADA
             // Load the libraries
             // ==============================
 
+            // root <asset>
+            // -----------------------
+            XmlNode xmlAsset = xmlCollada.SelectSingleNode("asset");
+            if (xmlAsset == null)
+                throw new ColladaLoadException("The root [COLLADA/asset] node is missing, unable to determine the asset information");
+            this.Asset = new Asset(xmlAsset, this);
+            
             // library_geometries
             // -----------------------
 
@@ -211,6 +221,23 @@ namespace Gdk.Content.COLLADA
 
                     // Add the controller to our dictionary
                     this.Controllers.Add(controller.Id, controller);
+                }
+            }
+
+            // library_nodes
+            // -----------------------
+
+            // Loop through the <library_nodes> elements
+            foreach (XmlNode xmlLibraryNodes in xmlCollada.SelectNodes("library_nodes"))
+            {
+                // Loop through <node> elements
+                foreach (XmlNode xmlNode in xmlLibraryNodes.SelectNodes("node"))
+                {
+                    // Load this node
+                    Node node = new Node(xmlNode, this);
+
+                    // Add the node to our dictionary
+                    this.Nodes.Add(node.Id, node);
                 }
             }
 

@@ -532,8 +532,6 @@ namespace Gdk.Content
                     // Make sure the parameter has a name, type, and a (value or binding)
                     if (string.IsNullOrEmpty(name))
                         throw new BuildException("Parameter found with no valid Name attribute");
-                    if (string.IsNullOrEmpty(value) && string.IsNullOrEmpty(bindToGlobal))
-                        throw new BuildException("Parameter [" + name + "] has no valid Value or BindToShared attribute");
 
                     // Do we already have this parameter?
                     if (shader.Parameters.ContainsKey(name))
@@ -1061,8 +1059,8 @@ namespace Gdk.Content
                     parameter.ArraySize = uniform.ArraySize;
                     parameter.UniformType = uniform.UniformType;
 
-                    // Is this NOT a binding?  (IOW: we need to parse the value)
-                    if (parameter.IsBindToGlobal == false)
+                    // Does this parameter have an initial value?
+                    if (parameter.HasInitialValue == true)
                     {
                         // Parse the parameter value based on the type
                         switch (parameter.UniformType)
@@ -1334,6 +1332,8 @@ namespace Gdk.Content
                 UInt16 parameterFlags = 0;
                 if (parameter.IsBindToGlobal)
                     parameterFlags |= (UInt16)ShaderParameterFlags.BindToGlobal;
+                if (parameter.HasInitialValue)
+                    parameterFlags |= (UInt16)ShaderParameterFlags.HasInitialValue;
                 writer.Write((UInt16)parameterFlags);
 
                 // Write the parameter name
@@ -1343,13 +1343,15 @@ namespace Gdk.Content
                 writer.Write((UInt16)parameter.UniformType);
                 writer.Write((UInt16)parameter.ArraySize);
                 
-                // Is this a binding or a value parameter?
+                // Is this a binding
                 if (parameter.IsBindToGlobal)
                 {
                     // Write the binding
                     BinaryWriterUtilities.WriteString(writer, parameter.Value);
                 }
-                else
+                
+                // Does this param have an initial value?
+                if(parameter.HasInitialValue)
                 {
                     // Write the value of the parameter
                     if (parameter.IntValues != null)
