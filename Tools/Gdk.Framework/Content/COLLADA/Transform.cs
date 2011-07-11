@@ -71,7 +71,7 @@ namespace Gdk.Content.COLLADA
             {
                 // Get this transform's matrix equivalent, and multiply it through the transform stack
                 Gdk.Matrix transformMatrix = transform.GetTransformMatrix();
-                result *= transformMatrix;
+                result = transformMatrix * result;
             }
 
             return result;
@@ -129,10 +129,15 @@ namespace Gdk.Content.COLLADA
             : base(xmlMatrix, ownerDocument)
         {
             // Get the float values
-            List<float> floatValues = StringUtilities.ParseFloats(xmlMatrix.InnerText, ' ');
+            List<float> values = StringUtilities.ParseFloats(xmlMatrix.InnerText, ' ');
 
-            // Load the matrix
-            this.Value = new Gdk.Matrix(floatValues.ToArray());
+            // Load the matrix (collada store the matrix in row-major order, but we need it in column-major order
+            this.Value = new Gdk.Matrix(
+                values[0], values[4], values[8], values[12],
+                values[1], values[5], values[9], values[13],
+                values[2], values[6], values[10], values[14],
+                values[3], values[7], values[11], values[15]
+                );
         }
 
         /// <summary>

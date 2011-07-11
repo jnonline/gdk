@@ -16,11 +16,13 @@ namespace Gdk
 	{
 	public:
 		// Model/Mesh/Material Properties
-		class ModelNode*					RootNode;
-		vector<class ModelNode*>			Nodes;
-		vector<class ModelMaterial*>		Materials;
-		vector<class ModelMesh*>			Meshes;
-		vector<class ModelMeshInstance*>	MeshInstances;
+		class ModelNode*							RootNode;
+		vector<class ModelNode*>					Nodes;
+		vector<class ModelMaterial*>				Materials;
+		vector<class ModelMesh*>					Meshes;
+		vector<class ModelSkeletalMesh*>			SkeletalMeshes;
+		vector<class ModelMeshInstance*>			MeshInstances;
+		vector<class ModelSkeletalMeshInstance*>	SkeletalMeshInstances;
 
 		// Runtime properties
 		Matrix3D	World;
@@ -40,9 +42,13 @@ namespace Gdk
 		// Private CTor
 		Model();
 
-		// Utility methods
-		void SetupVertexAttributeChannels(ModelMesh* mesh);
-		Shader* DetermineShader(ModelMesh* mesh, ModelMaterial* material);
+		// Loading Utilities
+		static void ReadMeshData(class ModelMesh* mesh, class Stream* stream);
+
+		// Rendering Utilities
+		void DrawMesh(class ModelMesh* mesh, class ModelMeshInstance* meshInstance, class ModelInstance* modelInstance, bool isSkeletalMesh);
+		void SetupVertexAttributeChannels(class ModelMesh* mesh);
+		class Shader* DetermineShader(class ModelMesh* mesh, class ModelMaterial* material);
 
 		// References to assets that this model uses (Textures, etc)
 		vector<class AssetBase*>  ownedAssets;

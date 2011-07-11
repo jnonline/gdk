@@ -88,7 +88,9 @@ namespace Gdk.Content.COLLADA
 
         // Child Objects
         public List<TransformBase> Transforms = new List<TransformBase>();
+        public List<InstanceController> ControllerInstances = new List<InstanceController>();
         public List<InstanceGeometry> GeometryInstances = new List<InstanceGeometry>();
+        public List<InstanceNode> NodeInstances = new List<InstanceNode>();
         public List<Node> ChildNodes = new List<Node>();
 
         /// <summary>
@@ -115,14 +117,46 @@ namespace Gdk.Content.COLLADA
             // Load the transforms
             this.Transforms = TransformBase.ParseTransforms(xmlNode.ChildNodes, ownerDocument);
 
+            // Load the controller instances
+            foreach (XmlNode xmlInstanceController in xmlNode.SelectNodes("instance_controller"))
+                this.ControllerInstances.Add(new InstanceController(xmlInstanceController, ownerDocument));
+
             // Load the geometry instances
             foreach (XmlNode xmlInstanceGeometry in xmlNode.SelectNodes("instance_geometry"))
                 this.GeometryInstances.Add(new InstanceGeometry(xmlInstanceGeometry, ownerDocument));
+
+            // Load the node instances
+            foreach (XmlNode xmlInstanceNode in xmlNode.SelectNodes("instance_node"))
+                this.NodeInstances.Add(new InstanceNode(xmlInstanceNode, ownerDocument));
 
             // Load the child nodes
             foreach (XmlNode xmlChildNode in xmlNode.SelectNodes("node"))
                 this.ChildNodes.Add(new Node(xmlChildNode, ownerDocument));
         }
+    }
+
+    // ============================================================
+    public class InstanceNode : ColladaBase
+    {
+        // Attributes
+        public string Sid;
+        public string Name;
+        public string Url;
+
+        /// <summary>
+        /// CTor
+        /// </summary>
+        public InstanceNode(XmlNode xmlInstanceNode, ColladaDocument ownerDocument)
+            : base(ownerDocument)
+        {
+            // Load the attributes
+            // --------------------------
+
+            this.Sid = XmlUtilities.GetAttribute(xmlInstanceNode, "sid", "");
+            this.Name = XmlUtilities.GetAttribute(xmlInstanceNode, "name", "");
+            this.Url = XmlUtilities.GetAttribute(xmlInstanceNode, "url", "");
+        }
+
     }
 
     // ============================================================

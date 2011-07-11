@@ -19,6 +19,20 @@ namespace Gdk.Content
         COLLADA.ColladaDocument Source;
         Model.Model ResultModel;
         
+        // Internals
+        int nextUniqueId = 1;
+
+        /// <summary>
+        /// Returns a unique integer every time this method is called
+        /// </summary>
+        /// <returns></returns>
+        public int GetUniqueId()
+        {
+            int id = nextUniqueId;
+            nextUniqueId++;
+            return id;
+        }
+
         /// <summary>
         /// Gets the descriptive details of this processor
         /// </summary>
@@ -38,7 +52,7 @@ namespace Gdk.Content
             details.AddParameter("Rotate", "Rotates the mesh by the given vector (per axis, in degrees)", "Transform", typeof(Vector3), Vector3.Zero);
             details.AddParameter("Pre-Translate", "Translates the mesh by a given vector (before scaling & rotating)", "Transform", typeof(Vector3), Vector3.Zero);
             details.AddParameter("Post-Translate", "Translates the mesh by a given vector (after scaling & rotating)", "Transform", typeof(Vector3), Vector3.Zero);
-
+            
             details.AddParameter("Remove Unused Nodes", "Removes any nodes that do not contribute to the rendered model.  (Turn this off if you have ghost nodes you will use for binding)", "Optimization", typeof(bool), true);
             details.AddParameter("Remove Unused Meshes", "Removes any meshes that are not instanced in the model.  (Turn this off if you will be dynamically instancing meshes within a model)", "Optimization", typeof(bool), true);
             details.AddParameter("Remove Unused Materials", "Removes any materials that are not instanced in the model.  (Turn this off if you will be dynamically switching materials on a mesh, such as swapping skins)", "Optimization", typeof(bool), true);
@@ -49,6 +63,7 @@ namespace Gdk.Content
             details.AddParameter("Default Shininess", "The shininess for the default material assigned to any meshes that do not have a material binding in the COLLADA source.", "Default Material", typeof(float), 0.0f);
             details.AddParameter("Default Emissive", "The emissive channel for the default material assigned to any meshes that do not have a material binding in the COLLADA source.", "Default Material", typeof(Color), new Color(0, 0, 0));
 
+            
             return details;
         }
 
@@ -113,26 +128,56 @@ namespace Gdk.Content
         /// This method builds a raw GDK Model from the Source collada data
         /// </summary>
         public void GenerateModel()
-        {   
-            // Create the model
-            // -------------------------------------
-
+        {
             // Create the new model that we are building
             this.ResultModel = new Model.Model();
 
-            // Get the "Transform" parameters
+            // Setup the root transforms for the model
+            // -------------------------------------
+
+            Context.LogInfo("<b> - Setting up root transforms</b>");
+
+            // Construct the root transform for this model; 
+            Matrix rootTransform = Matrix.Identity;
+
+            // Alter the root node to compensate for the UP Axis of the collada data
+            switch (this.Source.Asset.UpAxis)
+            {
+                case COLLADA.UpAxisTypes.X_UP:
+                    throw new BuildException("X_UP up-axis models are not currently supported");
+
+                case COLLADA.UpAxisTypes.Z_UP:
+                    Context.LogInfo(" +-- Converting collada data from Z_UP to Y_UP");
+                    rootTransform *= Matrix.CreateRotationX(3.0f * MathUtility.PiOver2);
+                    break;
+
+                case COLLADA.UpAxisTypes.Y_UP:
+                    Context.LogInfo(" +-- Collada data is already in Y_UP format");
+                    break;
+            }
+
+            // Apply scaling to get the collada data into a 1unit = 1meter scale
+            if (this.Source.Asset.UnitMeter != 1.0f)
+            {
+                Context.LogInfo(" +-- Scaling collada data to match [1-Unit = 1-Meter].  Current scale [1-Unit = " + this.Source.Asset.UnitMeter + "-Meters]");
+                rootTransform *= Matrix.CreateScale(this.Source.Asset.UnitMeter);
+            }
+            else
+                Context.LogInfo(" +-- Collada data is already in the default scale [1-Unit = 1-Meter].");
+
+            // Get the processor's "Transform" parameters
             float transformScale = Context.Parameters.GetValue("Scale", 1.0f);
             Vector3 transformRotate = Context.Parameters.GetValue("Rotate", Vector3.Zero);
             Vector3 transformPreTranslate = Context.Parameters.GetValue("Pre-Translate", Vector3.Zero);
             Vector3 transformPostTranslate = Context.Parameters.GetValue("Post-Translate", Vector3.Zero);
 
-            // Construct the root transform for this model, from the processor's "Transform" parameters
-            Gdk.Matrix rootTransform =
-                Matrix.CreateTranslation(transformPreTranslate)
-                * Matrix.CreateRotationY(MathUtility.DegreesToRadians(transformRotate.Y))
-                * Matrix.CreateRotationY(MathUtility.DegreesToRadians(transformRotate.Z))
-                * Matrix.CreateRotationY(MathUtility.DegreesToRadians(transformRotate.X))
+            // Apply the processor's "Transform" parameters to the root transform
+            rootTransform = rootTransform
+                * Matrix.CreateTranslation(transformPreTranslate)
                 * Matrix.CreateScale(transformScale)
+                * Matrix.CreateRotationX(MathUtility.DegreesToRadians(transformRotate.X))
+                * Matrix.CreateRotationY(MathUtility.DegreesToRadians(transformRotate.Y))
+                * Matrix.CreateRotationZ(MathUtility.DegreesToRadians(transformRotate.Z))
                 * Matrix.CreateTranslation(transformPostTranslate)
                 ;
 
@@ -147,7 +192,7 @@ namespace Gdk.Content
             // Process the Materials
             // -------------------------------------
 
-            Context.LogInfo("<b> - Processing Materials</b>");
+            Context.LogInfo("<br/><b> - Processing Materials</b>");
 
             // Loop through the collada materials
             foreach (KeyValuePair<string, COLLADA.Material> materialEntry in Source.Materials)
@@ -166,6 +211,18 @@ namespace Gdk.Content
             {
                 // Process this geometry
                 ProcessColladaGeometry(geometryEntry.Value);   
+            }
+
+            // Process the Controllers
+            // -------------------------------------
+
+            Context.LogInfo("<br/><b> - Processing Controllers</b>");
+
+            // Loop through the collada controllers
+            foreach (KeyValuePair<string, COLLADA.Controller> controllerEntry in Source.Controllers)
+            {
+                // Process this controller
+                ProcessColladaController(controllerEntry.Value);
             }
 
             // Process the scene node graph
@@ -196,16 +253,25 @@ namespace Gdk.Content
         {
             Context.LogInfo(" +-" + logIndent + " Node: " + colladaNode.Id);
 
-            // Get the full transform for this node
+            // Get the local & full transform for this node
             Gdk.Matrix localTransform = COLLADA.TransformBase.GetCombinedTransforms(colladaNode.Transforms);
-            Gdk.Matrix fullTransform = parentTransform * localTransform;
+            Gdk.Matrix absoluteTransform = localTransform * parentTransform;
 
             // Create the Model.Node for this node
             Model.Node node = new Gdk.Content.Model.Node();
             node.Transform = localTransform;
+            node.AbsoluteTransform = absoluteTransform;
             node.Id = colladaNode.Id;
+            node.Sid = colladaNode.Sid;
+
+            // If the node has no Id, we generate one
+            if(string.IsNullOrEmpty(node.Id))
+            {
+                node.Id = "GDK-Node-" + this.ResultModel.NodesById.Count;
+            }
 
             // Add this node to the parent & the global nodes lookup
+            node.ParentNode = parentNode;
             parentNode.ChildNodes.Add(node);
             this.ResultModel.NodesById.Add(node.Id, node);
 
@@ -216,12 +282,153 @@ namespace Gdk.Content
                 ProcessColladaInstanceGeometry(geometryInstance, node, logIndent);
             }
 
+            // Loop though the instanced controllers on this node
+            foreach (COLLADA.InstanceController controllerInstance in colladaNode.ControllerInstances)
+            {
+                // Process this controller instance
+                ProcessColladaInstanceController(controllerInstance, node, logIndent);
+            }
+
             // Loop through the child nodes
             foreach (COLLADA.Node colladaChildNode in colladaNode.ChildNodes)
             {
                 // Recurse process this node
-                ProcessColladaNode(colladaChildNode, node, fullTransform, logIndent + "--");
+                ProcessColladaNode(colladaChildNode, node, absoluteTransform, logIndent + "--");
             }
+        }
+
+        /// <summary>
+        /// Processes a COLLADA.InstanceController object, at the given node
+        /// </summary>
+        public void ProcessColladaInstanceController(COLLADA.InstanceController controllerInstance, Model.Node node, string logIndent)
+        {
+            // Get the controller that is being referenced
+            COLLADA.Controller controller = this.Source.GetObjectByUrl(controllerInstance.Url) as COLLADA.Controller;
+            if (controller == null)
+                throw new BuildException("Unable to instance a controller at the url \"" + controllerInstance.Url + "\", controller not found");
+
+            // Skin controllers
+            // ============================================
+            
+            if(controller.Skin != null)
+            {
+                // Get the SkeletalMesh that was built from this skin controller
+                Model.SkeletalMesh skeletalMesh = this.ResultModel.SkeletalMeshesById[controller.Id];
+                if(skeletalMesh == null)
+                    throw new BuildException("Unable to instance a skin controller, no skeletal mesh was processed for the skin source [mesh.id=\"" + controller.Skin.Source + "\"]");
+ 
+                // Create a skeletal mesh instance for this skin controller instance
+                Model.SkeletalMeshInstance skeletalMeshInstance = new Model.SkeletalMeshInstance();
+                skeletalMeshInstance.Mesh = skeletalMesh;
+                skeletalMeshInstance.Node = node;
+                this.ResultModel.SkeletalMeshInstances.Add(skeletalMeshInstance);
+
+                // Build a map of all the nodes used by this skeleton, by node SID
+                // ---------------------------------------------------------------------------
+
+                Dictionary<string, Model.Node> SkeletonNodesBySID = new Dictionary<string,Gdk.Content.Model.Node>();
+
+                // Loop through the skeletons used by this instance
+                foreach(COLLADA.Skeleton skeleton in controllerInstance.Skeletons)
+                {
+                    // Get the node at the root of this skeleton
+                    string skeletonNodeId = skeleton.URI;
+                    if(skeletonNodeId.StartsWith("#"))
+                        skeletonNodeId = skeletonNodeId.Substring(1);
+                    Model.Node skeletonRootNode = this.ResultModel.NodesById[skeletonNodeId];
+
+                    // Add all the nodes with a SID to our dictionary
+                    RecurseCollectNodesBySID(skeletonRootNode, SkeletonNodesBySID);
+                }
+
+                // Assign each joint to a node using the SkeletalMesh's Joint SID mappings
+                // ---------------------------------------------------------------------------
+
+                // Loop through the joint SIDs
+                foreach(string jointSID in skeletalMesh.JointSIDs)
+                {
+                    // Find the node with this SID
+                    Model.Node jointNode = SkeletonNodesBySID[jointSID];
+
+                    // Assign this node to this joint index in the skeletal mesh instance
+                    skeletalMeshInstance.JointToNodeMap.Add(jointNode);
+
+                    // Flag the node as InUse
+                    jointNode.InUse = true;
+                }
+
+                // Load the Material Bindings for the instance
+                // ------------------------------------------------
+
+                // Does the instance have any material bindings?
+                if (controllerInstance.BindMaterial != null)
+                {
+                    // Process the material bindings for this instance
+                    foreach (COLLADA.InstanceMaterial materialInstance in controllerInstance.BindMaterial.MaterialInstances)
+                    {
+                        // Does the mesh have this material symbol?
+                        if (skeletalMesh.TriangleSoupsByMaterialSymbol.ContainsKey(materialInstance.Symbol) == false)
+                        {
+                            Context.LogWarn("An [instance_controller] in the node id=\"" + node.Id + "\" contains a material binding for a material symbol \"" + materialInstance.Symbol + "\" that doesnt exist on the mesh.  (this is usually safe to ignore)");
+                            continue;
+                        }
+
+                        // Get the material that is targetted by this binding
+                        string materialId = materialInstance.Target;
+                        if (materialId.StartsWith("#"))
+                            materialId = materialId.Substring(1);
+                        Model.Material material;
+                        if (this.ResultModel.MaterialsById.TryGetValue(materialId, out material) == false)
+                        {
+                            throw new BuildException("The node id=\"" + node.Id + "\" contains a controller instance binding to an unknown material \"" + materialId + "\"");
+                        }
+
+                        // Add this binding to the mesh instance
+                        skeletalMeshInstance.MaterialBindings.Add(materialInstance.Symbol, material);
+                    }
+                }
+
+                // If the mesh has an unassigned material symbol, bind the default material to it
+                if (skeletalMesh.TriangleSoupsByMaterialSymbol.ContainsKey("GDK-Unassigned"))
+                {
+                    Model.Material defaultMaterial = this.ResultModel.MaterialsById["GDK-Default-Material"];
+                    skeletalMeshInstance.MaterialBindings.Add("GDK-Unassigned", defaultMaterial);
+                }
+
+                // Verify the instance has a material binding for every material symbol in the mesh
+                foreach (string materialSymbol in skeletalMesh.TriangleSoupsByMaterialSymbol.Keys)
+                    if (skeletalMeshInstance.MaterialBindings.Keys.Contains(materialSymbol) == false)
+                        throw new BuildException("An [instance_controller] for the controller \"" + skeletalMesh.Id + "\"] does not contains a binding for the material symbol \"" + materialSymbol + "\"");
+
+                if (skeletalMesh.TriangleSoupsByMaterialSymbol.Count != skeletalMeshInstance.MaterialBindings.Count)
+                    throw new BuildException("An [instance_controller] for the controller \"" + skeletalMesh.Id + "\"] does not have a matching number of material bindings.  [Expected:" + skeletalMesh.TriangleSoupsByMaterialSymbol.Count + "] [Actual:" + skeletalMeshInstance.MaterialBindings.Count + "]");
+
+                // -------------------------------------
+
+                // Log the skeletal mesh instance
+                Context.LogInfo(" +---" + logIndent + " Skeletal Mesh Instance: " + skeletalMesh.Id);
+
+                // Set the node as 'inUse'
+                node.InUse = true;
+            }
+
+            // ============================================
+        }
+
+        /// <summary>
+        /// Recursively adds the node & all its children to the dictionary (by their SID)
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="nodesBySID"></param>
+        public void RecurseCollectNodesBySID(Model.Node node, Dictionary<string, Model.Node> nodesBySID)
+        {
+            // If this node has a Sid, add it to the dictionary
+            if (string.IsNullOrEmpty(node.Sid) == false)
+                nodesBySID.Add(node.Sid, node);
+
+            // Recurse to the child nodes
+            foreach (Model.Node childNode in node.ChildNodes)
+                RecurseCollectNodesBySID(childNode, nodesBySID);
         }
 
         /// <summary>
@@ -231,10 +438,10 @@ namespace Gdk.Content
         {
             // Get the Mesh this instance is using
             string meshId = geometryInstance.Url;
-            if(meshId.StartsWith("#"))
+            if (meshId.StartsWith("#"))
                 meshId = meshId.Substring(1);
             Model.Mesh mesh;
-            if(this.ResultModel.MeshesById.TryGetValue(meshId, out mesh) == false)
+            if (this.ResultModel.MeshesById.TryGetValue(meshId, out mesh) == false)
             {
                 Context.LogWarn("The node id=\"" + node.Id + "\" contains an instance of an unknown/unrecognized mesh \"" + meshId + "\"");
                 return;
@@ -282,11 +489,11 @@ namespace Gdk.Content
             }
 
             // Verify the instance has a material binding for every material symbol in the mesh
-            foreach(string materialSymbol in mesh.TriangleSoupsByMaterialSymbol.Keys)
-                if(meshInstance.MaterialBindings.Keys.Contains(materialSymbol) == false)
+            foreach (string materialSymbol in mesh.TriangleSoupsByMaterialSymbol.Keys)
+                if (meshInstance.MaterialBindings.Keys.Contains(materialSymbol) == false)
                     throw new BuildException("An [instance_geometry] for the geometry \"" + mesh.Id + "\"] does not contains a binding for the material symbol \"" + materialSymbol + "\"");
 
-            if(mesh.TriangleSoupsByMaterialSymbol.Count != meshInstance.MaterialBindings.Count)
+            if (mesh.TriangleSoupsByMaterialSymbol.Count != meshInstance.MaterialBindings.Count)
                 throw new BuildException("An [instance_geometry] for the geometry \"" + mesh.Id + "\"] does not have a matching number of material bindings.  [Expected:" + mesh.TriangleSoupsByMaterialSymbol.Count + "] [Actual:" + meshInstance.MaterialBindings.Count + "]");
 
             // Log the mesh instance
@@ -294,6 +501,243 @@ namespace Gdk.Content
 
             // Set the node as 'inUse'
             node.InUse = true;
+        }
+
+        /// <summary>
+        /// Processes a COLLADA.Controller object
+        /// </summary>
+        public void ProcessColladaController(COLLADA.Controller controller)
+        {
+            // Handle the controller based on it's type
+
+            // Skin Controller
+            // ===============================================
+
+            if (controller.Type == COLLADA.ControllerType.Skin)
+            {
+                Context.LogInfo(" +- Skin: " + controller.Id);
+
+                // Clone the source mesh
+                // -------------------------------------------
+
+                // Get the source mesh this controller uses
+                COLLADA.Geometry skinSourceGeometry = this.Source.GetObjectByUrl(controller.Skin.Source) as COLLADA.Geometry;
+                Model.Mesh sourceMesh = this.ResultModel.MeshesById[skinSourceGeometry.Id];
+
+                // Create a skeletal mesh 
+                Model.SkeletalMesh skeletalMesh = new Model.SkeletalMesh();
+                skeletalMesh.Id = controller.Id;
+
+                // Clone the mesh flags & triangle soup data from the source mesh
+                skeletalMesh.Flags = sourceMesh.Flags;
+                foreach(KeyValuePair<string, Model.TriangleSoup> triangleSoupEntry in sourceMesh.TriangleSoupsByMaterialSymbol)
+                    skeletalMesh.TriangleSoupsByMaterialSymbol.Add(triangleSoupEntry.Key, triangleSoupEntry.Value.Clone());
+
+                // Add the cloned mesh to the model
+                this.ResultModel.SkeletalMeshesById.Add(skeletalMesh.Id, skeletalMesh);
+
+                Context.LogVerbose(" +--- Source Mesh: " + sourceMesh.Id);
+
+                // Load the joint data for this skeletal mesh
+                // -------------------------------------------
+
+                // Get the skin's joint inputs for the JOINT & INV_BIND_MATRIX semantics
+                COLLADA.Input jointInput = controller.Skin.Joints.Inputs.Single(n => n.Semantic == "JOINT");
+                COLLADA.Input invBindMatrixInput = controller.Skin.Joints.Inputs.Single(n => n.Semantic == "INV_BIND_MATRIX");
+
+                // Get the source arrays for the joint data
+                COLLADA.Source jointSource = this.Source.GetObjectByUrl(jointInput.Source) as COLLADA.Source;
+                COLLADA.Source invBindMatrixSource = this.Source.GetObjectByUrl(invBindMatrixInput.Source) as COLLADA.Source;
+
+                // Loop through the joints used by this skin
+                skeletalMesh.NumJoints = (UInt16)jointSource.ArrayData.Count;
+                for(int jointIndex = 0; jointIndex < jointSource.ArrayData.Count; jointIndex++)
+                {
+                    // Get the SID for this joint
+                    string jointSID = jointSource.ArrayData.GetValue(jointIndex) as string;
+                    skeletalMesh.JointSIDs.Add(jointSID);;
+
+                    // Get the InvBindMatrix for this joint
+                    List<float> ibmValues = (invBindMatrixSource.ArrayData as COLLADA.FloatArray).Values;
+                    int offset = jointIndex * 16;
+                    Matrix jointInvBindMatrix = new Matrix(
+                        ibmValues[offset + 0], ibmValues[offset + 4], ibmValues[offset + 8], ibmValues[offset + 12],
+                        ibmValues[offset + 1], ibmValues[offset + 5], ibmValues[offset + 9], ibmValues[offset + 13],
+                        ibmValues[offset + 2], ibmValues[offset + 6], ibmValues[offset + 10], ibmValues[offset + 14],
+                        ibmValues[offset + 3], ibmValues[offset + 7], ibmValues[offset + 11], ibmValues[offset + 15]
+                        );
+                    skeletalMesh.JointInvBindMatrices.Add(jointInvBindMatrix);
+
+                }
+
+                Context.LogVerbose(" +--- Joints: " + skeletalMesh.NumJoints);
+
+                // Load the vertex bone indices & weights from the collada skin
+                // -------------------------------------------------------
+
+                int sampleIndex = 0;
+                List<SkinVertexData> skinVertices = new List<SkinVertexData>();
+
+                int highestSingleVertexBoneCount = 0;
+                float[] verticesBonesCounter = new float[16];   // Keeps a count of the number of vertices that use 1, 2, 3, + bones
+
+                // Loop through the vertices in the collada skin
+                for(int vertexIndex = 0; vertexIndex < controller.Skin.VertexWeights.Count; vertexIndex++)
+                {
+                    // Create a VertexBoneData for this vertex
+                    SkinVertexData skinVertexData = new SkinVertexData();
+                    skinVertices.Add(skinVertexData);
+
+                    // Get the number of bones that affect this vertex
+                    skinVertexData.NumBones = controller.Skin.VertexWeights.VCount[vertexIndex];
+
+                    // Update the bones per vertex counter & track the highest number of bones per single vertex
+                    verticesBonesCounter[skinVertexData.NumBones]++;
+                    if(skinVertexData.NumBones > highestSingleVertexBoneCount)
+                        highestSingleVertexBoneCount = skinVertexData.NumBones;
+
+                    // Loop through the number of joints affecting this vertex
+                    for (int affectorIndex = 0; affectorIndex < skinVertexData.NumBones; affectorIndex++)
+                    {
+                        // Sample the named data of this vertex affector from the source/accessor/inputs model of the skin
+                        Dictionary<string, object> namedVertexData = new Dictionary<string, object>();
+                        sampleIndex += SampleColladaSharedInputs(sampleIndex, controller.Skin.VertexWeights.V, controller.Skin.VertexWeights.Inputs, namedVertexData, "");
+
+                        // Parse the joint index & weight into the vertex bone data struct
+                        int jointIndex = (int)namedVertexData["JOINT.INDEX"];
+                        float weight = GetObjectAsFloat(namedVertexData["WEIGHT.WEIGHT"]);
+                        skinVertexData.Indices.Add(jointIndex);
+                        skinVertexData.Weights.Add(weight);
+
+                        // For now, we dont support -1 bone indices (which means no skinning matrix)
+                        //   This could be implmented in the future by pushing all bone indices out by 1 & making bone0 = identity...
+                        if(jointIndex < 0)
+                            throw new BuildException("Skinning joint indices of -1 are not supported.  Please bind all of you skinned mesh vertices to a bone structure");
+                    }
+                }
+
+                // Convert the skinning data to consistent 1, 2, or 4 bone indices
+                // -----------------------------------------------------------------------
+
+                // TODO: Determine the type of skinning to use
+                //   For now, everything forces 4-Bone skinning
+
+                int fixedBonesPerVertex = 4;
+
+                // Loop through the skinning vertex data
+                for(int vertexIndex = 0; vertexIndex < skinVertices.Count; vertexIndex++)
+                {
+                    SkinVertexData skinVertex = skinVertices[vertexIndex];
+
+                    // Does this vertex have MORE bones than we need?
+                    while(skinVertex.NumBones > fixedBonesPerVertex)
+                    {
+                        // Find the bone with the weakest weight
+                        float weakestWeight = 10000.0f;
+                        int weakestBoneIndex = 0;
+                        for(int boneIndex=0; boneIndex < skinVertex.NumBones; boneIndex++)
+                        {
+                            // Is this the weaker bone?
+                            if(skinVertex.Weights[boneIndex] <= weakestWeight)
+                            {
+                                weakestWeight = skinVertex.Weights[boneIndex];
+                                weakestBoneIndex = boneIndex;
+                            }
+                        }
+
+                        // Remove the weak bone
+                        skinVertex.Indices.RemoveAt(weakestBoneIndex);
+                        skinVertex.Weights.RemoveAt(weakestBoneIndex);
+                        skinVertex.NumBones--;
+                    }
+
+                    // Does this vertex have LESS bones than we need?
+                    while(skinVertex.NumBones < fixedBonesPerVertex)
+                    {
+                        // Lets add a new bone with matrix 0 & weight 0
+                        skinVertex.Indices.Add(0);
+                        skinVertex.Weights.Add(0.0f);
+                        skinVertex.NumBones++;
+                    }
+                }
+
+                Context.LogVerbose(" +--- Joints Per Vertex: " + fixedBonesPerVertex);
+
+                // Normalize the bone weights
+                // ------------------------------------------
+
+                // Loop through the skinning vertex data
+                bool didWeightNormalization = false;
+                for(int vertexIndex = 0; vertexIndex < skinVertices.Count; vertexIndex++)
+                {
+                    SkinVertexData skinVertex = skinVertices[vertexIndex];
+
+                    // Get the total of all the bone weights in this vertex
+                    float totalWeight = 0.0f;
+                    for(int boneIndex=0; boneIndex < skinVertex.NumBones; boneIndex++)
+                    {
+                        totalWeight += skinVertex.Weights[boneIndex];
+                        if (totalWeight != 1.0f)
+                            didWeightNormalization = true;
+                    }
+
+                    // If the total weight isnt 0, then normalize all the weights to a total weight of 1.0
+                    if(totalWeight != 0.0f)
+                    {
+                        for(int boneIndex=0; boneIndex < skinVertex.NumBones; boneIndex++)
+                        {
+                            skinVertex.Weights[boneIndex] /= totalWeight;
+                        }
+                    }
+                }
+
+                // Log if we normalized the weights
+                if(didWeightNormalization == true)
+                    Context.LogVerbose(" +--- Joint Weights Normalized");
+
+                // Apply the skin vertex data to the mesh
+                // --------------------------------------------
+
+                // Set the mesh flags for this type of skinning
+                switch(fixedBonesPerVertex)
+                {
+                    case 1: skeletalMesh.Flags |= Model.MeshFlags.VertexHasSingleBone; break;
+                    case 2: skeletalMesh.Flags |= Model.MeshFlags.VertexHas2WeightedBones; break;
+                    case 4: skeletalMesh.Flags |= Model.MeshFlags.VertexHas4WeightedBones; break;
+                    default: throw new BuildException("Skeletal mesh processing is using an unsupported number of bones per vertex: " + fixedBonesPerVertex);
+                }
+
+                // Loop through the triangle soups in the mesh
+                foreach (Model.TriangleSoup triangleSoup in skeletalMesh.TriangleSoupsByMaterialSymbol.Values)
+                {
+                    // Loop through the triangles in this soup
+                    foreach (Model.Triangle triangle in triangleSoup.Triangles)
+                    {
+                        // Loop through the vertices in this triangle
+                        foreach (Model.Vertex vertex in triangle.Vertices)
+                        {
+                            // Lookup the skin vertex data for this vertex
+                            SkinVertexData skinVertex = skinVertices[vertex.Index];
+
+                            // Copy the bone indices & weights to this vertex
+                            for(int boneIndex=0; boneIndex < fixedBonesPerVertex; boneIndex++)
+                            {
+                                vertex.BoneIndices[boneIndex] = (UInt16)skinVertex.Indices[boneIndex];
+                                vertex.BoneWeights[boneIndex] = skinVertex.Weights[boneIndex];
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Morph Controller
+            // ===============================================
+
+            if (controller.Type == COLLADA.ControllerType.Morph)
+            {
+                // Currently Unsupported
+                Context.LogWarn("Morph controller detected \"" + controller.Id + "\".  Skipping processing as morph controllers are unsupported");
+            }
         }
 
         /// <summary>
@@ -360,21 +804,13 @@ namespace Gdk.Content
                 // ----------------------------------------------------
 
                 // Vertex Format
-                string vertexFormat = 
-                    "[Position: YES] " +
-                    "[Normal: YES] " +
-                    "[Color: " + ((mesh.Flags & Gdk.Content.Model.MeshFlags.VertexHasColor) > 0 ? "YES" : " NO") + "] " +
-                    "[TexCoords1: " + ((mesh.Flags & Gdk.Content.Model.MeshFlags.VertexHasTexCoords) > 0 ? "YES" : " NO") + "] " +
-                    "[TexCoords2: " + ((mesh.Flags & Gdk.Content.Model.MeshFlags.VertexHasTexCoords2) > 0 ? "YES" : " NO") + "] ";
-
-                // Skinning info
-                switch (mesh.Flags & Gdk.Content.Model.MeshFlags.SKINNING_TYPE_MASK)
-                {
-                    case Gdk.Content.Model.MeshFlags.VertexHasNoSkinning: vertexFormat += "[Skinning: NONE] ";  break;
-                    case Gdk.Content.Model.MeshFlags.VertexHasSingleBone: vertexFormat += "[Skinning: 1 BONE] ";  break;
-                    case Gdk.Content.Model.MeshFlags.VertexHas2WeightedBones: vertexFormat += "[Skinning: TWO BONES] ";  break;
-                    case Gdk.Content.Model.MeshFlags.VertexHas4WeightedBones: vertexFormat += "[Skinning: FOUR BONES] ";  break;
-                }
+                string vertexFormat = "P3 N3 ";
+                if ((mesh.Flags & Gdk.Content.Model.MeshFlags.VertexHasColor) > 0)
+                    vertexFormat += "C4 ";
+                if ((mesh.Flags & Gdk.Content.Model.MeshFlags.VertexHasTexCoords) > 0)
+                    vertexFormat += "TC2a ";
+                if ((mesh.Flags & Gdk.Content.Model.MeshFlags.VertexHasTexCoords2) > 0)
+                    vertexFormat += "TC2b ";
 
                 Context.LogVerbose(" +--- Vertex Format: " + vertexFormat);
 
@@ -565,9 +1001,18 @@ namespace Gdk.Content
                 if (sharedInput.Offset > highestOffset)
                     highestOffset = sharedInput.Offset;
 
+                // For joint semantics, we also add the joint index
+                if (sharedInput.Semantic == "JOINT")
+                {
+                    results.Add("JOINT.INDEX", sourceIndex);
+                }
+
                 // Is this a custom lookup semantic?
                 if (sharedInput.Semantic == "VERTEX")
                 {
+                    // Add the vertex index to the results
+                    results.Add("VERTEX.INDEX", sourceIndex);
+
                     // Get the Vertices object that this input's source references
                     COLLADA.Vertices vertices = Source.GetObjectByUrl(sharedInput.Source) as COLLADA.Vertices;
                     if (vertices == null)
@@ -583,8 +1028,12 @@ namespace Gdk.Content
                     if (source == null)
                         throw new BuildException("Unable to find a [source] at the url: " + sharedInput.Source);
 
-                    // Sample the source
-                    SampleColladaSource(sourceIndex, source, results, prefix + sharedInput.Semantic + ".");
+                    // Make sure the index is valid before doing the lookup
+                    if (sourceIndex >= 0 && sourceIndex < source.ArrayData.Count)
+                    {
+                        // Sample the source
+                        SampleColladaSource(sourceIndex, source, results, prefix + sharedInput.Semantic + ".");
+                    }
                 }
             }
 
@@ -663,6 +1112,9 @@ namespace Gdk.Content
             {
                 switch (dataItem.Key)
                 {
+                    // Vertex Index
+                    case "VERTEX.INDEX": vertex.Index = (int)dataItem.Value; break;
+
                     // Position
                     case "POSITION.X": vertex.Position.X = GetObjectAsFloat(dataItem.Value); break;
                     case "POSITION.Y": vertex.Position.Y = GetObjectAsFloat(dataItem.Value); break;
@@ -963,6 +1415,9 @@ namespace Gdk.Content
             bool removeUnusedMeshes = Context.Parameters.GetValue("Remove Unused Meshes", true);
             if (removeUnusedMeshes)
             {
+                // Meshes
+                // ------------------------
+
                 Context.LogInfo(" - Checking for unused meshes");
 
                 // Loop through the meshes by id
@@ -987,6 +1442,36 @@ namespace Gdk.Content
                         // Remove the mesh from the model
                         this.ResultModel.MeshesById.Remove(meshId);
                         Context.LogInfo(" +- Removing unused mesh: \"" + meshId + "\"");
+                    }
+                }
+
+                // Skeletal Meshes
+                // ------------------------
+
+                Context.LogInfo(" - Checking for unused skeletal meshes");
+
+                // Loop through the meshes by id
+                List<string> skeletalMeshIds = new List<string>(this.ResultModel.SkeletalMeshesById.Keys);
+                foreach (string skeletalMeshId in skeletalMeshIds)
+                {
+                    // Get this skeletal mesh
+                    Model.SkeletalMesh skeletalMesh = this.ResultModel.SkeletalMeshesById[skeletalMeshId];
+
+                    // Are there any instances of this skeletal mesh?
+                    bool instanceFound = false;
+                    foreach (Model.SkeletalMeshInstance skeletalMeshInstance in this.ResultModel.SkeletalMeshInstances)
+                        if (skeletalMeshInstance.Mesh == skeletalMesh)
+                        {
+                            instanceFound = true;
+                            break;
+                        }
+
+                    // Did we not find any instances of this skeletal mesh?
+                    if (instanceFound == false)
+                    {
+                        // Remove theskeletal  mesh from the model
+                        this.ResultModel.SkeletalMeshesById.Remove(skeletalMeshId);
+                        Context.LogInfo(" +- Removing unused skeletal mesh: \"" + skeletalMeshId + "\"");
                     }
                 }
             }
@@ -1050,6 +1535,13 @@ namespace Gdk.Content
                         // Remove the node from the model
                         this.ResultModel.NodesById.Remove(nodeId);
                         Context.LogInfo(" +- Removing unused node: \"" + nodeId + "\"");
+
+                        // Remove this node from the node heirarchy
+                        if (node.ParentNode != null)
+                            if (node.ParentNode.ChildNodes.Contains(node))
+                                node.ParentNode.ChildNodes.Remove(node);
+                        node.ParentNode = null;
+
                     }
                 }
             }
@@ -1066,6 +1558,8 @@ namespace Gdk.Content
             // =================================
 
             // TODO(P1) - Sort the mesh instances for optimal performance
+            //    Sort the mesh parts to minimize state changes
+            //    Sort the mesh isntances to minimize state changes (instaces of the same mesh could be back2back)
 
 
         }
@@ -1096,7 +1590,7 @@ namespace Gdk.Content
 
             // Nodes
             int nodeIndex = 0;
-            RecurseSetNodeIndex(this.ResultModel.RootNode, ref nodeIndex, 0);
+            RecurseSetNodeIndex(this.ResultModel.RootNode, ref nodeIndex);
 
             // Materials
             int materialIndex = 0;
@@ -1114,6 +1608,14 @@ namespace Gdk.Content
                 meshIndex++;
             }
 
+            // SkeletalMeshes
+            int skeletalMeshIndex = 0;
+            foreach (Model.SkeletalMesh skeletalMesh in this.ResultModel.SkeletalMeshesById.Values)
+            {
+                skeletalMesh.Index = skeletalMeshIndex;
+                skeletalMeshIndex++;
+            }
+
             // Finalize the Meshes
             // ==================================
 
@@ -1125,90 +1627,33 @@ namespace Gdk.Content
             // Loop through the meshes
             foreach (Model.Mesh mesh in this.ResultModel.MeshesById.Values)
             {
+                FinalizeMesh(mesh, ref originalVertices, ref reducedVertices);
+            }
 
-                // Calculate missing normals
-                // -------------------------------------
+            // Finalize the Skeletal Meshes
+            // ==================================
 
-                bool autoCalculatedNormals = false;
+            Context.LogInfo(" - Finalizing Skeletal Meshes");
 
-                // Loop through the triangle soups in this mesh
-                foreach (KeyValuePair<string, Model.TriangleSoup> triangleSoupByMaterialSymbol in mesh.TriangleSoupsByMaterialSymbol)
+            int skeletalOriginalVertices = 0;
+            int skeletalReducedVertices = 0;
+
+            // Loop through the meshes
+            foreach (Model.SkeletalMesh skeletalMesh in this.ResultModel.SkeletalMeshesById.Values)
+            {
+                FinalizeMesh(skeletalMesh, ref skeletalOriginalVertices, ref skeletalReducedVertices);
+
+                // Log the mesh details
+                /*
+                foreach (Model.Vertex vertex in skeletalMesh.Vertices)
                 {
-                    Model.TriangleSoup triangleSoup = triangleSoupByMaterialSymbol.Value;
-
-                    // Loop through the triangles
-                    foreach (Model.Triangle triangle in triangleSoup.Triangles)
-                    {
-                        // Does this triangle need normals?
-                        if (triangle.Vertices[0].Normal.Equals(Vector3.Zero))
-                        {
-                            // Calculate a face normal for this triangle
-                            Vector3 p1 = triangle.Vertices[0].Position;
-                            Vector3 p2 = triangle.Vertices[1].Position;
-                            Vector3 p3 = triangle.Vertices[2].Position;
-                            Vector3 normal = Vector3.Normalize(Vector3.Cross(p2 - p1, p2 - p3));
-                            triangle.Vertices[0].Normal = normal;
-                            triangle.Vertices[1].Normal = normal;
-                            triangle.Vertices[2].Normal = normal;
-
-                            autoCalculatedNormals = true;
-                        }
-                    }
+                    Context.LogVerbose(
+                        " +- V[" + vertex.Index + "]"
+                        + " Bones[" + vertex.BoneIndices[0] + "," + vertex.BoneIndices[1] + "," + vertex.BoneIndices[2] + "," + vertex.BoneIndices[3] + "]"
+                        + " Weights[" + vertex.BoneWeights[0] + "," + vertex.BoneWeights[1] + "," + vertex.BoneWeights[2] + "," + vertex.BoneWeights[3] + "]"
+                    );
                 }
-
-                // Log the work, if we did it
-                if (autoCalculatedNormals == true)
-                {
-                    Context.LogVerbose(" +- Mesh \"" + mesh.Id + "\" is missing normals.  They will be auto-generated");
-                }
-
-                // Process the triangle soups into vertex/index buffer'd mesh parts
-                // ------------------------------------------------------------------
-
-                // Loop through the triangle soups
-                foreach (KeyValuePair<string, Model.TriangleSoup> triangleSoupByMaterialSymbol in mesh.TriangleSoupsByMaterialSymbol)
-                {
-                    // Get the soup & the material symbol
-                    string materialSymbol = triangleSoupByMaterialSymbol.Key;
-                    Model.TriangleSoup triangleSoup = triangleSoupByMaterialSymbol.Value;
-
-                    // Create a mesh part for this soup
-                    Model.MeshPart meshPart = new Gdk.Content.Model.MeshPart();
-                    mesh.MeshParts.Add(meshPart);
-                    meshPart.IndexStart = mesh.Indices.Count;
-                    meshPart.IndexCount = triangleSoup.Triangles.Count * 3;
-                    meshPart.MaterialSymbol = triangleSoupByMaterialSymbol.Key;
-
-                    // Convert triangle soup to vertices/indices   (removing duplicate vertices)
-                    foreach (Model.Triangle triangle in triangleSoup.Triangles)
-                    {
-                        AddIndexedVertexToMesh(mesh, triangle.Vertices[0]);
-                        AddIndexedVertexToMesh(mesh, triangle.Vertices[1]);
-                        AddIndexedVertexToMesh(mesh, triangle.Vertices[2]);
-                    }
-
-                    // Track the vertex counts
-                    originalVertices += triangleSoup.Triangles.Count * 3;
-                }
-                reducedVertices += mesh.Vertices.Count;
-
-                // Check for huge meshes..
-                if (mesh.Vertices.Count > UInt16.MaxValue)
-                    throw new BuildException("Mesh contains too many vertices:  " + mesh.Indices.Count);
-                if (mesh.Indices.Count > UInt16.MaxValue)
-                    throw new BuildException("Mesh contains too many indices:  " + mesh.Indices.Count);
-
-                // Calculate the Mesh Bounding Volume
-                // -------------------------------------
-
-                // Start with a 0 radius sphere at the first vertex
-                mesh.BoundingSphere = new Sphere3(mesh.Vertices[0].Position, 0.0f);
-
-                // Loop through the rest of the vertices
-                for (int vertexIndex = 1; vertexIndex < mesh.Vertices.Count; vertexIndex++)
-                {
-                    mesh.BoundingSphere.GrowToContain(mesh.Vertices[vertexIndex].Position);
-                }
+                */
             }
 
             // Log the final object counts
@@ -1219,7 +1664,102 @@ namespace Gdk.Content
             Context.LogInfo(" +- Materials: " + this.ResultModel.MaterialsById.Count);
             Context.LogInfo(" +- Meshes: " + this.ResultModel.MeshesById.Count);
             Context.LogInfo(" +--- Vertex Count: [Original: " + originalVertices + "] [Reduced: " + reducedVertices + "] - " + (int)((1.0f - reducedVertices / (float)originalVertices) * 100) + "% reduction");
+            Context.LogInfo(" +- Skeletal Meshes: " + this.ResultModel.SkeletalMeshesById.Count);
+            Context.LogInfo(" +--- Vertex Count: [Original: " + skeletalOriginalVertices + "] [Reduced: " + skeletalReducedVertices + "] - " + (int)((1.0f - skeletalReducedVertices / (float)skeletalOriginalVertices) * 100) + "% reduction");
             Context.LogInfo(" +- Mesh Instances: " + this.ResultModel.MeshInstances.Count);
+            Context.LogInfo(" +- Skeletal Mesh Instances: " + this.ResultModel.SkeletalMeshInstances.Count);
+        }
+
+        /// <summary>
+        /// Finalizes the data in the mesh
+        /// </summary>
+        private void FinalizeMesh(Model.Mesh mesh, ref int originalVertices, ref int reducedVertices)
+        {
+            string meshType = mesh.GetType().Name;
+
+            // Calculate missing normals
+            // -------------------------------------
+
+            bool autoCalculatedNormals = false;
+
+            // Loop through the triangle soups in this mesh
+            foreach (KeyValuePair<string, Model.TriangleSoup> triangleSoupByMaterialSymbol in mesh.TriangleSoupsByMaterialSymbol)
+            {
+                Model.TriangleSoup triangleSoup = triangleSoupByMaterialSymbol.Value;
+
+                // Loop through the triangles
+                foreach (Model.Triangle triangle in triangleSoup.Triangles)
+                {
+                    // Does this triangle need normals?
+                    if (triangle.Vertices[0].Normal.Equals(Vector3.Zero))
+                    {
+                        // Calculate a face normal for this triangle
+                        Vector3 p1 = triangle.Vertices[0].Position;
+                        Vector3 p2 = triangle.Vertices[1].Position;
+                        Vector3 p3 = triangle.Vertices[2].Position;
+                        Vector3 normal = Vector3.Normalize(Vector3.Cross(p2 - p1, p2 - p3));
+                        triangle.Vertices[0].Normal = normal;
+                        triangle.Vertices[1].Normal = normal;
+                        triangle.Vertices[2].Normal = normal;
+
+                        autoCalculatedNormals = true;
+                    }
+                }
+            }
+
+            // Log the work, if we did it
+            if (autoCalculatedNormals == true)
+            {
+                Context.LogVerbose(" +- " + meshType + " \"" + mesh.Id + "\" is missing normals.  They will be auto-generated");
+            }
+
+            // Process the triangle soups into vertex/index buffer'd mesh parts
+            // ------------------------------------------------------------------
+
+            // Loop through the triangle soups
+            foreach (KeyValuePair<string, Model.TriangleSoup> triangleSoupByMaterialSymbol in mesh.TriangleSoupsByMaterialSymbol)
+            {
+                // Get the soup & the material symbol
+                string materialSymbol = triangleSoupByMaterialSymbol.Key;
+                Model.TriangleSoup triangleSoup = triangleSoupByMaterialSymbol.Value;
+
+                // Create a mesh part for this soup
+                Model.MeshPart meshPart = new Gdk.Content.Model.MeshPart();
+                mesh.MeshParts.Add(meshPart);
+                meshPart.IndexStart = mesh.Indices.Count;
+                meshPart.IndexCount = triangleSoup.Triangles.Count * 3;
+                meshPart.MaterialSymbol = triangleSoupByMaterialSymbol.Key;
+
+                // Convert triangle soup to vertices/indices   (removing duplicate vertices)
+                foreach (Model.Triangle triangle in triangleSoup.Triangles)
+                {
+                    AddIndexedVertexToMesh(mesh, triangle.Vertices[0]);
+                    AddIndexedVertexToMesh(mesh, triangle.Vertices[1]);
+                    AddIndexedVertexToMesh(mesh, triangle.Vertices[2]);
+                }
+
+                // Track the vertex counts
+                originalVertices += triangleSoup.Triangles.Count * 3;
+            }
+            reducedVertices += mesh.Vertices.Count;
+
+            // Check for huge meshes..
+            if (mesh.Vertices.Count > UInt16.MaxValue)
+                throw new BuildException(meshType + " contains too many vertices:  " + mesh.Indices.Count);
+            if (mesh.Indices.Count > UInt16.MaxValue)
+                throw new BuildException(meshType + " contains too many indices:  " + mesh.Indices.Count);
+
+            // Calculate the Mesh Bounding Volume
+            // -------------------------------------
+
+            // Start with a 0 radius sphere at the first vertex
+            mesh.BoundingSphere = new Sphere3(mesh.Vertices[0].Position, 0.0f);
+
+            // Loop through the rest of the vertices
+            for (int vertexIndex = 1; vertexIndex < mesh.Vertices.Count; vertexIndex++)
+            {
+                mesh.BoundingSphere.GrowToContain(mesh.Vertices[vertexIndex].Position);
+            }
         }
 
         /// <summary>
@@ -1249,18 +1789,17 @@ namespace Gdk.Content
         /// <summary>
         /// Finalizes the gdk model
         /// </summary>
-        public void RecurseSetNodeIndex(Model.Node node, ref int index, int parentIndex)
+        public void RecurseSetNodeIndex(Model.Node node, ref int index)
         {
-            // Set this node's index & parent index
+            // Set this node's index
             node.Index = index;
-            node.ParentIndex = parentIndex;
 
             // Increment the index
             index++;
 
             // Recurse to the child nodes
             foreach (Model.Node childNode in node.ChildNodes)
-                RecurseSetNodeIndex(childNode, ref index, node.Index);
+                RecurseSetNodeIndex(childNode, ref index);
         }
 
         #endregion
@@ -1353,7 +1892,9 @@ namespace Gdk.Content
             writer.Write((UInt16) this.ResultModel.NodesById.Count);
             writer.Write((UInt16) this.ResultModel.MaterialsById.Count);
             writer.Write((UInt16) this.ResultModel.MeshesById.Count);
+            writer.Write((UInt16) this.ResultModel.SkeletalMeshesById.Count);
             writer.Write((UInt16) this.ResultModel.MeshInstances.Count);
+            writer.Write((UInt16) this.ResultModel.SkeletalMeshInstances.Count);
 
             // Nodes
             // -----------------------
@@ -1361,9 +1902,11 @@ namespace Gdk.Content
             // Loop through the nodes in index order
             foreach (Model.Node node in this.ResultModel.NodesById.Values.OrderBy(n => n.Index))
             {
+                //Context.LogInfo("Parent:" + (node.ParentNode == null ? "NA" : node.ParentNode.Index.ToString()) + "  Node:" + node.Index + "  Id: " + node.Id);
+
                 // Write out the node info
                 BinaryWriterUtilities.WriteString(writer, node.Id);
-                writer.Write((UInt16)node.ParentIndex);
+                writer.Write((UInt16)(node.ParentNode == null ? 65535 : node.ParentNode.Index));
                 BinaryWriterUtilities.WriteMatrix(writer, node.Transform);
             }
 
@@ -1394,67 +1937,25 @@ namespace Gdk.Content
             // Loop through the meshes in index order
             foreach (Model.Mesh mesh in this.ResultModel.MeshesById.Values.OrderBy(n => n.Index))
             {
-                // Write out the mesh header
-                BinaryWriterUtilities.WriteString(writer, mesh.Id);
-                writer.Write((UInt16)mesh.Flags);
-                writer.Write((UInt16)mesh.Vertices.Count);
-                writer.Write((UInt16)mesh.Indices.Count);
-                writer.Write((UInt16)mesh.MeshParts.Count);
+                WriteMesh(writer, mesh);
+            }
 
-                // Write the bounding sphere
-                BinaryWriterUtilities.WriteVector3(writer, mesh.BoundingSphere.Center);
-                writer.Write(mesh.BoundingSphere.Radius);
+            // Skeletal Meshes
+            // -----------------------
 
-                // Write the vertex data
-                foreach(Model.Vertex vertex in mesh.Vertices)
+            // Loop through the skeletal meshes in index order
+            foreach (Model.SkeletalMesh skeletalMesh in this.ResultModel.SkeletalMeshesById.Values.OrderBy(n => n.Index))
+            {
+                // Write all the mesh details
+                WriteMesh(writer, skeletalMesh);
+
+                // Write the number of joints used by this skeletal mesh
+                writer.Write((UInt16) skeletalMesh.NumJoints);
+
+                // Write out the InvBindMatrices for the joints
+                for (UInt16 jointIndex = 0; jointIndex < skeletalMesh.NumJoints; jointIndex++)
                 {
-                    // Write the position & normal
-                    BinaryWriterUtilities.WriteVector3(writer, vertex.Position);
-                    BinaryWriterUtilities.WriteVector3(writer, vertex.Normal);
-                    
-                    // Write the optional vertex properties
-                    if ((mesh.Flags & Model.MeshFlags.VertexHasColor) > 0)
-                        BinaryWriterUtilities.WriteColor(writer, vertex.Color);
-                    if ((mesh.Flags & Model.MeshFlags.VertexHasTexCoords) > 0)
-                        BinaryWriterUtilities.WriteVector2(writer, vertex.TexCoords1);
-                    if ((mesh.Flags & Model.MeshFlags.VertexHasTexCoords2) > 0)
-                        BinaryWriterUtilities.WriteVector2(writer, vertex.TexCoords2);
-
-                    // Write the bone index/weight propeties
-                    if ((mesh.Flags & Model.MeshFlags.SKINNING_TYPE_MASK) == Model.MeshFlags.VertexHasSingleBone)
-                        writer.Write(vertex.BoneIndices[0]);
-                    else if ((mesh.Flags & Model.MeshFlags.SKINNING_TYPE_MASK) == Model.MeshFlags.VertexHas2WeightedBones)
-                    {
-                        writer.Write(vertex.BoneIndices[0]);
-                        writer.Write(vertex.BoneIndices[1]);
-                        writer.Write(vertex.BoneWeights[0]);
-                        writer.Write(vertex.BoneWeights[1]);
-                    }
-                    else if ((mesh.Flags & Model.MeshFlags.SKINNING_TYPE_MASK) == Model.MeshFlags.VertexHas4WeightedBones)
-                    {
-                        writer.Write(vertex.BoneIndices[0]);
-                        writer.Write(vertex.BoneIndices[1]);
-                        writer.Write(vertex.BoneIndices[2]);
-                        writer.Write(vertex.BoneIndices[3]);
-                        writer.Write(vertex.BoneWeights[0]);
-                        writer.Write(vertex.BoneWeights[1]);
-                        writer.Write(vertex.BoneWeights[2]);
-                        writer.Write(vertex.BoneWeights[3]);
-                    }
-                }
-
-                // Write the indices
-                foreach (int index in mesh.Indices)
-                {
-                    writer.Write((UInt16)index);
-                }
-
-                // Loop through the mesh parts
-                foreach (Model.MeshPart meshPart in mesh.MeshParts)
-                {
-                    writer.Write((UInt16)meshPart.IndexStart);
-                    writer.Write((UInt16)meshPart.IndexCount);
-                    BinaryWriterUtilities.WriteString(writer, meshPart.MaterialSymbol);
+                    BinaryWriterUtilities.WriteMatrix(writer, skeletalMesh.JointInvBindMatrices[jointIndex]);
                 }
             }
 
@@ -1481,6 +1982,36 @@ namespace Gdk.Content
                 }
             }
 
+            // Skeletal Mesh Instances
+            // -----------------------
+
+            // Loop through the skeletal mesh instances
+            foreach (Model.SkeletalMeshInstance skeletalMeshInstance in this.ResultModel.SkeletalMeshInstances)
+            {
+                // Write the instanced object indices
+                writer.Write((UInt16)skeletalMeshInstance.Node.Index);
+                writer.Write((UInt16)skeletalMeshInstance.Mesh.Index);
+
+                // Write the material assignment table for the skeletal mesh
+
+                // Loop through the mesh parts of the skeletal mesh
+                foreach (Model.MeshPart meshPart in skeletalMeshInstance.Mesh.MeshParts)
+                {
+                    // Get the material this mesh part's material symbol is bound to
+                    Model.Material material = skeletalMeshInstance.MaterialBindings[meshPart.MaterialSymbol];
+
+                    // Write the material index for the material this part is bound to
+                    writer.Write((UInt16)material.Index);
+                }
+
+                // Write the joint to node mappings
+                foreach (Model.Node jointNode in skeletalMeshInstance.JointToNodeMap)
+                {
+                    // Write the index of the node used at this joint
+                    writer.Write((UInt16)jointNode.Index);
+                }
+            }
+
             // Finished
             // -----------------------
 
@@ -1488,7 +2019,93 @@ namespace Gdk.Content
             writer.Close();
         }
 
+        private void WriteMesh(BinaryWriter writer, Model.Mesh mesh)
+        {
+            // Write out the mesh header
+            BinaryWriterUtilities.WriteString(writer, mesh.Id);
+            writer.Write((UInt16)mesh.Flags);
+            writer.Write((UInt16)mesh.Vertices.Count);
+            writer.Write((UInt16)mesh.Indices.Count);
+            writer.Write((UInt16)mesh.MeshParts.Count);
+
+            // Write the bounding sphere
+            BinaryWriterUtilities.WriteVector3(writer, mesh.BoundingSphere.Center);
+            writer.Write(mesh.BoundingSphere.Radius);
+
+            // Write the vertex data
+            foreach (Model.Vertex vertex in mesh.Vertices)
+            {
+                // Write the position & normal
+                BinaryWriterUtilities.WriteVector3(writer, vertex.Position);
+                BinaryWriterUtilities.WriteVector3(writer, vertex.Normal);
+
+                // Write the optional vertex properties
+                if ((mesh.Flags & Model.MeshFlags.VertexHasColor) > 0)
+                    BinaryWriterUtilities.WriteColor(writer, vertex.Color);
+                if ((mesh.Flags & Model.MeshFlags.VertexHasTexCoords) > 0)
+                    BinaryWriterUtilities.WriteVector2(writer, vertex.TexCoords1);
+                if ((mesh.Flags & Model.MeshFlags.VertexHasTexCoords2) > 0)
+                    BinaryWriterUtilities.WriteVector2(writer, vertex.TexCoords2);
+
+                // Write the bone index/weight propeties
+                if ((mesh.Flags & Model.MeshFlags.SKINNING_TYPE_MASK) == Model.MeshFlags.VertexHasSingleBone)
+                    writer.Write(vertex.BoneIndices[0]);
+                else if ((mesh.Flags & Model.MeshFlags.SKINNING_TYPE_MASK) == Model.MeshFlags.VertexHas2WeightedBones)
+                {
+                    writer.Write(vertex.BoneIndices[0]);
+                    writer.Write(vertex.BoneIndices[1]);
+                    writer.Write(vertex.BoneWeights[0]);
+                    writer.Write(vertex.BoneWeights[1]);
+                }
+                else if ((mesh.Flags & Model.MeshFlags.SKINNING_TYPE_MASK) == Model.MeshFlags.VertexHas4WeightedBones)
+                {
+                    writer.Write(vertex.BoneIndices[0]);
+                    writer.Write(vertex.BoneIndices[1]);
+                    writer.Write(vertex.BoneIndices[2]);
+                    writer.Write(vertex.BoneIndices[3]);
+                    writer.Write(vertex.BoneWeights[0]);
+                    writer.Write(vertex.BoneWeights[1]);
+                    writer.Write(vertex.BoneWeights[2]);
+                    writer.Write(vertex.BoneWeights[3]);
+                }
+            }
+
+            // Write the indices
+            foreach (int index in mesh.Indices)
+            {
+                writer.Write((UInt16)index);
+            }
+
+            // Loop through the mesh parts
+            foreach (Model.MeshPart meshPart in mesh.MeshParts)
+            {
+                writer.Write((UInt16)meshPart.IndexStart);
+                writer.Write((UInt16)meshPart.IndexCount);
+                BinaryWriterUtilities.WriteString(writer, meshPart.MaterialSymbol);
+            }
+        }
+
         #endregion
 
     } // class
+
+    /// <summary>
+    /// Storage class used to store bone index & weight information
+    /// </summary>
+    class SkinVertexData
+    {
+        public int NumBones;
+        public List<int> Indices = new List<int>();
+        public List<float> Weights = new List<float>();
+    }
+
 } // namespace
+
+
+
+//  TODO(P1)  Work Items
+// ----------------------------------------
+
+// Optimizer
+//   For skeletal meshes > 24 bones, split the mesh into 2, with seperate bone structures
+//

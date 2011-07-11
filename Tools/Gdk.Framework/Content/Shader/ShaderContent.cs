@@ -81,7 +81,8 @@ namespace Gdk.Content
     // ===============================================================
     public enum ShaderParameterFlags
     {
-        BindToGlobal = 0x0001
+        BindToGlobal = 0x0001,
+        HasInitialValue = 0x0002
     }
 
     // ===============================================================
@@ -110,7 +111,10 @@ namespace Gdk.Content
     {
         public string Name;
         public string Value;
+        public string Binding;
+
         public bool IsBindToGlobal;
+        public bool HasInitialValue;
 
         public List<int> IntValues = null;
         public List<float> FloatValues = null;
@@ -126,6 +130,7 @@ namespace Gdk.Content
             this.Name = name;
             this.Value = value;
             this.IsBindToGlobal = isBindToGlobal;
+            this.HasInitialValue = (this.IsBindToGlobal == false && string.IsNullOrEmpty(value) == false);
 
             this.UniformType = ShaderUniformType.Float;
             this.ArraySize = 1;

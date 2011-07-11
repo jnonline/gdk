@@ -180,7 +180,8 @@ namespace ShaderParameterFlags
 {
 	enum Enum
     {
-        BindToGlobal			= 0x0001
+        BindToGlobal			= 0x0001,
+		HasInitialValue			= 0x0002
     };
 }
 
@@ -356,7 +357,8 @@ Shader* Shader::FromStream(Stream* stream)
 			// Bind!
 			parameter->Bind(sharedUniformValue);
 		}
-		else
+		// Does this parameter have an initial value?
+		else if((parameterFlags & ShaderParameterFlags::HasInitialValue) > 0)
 		{
 			// Calculate the size of the value data
 			size_t valueDataSize = UniformTypes::SizeOf(parameterType) * parameterArraySize;

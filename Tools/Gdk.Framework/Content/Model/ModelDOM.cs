@@ -18,7 +18,9 @@ namespace Gdk.Content.Model
         public Dictionary<string, Node> NodesById = new Dictionary<string, Node>();
         public Dictionary<string, Material> MaterialsById = new Dictionary<string, Material>();
         public Dictionary<string, Mesh> MeshesById = new Dictionary<string, Mesh>();
+        public Dictionary<string, SkeletalMesh> SkeletalMeshesById = new Dictionary<string, SkeletalMesh>();
         public List<MeshInstance> MeshInstances = new List<MeshInstance>();
+        public List<SkeletalMeshInstance> SkeletalMeshInstances = new List<SkeletalMeshInstance>();
 
         // Compile-time Properties (these are only used during the compilation/processing process)
         // ----------------------------------------------------
@@ -32,14 +34,17 @@ namespace Gdk.Content.Model
 
         public string Id;
         public Gdk.Matrix Transform;
-        public int ParentIndex;
 
         // Compile-time Properties (these are only used during the compilation/processing process)
         // ----------------------------------------------------
-        
+
+        public string Sid;
         public int Index;
+        public Node ParentNode;
         public List<Node> ChildNodes = new List<Node>();
         public bool InUse;
+
+        public Gdk.Matrix AbsoluteTransform;
     }
 
     // ========================================================
@@ -115,6 +120,7 @@ namespace Gdk.Content.Model
 
         // These flags define the data that is relevant in the vertex
         public MeshFlags Flags;
+        public int Index;
 
         /// <summary>
         /// Equals()
@@ -136,6 +142,28 @@ namespace Gdk.Content.Model
                 && v.BoneWeights[3] == this.BoneWeights[3]
                 ;
         } 
+
+        /// <summary>
+        /// Creates a duplicate of this mesh (only the pre-finalized triangle soup data is cloned, none of the meshpart/vertex/index data is cloned)
+        /// </summary>
+        /// <returns></returns>
+        public Vertex Clone()
+        {
+            Vertex clone = new Vertex();
+            clone.Position = this.Position;
+            clone.Normal = this.Normal;
+            clone.Color = this.Color;
+            clone.TexCoords1 = this.TexCoords1;
+            clone.TexCoords2 = this.TexCoords2;
+            for (int i = 0; i < 4; i++)
+            {
+                clone.BoneIndices[i] = this.BoneIndices[i];
+                clone.BoneWeights[i] = this.BoneWeights[i];
+            }
+            clone.Flags = this.Flags;
+            clone.Index = this.Index;
+            return clone;
+        }
     }
 
     // ========================================================
@@ -146,6 +174,7 @@ namespace Gdk.Content.Model
 
         public string Id;
         public MeshFlags Flags;
+
         public List<Vertex> Vertices = new List<Vertex>();
         public List<int> Indices = new List<int>();
         public List<MeshPart> MeshParts = new List<MeshPart>();
@@ -156,6 +185,22 @@ namespace Gdk.Content.Model
 
         public int Index;
         public Dictionary<string, TriangleSoup> TriangleSoupsByMaterialSymbol = new Dictionary<string, TriangleSoup>();
+
+    }
+
+    // ========================================================
+    public class SkeletalMesh : Mesh
+    {
+        // Run-time Properties (these are written out to the binary)
+        // ----------------------------------------------------
+
+        public UInt16 NumJoints;
+        public List<Matrix> JointInvBindMatrices = new List<Matrix>();
+
+        // Compile-time Properties (these are only used during the compilation/processing process)
+        // ----------------------------------------------------
+
+        public List<string> JointSIDs = new List<string>();
     }
 
     // ========================================================
@@ -174,6 +219,20 @@ namespace Gdk.Content.Model
     {
         // This class is ONLY used during compile time
         public List<Triangle> Triangles = new List<Triangle>();
+
+        /// <summary>
+        /// Creates a duplicate of this object
+        /// </summary>
+        /// <returns></returns>
+        public TriangleSoup Clone()
+        {
+            TriangleSoup clone = new TriangleSoup();
+            foreach(Triangle triangle in this.Triangles)
+            {
+                clone.Triangles.Add(triangle.Clone());
+            }
+            return clone;
+        }
     }
 
     // ========================================================
@@ -181,6 +240,20 @@ namespace Gdk.Content.Model
     {
         // This class is ONLY used during compile time
         public Vertex[] Vertices = new Vertex[3];
+
+        /// <summary>
+        /// Creates a duplicate of this object
+        /// </summary>
+        /// <returns></returns>
+        public Triangle Clone()
+        {
+            Triangle clone = new Triangle();
+            for (int i = 0; i < 3; i++)
+            {
+                clone.Vertices[i] = this.Vertices[i].Clone();
+            }
+            return clone;
+        }
     }
 
     // ========================================================
@@ -196,6 +269,19 @@ namespace Gdk.Content.Model
         // ----------------------------------------------------
 
         public Dictionary<string, Material> MaterialBindings = new Dictionary<string, Material>();
+    }
+
+    // ========================================================
+    public class SkeletalMeshInstance : MeshInstance
+    {
+        // Run-time Properties (these are written out to the binary)
+        // ----------------------------------------------------
+
+        public List<Node> JointToNodeMap = new List<Node>();    // This list contains a reference to a node for each joint of the skeletal mesh
+
+        // Compile-time Properties (these are only used during the compilation/processing process)
+        // ----------------------------------------------------
+
     }
     
 

@@ -10,6 +10,9 @@
 		<Asset Path="Models/Ground.dae" Processor="ModelProcessor">
 			<Parameters />
 		</Asset>
+		<Asset Path="Models/SkeletonWarrior.dae" Processor="ModelProcessor">
+			<Parameters />
+		</Asset>
 		<Asset Path="Models/Tank.dae" Processor="ModelProcessor">
 			<Parameters />
 		</Asset>
@@ -28,6 +31,9 @@
 			<Parameters />
 		</Asset>
 		<Asset Path="Shaders/Model/Mesh/NonTextured.shader" Processor="ShaderProcessor">
+			<Parameters />
+		</Asset>
+		<Asset Path="Shaders/Model/SkeletalMeshB4/DiffuseTextured.shader" Processor="ShaderProcessor">
 			<Parameters />
 		</Asset>
 		<Asset Path="Shaders/Renderer2D/NonTextured.shader" Processor="ShaderProcessor">

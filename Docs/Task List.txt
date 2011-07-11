@@ -1,13 +1,5 @@
 
-AssetManager - 
-	Get rid of 'ignore child assets'.... somehow...
-
-Post-Build PC
-	Add " " around paths
-
-Is it possible to hook VC-Clean operation, and delete the Assets folder..
-
-
+	
 
 ==================================================
 == Tasks
@@ -92,6 +84,26 @@ Renderer2D, flush the batch if Quads > max Quads
 == Work Item notes
 ==================================================
 
+	AssetManager - 
+		Get rid of 'ignore child assets'.... somehow...
+
+	Post-Build PC
+		Add " " around paths
+
+	Is it possible to hook VC-Clean operation, and delete the Assets folder..
+
+	Gdk Model v2
+		Skinning
+		Animation
+		Custom shaders + Shader Selection
+		Need a way to select different materials within a model instance (instance 1 uses material A for symbol "Skin", instance 2 uses material B, etc	)
+		Support material texture properties..  (pFormat, filtering, wrap, etc, .. from collada)
+		Tests
+		
+	Shader profiles.   GLSL 2.1, GLSL 3.3, GLSL 4.0, GLES 2.0
+
+	Standardize the attribute/uniform/varying names for shaders..  "a_Position"
+
 	Project deployment fixes
 		iOS & MAC builds 
 			Build to /Bin sub folder
@@ -118,8 +130,6 @@ x		2D Particles
 	Renderer2D::
 		Clipping Rect...
 		
-	Shaders
-		Model/Mesh/ Textured.shader
 
 - Ideas
 	Device class
@@ -137,14 +147,8 @@ DCRs From GunHack Jam
 Pri 1
 		
 	Shaders:  Heuristic based technique selection
-	
-	Model.Draw()    [instead of ModelInstance.Draw()]
-		instance just passes it's transform & materials in...
 			
 Pri 2
-	- Tools::ModelProcessor
-		Support for no-material  <triangles> node is missing a "Material" attribute
-		Combine meshes with same node transform & material...
 
 	- Tools::ContentStudio
 		- double click to build..		
@@ -249,7 +253,7 @@ Coding
 		2D
 		3D
 	
-API Reference…
+API Reference
 	Doxygen or somthing
 
 --------------------------------
@@ -260,10 +264,12 @@ Gdk/Docs folder..
 	API docs here
 	clearly separate the 'notes'
 
-Adding copyright to all source..
+Adding copyright to all .Net Tools source..
 
 /* 
   Copyright (c) 2011, Raincity Games LLC
   Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 */
 
+		
+	

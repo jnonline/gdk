@@ -24,12 +24,12 @@ vector<class ModuleRegistration*> Module::registeredModules;
 void Module::Init()
 {
     // Samples
-    RegisterModule<Tanks3DModule>(L"Tanks 3D", ModuleCategory::Samples);
+    //RegisterModule<Tanks3DModule>(L"Tanks 3D", ModuleCategory::Samples);
 
     // Tests
-    RegisterModule<InputTestsModule>(L"Input Tests", ModuleCategory::Tests);
-    RegisterModule<Simple2DTests>(L"Simple 2D Tests", ModuleCategory::Tests);
     RegisterModule<Simple3DTests>(L"Simple 3D Tests", ModuleCategory::Tests);
+	RegisterModule<InputTestsModule>(L"Input Tests", ModuleCategory::Tests);
+    RegisterModule<Simple2DTests>(L"Simple 2D Tests", ModuleCategory::Tests);
     RegisterModule<UnitTestsModule>(L"Unit Tests", ModuleCategory::Tests);
 }
 
