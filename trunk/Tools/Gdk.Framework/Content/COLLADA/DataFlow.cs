@@ -125,15 +125,7 @@ namespace Gdk.Content.COLLADA
             // Load the array data
             // --------------------------
 
-            // Get the list of float values
-            string stringOfFloats = xmlFloatArray.InnerText;
-
-            // Split up each value by the seperating space 
-            string[] floatsAsStrings = stringOfFloats.Split(' ');
-
-            // Turn the string array into a float array
-            for (int i = 0; i < floatsAsStrings.Length; i++)
-                this.Values.Add(float.Parse(floatsAsStrings[i]));
+            this.Values = StringUtilities.ParseFloats(xmlFloatArray.InnerText.Trim());
         }
 
         /// <summary>
@@ -160,15 +152,7 @@ namespace Gdk.Content.COLLADA
             // Load the array data
             // --------------------------
 
-            // Get the list of bool values
-            string stringOfBools = xmlBoolArray.InnerText;
-
-            // Split up each value by the seperating space 
-            string[] boolsAsStrings = stringOfBools.Split(' ');
-
-            // Turn the string array into a bool array
-            for (int i = 0; i < boolsAsStrings.Length; i++)
-                this.Values.Add(bool.Parse(boolsAsStrings[i]));
+            this.Values = StringUtilities.ParseBools(xmlBoolArray.InnerText.Trim());
         }
 
         /// <summary>
@@ -205,15 +189,7 @@ namespace Gdk.Content.COLLADA
             // Load the array data
             // --------------------------
 
-            // Get the list of int values
-            string stringOfInts = xmlIntArray.InnerText;
-
-            // Split up each value by the seperating space 
-            string[] intsAsStrings = stringOfInts.Split(' ');
-
-            // Turn the string array into a int array
-            for (int i = 0; i < intsAsStrings.Length; i++)
-                this.Values.Add(int.Parse(intsAsStrings[i]));
+            this.Values = StringUtilities.ParseInts(xmlIntArray.InnerText.Trim());
         }
 
         /// <summary>

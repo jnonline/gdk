@@ -89,7 +89,7 @@ void Texture2D::SetWrapMode(TextureWrapMode::Enum value)
 	Graphics::BindTexture(this->GLTextureId);
     
     // Check if the user is trying to set an invalid wrap mode
-    if(value != TextureWrapMode::Clamp &&
+	if(value != TextureWrapMode::Clamp &&
        (Math::IsPowerOfTwo((UInt32)this->Width) == false || Math::IsPowerOfTwo((UInt32)this->Height) == false) )
     {
         LOG_WARN(L"Attempt to set invalid wrapping mode on a Non-PoT texture.  Reverting to Clamped");

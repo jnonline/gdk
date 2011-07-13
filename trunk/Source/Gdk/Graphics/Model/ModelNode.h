@@ -15,7 +15,7 @@ namespace Gdk
 	public:
 		
 		// Properties 
-		string		Id;
+		string		Name;
 		UInt16		Index;
 		ModelNode*	ParentNode;
 		vector<ModelNode*>	ChildNodes;

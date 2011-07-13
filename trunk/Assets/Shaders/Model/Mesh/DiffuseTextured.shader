@@ -11,6 +11,22 @@
     <Attribute Name="a_normal" Location="1" />
     <Attribute Name="a_texCoord" Location="3" />
   </AttributeBindings>
+
+  <Parameters>
+    <Parameter Name="u_World" BindToGlobal="World" />
+    <Parameter Name="u_View" BindToGlobal="View" />
+    <Parameter Name="u_Proj" BindToGlobal="Projection" />
+
+    <Parameter Name="u_MaterialEmissive" BindToGlobal="Material.Emissive" />
+    <Parameter Name="u_MaterialDiffuse" BindToGlobal="Material.Diffuse" />
+
+    <Parameter Name="u_AmbientLight" BindToGlobal="AmbientLight" />
+    <Parameter Name="u_NumLights" BindToGlobal="NumActiveLights" />
+    <Parameter Name="u_LightPositionsAndFalloffs" BindToGlobal="LightPositionsAndFalloffs" />
+    <Parameter Name="u_LightColors" BindToGlobal="LightColors" />
+
+    <Parameter Name="u_DiffuseTexture" Value="0" />
+  </Parameters>
   
   <Techniques>
 
@@ -69,7 +85,7 @@
           
           // Uniforms - Material
           uniform vec4 u_MaterialEmissive;
-          uniform float u_MaterialAlpha;
+          uniform vec4 u_MaterialDiffuse;
           
           // Uniforms - Lighting
           uniform vec3 u_AmbientLight;
@@ -118,7 +134,7 @@
             vec4 fragmentColor = texture2D(u_DiffuseTexture, v_texCoord);
             
             // Calculate the total final color
-            gl_FragColor = vec4(fragmentColor.rgb * lightAccumulation, fragmentColor.a * u_MaterialAlpha);
+            gl_FragColor = vec4(fragmentColor.rgb * lightAccumulation, fragmentColor.a * u_MaterialDiffuse.a);
           }
         ]]>
       </FragmentShader>
@@ -217,7 +233,7 @@
           varying vec3 v_color;
           
           // Uniforms - Material
-          uniform float u_MaterialAlpha;
+          uniform vec4 u_MaterialDiffuse;
 
           // Uniforms - Texturing
           uniform sampler2D u_DiffuseTexture;
@@ -228,28 +244,12 @@
             vec4 fragmentColor = texture2D(u_DiffuseTexture, v_texCoord);
             
             // Calculate the total final color
-            gl_FragColor = vec4(fragmentColor.rgb * v_color, fragmentColor.a * u_MaterialAlpha);
+            gl_FragColor = vec4(fragmentColor.rgb * v_color, fragmentColor.a * u_MaterialDiffuse.a);
           }
         ]]>
       </FragmentShader>
     </Technique>
     
   </Techniques>
-
-  <Parameters>
-    <Parameter Name="u_World" BindToGlobal="World" />
-    <Parameter Name="u_View" BindToGlobal="View" />
-    <Parameter Name="u_Proj" BindToGlobal="Projection" />
-
-    <Parameter Name="u_MaterialEmissive" BindToGlobal="Material.Emissive" />
-    <Parameter Name="u_MaterialAlpha" BindToGlobal="Material.Alpha" />
-
-    <Parameter Name="u_AmbientLight" BindToGlobal="AmbientLight" />
-    <Parameter Name="u_NumLights" BindToGlobal="NumActiveLights" />
-    <Parameter Name="u_LightPositionsAndFalloffs" BindToGlobal="LightPositionsAndFalloffs" />
-    <Parameter Name="u_LightColors" BindToGlobal="LightColors" />
-
-    <Parameter Name="u_DiffuseTexture" Value="0" />
-  </Parameters>
 
 </Shader>

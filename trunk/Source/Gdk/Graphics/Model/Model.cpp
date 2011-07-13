@@ -135,7 +135,7 @@ Model* Model::FromAsset(AssetLoadContext* context)
 		ModelNode* node = GdkNew ModelNode();
 
 		// Load the stream data
-		node->Id = stream->ReadString();
+		node->Name = stream->ReadString();
 		UInt16 parentNodeIndex = stream->ReadUInt16();
 		node->LocalTransform = Matrix3D::ReadFromStream(stream);
 
@@ -654,7 +654,7 @@ void Model::DrawMesh(ModelMesh* mesh, ModelMeshInstance* meshInstance, ModelInst
 			}
 
 			// Render the mesh part
-			glDrawElements(GL_TRIANGLES, meshPart->IndexCount, GL_UNSIGNED_SHORT, (void*) meshPart->IndexStart);
+			glDrawElements(GL_TRIANGLES, meshPart->IndexCount, GL_UNSIGNED_SHORT, (void*) (meshPart->IndexStart * sizeof(UInt16)));
 		}
 
 	} // foreach( MeshPart )

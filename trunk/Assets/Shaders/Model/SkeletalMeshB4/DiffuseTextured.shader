@@ -21,7 +21,7 @@
     <Parameter Name="u_BoneMatrices" />
 
     <Parameter Name="u_MaterialEmissive" BindToGlobal="Material.Emissive" />
-    <Parameter Name="u_MaterialAlpha" BindToGlobal="Material.Alpha" />
+    <Parameter Name="u_MaterialDiffuse" BindToGlobal="Material.Diffuse" />
 
     <Parameter Name="u_AmbientLight" BindToGlobal="AmbientLight" />
     <Parameter Name="u_NumLights" BindToGlobal="NumActiveLights" />
@@ -147,7 +147,7 @@
           
           // Uniforms - Material
           uniform vec4 u_MaterialEmissive;
-          uniform float u_MaterialAlpha;
+          uniform vec4 u_MaterialDiffuse;
           
           // Uniforms - Lighting
           uniform vec3 u_AmbientLight;
@@ -196,7 +196,7 @@
             vec4 fragmentColor = texture2D(u_DiffuseTexture, v_texCoord);
             
             // Calculate the total final color
-            gl_FragColor = vec4(fragmentColor.rgb * lightAccumulation, fragmentColor.a * u_MaterialAlpha);
+            gl_FragColor = vec4(fragmentColor.rgb * lightAccumulation, fragmentColor.a * u_MaterialDiffuse.a);
           }
         ]]>
       </FragmentShader>

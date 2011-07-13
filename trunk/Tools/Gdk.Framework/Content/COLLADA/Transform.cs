@@ -93,7 +93,7 @@ namespace Gdk.Content.COLLADA
             : base(xmlLookAt, ownerDocument)
         {
             // Get the float values
-            List<float> floatValues = StringUtilities.ParseFloats(xmlLookAt.InnerText, ' ');
+            List<float> floatValues = StringUtilities.ParseFloats(xmlLookAt.InnerText);
 
             // Get the vectors from the floats
             Position.X = floatValues[0];
@@ -129,7 +129,7 @@ namespace Gdk.Content.COLLADA
             : base(xmlMatrix, ownerDocument)
         {
             // Get the float values
-            List<float> values = StringUtilities.ParseFloats(xmlMatrix.InnerText, ' ');
+            List<float> values = StringUtilities.ParseFloats(xmlMatrix.InnerText);
 
             // Load the matrix (collada store the matrix in row-major order, but we need it in column-major order
             this.Value = new Gdk.Matrix(
@@ -163,7 +163,7 @@ namespace Gdk.Content.COLLADA
             : base(xmlRotate, ownerDocument)
         {
             // Get the float values
-            List<float> floatValues = StringUtilities.ParseFloats(xmlRotate.InnerText, ' ');
+            List<float> floatValues = StringUtilities.ParseFloats(xmlRotate.InnerText);
 
             // Load the rotation values
             Axis.X = floatValues[0];
@@ -194,7 +194,7 @@ namespace Gdk.Content.COLLADA
             : base(xmlScale, ownerDocument)
         {
             // Get the float values
-            List<float> floatValues = StringUtilities.ParseFloats(xmlScale.InnerText, ' ');
+            List<float> floatValues = StringUtilities.ParseFloats(xmlScale.InnerText);
 
             // Load the rotation values
             Value.X = floatValues[0];
@@ -226,7 +226,7 @@ namespace Gdk.Content.COLLADA
             : base(xmlSkew, ownerDocument)
         {
             // Get the float values
-            List<float> floatValues = StringUtilities.ParseFloats(xmlSkew.InnerText, ' ');
+            List<float> floatValues = StringUtilities.ParseFloats(xmlSkew.InnerText);
 
             // Load the rotation values
             Angle = floatValues[0];
@@ -260,7 +260,7 @@ namespace Gdk.Content.COLLADA
             : base(xmlTranslate, ownerDocument)
         {
             // Get the float values
-            List<float> floatValues = StringUtilities.ParseFloats(xmlTranslate.InnerText, ' ');
+            List<float> floatValues = StringUtilities.ParseFloats(xmlTranslate.InnerText);
 
             // Load the rotation values
             Value.X = floatValues[0];

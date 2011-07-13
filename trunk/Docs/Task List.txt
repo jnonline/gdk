@@ -86,12 +86,15 @@ Renderer2D, flush the batch if Quads > max Quads
 
 	AssetManager - 
 		Get rid of 'ignore child assets'.... somehow...
+		Models should NOT have the 'ownedAssets' property..  this should maybe be a pool?
 
 	Post-Build PC
 		Add " " around paths
 
 	Is it possible to hook VC-Clean operation, and delete the Assets folder..
 
+	Get rid of the Build/Edit mode thing,..
+	 
 	Gdk Model v2
 		Skinning
 		Animation

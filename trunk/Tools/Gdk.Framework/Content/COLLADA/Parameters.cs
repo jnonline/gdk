@@ -202,7 +202,7 @@ namespace Gdk.Content.COLLADA
         public Float1(XmlNode xmlFloat, ColladaDocument ownerDocument)
             : base(xmlFloat, ownerDocument)
         {
-            List<float> floatValues = StringUtilities.ParseFloats(xmlFloat.InnerText, ' ');
+            List<float> floatValues = StringUtilities.ParseFloats(xmlFloat.InnerText);
             this.Value = floatValues[0];
         }
     }
@@ -217,7 +217,7 @@ namespace Gdk.Content.COLLADA
         public Float2(XmlNode xmlFloat2, ColladaDocument ownerDocument)
             : base(xmlFloat2, ownerDocument)
         {
-            List<float> floatValues = StringUtilities.ParseFloats(xmlFloat2.InnerText, ' ');
+            List<float> floatValues = StringUtilities.ParseFloats(xmlFloat2.InnerText);
             this.Values[0] = floatValues[0];
             this.Values[1] = floatValues[1];
         }
@@ -233,7 +233,7 @@ namespace Gdk.Content.COLLADA
         public Float3(XmlNode xmlFloat3, ColladaDocument ownerDocument)
             : base(xmlFloat3, ownerDocument)
         {
-            List<float> floatValues = StringUtilities.ParseFloats(xmlFloat3.InnerText, ' ');
+            List<float> floatValues = StringUtilities.ParseFloats(xmlFloat3.InnerText);
             this.Values[0] = floatValues[0];
             this.Values[1] = floatValues[1];
             this.Values[2] = floatValues[2];
@@ -250,7 +250,7 @@ namespace Gdk.Content.COLLADA
         public Float4(XmlNode xmlFloat4, ColladaDocument ownerDocument)
             : base(xmlFloat4, ownerDocument)
         {
-            List<float> floatValues = StringUtilities.ParseFloats(xmlFloat4.InnerText, ' ');
+            List<float> floatValues = StringUtilities.ParseFloats(xmlFloat4.InnerText);
             this.Values[0] = floatValues[0];
             this.Values[1] = floatValues[1];
             this.Values[2] = floatValues[2];
@@ -270,11 +270,11 @@ namespace Gdk.Content.COLLADA
         public Color(XmlNode xmlColor, ColladaDocument ownerDocument)
             : base(ownerDocument)
         {
-            string[] floatsAsStrings = xmlColor.InnerText.Trim().Split(' ');
-            R = float.Parse(floatsAsStrings[0]);
-            G = float.Parse(floatsAsStrings[1]);
-            B = float.Parse(floatsAsStrings[2]);
-            A = float.Parse(floatsAsStrings[3]);
+            List<float> floatValues = StringUtilities.ParseFloats(xmlColor.InnerText);
+            R = floatValues[0];
+            G = floatValues[1];
+            B = floatValues[2];
+            A = floatValues[3];
         }
 
         /// <summary>

@@ -260,7 +260,7 @@ namespace Gdk.Content.COLLADA
             foreach (XmlNode xmlP in xmlData.SelectNodes("p"))
             {
                 // Turn the string of space delimited indices into an int list
-                List<int> listOfInts = StringUtilities.ParseInts(xmlP.InnerText.Trim(), ' ');
+                List<int> listOfInts = StringUtilities.ParseInts(xmlP.InnerText.Trim());
                 IndexSet indexSet = new IndexSet(listOfInts);
                 
                 // Add this index set to our list
@@ -327,7 +327,7 @@ namespace Gdk.Content.COLLADA
             XmlNode xmlVCount = xmlPolylist.SelectSingleNode("vcount");
 
             // Turn the string of space delimited indices into an int list
-            this.VCounts = StringUtilities.ParseInts(xmlVCount.InnerText.Trim(), ' ');
+            this.VCounts = StringUtilities.ParseInts(xmlVCount.InnerText.Trim());
         }
     }
 }
