@@ -132,7 +132,7 @@ namespace Gdk.Content.COLLADA
             if (xmlBindShapeMatrix != null)
             {
                 // Get the float values & build a matrix from them
-                List<float> values = StringUtilities.ParseFloats(xmlBindShapeMatrix.InnerText, ' ');
+                List<float> values = StringUtilities.ParseFloats(xmlBindShapeMatrix.InnerText);
                 this.BindShapeMatrix = new Gdk.Matrix(
                     values[0], values[4], values[8], values[12],
                     values[1], values[5], values[9], values[13],
@@ -239,12 +239,12 @@ namespace Gdk.Content.COLLADA
             // <vcount>
             XmlNode xmlVCount = xmlVertexWeights.SelectSingleNode("vcount");
             if (xmlVCount != null)
-                this.VCount = StringUtilities.ParseInts(xmlVCount.InnerText.Trim(), ' ');
+                this.VCount = StringUtilities.ParseInts(xmlVCount.InnerText.Trim());
 
             // <v>
             XmlNode xmlV = xmlVertexWeights.SelectSingleNode("v");
             if (xmlV != null)
-                this.V = StringUtilities.ParseInts(xmlV.InnerText.Trim(), ' ');
+                this.V = StringUtilities.ParseInts(xmlV.InnerText.Trim());
 
         }
     }

@@ -15,12 +15,14 @@ namespace Gdk.Content.Model
         // ----------------------------------------------------
 
         public Node RootNode;
-        public Dictionary<string, Node> NodesById = new Dictionary<string, Node>();
+
+        public List<Node> Nodes = new List<Node>();
+        public List<MeshInstance> MeshInstances = new List<MeshInstance>();
+        public List<SkeletalMeshInstance> SkeletalMeshInstances = new List<SkeletalMeshInstance>();
+
         public Dictionary<string, Material> MaterialsById = new Dictionary<string, Material>();
         public Dictionary<string, Mesh> MeshesById = new Dictionary<string, Mesh>();
         public Dictionary<string, SkeletalMesh> SkeletalMeshesById = new Dictionary<string, SkeletalMesh>();
-        public List<MeshInstance> MeshInstances = new List<MeshInstance>();
-        public List<SkeletalMeshInstance> SkeletalMeshInstances = new List<SkeletalMeshInstance>();
 
         // Compile-time Properties (these are only used during the compilation/processing process)
         // ----------------------------------------------------
@@ -32,7 +34,7 @@ namespace Gdk.Content.Model
         // Run-time Properties (these are written out to the binary)
         // ----------------------------------------------------
 
-        public string Id;
+        public string Name;
         public Gdk.Matrix Transform;
 
         // Compile-time Properties (these are only used during the compilation/processing process)
@@ -45,6 +47,28 @@ namespace Gdk.Content.Model
         public bool InUse;
 
         public Gdk.Matrix AbsoluteTransform;
+
+        /// <summary>
+        /// Finds a node with the given Id by recursively walking the node heirarchy
+        /// </summary>
+        /// <param name="nodeId"></param>
+        /// <returns></returns>
+        public Node FindNodeById(string nodeId)
+        {
+            // Does this node have the given Id?
+            if (this.Name == nodeId)
+                return this;
+
+            // Recurse to the children
+            foreach(Node childNode in this.ChildNodes)
+            {
+                Node result = childNode.FindNodeById(nodeId);
+                if (result != null)
+                    return result;
+            }
+
+            return null;
+        }
     }
 
     // ========================================================
@@ -100,7 +124,7 @@ namespace Gdk.Content.Model
 		VertexHasTexCoords2		    = 0x0004,		// float[2]
 
 		// Bone skinning data types
-		SKINNING_TYPE_MASK			  = 0x0300,
+		SKINNING_TYPE_MASK			= 0x0300,
 		VertexHasNoSkinning		    = 0x0000,
 		VertexHasSingleBone		    = 0x0100,		// float[1]				Single bone index
 		VertexHas2WeightedBones	    = 0x0200,		// float[2] + float[2]	2 Bone indices & weights
@@ -127,7 +151,8 @@ namespace Gdk.Content.Model
         /// </summary>
         public bool Equals(Vertex v)
         {
-            return v.Position.Equals(this.Position)
+            return v.Flags == this.Flags 
+                && v.Position.Equals(this.Position)
                 && v.Normal.Equals(this.Normal)
                 && v.Color.Equals(this.Color)
                 && v.TexCoords1.Equals(this.TexCoords1)

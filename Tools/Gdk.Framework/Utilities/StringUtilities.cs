@@ -36,14 +36,22 @@ namespace Gdk
         }
 
         /// <summary>
+        /// Parse a list of ints from a string.  the float can be seperated by whitespace, commas, etc
+        /// </summary>
+        static public List<int> ParseInts(string input)
+        {
+            return ParseInts(input, '\n', '\r', '\t', ' ', ',');
+        }
+
+        /// <summary>
         /// Parse a list of ints from a string
         /// </summary>
-        static public List<int> ParseInts(string input, char seperator)
+        static public List<int> ParseInts(string input, params char[] seperators)
         {
             List<int> results = new List<int>();
 
             // Split the string by the seperator
-            string[] stringValues = input.Split(seperator);
+            string[] stringValues = input.Split(seperators);
 
             // Loop through the string values
             foreach (string stringValue in stringValues)
@@ -59,14 +67,22 @@ namespace Gdk
         }
 
         /// <summary>
+        /// Parse a list of floats from a string.  the float can be seperated by whitespace, commas, etc
+        /// </summary>
+        static public List<float> ParseFloats(string input)
+        {
+            return ParseFloats(input, '\n', '\r', '\t', ' ', ',');
+        }
+
+        /// <summary>
         /// Parse a list of floats from a string
         /// </summary>
-        static public List<float> ParseFloats(string input, char seperator)
+        static public List<float> ParseFloats(string input, params char[] seperators)
         {
             List<float> results = new List<float>();
 
-            // Split the string by the seperator
-            string[] stringValues = input.Split(seperator);
+            // Split the string by the seperators
+            string[] stringValues = input.Split(seperators);
                 
             // Loop through the string values
             foreach (string stringValue in stringValues)
@@ -80,6 +96,38 @@ namespace Gdk
 
             return results;
         }
+
+        /// <summary>
+        /// Parse a list of bools from a string.  the float can be seperated by whitespace, commas, etc
+        /// </summary>
+        static public List<bool> ParseBools(string input)
+        {
+            return ParseBools(input, '\n', '\r', '\t', ' ', ',');
+        }
+
+        /// <summary>
+        /// Parse a list of bools from a string
+        /// </summary>
+        static public List<bool> ParseBools(string input, params char[] seperators)
+        {
+            List<bool> results = new List<bool>();
+
+            // Split the string by the seperators
+            string[] stringValues = input.Split(seperators);
+
+            // Loop through the string values
+            foreach (string stringValue in stringValues)
+            {
+                // Trim all white space from the value
+                stringValue.Trim();
+                bool boolValue = false;
+                if (bool.TryParse(stringValue, out boolValue) == true)
+                    results.Add(boolValue);
+            }
+
+            return results;
+        }
+
 
         /// <summary>
         /// Replaces any html commands with encoded strings in the given input

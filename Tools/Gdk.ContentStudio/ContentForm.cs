@@ -687,6 +687,13 @@ namespace Gdk.ContentStudio
                 statusErrorLabel.Text = string.Format("[{0} Errors]", failedAssets);
             else
                 statusErrorLabel.Text = "";
+
+            // If this is the selected node, update the log display
+            if (assetsTree.SelectedNodes.Count > 0 &&
+                assetsTree.SelectedNodes[0] == assetTag.Node)
+            {
+                SetWebBrowserHtml(assetTag.Log);
+            }
         }
 
         /// <summary>
@@ -727,7 +734,9 @@ namespace Gdk.ContentStudio
             if (assetsTree.SelectedNodes.Count > 0 &&
                 assetsTree.SelectedNodes[0] == assetTag.Node)
             {
-                SetWebBrowserHtml(assetTag.Log);
+                // Stop tracking log changes after the log gets bit
+                if(assetTag.Log.Length < 10000)
+                    SetWebBrowserHtml(assetTag.Log);
             }
         }
 

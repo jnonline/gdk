@@ -175,7 +175,7 @@ namespace Gdk.Content
             // Loop through all the processors
             foreach (KeyValuePair<string, ProcessorDetails> pair in processorDetailsByName)
             {
-                // Loop through the extensions this process supports
+                // Loop through the extensions this processor supports
                 foreach(string supportedExtension in pair.Value.FileExtensions)
                 {
                     string regExPattern = supportedExtension
@@ -184,7 +184,7 @@ namespace Gdk.Content
                         ;
 
                     // Does this processor support the given file extension?
-                    if (Regex.IsMatch(fileExtension, regExPattern))
+                    if (Regex.IsMatch(fileExtension, regExPattern, RegexOptions.IgnoreCase))
                     {
                         // If the supported extension has a wildcard, add it to the end of the list
                         if(supportedExtension.Contains('*') || supportedExtension.Contains('?'))

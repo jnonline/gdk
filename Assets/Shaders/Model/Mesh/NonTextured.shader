@@ -12,6 +12,20 @@
     <Attribute Name="a_color" Location="2" />
   </AttributeBindings>
 
+  <Parameters>
+    <Parameter Name="u_World" BindToGlobal="World" />
+    <Parameter Name="u_View" BindToGlobal="View" />
+    <Parameter Name="u_Proj" BindToGlobal="Projection" />
+
+    <Parameter Name="u_MaterialEmissive" BindToGlobal="Material.Emissive" />
+
+    <Parameter Name="u_AmbientLight" BindToGlobal="AmbientLight" />
+    <Parameter Name="u_NumLights" BindToGlobal="NumActiveLights" />
+    <Parameter Name="u_LightPositionsAndFalloffs" BindToGlobal="LightPositionsAndFalloffs" />
+    <Parameter Name="u_LightColors" BindToGlobal="LightColors" />
+
+  </Parameters>
+  
   <Techniques>
 
     <Technique Name="FragmentLighting">
@@ -213,19 +227,5 @@
     </Technique>
 
   </Techniques>
-
-  <Parameters>
-    <Parameter Name="u_World" BindToGlobal="World" />
-    <Parameter Name="u_View" BindToGlobal="View" />
-    <Parameter Name="u_Proj" BindToGlobal="Projection" />
-
-    <Parameter Name="u_MaterialEmissive" BindToGlobal="Material.Emissive" />
-
-    <Parameter Name="u_AmbientLight" BindToGlobal="AmbientLight" />
-    <Parameter Name="u_NumLights" BindToGlobal="NumActiveLights" />
-    <Parameter Name="u_LightPositionsAndFalloffs" BindToGlobal="LightPositionsAndFalloffs" />
-    <Parameter Name="u_LightColors" BindToGlobal="LightColors" />
-
-  </Parameters>
 
 </Shader>
