@@ -157,6 +157,8 @@ ModelInstance - instanced data for a model...
 		- Materials[]
 		- Meshes[]
 		- MeshInstances[]
+		  Animations[]
+		  AnimationClips[]
 	
 	Node					[COLLADA:  node]
 		- Name
@@ -176,25 +178,29 @@ ModelInstance - instanced data for a model...
 		- Vertices
 		- Indices
 		- Parts[]									
-
-	MeshPart				[COLLADA:  mesh / trangles [tristrips, trifans, ...]
+		- NumJoints
+		- InvBindMatrices[]
+		
+	MeshPart				[COLLADA:  mesh / triangles [tristrips, trifans, ...]
 		// - Flags				[type? triagles, fans, strips, etc?]
 		- Start Indices
 		- End Indices
 		- MatSymbol			[this ID is bound to a model.material through the mesh instance]
 		
 	MeshInstance			[COLLADA:  node / instance_geometry]
-		- Mesh Ref
-		- Node Ref
-		- MaterialBinding	[COLLADA:  instance_geometry / bind_material]
-			- MaterialRef	[binds a Model.Material to a MeshPart.MatSymbol]
-			- MatSymbol	
-		
-	
+		- Mesh Index
+		- Node Index
+		- MaterialBindings[]				[COLLADA:  instance_geometry / bind_material]
+			- [indexer = mesh part index]
+			- Value: Material Index			[binds a Model.Material to a MeshPart.MatSymbol]	
+		  JointNodes[]
+			- [indexer = joint index within SkeletalMesh]
+			- Value: Node Index
+			
+
 			
 	Animations
-		 - todo
-
+		 - see below
 
 
 	ModelInstance - instanced data for a model...
@@ -207,3 +213,86 @@ ModelInstance - instanced data for a model...
 			
 		- Material swapping..  <param> driven material bindings (between mesh parts & materials)
 	
+	
+------------------------------------------------------------
+-- Animation Brainstorm - GDK Model v3 Extension
+
+	Animation 
+		- Name
+		- ChildAnimations[]		// Allows animation trees 
+		- NodeAnims[]
+	
+	NodeAnimation
+		- Node Index
+		- TransformKeyFrames[]
+		
+	TransformKeyFrame
+		- Time
+		- Scale
+		- Rotation
+		- TRanslation
+		
+	AnimationClip 
+		- Name
+		- AnimationIndex
+		- StartTime
+		- EndTime
+		
+	
+	AnimationClipInstance
+		- AnimationClipIndex
+		- float T;
+
+	ModelInstance
+		- AnimationClipInstances[]
+		
+		+ UpdateAnimation (time tDelta)
+			- loop though clip instances
+				clipInst.T += tdelta;
+				if(clipInst.T > clipInst.Clip.EndTime)
+					- what action to do at clip end? (stop, restart, ping pong, etc??)
+					- fire event?
+				ApplyAnimation( clipInst.Clip.Anim, clipInst.T );
+				
+		+ ApplyAnimation( anim, t)
+			foreach childAnim in anim
+				ApplyAnimation( childAnim, t)
+			foreach nodeAnim in anim.NodeAnims
+				nodeAnim.Node.LocalMatrix = nodeAnim.GetValueAtT(t);
+						// Looks up the keyframe before & after T, then lerps it with T
+				
+			
+		
+	
+	
+-----------------------
+  - Idea:   Animation = set of (Target + Keyframe data)
+  
+  
+	Animation 
+		- Name
+		- ChildAnimations[]		// Allows animation trees 
+		- MatrixAnims[]			// Set of matrix animations that are applied as part of this animation
+		
+		
+	MatrixAnimation
+		- AnimationTarget
+		- MatrixKeyFrames
+		
+	AnimationTarget
+		- Type				= Node, etc, etc, etc   (Some targetable thing in the model)
+		- Index				= 14
+		
+	MatrixKeyFrames				// Contains a list of TIME / MATRIX pairs, as the keyframes
+		0.0 - Matrix
+		1.0 - Matrix
+		....
+		43.333 - Matrix
+
+
+-- Decompose matrix animation??
+	- Translation + Quaternion + Scaling?
+	- Interpolate seperately.. using Lerp + Slerp?
+	
+		
+		

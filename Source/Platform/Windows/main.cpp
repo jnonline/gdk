@@ -37,6 +37,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	if(Gdk::Application::Platform_InitGdk() == false)
 		return 0;
 
+	
+	Gdk::Quaternion q = Gdk::Quaternion::FromAxisAngle(Gdk::Vector3(0,1,0), Gdk::Math::PI * 0.25f);
+	Gdk::Vector3 axis;
+	float a = q.ToAxisAngle(axis);
+
 	// Create the window
 	// ------------------------------------------------------
 

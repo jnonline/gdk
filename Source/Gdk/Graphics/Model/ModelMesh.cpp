@@ -24,11 +24,11 @@ size_t ModelMeshFlags::GetVertexStrideFromFlags(UInt16 flags)
 
 	UInt16 skinningType = flags & ModelMeshFlags::SKINNING_TYPE_MASK;
 	if(skinningType == ModelMeshFlags::VertexHasSingleBone)
-		vertexStride += sizeof(UInt16);
+		vertexStride += sizeof(UInt8);
 	else if(skinningType == ModelMeshFlags::VertexHas2WeightedBones)
-		vertexStride += sizeof(UInt16[2]) + sizeof(float[2]);
+		vertexStride += sizeof(UInt8[2]) + sizeof(float[2]);
 	else if(skinningType == ModelMeshFlags::VertexHas4WeightedBones)
-		vertexStride += sizeof(UInt16[4]) + sizeof(float[4]);
+		vertexStride += sizeof(UInt8[4]) + sizeof(float[4]);
 	// else:   ModelMeshFlags::VertexHasNoSkinning
 
 	return vertexStride;
@@ -39,6 +39,7 @@ ModelMesh::ModelMesh()
 {
 	VertexBuffer = 0;
 	IndexBuffer = 0;
+	NumJoints = 0;
 }
 
 // ***********************************************************************

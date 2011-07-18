@@ -6,41 +6,32 @@ using System.Text;
 using System.Xml;
 using Gdk;
 
-namespace Gdk.Content
+namespace Gdk.Content.Model
 {
     
     // ===============================================================
     public class ModelProcessor : Processor
     {
+        // Source content (Collada)
         string ColladaSourceFile;
         string ColladaSourceFolder;
-
-        // The source COLLADA & result MODEL objects 
         COLLADA.ColladaDocument Source;
-        Model.Model ResultModel;
-        
-        // Internals
-        int nextUniqueId = 1;
 
-        /// <summary>
-        /// Returns a unique integer every time this method is called
-        /// </summary>
-        /// <returns></returns>
-        public int GetUniqueId()
-        {
-            int id = nextUniqueId;
-            nextUniqueId++;
-            return id;
-        }
+        // Destination content (Gdk.Model)
+        Model ResultModel;
+
+        // Intermediate objects used during the processing
+        public Dictionary<string, Material> MaterialsByColladaId = new Dictionary<string, Material>();
+        public Dictionary<string, Mesh> MeshesByColladaId = new Dictionary<string, Mesh>();
+        public Dictionary<string, Animation> AnimationsByColladaId = new Dictionary<string, Animation>();
 
         /// <summary>
         /// Gets the descriptive details of this processor
         /// </summary>
-        /// <returns></returns>
         public override ProcessorDetails GetDetails()
         {
             ProcessorDetails details = new ProcessorDetails(
-                "Processes all the mesh data from a single COLLADA file into a GdkModel output",
+                "Processes all the data from a COLLADA file into a Gdk Model",
                 Icons.ModelIcon
                 );
             details.FileExtensions.Add("dae");
@@ -63,7 +54,6 @@ namespace Gdk.Content
             details.AddParameter("Default Shininess", "The shininess for the default material assigned to any meshes that do not have a material binding in the COLLADA source.", "Default Material", typeof(float), 0.0f);
             details.AddParameter("Default Emissive", "The emissive channel for the default material assigned to any meshes that do not have a material binding in the COLLADA source.", "Default Material", typeof(Color), new Color(0, 0, 0));
 
-            
             return details;
         }
 
@@ -131,7 +121,7 @@ namespace Gdk.Content
         public void GenerateModel()
         {
             // Create the new model that we are building
-            this.ResultModel = new Model.Model();
+            this.ResultModel = new Model();
 
             // Setup the root transforms for the model
             // -------------------------------------
@@ -183,8 +173,8 @@ namespace Gdk.Content
                 ;
 
             // Setup the root node of the model
-            Model.Node rootNode = new Model.Node();
-            rootNode.Transform = rootTransform;
+            Node rootNode = new Node();
+            rootNode.PoseTransform = rootTransform;
             rootNode.Name = "GDK.Model.Root";
 
             this.ResultModel.RootNode = rootNode;
@@ -245,12 +235,208 @@ namespace Gdk.Content
                 // Process this node
                 ProcessColladaNode(colladaNode, this.ResultModel.RootNode, rootTransform, "");
             }
+
+            // Process animations
+            // -------------------------------------
+
+            Context.LogInfo("<br/><b> - Processing Animations</b>");
+
+            // Loop through the collada animations
+            foreach (KeyValuePair<string, COLLADA.Animation> animationEntry in Source.Animations)
+            {
+                ProcessColladaAnimation(animationEntry.Value, null, string.Empty);
+            }
+
+            // Process animation clips
+            // -------------------------------------
+
+            Context.LogInfo("<br/><b> - Processing Animation Clips</b>");
+
+            // Loop through the collada animation clips
+            foreach (KeyValuePair<string, COLLADA.AnimationClip> animationClipEntry in Source.AnimationClips)
+            {
+                ProcessColladaAnimationClip(animationClipEntry.Value);
+            }
+
+        }
+
+        /// <summary>
+        /// Processes a COLLADA.AnimationClip object
+        /// </summary>
+        public void ProcessColladaAnimationClip(COLLADA.AnimationClip colladaAnimationClip)
+        {
+            // Create a new Gdk AnimationClip
+            AnimationClip animationClip = new AnimationClip();
+
+            // Get the animation clip Name & Id
+            animationClip.Name = colladaAnimationClip.Name;
+            if (string.IsNullOrEmpty(animationClip.Name))
+                animationClip.Name = colladaAnimationClip.Id;
+
+            Context.LogInfo(" +- Animation Clip: " + animationClip.Name + " [Collada ID: " + colladaAnimationClip.Id + "]");
+
+            // Get the clip start/end times
+            animationClip.StartTime = (float)colladaAnimationClip.Start;
+            animationClip.EndTime = (float)colladaAnimationClip.End;
+
+            // Loop through the animations that are instanced in this clip
+            foreach(COLLADA.InstanceAnimation animationInstance in colladaAnimationClip.AnimationInstances)
+            {
+                // Get the ID of this instanced animation
+                string animationId = animationInstance.Url;
+                if(animationId.StartsWith("#"))
+                    animationId = animationId.Substring(1);
+
+                // Lookup the animation & add it to our clip
+                Animation animation = this.AnimationsByColladaId[animationId];
+                animationClip.Animations.Add(animation);
+            }
+
+            // Add the animation clip to the model
+            this.ResultModel.AnimationClips.Add(animationClip);
+        }
+
+        /// <summary>
+        /// Processes a COLLADA.Animation object
+        /// </summary>
+        public void ProcessColladaAnimation(COLLADA.Animation colladaAnimation, Animation parentAnimation, string indent)
+        {
+            // Create a new Gdk Animation
+            Animation animation = new Animation();
+
+            // Get the animation Name & Id
+            animation.ColladaID = colladaAnimation.Id;
+            animation.Name = colladaAnimation.Name;
+            if(string.IsNullOrEmpty(animation.Name))
+                animation.Name = colladaAnimation.Id;
+
+            Context.LogInfo(" +-" + indent + " Animation: " + animation.Name + " [Collada ID: " + colladaAnimation.Id + "]");
+
+            // If the animation has an ID, add it to our Id list
+            if(string.IsNullOrEmpty(colladaAnimation.Id) == false)
+            {
+                this.AnimationsByColladaId.Add(colladaAnimation.Id, animation);
+            }
+
+            // Add the anim to the parent
+            if(parentAnimation != null)
+                parentAnimation.Children.Add(animation);
+
+            // Add the animation to the model
+            this.ResultModel.Animations.Add(animation);
+
+            // Process child animations
+            // -----------------------------
+
+            foreach (COLLADA.Animation childColladaAnimation in colladaAnimation.Animations)
+            {
+                ProcessColladaAnimation(childColladaAnimation, animation, indent + "--");
+            }
+
+            // Process the node/matrix animations within this animation
+            // -----------------------------
+
+            ProcessNodeAnimations(colladaAnimation, animation, indent);
+
+        }
+
+        /// <summary>
+        /// Processes the node animations from a collada animation
+        /// </summary>
+        public void ProcessNodeAnimations(COLLADA.Animation colladaAnimation, Animation animation, string indent)
+        {
+            // Loop through the channels in the animation
+            foreach (COLLADA.Channel channel in colladaAnimation.Channels)
+            {
+                // Find the target of the channel
+                // --------------------------------
+
+                // TODO(P2): This should really use the full COLLADA Addressing scheme to find the object being animated..
+                //   but for now, we hard code the animation addressing to support "NODE/Matrix"
+
+                // Split the address path into the Id & Child element  (and make sure we have both)
+                string[] targetParts = channel.Target.Split('/');
+                if (targetParts.Length != 2)
+                    return;
+
+                // Make sure the target is pointing at a collada node
+                COLLADA.Node colladaNode = this.Source.GetObjectByUrl("#" + targetParts[0]) as COLLADA.Node; 
+                if(colladaNode == null)
+                    return; // The channel does not target a node
+
+                // Make sure the target points at a matrix transform within the node
+                COLLADA.TransformBase transform = colladaNode.Transforms.First(n => n.Sid == targetParts[1]);
+                if (transform == null || (transform is COLLADA.Matrix == false))
+                    return; // This animation is not applied to a node matrix
+
+                // Find the Node referenced by the address ID
+                Node node = this.ResultModel.RootNode.FindNodeByColladaId(targetParts[0]);
+                if (node == null)
+                    throw new BuildException("Animation references a node that was not processed.");
+
+                // Create a node animation for this node
+                NodeAnimation nodeAnimation = new NodeAnimation();
+                nodeAnimation.Node = node;
+
+                // Process the Channel Source
+                // ------------------------------
+
+                // Get the source
+                COLLADA.Sampler sampler = this.Source.GetObjectByUrl(channel.Source) as COLLADA.Sampler;
+                if (sampler == null)
+                    throw new Exception("Animation channel references an unknown [sampler@id=\"" + channel.Source + "\"]");
+
+                // Get the 3 sources..  INPUT / OUTPUT / INTERPOLATION
+                string inputSourceUrl = sampler.Inputs.Single(n => n.Semantic == "INPUT").Source;
+                string outputSourceUrl = sampler.Inputs.Single(n => n.Semantic == "OUTPUT").Source;
+                string interpolationSourceUrl = sampler.Inputs.Single(n => n.Semantic == "INTERPOLATION").Source;
+
+                COLLADA.Source inputSource = this.Source.GetObjectByUrl(inputSourceUrl) as COLLADA.Source;
+                COLLADA.Source outputSource = this.Source.GetObjectByUrl(outputSourceUrl) as COLLADA.Source;
+                COLLADA.Source interpolationSource = this.Source.GetObjectByUrl(interpolationSourceUrl) as COLLADA.Source;
+
+                // Get the input & output float values
+                List<float> inputValues = (inputSource.ArrayData as COLLADA.FloatArray).Values;
+                List<float> outputValues = (outputSource.ArrayData as COLLADA.FloatArray).Values;
+
+                // Loop through the keyframes
+                for(int index=0; index < inputValues.Count; index++)
+                {
+                    // Create this node animation keyframe
+                    TransformKeyFrame keyFrame = new TransformKeyFrame();
+                    nodeAnimation.KeyFrames.Add(keyFrame);
+
+                    // Set the keyframe time
+                    keyFrame.Time = inputValues[index];
+
+                    // Extract the output TRANSFORM matrix
+                    List<float> matrixValues = outputValues.GetRange(index * 16, 16);
+                    Matrix transformMatrix = new Gdk.Matrix(
+                        matrixValues[0], matrixValues[4], matrixValues[8], matrixValues[12],
+                        matrixValues[1], matrixValues[5], matrixValues[9], matrixValues[13],
+                        matrixValues[2], matrixValues[6], matrixValues[10], matrixValues[14],
+                        matrixValues[3], matrixValues[7], matrixValues[11], matrixValues[15]
+                        );
+
+                    // Decompose the output transform into the keyframe
+                    transformMatrix.Decompose(out keyFrame.Scale, out keyFrame.Rotation, out keyFrame.Translation);
+                }
+
+                // Did the node have any keyframes?
+                if(nodeAnimation.KeyFrames.Count > 0)
+                {
+                    // Put this node animation into the animation
+                    animation.NodeAnimations.Add(nodeAnimation);
+
+                    Context.LogInfo(" +---" + indent + " Node [" + node.Name + "] [Keyframes: " + nodeAnimation.KeyFrames.Count + "]");
+                }
+            }
         }
 
         /// <summary>
         /// Processes a COLLADA.Node object
         /// </summary>
-        public void ProcessColladaNode(COLLADA.Node colladaNode, Model.Node parentNode, Gdk.Matrix parentTransform, string logIndent)
+        public void ProcessColladaNode(COLLADA.Node colladaNode, Node parentNode, Gdk.Matrix parentTransform, string logIndent)
         {
             Context.LogInfo(" +-" + logIndent + " Node: " + colladaNode.Id);
 
@@ -259,21 +445,20 @@ namespace Gdk.Content
             Gdk.Matrix absoluteTransform = localTransform * parentTransform;
 
             // Create the Model.Node for this node
-            Model.Node node = new Gdk.Content.Model.Node();
-            node.Transform = localTransform;
-            node.AbsoluteTransform = absoluteTransform;
-            node.Name = colladaNode.Id;
-            node.Sid = colladaNode.Sid;
+            Node node = new Node();
+            node.PoseTransform = localTransform;
+            node.ColladaSID = colladaNode.Sid;
+            node.ColladaID = colladaNode.Id;
 
-            // If the node has no Id, we generate one
+            // Get the node name
+            node.Name = colladaNode.Name;
             if (string.IsNullOrEmpty(node.Name))
-            {
-                node.Name = "GDK-Node-" + this.ResultModel.Nodes.Count;
-            }
+                node.Name = node.ColladaID;
 
-            // Add this node to the parent & the global nodes list
+            // Add this node to the model
             node.ParentNode = parentNode;
-            parentNode.ChildNodes.Add(node);
+            if(parentNode != null)
+                parentNode.ChildNodes.Add(node);
             this.ResultModel.Nodes.Add(node);
 
             // Loop though the instanced geometry on this node
@@ -308,7 +493,7 @@ namespace Gdk.Content
         /// <summary>
         /// Processes a COLLADA.InstanceNode object, at the given node
         /// </summary>
-        public void ProcessColladaInstanceNode(COLLADA.InstanceNode nodeInstance, Model.Node parentNode, Gdk.Matrix parentTransform, string logIndent)
+        public void ProcessColladaInstanceNode(COLLADA.InstanceNode nodeInstance, Node parentNode, Gdk.Matrix parentTransform, string logIndent)
         {
             // Get the node that is being instanced
             COLLADA.Node colladaNode = this.Source.GetObjectByUrl(nodeInstance.Url) as COLLADA.Node;
@@ -322,7 +507,7 @@ namespace Gdk.Content
         /// <summary>
         /// Processes a COLLADA.InstanceController object, at the given node
         /// </summary>
-        public void ProcessColladaInstanceController(COLLADA.InstanceController controllerInstance, Model.Node node, string logIndent)
+        public void ProcessColladaInstanceController(COLLADA.InstanceController controllerInstance, Node node, string logIndent)
         {
             // Get the controller that is being referenced
             COLLADA.Controller controller = this.Source.GetObjectByUrl(controllerInstance.Url) as COLLADA.Controller;
@@ -334,21 +519,21 @@ namespace Gdk.Content
             
             if(controller.Skin != null)
             {
-                // Get the SkeletalMesh that was built from this skin controller
-                Model.SkeletalMesh skeletalMesh = this.ResultModel.SkeletalMeshesById[controller.Id];
-                if(skeletalMesh == null)
-                    throw new BuildException("Unable to instance a skin controller, no skeletal mesh was processed for the skin source [mesh.id=\"" + controller.Skin.Source + "\"]");
+                // Get the Mesh that was built from this skin controller
+                Mesh mesh = this.MeshesByColladaId[controller.Id];
+                if (mesh == null)
+                    throw new BuildException("Unable to instance a skin controller, no mesh was processed for the skin source [mesh.id=\"" + controller.Skin.Source + "\"]");
  
                 // Create a skeletal mesh instance for this skin controller instance
-                Model.SkeletalMeshInstance skeletalMeshInstance = new Model.SkeletalMeshInstance();
-                skeletalMeshInstance.Mesh = skeletalMesh;
-                skeletalMeshInstance.Node = node;
-                this.ResultModel.SkeletalMeshInstances.Add(skeletalMeshInstance);
+                MeshInstance meshInstance = new MeshInstance();
+                meshInstance.Mesh = mesh;
+                meshInstance.Node = node;
+                this.ResultModel.MeshInstances.Add(meshInstance);
 
                 // Build a map of all the nodes used by this skeleton, by node SID
                 // ---------------------------------------------------------------------------
 
-                Dictionary<string, Model.Node> SkeletonNodesBySID = new Dictionary<string,Gdk.Content.Model.Node>();
+                Dictionary<string, Node> SkeletonNodesBySID = new Dictionary<string, Node>();
 
                 // Is this node using specific skeleton roots?
                 if (controllerInstance.Skeletons.Count > 0)
@@ -360,7 +545,7 @@ namespace Gdk.Content
                         string skeletonNodeId = skeleton.URI;
                         if (skeletonNodeId.StartsWith("#"))
                             skeletonNodeId = skeletonNodeId.Substring(1);
-                        Model.Node skeletonRootNode = this.ResultModel.RootNode.FindNodeById(skeletonNodeId);
+                        Node skeletonRootNode = this.ResultModel.RootNode.FindNodeByColladaId(skeletonNodeId);
 
                         if(skeletonRootNode == null)
                             throw new BuildException("Unable to find the node \"" + skeletonNodeId + "\" referenced in an [instance_controller/skeleton] element");
@@ -379,13 +564,13 @@ namespace Gdk.Content
                 // ---------------------------------------------------------------------------
 
                 // Loop through the joint SIDs
-                foreach(string jointSID in skeletalMesh.JointSIDs)
+                foreach(string jointSID in mesh.JointSIDs)
                 {
                     // Find the node with this SID
-                    Model.Node jointNode = SkeletonNodesBySID[jointSID];
+                    Node jointNode = SkeletonNodesBySID[jointSID];
 
                     // Assign this node to this joint index in the skeletal mesh instance
-                    skeletalMeshInstance.JointToNodeMap.Add(jointNode);
+                    meshInstance.JointToNodeMap.Add(jointNode);
 
                     // Flag the node as InUse
                     jointNode.InUse = true;
@@ -401,7 +586,7 @@ namespace Gdk.Content
                     foreach (COLLADA.InstanceMaterial materialInstance in controllerInstance.BindMaterial.MaterialInstances)
                     {
                         // Does the mesh have this material symbol?
-                        if (skeletalMesh.TriangleSoupsByMaterialSymbol.ContainsKey(materialInstance.Symbol) == false)
+                        if (mesh.TrianglesByMaterialSymbol.ContainsKey(materialInstance.Symbol) == false)
                         {
                             Context.LogWarn("An [instance_controller] in the node id=\"" + node.Name + "\" contains a material binding for a material symbol \"" + materialInstance.Symbol + "\" that doesnt exist on the mesh.  (this is usually safe to ignore)");
                             continue;
@@ -411,36 +596,36 @@ namespace Gdk.Content
                         string materialId = materialInstance.Target;
                         if (materialId.StartsWith("#"))
                             materialId = materialId.Substring(1);
-                        Model.Material material;
-                        if (this.ResultModel.MaterialsById.TryGetValue(materialId, out material) == false)
+                        Material material;
+                        if (this.MaterialsByColladaId.TryGetValue(materialId, out material) == false)
                         {
                             throw new BuildException("The node id=\"" + node.Name + "\" contains a controller instance binding to an unknown material \"" + materialId + "\"");
                         }
 
                         // Add this binding to the mesh instance
-                        skeletalMeshInstance.MaterialBindings.Add(materialInstance.Symbol, material);
+                        meshInstance.MaterialBindings.Add(materialInstance.Symbol, material);
                     }
                 }
 
                 // If the mesh has an unassigned material symbol, bind the default material to it
-                if (skeletalMesh.TriangleSoupsByMaterialSymbol.ContainsKey("GDK-Unassigned"))
+                if (mesh.TrianglesByMaterialSymbol.ContainsKey("GDK-Unassigned"))
                 {
-                    Model.Material defaultMaterial = this.ResultModel.MaterialsById["GDK-Default-Material"];
-                    skeletalMeshInstance.MaterialBindings.Add("GDK-Unassigned", defaultMaterial);
+                    Material defaultMaterial = this.MaterialsByColladaId["GDK-Default-Material"];
+                    meshInstance.MaterialBindings.Add("GDK-Unassigned", defaultMaterial);
                 }
 
                 // Verify the instance has a material binding for every material symbol in the mesh
-                foreach (string materialSymbol in skeletalMesh.TriangleSoupsByMaterialSymbol.Keys)
-                    if (skeletalMeshInstance.MaterialBindings.Keys.Contains(materialSymbol) == false)
-                        throw new BuildException("An [instance_controller] for the controller \"" + skeletalMesh.Id + "\"] does not contains a binding for the material symbol \"" + materialSymbol + "\"");
+                foreach (string materialSymbol in mesh.TrianglesByMaterialSymbol.Keys)
+                    if (meshInstance.MaterialBindings.Keys.Contains(materialSymbol) == false)
+                        throw new BuildException("An [instance_controller] for the controller \"" + controller.Id + "\"] does not contains a binding for the material symbol \"" + materialSymbol + "\"");
 
-                if (skeletalMesh.TriangleSoupsByMaterialSymbol.Count != skeletalMeshInstance.MaterialBindings.Count)
-                    throw new BuildException("An [instance_controller] for the controller \"" + skeletalMesh.Id + "\"] does not have a matching number of material bindings.  [Expected:" + skeletalMesh.TriangleSoupsByMaterialSymbol.Count + "] [Actual:" + skeletalMeshInstance.MaterialBindings.Count + "]");
+                if (mesh.TrianglesByMaterialSymbol.Count != meshInstance.MaterialBindings.Count)
+                    throw new BuildException("An [instance_controller] for the controller \"" + controller.Id + "\"] does not have a matching number of material bindings.  [Expected:" + mesh.TrianglesByMaterialSymbol.Count + "] [Actual:" + meshInstance.MaterialBindings.Count + "]");
 
                 // -------------------------------------
 
                 // Log the skeletal mesh instance
-                Context.LogInfo(" +---" + logIndent + " Skeletal Mesh Instance: " + skeletalMesh.Id);
+                Context.LogInfo(" +---" + logIndent + " Mesh Instance (Skinned): " + mesh.ColladaID);
 
                 // Set the node as 'inUse'
                 node.InUse = true;
@@ -454,35 +639,35 @@ namespace Gdk.Content
         /// </summary>
         /// <param name="node"></param>
         /// <param name="nodesBySID"></param>
-        public void RecurseCollectNodesBySID(Model.Node node, Dictionary<string, Model.Node> nodesBySID)
+        public void RecurseCollectNodesBySID(Node node, Dictionary<string, Node> nodesBySID)
         {
             // If this node has a Sid, add it to the dictionary
-            if (string.IsNullOrEmpty(node.Sid) == false)
-                nodesBySID.Add(node.Sid, node);
+            if (string.IsNullOrEmpty(node.ColladaSID) == false)
+                nodesBySID.Add(node.ColladaSID, node);
 
             // Recurse to the child nodes
-            foreach (Model.Node childNode in node.ChildNodes)
+            foreach (Node childNode in node.ChildNodes)
                 RecurseCollectNodesBySID(childNode, nodesBySID);
         }
 
         /// <summary>
         /// Processes a COLLADA.InstanceGeometry object, at the given node
         /// </summary>
-        public void ProcessColladaInstanceGeometry(COLLADA.InstanceGeometry geometryInstance, Model.Node node, string logIndent)
+        public void ProcessColladaInstanceGeometry(COLLADA.InstanceGeometry geometryInstance, Node node, string logIndent)
         {
             // Get the Mesh this instance is using
             string meshId = geometryInstance.Url;
             if (meshId.StartsWith("#"))
                 meshId = meshId.Substring(1);
-            Model.Mesh mesh;
-            if (this.ResultModel.MeshesById.TryGetValue(meshId, out mesh) == false)
+            Mesh mesh;
+            if (this.MeshesByColladaId.TryGetValue(meshId, out mesh) == false)
             {
                 Context.LogWarn("The node id=\"" + node.Name + "\" contains an instance of an unknown/unrecognized mesh \"" + meshId + "\"");
                 return;
             }
 
             // Create the GDK MeshInstance
-            Model.MeshInstance meshInstance = new Model.MeshInstance();
+            MeshInstance meshInstance = new MeshInstance();
             meshInstance.Mesh = mesh;
             meshInstance.Node = node;
             this.ResultModel.MeshInstances.Add(meshInstance);
@@ -494,7 +679,7 @@ namespace Gdk.Content
                 foreach (COLLADA.InstanceMaterial materialInstance in geometryInstance.BindMaterial.MaterialInstances)
                 {
                     // Does the mesh have this material symbol?
-                    if (mesh.TriangleSoupsByMaterialSymbol.ContainsKey(materialInstance.Symbol) == false)
+                    if (mesh.TrianglesByMaterialSymbol.ContainsKey(materialInstance.Symbol) == false)
                     {
                         Context.LogWarn("An [instance_geometry] in the node id=\"" + node.Name + "\" contains a material binding for a material symbol \"" + materialInstance.Symbol + "\" that doesnt exist on the mesh.  (this is usually safe to ignore)");
                         continue;
@@ -504,8 +689,8 @@ namespace Gdk.Content
                     string materialId = materialInstance.Target;
                     if (materialId.StartsWith("#"))
                         materialId = materialId.Substring(1);
-                    Model.Material material;
-                    if (this.ResultModel.MaterialsById.TryGetValue(materialId, out material) == false)
+                    Material material;
+                    if (this.MaterialsByColladaId.TryGetValue(materialId, out material) == false)
                     {
                         throw new BuildException("The node id=\"" + node.Name + "\" contains a geometry instance binding to an unknown material \"" + materialId + "\"");
                     }
@@ -516,22 +701,22 @@ namespace Gdk.Content
             }
 
             // If the mesh has an unassigned material symbol, bind the default material to it
-            if (mesh.TriangleSoupsByMaterialSymbol.ContainsKey("GDK-Unassigned"))
+            if (mesh.TrianglesByMaterialSymbol.ContainsKey("GDK-Unassigned"))
             {
-                Model.Material defaultMaterial = this.ResultModel.MaterialsById["GDK-Default-Material"];
+                Material defaultMaterial = this.MaterialsByColladaId["GDK-Default-Material"];
                 meshInstance.MaterialBindings.Add("GDK-Unassigned", defaultMaterial);
             }
 
             // Verify the instance has a material binding for every material symbol in the mesh
-            foreach (string materialSymbol in mesh.TriangleSoupsByMaterialSymbol.Keys)
+            foreach (string materialSymbol in mesh.TrianglesByMaterialSymbol.Keys)
                 if (meshInstance.MaterialBindings.Keys.Contains(materialSymbol) == false)
-                    throw new BuildException("An [instance_geometry] for the geometry \"" + mesh.Id + "\"] does not contains a binding for the material symbol \"" + materialSymbol + "\"");
+                    throw new BuildException("An [instance_geometry] for the geometry \"" + meshId + "\"] does not contains a binding for the material symbol \"" + materialSymbol + "\"");
 
-            if (mesh.TriangleSoupsByMaterialSymbol.Count != meshInstance.MaterialBindings.Count)
-                throw new BuildException("An [instance_geometry] for the geometry \"" + mesh.Id + "\"] does not have a matching number of material bindings.  [Expected:" + mesh.TriangleSoupsByMaterialSymbol.Count + "] [Actual:" + meshInstance.MaterialBindings.Count + "]");
+            if (mesh.TrianglesByMaterialSymbol.Count != meshInstance.MaterialBindings.Count)
+                throw new BuildException("An [instance_geometry] for the geometry \"" + meshId + "\"] does not have a matching number of material bindings.  [Expected:" + mesh.TrianglesByMaterialSymbol.Count + "] [Actual:" + meshInstance.MaterialBindings.Count + "]");
 
             // Log the mesh instance
-            Context.LogInfo(" +---" + logIndent + " Mesh Instance: " + mesh.Id);
+            Context.LogInfo(" +---" + logIndent + " Mesh Instance: " + mesh.ColladaID);
 
             // Set the node as 'inUse'
             node.InUse = true;
@@ -556,21 +741,33 @@ namespace Gdk.Content
 
                 // Get the source mesh this controller uses
                 COLLADA.Geometry skinSourceGeometry = this.Source.GetObjectByUrl(controller.Skin.Source) as COLLADA.Geometry;
-                Model.Mesh sourceMesh = this.ResultModel.MeshesById[skinSourceGeometry.Id];
+                Mesh sourceMesh = this.MeshesByColladaId[skinSourceGeometry.Id];
 
                 // Create a skeletal mesh 
-                Model.SkeletalMesh skeletalMesh = new Model.SkeletalMesh();
-                skeletalMesh.Id = controller.Id;
+                Mesh skinnedMesh = new Mesh();
+                skinnedMesh.ColladaID = controller.Id;
+                skinnedMesh.Name = controller.Name;
+                if (string.IsNullOrEmpty(skinnedMesh.Name) == true)
+                    skinnedMesh.Name = controller.Id;
 
-                // Clone the mesh flags & triangle soup data from the source mesh
-                skeletalMesh.Flags = sourceMesh.Flags;
-                foreach(KeyValuePair<string, Model.TriangleSoup> triangleSoupEntry in sourceMesh.TriangleSoupsByMaterialSymbol)
-                    skeletalMesh.TriangleSoupsByMaterialSymbol.Add(triangleSoupEntry.Key, triangleSoupEntry.Value.Clone());
+                // Clone the source mesh flags & primitives
+                skinnedMesh.Flags = sourceMesh.Flags;
+                foreach (KeyValuePair<string, List<Triangle>> triangleBlobEntry in sourceMesh.TrianglesByMaterialSymbol)
+                {
+                    // Clone the triangles assigned to this material
+                    List<Triangle> clonedTriangleBlob = new List<Triangle>();
+                    foreach(Triangle sourceTri in triangleBlobEntry.Value)
+                        clonedTriangleBlob.Add(new Triangle(sourceTri));
+                    skinnedMesh.TrianglesByMaterialSymbol.Add(triangleBlobEntry.Key, clonedTriangleBlob);
+                } 
 
-                // Add the cloned mesh to the model
-                this.ResultModel.SkeletalMeshesById.Add(skeletalMesh.Id, skeletalMesh);
+                // Add the new skinned mesh to the processed set
+                this.MeshesByColladaId.Add(skinnedMesh.ColladaID, skinnedMesh);
 
-                Context.LogVerbose(" +--- Source Mesh: " + sourceMesh.Id);
+                // Add the mesh to the model
+                this.ResultModel.Meshes.Add(skinnedMesh);
+
+                Context.LogVerbose(" +--- Source Mesh: " + sourceMesh.ColladaID);
 
                 // Load the joint data for this skeletal mesh
                 // -------------------------------------------
@@ -584,12 +781,12 @@ namespace Gdk.Content
                 COLLADA.Source invBindMatrixSource = this.Source.GetObjectByUrl(invBindMatrixInput.Source) as COLLADA.Source;
 
                 // Loop through the joints used by this skin
-                skeletalMesh.NumJoints = (UInt16)jointSource.ArrayData.Count;
+                skinnedMesh.NumJoints = (UInt16)jointSource.ArrayData.Count;
                 for(int jointIndex = 0; jointIndex < jointSource.ArrayData.Count; jointIndex++)
                 {
                     // Get the SID for this joint
                     string jointSID = jointSource.ArrayData.GetValue(jointIndex) as string;
-                    skeletalMesh.JointSIDs.Add(jointSID);;
+                    skinnedMesh.JointSIDs.Add(jointSID); ;
 
                     // Get the InvBindMatrix for this joint
                     List<float> ibmValues = (invBindMatrixSource.ArrayData as COLLADA.FloatArray).Values;
@@ -600,11 +797,11 @@ namespace Gdk.Content
                         ibmValues[offset + 2], ibmValues[offset + 6], ibmValues[offset + 10], ibmValues[offset + 14],
                         ibmValues[offset + 3], ibmValues[offset + 7], ibmValues[offset + 11], ibmValues[offset + 15]
                         );
-                    skeletalMesh.JointInvBindMatrices.Add(jointInvBindMatrix);
+                    skinnedMesh.JointInvBindMatrices.Add(jointInvBindMatrix);
 
                 }
 
-                Context.LogVerbose(" +--- Joints: " + skeletalMesh.NumJoints);
+                Context.LogVerbose(" +--- Joints: " + skinnedMesh.NumJoints);
 
                 // Load the vertex bone indices & weights from the collada skin
                 // -------------------------------------------------------
@@ -735,20 +932,20 @@ namespace Gdk.Content
                 // Set the mesh flags for this type of skinning
                 switch(fixedBonesPerVertex)
                 {
-                    case 1: skeletalMesh.Flags |= Model.MeshFlags.VertexHasSingleBone; break;
-                    case 2: skeletalMesh.Flags |= Model.MeshFlags.VertexHas2WeightedBones; break;
-                    case 4: skeletalMesh.Flags |= Model.MeshFlags.VertexHas4WeightedBones; break;
+                    case 1: skinnedMesh.Flags |= MeshFlags.VertexHasSingleBone; break;
+                    case 2: skinnedMesh.Flags |= MeshFlags.VertexHas2WeightedBones; break;
+                    case 4: skinnedMesh.Flags |= MeshFlags.VertexHas4WeightedBones; break;
                     default: throw new BuildException("Skeletal mesh processing is using an unsupported number of bones per vertex: " + fixedBonesPerVertex);
                 }
 
-                // Loop through the triangle soups in the mesh
-                foreach (Model.TriangleSoup triangleSoup in skeletalMesh.TriangleSoupsByMaterialSymbol.Values)
+                // Loop through the triangle sets in the mesh
+                foreach (List<Triangle> triangleSet in skinnedMesh.TrianglesByMaterialSymbol.Values)
                 {
-                    // Loop through the triangles in this soup
-                    foreach (Model.Triangle triangle in triangleSoup.Triangles)
+                    // Loop through the triangles in this se
+                    foreach (Triangle triangle in triangleSet)
                     {
                         // Loop through the vertices in this triangle
-                        foreach (Model.Vertex vertex in triangle.Vertices)
+                        foreach (Vertex vertex in triangle.Vertices)
                         {
                             // Lookup the skin vertex data for this vertex
                             SkinVertexData skinVertex = skinVertices[vertex.Index];
@@ -756,7 +953,7 @@ namespace Gdk.Content
                             // Copy the bone indices & weights to this vertex
                             for(int boneIndex=0; boneIndex < fixedBonesPerVertex; boneIndex++)
                             {
-                                vertex.BoneIndices[boneIndex] = (UInt16)skinVertex.Indices[boneIndex];
+                                vertex.BoneIndices[boneIndex] = (byte)skinVertex.Indices[boneIndex];
                                 vertex.BoneWeights[boneIndex] = skinVertex.Weights[boneIndex];
                             }
                         }
@@ -785,10 +982,13 @@ namespace Gdk.Content
                 Context.LogInfo(" +- Mesh: " + colladaGeometry.Id);
 
                 // Create a new Gdk Mesh
-                Model.Mesh mesh = new Gdk.Content.Model.Mesh();
+                Mesh mesh = new Mesh();
 
                 // Copy the Id
-                mesh.Id = colladaGeometry.Id;
+                mesh.ColladaID = colladaGeometry.Id;
+                mesh.Name = colladaGeometry.Name;
+                if (string.IsNullOrEmpty(mesh.Name))
+                    mesh.Name = colladaGeometry.Id;
 
                 // Parse the triangle soups from the COLLADA data
                 // ----------------------------------------------------
@@ -807,14 +1007,14 @@ namespace Gdk.Content
 
                 // TODO(P2): Support TriFans & TriStrips
                 if (colladaGeometry.Mesh.TriFansSets.Count > 0)
-                    throw new BuildException("The mesh \"" + mesh.Id + "\" contains a <trifans> element, which isnt currently supported");
+                    throw new BuildException("The mesh \"" + mesh.ColladaID + "\" contains a <trifans> element, which isnt currently supported");
                 if (colladaGeometry.Mesh.TriStripsSets.Count > 0)
-                    throw new BuildException("The mesh \"" + mesh.Id + "\" contains a <tristrips> element, which isnt currently supported");
+                    throw new BuildException("The mesh \"" + mesh.ColladaID + "\" contains a <tristrips> element, which isnt currently supported");
 
                 // Did we not find any triangles?
-                if(mesh.TriangleSoupsByMaterialSymbol.Count == 0)
+                if(mesh.TrianglesByMaterialSymbol.Count == 0)
                 {
-                    Context.LogWarn(" +--- The mesh \"" + mesh.Id + "\" contains no triangle data, skipping");
+                    Context.LogWarn(" +--- The mesh \"" + mesh.ColladaID + "\" contains no triangle data, skipping");
                     return;
                 }
 
@@ -822,12 +1022,12 @@ namespace Gdk.Content
                 // ----------------------------------------------------
 
                 // Get the first vertex in the first triangle of the first triangle soup :D
-                Model.Vertex firstVertex = mesh.TriangleSoupsByMaterialSymbol.First().Value.Triangles[0].Vertices[0];
+                Vertex firstVertex = mesh.TrianglesByMaterialSymbol.First().Value[0].Vertices[0];
 
                 // Verify every vertex within this mesh uses the exact same vertex data format
-                foreach (Model.TriangleSoup triangleSoup in mesh.TriangleSoupsByMaterialSymbol.Values)
-                    foreach (Model.Triangle triangle in triangleSoup.Triangles)
-                        foreach (Model.Vertex vertex in triangle.Vertices)
+                foreach (List<Triangle> triangleSet in mesh.TrianglesByMaterialSymbol.Values)
+                    foreach (Triangle triangle in triangleSet)
+                        foreach (Vertex vertex in triangle.Vertices)
                             if (firstVertex.Flags != vertex.Flags)
                                 throw new BuildException("The geometry mesh \"" + colladaGeometry.Id + "\" contains mixed vertex types, which is currently un-supported by the GDK ModelProcessor");
                 
@@ -849,13 +1049,16 @@ namespace Gdk.Content
                 Context.LogVerbose(" +--- Vertex Format: " + vertexFormat);
 
                 // Log the triangle soup data
-                foreach (KeyValuePair<string, Model.TriangleSoup> soupByMaterial in mesh.TriangleSoupsByMaterialSymbol)
+                foreach (KeyValuePair<string, List<Triangle>> trianglesByMaterial in mesh.TrianglesByMaterialSymbol)
                 {
-                    Context.LogVerbose(" +--- Triangle Soup:  [Material: " + soupByMaterial.Key + "] [#Triangles: " + soupByMaterial.Value.Triangles.Count + "]");
+                    Context.LogVerbose(" +--- Triangle Soup:  [Material: " + trianglesByMaterial.Key + "] [#Triangles: " + trianglesByMaterial.Value.Count + "]");
                 }
 
+                // Add the mesh to the processed set
+                this.MeshesByColladaId.Add(mesh.ColladaID, mesh);
+
                 // Add the mesh to the model
-                ResultModel.MeshesById.Add(mesh.Id, mesh);
+                this.ResultModel.Meshes.Add(mesh);
             }
             else
             {
@@ -870,11 +1073,12 @@ namespace Gdk.Content
         public void EnsureDefaultMaterialExists()
         {
             // Does the model have the default material?
-            if (this.ResultModel.MaterialsById.ContainsKey("GDK-Default-Material") == false)
+            if (this.MaterialsByColladaId.ContainsKey("GDK-Default-Material") == false)
             {
                 // Create the default material
-                Model.Material defaultMaterial = new Model.Material();
-                defaultMaterial.Id = "GDK-Default-Material";
+                Material defaultMaterial = new Material();
+                defaultMaterial.Name = "GDK-Default-Material";
+                defaultMaterial.ColladaID = "GDK-Default-Material";
                 defaultMaterial.Ambient = Context.Parameters.GetValue("Default Ambient", Color.Black);
                 defaultMaterial.Diffuse = Context.Parameters.GetValue("Default Diffuse", new Color(196, 0, 196));
                 defaultMaterial.Specular = Context.Parameters.GetValue("Default Specular", Color.White);
@@ -883,7 +1087,8 @@ namespace Gdk.Content
                 defaultMaterial.Flags = 0;
 
                 // Add the default material to the model
-                this.ResultModel.MaterialsById.Add("GDK-Default-Material", defaultMaterial);
+                this.MaterialsByColladaId.Add(defaultMaterial.ColladaID, defaultMaterial);
+                this.ResultModel.Materials.Add(defaultMaterial);
             }
         }
 
@@ -892,12 +1097,12 @@ namespace Gdk.Content
         /// material, a new one is created and added to the mesh
         /// </summary>
         /// <param name="mesh"></param>
-        Model.TriangleSoup GetTriangleSoupForMaterialSymbol(Model.Mesh mesh, string materialSymbol)
+        List<Triangle> GetTriangleSetForMaterialSymbol(Mesh mesh, string materialSymbol)
         {
             // If the material symbol is blank, use the builtin 'GDK-No-Material' material
             if (string.IsNullOrEmpty(materialSymbol))
             {
-                Context.LogWarn("The mesh[id=\"" + mesh.Id + "\"] does not have a material symbol, defaulting to the \"GDK-Unassigned\" symbol");
+                Context.LogWarn("The mesh[id=\"" + mesh.ColladaID + "\"] does not have a material symbol, defaulting to the \"GDK-Unassigned\" symbol");
                 materialSymbol = "GDK-Unassigned";
 
                 // Ensure the default material exists
@@ -905,26 +1110,26 @@ namespace Gdk.Content
             }
 
             // Does the mesh have an existing triangle soup for this material symbol?
-            if (mesh.TriangleSoupsByMaterialSymbol.ContainsKey(materialSymbol) == true)
+            if (mesh.TrianglesByMaterialSymbol.ContainsKey(materialSymbol) == true)
             {
                 // Use this soup
-                return mesh.TriangleSoupsByMaterialSymbol[materialSymbol];
+                return mesh.TrianglesByMaterialSymbol[materialSymbol];
             }
             
             // Create a new soup for this material symbol
-            Model.TriangleSoup triangleSoup = new Model.TriangleSoup();
-            mesh.TriangleSoupsByMaterialSymbol.Add(materialSymbol, triangleSoup);
+            List<Triangle> newTriangleSet = new List<Triangle>();
+            mesh.TrianglesByMaterialSymbol.Add(materialSymbol, newTriangleSet);
 
-            return triangleSoup;
+            return newTriangleSet;
         }
 
         /// <summary>
         /// Processes a single COLLADA <triangles/> element and adds the triangle/vertex data to a Mesh
         /// </summary>
-        void ProcessColladaTriangles(COLLADA.Triangles triangles, Model.Mesh mesh)
+        void ProcessColladaTriangles(COLLADA.Triangles triangles, Mesh mesh)
         {
             // Get a triangle soup in the mesh for this <triangles>'s material symbol
-            Model.TriangleSoup triangleSoup = GetTriangleSoupForMaterialSymbol(mesh, triangles.Material);
+            List<Triangle> trianglesSet = GetTriangleSetForMaterialSymbol(mesh, triangles.Material);
 
             // Loop through the primitives sets (<p> elements)
             foreach(COLLADA.IndexSet indexSet in triangles.PrimitiveIndexSets)
@@ -935,8 +1140,8 @@ namespace Gdk.Content
                 for (int triangleIndex = 0; triangleIndex < triangles.Count; triangleIndex++)
                 {
                     // Create a triangle in the soup
-                    Model.Triangle triangle = new Gdk.Content.Model.Triangle();
-                    triangleSoup.Triangles.Add(triangle);
+                    Triangle triangle = new Triangle();
+                    trianglesSet.Add(triangle);
 
                     // Loop through the 3 vertices of this triangle
                     for (int i = 0; i < 3; i++)
@@ -946,7 +1151,7 @@ namespace Gdk.Content
                         vertexSourceIndex += SampleColladaSharedInputs(vertexSourceIndex, indexSet, triangles.Inputs, namedVertexData, string.Empty);
 
                         // Parse the named data into a Model Vertex
-                        Model.Vertex vertex = BuildModelVertex(namedVertexData);
+                        Vertex vertex = BuildModelVertex(namedVertexData);
 
                         // Add the vertex to the triangle
                         triangle.Vertices[i] = vertex;
@@ -959,14 +1164,14 @@ namespace Gdk.Content
         /// Processes a single COLLADA <polylist/> element and adds the triangle/vertex data to a Mesh
         /// </summary>
         /// <param name="mesh"></param>
-        void ProcessColladaPolyList(COLLADA.PolyList polylist, Model.Mesh mesh)
+        void ProcessColladaPolyList(COLLADA.PolyList polylist, Mesh mesh)
         {
             // Get a triangle soup in the mesh for this <polylist>'s material symbol
-            Model.TriangleSoup triangleSoup = GetTriangleSoupForMaterialSymbol(mesh, polylist.Material);
+            List<Triangle> trianglesSet = GetTriangleSetForMaterialSymbol(mesh, polylist.Material);
 
             // Verify the poly list has polygon vertices
             if (polylist.PrimitiveIndexSets.Count != 1)
-                throw new BuildException("The mesh[id=\"" + mesh.Id + "\"]/polylist contains an invalid number of [p] child elements (should be 1)");
+                throw new BuildException("The mesh[id=\"" + mesh.ColladaID + "\"]/polylist contains an invalid number of [p] child elements (should be 1)");
 
             int vertexSourceIndex = 0;
 
@@ -978,18 +1183,18 @@ namespace Gdk.Content
             {
                 // Make sure this poly has at least 3 vertices
                 if (polyVertexCount < 3)
-                    throw new BuildException("The mesh[id=\"" + mesh.Id + "\"]/polylist contains a poly with less than 3 vertices");
+                    throw new BuildException("The mesh[id=\"" + mesh.ColladaID + "\"]/polylist contains a poly with less than 3 vertices");
 
                 // Sample the first vertex
                 Dictionary<string, object> namedVertexData1 = new Dictionary<string, object>();
                 vertexSourceIndex += SampleColladaSharedInputs(vertexSourceIndex, indexSet, polylist.Inputs, namedVertexData1, string.Empty);
-                Model.Vertex vertex1 = BuildModelVertex(namedVertexData1);
+                Vertex vertex1 = BuildModelVertex(namedVertexData1);
 
                 // Sample the 3rd vertex
                 Dictionary<string, object> namedVertexData3 = new Dictionary<string, object>();
                 vertexSourceIndex += SampleColladaSharedInputs(vertexSourceIndex, indexSet, polylist.Inputs, namedVertexData3, string.Empty);
-                Model.Vertex vertex3 = BuildModelVertex(namedVertexData3);
-                Model.Vertex vertex2;
+                Vertex vertex3 = BuildModelVertex(namedVertexData3);
+                Vertex vertex2;
 
                 // Loop through the triangles
                 for (int triangleIndex = 0; triangleIndex < polyVertexCount - 2; triangleIndex++)
@@ -1003,11 +1208,11 @@ namespace Gdk.Content
                     vertex3 = BuildModelVertex(namedVertexData3);
 
                     // Build a triangle out of the 3 vertices
-                    Model.Triangle triangle = new Gdk.Content.Model.Triangle();
+                    Triangle triangle = new Triangle();
                     triangle.Vertices[0] = vertex1;
                     triangle.Vertices[1] = vertex2;
                     triangle.Vertices[2] = vertex3;
-                    triangleSoup.Triangles.Add(triangle);
+                    trianglesSet.Add(triangle);
                 }
             }
         }
@@ -1136,10 +1341,10 @@ namespace Gdk.Content
         /// <summary>
         /// Extracts a Model.Vertex from the given named vertex data blob (as parsed from collada data)
         /// </summary>
-        public Model.Vertex BuildModelVertex(Dictionary<string, object> namedVertexData)
+        public Vertex BuildModelVertex(Dictionary<string, object> namedVertexData)
         {
             // Create a default vertex
-            Model.Vertex vertex = new Model.Vertex();
+            Vertex vertex = new Vertex();
 
             // Loop through the vertex data items
             foreach (KeyValuePair<string, object> dataItem in namedVertexData)
@@ -1162,11 +1367,11 @@ namespace Gdk.Content
                     // TexCoord1
                     case "TEXCOORD.S": 
                         vertex.TexCoords1.X = GetObjectAsFloat(dataItem.Value);
-                        vertex.Flags |= Model.MeshFlags.VertexHasTexCoords;
+                        vertex.Flags |= MeshFlags.VertexHasTexCoords;
                         break;
                     case "TEXCOORD.T": 
                         vertex.TexCoords1.Y = GetObjectAsFloat(dataItem.Value);
-                        vertex.Flags |= Model.MeshFlags.VertexHasTexCoords;
+                        vertex.Flags |= MeshFlags.VertexHasTexCoords;
 
                         // Collada texture coordinates are based on 0,0 = bottom left
                         // GDK's are based on 0,0 = top left
@@ -1178,19 +1383,19 @@ namespace Gdk.Content
                     // Color
                     case "COLOR.R":
                         vertex.Color.R = (byte)(Math.Max(Math.Min(GetObjectAsFloat(dataItem.Value), 1.0f), 0.0f) * 255.0f);
-                        vertex.Flags |= Model.MeshFlags.VertexHasColor;
+                        vertex.Flags |= MeshFlags.VertexHasColor;
                         break;
                     case "COLOR.G":
                         vertex.Color.G = (byte)(Math.Max(Math.Min(GetObjectAsFloat(dataItem.Value), 1.0f), 0.0f) * 255.0f);
-                        vertex.Flags |= Model.MeshFlags.VertexHasColor;
+                        vertex.Flags |= MeshFlags.VertexHasColor;
                         break;
                     case "COLOR.B":
                         vertex.Color.B = (byte)(Math.Max(Math.Min(GetObjectAsFloat(dataItem.Value), 1.0f), 0.0f) * 255.0f);
-                        vertex.Flags |= Model.MeshFlags.VertexHasColor;
+                        vertex.Flags |= MeshFlags.VertexHasColor;
                         break;
                     case "COLOR.A":
                         vertex.Color.A = (byte)(Math.Max(Math.Min(GetObjectAsFloat(dataItem.Value), 1.0f), 0.0f) * 255.0f);
-                        vertex.Flags |= Model.MeshFlags.VertexHasColor;
+                        vertex.Flags |= MeshFlags.VertexHasColor;
                         break;
 
                     // Vertex Data we ignore
@@ -1231,10 +1436,15 @@ namespace Gdk.Content
             Context.LogInfo(" +- Material: " + colladaMaterial.Id);
 
             // Create a new Gdk Material
-            Model.Material material = new Gdk.Content.Model.Material();
+            Material material = new Material();
 
             // Copy the Id
-            material.Id = colladaMaterial.Id;
+            material.ColladaID = colladaMaterial.Id;
+
+            // Get the material name
+            material.Name = colladaMaterial.Name;
+            if (string.IsNullOrEmpty(material.Name))
+                material.ColladaID = colladaMaterial.Id;
 
             // Get the Effect & Effect-Instance that this material uses
             COLLADA.InstanceEffect effectInstance = colladaMaterial.InstanceEffect;
@@ -1380,7 +1590,7 @@ namespace Gdk.Content
             {
                 // The material is diffuse textured, so set the material flag for diffuse texturing
                 material.Diffuse = Gdk.Color.White;
-                material.Flags |= Model.MaterialFlags.DiffuseTextured;
+                material.Flags |= MaterialFlags.DiffuseTextured;
 
                 // Lookup the sampler by the given sid
                 COLLADA.Sampler2D sampler = (COLLADA.Sampler2D) GetFXParamValue(effect, effectInstance, diffuseTextureRef);
@@ -1401,7 +1611,8 @@ namespace Gdk.Content
             }
 
             // Add the material to the model
-            ResultModel.MaterialsById.Add(material.Id, material);
+            this.MaterialsByColladaId.Add(material.ColladaID, material);
+            this.ResultModel.Materials.Add(material);
         }
      
 
@@ -1445,7 +1656,7 @@ namespace Gdk.Content
         {
             // Remove unused meshes
             // =================================
-
+            /*
             bool removeUnusedMeshes = Context.Parameters.GetValue("Remove Unused Meshes", true);
             if (removeUnusedMeshes)
             {
@@ -1455,15 +1666,15 @@ namespace Gdk.Content
                 Context.LogInfo(" - Checking for unused meshes");
 
                 // Loop through the meshes by id
-                List<string> meshIds = new List<string>(this.ResultModel.MeshesById.Keys);
+                List<string> meshIds = new List<string>(this.MeshesByColladaId.Keys);
                 foreach (string meshId in meshIds)
                 {
                     // Get this mesh
-                    Model.Mesh mesh = this.ResultModel.MeshesById[meshId];
+                    Mesh mesh = this.ResultModel.MeshesByColladaId[meshId];
 
                     // Are there any instances of this mesh?
                     bool instanceFound = false;
-                    foreach (Model.MeshInstance meshInstance in this.ResultModel.MeshInstances)
+                    foreach (MeshInstance meshInstance in this.ResultModel.MeshInstances)
                         if (meshInstance.Mesh == mesh)
                         {
                             instanceFound = true;
@@ -1474,41 +1685,11 @@ namespace Gdk.Content
                     if (instanceFound == false)
                     {
                         // Remove the mesh from the model
-                        this.ResultModel.MeshesById.Remove(meshId);
+                        this.MeshesByColladaId.Remove(meshId);
+                        this.ResultModel.Meshes.Remove(mesh);
                         Context.LogInfo(" +- Removing unused mesh: \"" + meshId + "\"");
                     }
                 }
-
-                // Skeletal Meshes
-                // ------------------------
-
-                Context.LogInfo(" - Checking for unused skeletal meshes");
-
-                // Loop through the meshes by id
-                List<string> skeletalMeshIds = new List<string>(this.ResultModel.SkeletalMeshesById.Keys);
-                foreach (string skeletalMeshId in skeletalMeshIds)
-                {
-                    // Get this skeletal mesh
-                    Model.SkeletalMesh skeletalMesh = this.ResultModel.SkeletalMeshesById[skeletalMeshId];
-
-                    // Are there any instances of this skeletal mesh?
-                    bool instanceFound = false;
-                    foreach (Model.SkeletalMeshInstance skeletalMeshInstance in this.ResultModel.SkeletalMeshInstances)
-                        if (skeletalMeshInstance.Mesh == skeletalMesh)
-                        {
-                            instanceFound = true;
-                            break;
-                        }
-
-                    // Did we not find any instances of this skeletal mesh?
-                    if (instanceFound == false)
-                    {
-                        // Remove theskeletal  mesh from the model
-                        this.ResultModel.SkeletalMeshesById.Remove(skeletalMeshId);
-                        Context.LogInfo(" +- Removing unused skeletal mesh: \"" + skeletalMeshId + "\"");
-                    }
-                }
-            }
 
             // Remove unused materials
             // =================================
@@ -1519,16 +1700,16 @@ namespace Gdk.Content
                 Context.LogInfo(" - Checking for unused materials");
 
                 // Loop through the meshes by id
-                List<string> materialIds = new List<string>(this.ResultModel.MaterialsById.Keys);
+                List<string> materialIds = new List<string>(this.ResultModel.MaterialsByColladaId.Keys);
                 foreach (string materialId in materialIds)
                 {
                     // Get this material
-                    Model.Material material = this.ResultModel.MaterialsById[materialId];
+                    Material material = this.MaterialsByColladaId[materialId];
 
                     // Are there any instances of this material?
                     bool instanceFound = false;
-                    foreach (Model.MeshInstance meshInstance in this.ResultModel.MeshInstances)
-                        foreach(KeyValuePair<string, Model.Material> materialBinding in meshInstance.MaterialBindings)
+                    foreach (MeshInstance meshInstance in this.ResultModel.MeshInstances)
+                        foreach (KeyValuePair<string, Material> materialBinding in meshInstance.MaterialBindings)
                             if (materialBinding.Value == material)
                             {
                                 instanceFound = true;
@@ -1539,7 +1720,8 @@ namespace Gdk.Content
                     if (instanceFound == false)
                     {
                         // Remove the material from the model
-                        this.ResultModel.MaterialsById.Remove(materialId);
+                        this.MaterialsById.Remove(materialId);
+                        this.ResultModel.Materials.Remove(material);
                         Context.LogInfo(" +- Removing unused material: \"" + materialId + "\"");
                     }
                 }
@@ -1560,7 +1742,7 @@ namespace Gdk.Content
                 for(int nodeIndex = 0; nodeIndex < this.ResultModel.Nodes.Count; nodeIndex++)
                 {
                     // Get this node
-                    Model.Node node = this.ResultModel.Nodes[nodeIndex];
+                    Node node = this.ResultModel.Nodes[nodeIndex];
 
                     // Is this node Not in use?
                     if(node.InUse == false)
@@ -1578,7 +1760,7 @@ namespace Gdk.Content
                     }
                 }
             }
-
+*/
             // Combine like meshes
             // =================================
 
@@ -1594,17 +1776,16 @@ namespace Gdk.Content
             //    Sort the mesh parts to minimize state changes
             //    Sort the mesh isntances to minimize state changes (instaces of the same mesh could be back2back)
 
-
         }
 
         /// <summary>
         /// Recursively walks a node graph and sets the InUse flag for a node, if any of its decendents have the InUse flag set
         /// </summary>
         /// <param name="node"></param>
-        public bool RecurseUpdateNodeUsage(Model.Node node)
+        public bool RecurseUpdateNodeUsage(Node node)
         {
             // Recurse to the children.  If any of them are in use, then this node will be too!
-            foreach (Model.Node childNode in node.ChildNodes)
+            foreach (Node childNode in node.ChildNodes)
                 node.InUse |= RecurseUpdateNodeUsage(childNode);
             return node.InUse;
         }
@@ -1618,59 +1799,15 @@ namespace Gdk.Content
         /// </summary>
         public void FinalizeModel()
         {
-            // Assign Object Indices
-            // ==================================
-
-            // Nodes
-            for (int nodeIndex = 0; nodeIndex < this.ResultModel.Nodes.Count; nodeIndex++)
-            {
-                this.ResultModel.Nodes[nodeIndex].Index = nodeIndex;
-            }
-
-            // Materials
-            int materialIndex = 0;
-            foreach(Model.Material material in this.ResultModel.MaterialsById.Values)
-            {
-                material.Index = materialIndex;
-                materialIndex++;
-            }
-
-            // Meshes
-            int meshIndex = 0;
-            foreach (Model.Mesh mesh in this.ResultModel.MeshesById.Values)
-            {
-                mesh.Index = meshIndex;
-                meshIndex++;
-            }
-
-            // SkeletalMeshes
-            int skeletalMeshIndex = 0;
-            foreach (Model.SkeletalMesh skeletalMesh in this.ResultModel.SkeletalMeshesById.Values)
-            {
-                skeletalMesh.Index = skeletalMeshIndex;
-                skeletalMeshIndex++;
-            }
-
             // Finalize the Meshes
             // ==================================
 
             Context.LogInfo("<b> - Finalizing Meshes</b>");
 
             // Loop through the meshes
-            foreach (Model.Mesh mesh in this.ResultModel.MeshesById.Values)
+            foreach (Mesh mesh in this.ResultModel.Meshes)
             {
                 FinalizeMesh(mesh);
-            }
-
-            // Finalize the Skeletal Meshes
-            // ==================================
-
-            Context.LogInfo("<br/><b> - Finalizing Skeletal Meshes</b>");
-
-            // Loop through the meshes
-            foreach (Model.SkeletalMesh skeletalMesh in this.ResultModel.SkeletalMeshesById.Values)
-            {
-                FinalizeMesh(skeletalMesh);
             }
 
             // Log the final object counts
@@ -1678,11 +1815,11 @@ namespace Gdk.Content
 
             Context.LogInfo("<br/><b> - Final Model Details</b>");
             Context.LogInfo(" +- Nodes: " + this.ResultModel.Nodes.Count);
-            Context.LogInfo(" +- Materials: " + this.ResultModel.MaterialsById.Count);
-            Context.LogInfo(" +- Meshes: " + this.ResultModel.MeshesById.Count);
-            Context.LogInfo(" +- Skeletal Meshes: " + this.ResultModel.SkeletalMeshesById.Count);
+            Context.LogInfo(" +- Materials: " + this.ResultModel.Materials.Count);
+            Context.LogInfo(" +- Meshes: " + this.ResultModel.Meshes.Count);
             Context.LogInfo(" +- Mesh Instances: " + this.ResultModel.MeshInstances.Count);
-            Context.LogInfo(" +- Skeletal Mesh Instances: " + this.ResultModel.SkeletalMeshInstances.Count);
+            Context.LogInfo(" +- Animations: " + this.ResultModel.Animations.Count);
+            Context.LogInfo(" +- Animation Clips: " + this.ResultModel.AnimationClips.Count);
 
             // Check the final stats
             // ------------------------------------
@@ -1690,18 +1827,16 @@ namespace Gdk.Content
             if (this.ResultModel.Nodes.Count == 0)
                 throw new BuildException("The model has to final data, either the collada source is empty or invalid, or something went horribly wrong during processing");
 
-            if (this.ResultModel.MeshInstances.Count == 0 &&
-                this.ResultModel.SkeletalMeshInstances.Count == 0)
+            if (this.ResultModel.MeshInstances.Count == 0)
                 Context.LogWarn("No meshes were instanced in this model, so the model data is empty..  This is likely a bad thing...");
         }
 
         /// <summary>
         /// Finalizes the data in the mesh
         /// </summary>
-        private void FinalizeMesh(Model.Mesh mesh)
+        private void FinalizeMesh(Mesh mesh)
         {
-            string meshType = mesh.GetType().Name;
-            Context.LogInfo(" +-- " + meshType + ": " + mesh.Id);
+            Context.LogInfo(" +-- Mesh: " + mesh.ColladaID);
 
             // Calculate missing normals
             // -------------------------------------
@@ -1709,12 +1844,10 @@ namespace Gdk.Content
             bool autoCalculatedNormals = false;
 
             // Loop through the triangle soups in this mesh
-            foreach (KeyValuePair<string, Model.TriangleSoup> triangleSoupByMaterialSymbol in mesh.TriangleSoupsByMaterialSymbol)
+            foreach (KeyValuePair<string, List<Triangle>> trianglesByMaterialSymbol in mesh.TrianglesByMaterialSymbol)
             {
-                Model.TriangleSoup triangleSoup = triangleSoupByMaterialSymbol.Value;
-
                 // Loop through the triangles
-                foreach (Model.Triangle triangle in triangleSoup.Triangles)
+                foreach (Triangle triangle in trianglesByMaterialSymbol.Value)
                 {
                     // Does this triangle need normals?
                     if (triangle.Vertices[0].Normal.Equals(Vector3.Zero))
@@ -1746,21 +1879,21 @@ namespace Gdk.Content
             int reducedVertices = 0;
 
             // Loop through the triangle soups
-            foreach (KeyValuePair<string, Model.TriangleSoup> triangleSoupByMaterialSymbol in mesh.TriangleSoupsByMaterialSymbol)
+            foreach (KeyValuePair<string, List<Triangle>> trianglesByMaterialSymbol in mesh.TrianglesByMaterialSymbol)
             {
                 // Get the soup & the material symbol
-                string materialSymbol = triangleSoupByMaterialSymbol.Key;
-                Model.TriangleSoup triangleSoup = triangleSoupByMaterialSymbol.Value;
+                string materialSymbol = trianglesByMaterialSymbol.Key;
+                List<Triangle> triangles = trianglesByMaterialSymbol.Value;
 
                 // Create a mesh part for this soup
-                Model.MeshPart meshPart = new Gdk.Content.Model.MeshPart();
+                MeshPart meshPart = new MeshPart();
                 mesh.MeshParts.Add(meshPart);
                 meshPart.IndexStart = mesh.Indices.Count;
-                meshPart.IndexCount = triangleSoup.Triangles.Count * 3;
-                meshPart.MaterialSymbol = triangleSoupByMaterialSymbol.Key;
+                meshPart.IndexCount = triangles.Count * 3;
+                meshPart.MaterialSymbol = materialSymbol;
 
                 // Convert triangle soup to vertices/indices   (removing duplicate vertices)
-                foreach (Model.Triangle triangle in triangleSoup.Triangles)
+                foreach (Triangle triangle in triangles)
                 {
                     AddIndexedVertexToMesh(mesh, triangle.Vertices[0]);
                     AddIndexedVertexToMesh(mesh, triangle.Vertices[1]);
@@ -1768,7 +1901,7 @@ namespace Gdk.Content
                 }
 
                 // Track the vertex counts
-                originalVertices += triangleSoup.Triangles.Count * 3;
+                originalVertices += triangles.Count * 3;
             }
             reducedVertices += mesh.Vertices.Count;
 
@@ -1779,16 +1912,16 @@ namespace Gdk.Content
 
             
             // Log the mesh part details
-            foreach(Model.MeshPart meshPart in mesh.MeshParts)
+            foreach(MeshPart meshPart in mesh.MeshParts)
             {
                 Context.LogVerbose(" +---- Mesh Part [Material: " + meshPart.MaterialSymbol + "] [IndexCount: " + meshPart.IndexCount + "] [IndexStart: " + meshPart.IndexStart + "]");
             }
 
             // Check for huge meshes..
             if (mesh.Vertices.Count > UInt16.MaxValue)
-                throw new BuildException(meshType + " contains too many vertices:  " + mesh.Vertices.Count);
+                throw new BuildException("Mesh contains too many vertices:  " + mesh.Vertices.Count);
             if (mesh.Indices.Count > UInt16.MaxValue)
-                throw new BuildException(meshType + " contains too many indices:  " + mesh.Indices.Count);
+                throw new BuildException("Mesh contains too many indices:  " + mesh.Indices.Count);
 
             // Calculate the Mesh Bounding Volume
             // -------------------------------------
@@ -1806,7 +1939,7 @@ namespace Gdk.Content
         /// <summary>
         /// Adds a vertex & its index to the mesh.  If a like vertex already exists, that vertex is indexed instead.
         /// </summary>
-        public int AddIndexedVertexToMesh(Model.Mesh mesh, Model.Vertex vertex)
+        public int AddIndexedVertexToMesh(Mesh mesh, Vertex vertex)
         {
             // Loop through the existing vertices
             for(int vertexIndex=0; vertexIndex < mesh.Vertices.Count; vertexIndex++)
@@ -1827,22 +1960,6 @@ namespace Gdk.Content
             return newIndex;
         }
 
-        /// <summary>
-        /// Finalizes the gdk model
-        /// </summary>
-        public void RecurseSetNodeIndex(Model.Node node, ref int index)
-        {
-            // Set this node's index
-            node.Index = index;
-
-            // Increment the index
-            index++;
-
-            // Recurse to the child nodes
-            foreach (Model.Node childNode in node.ChildNodes)
-                RecurseSetNodeIndex(childNode, ref index);
-        }
-
         #endregion
 
         #region Dependency Processing
@@ -1856,10 +1973,8 @@ namespace Gdk.Content
             PixelFormats diffusePixelFormat = Context.Parameters.GetEnumValue<PixelFormats>("Diffuse PixelFormat", PixelFormats.RGBA_5551);
 
             // Loop through the materials
-            foreach (KeyValuePair<string, Model.Material> entry in this.ResultModel.MaterialsById)
+            foreach (Material material in this.ResultModel.Materials)
             {
-                Model.Material material = entry.Value;
-
                 // If this material has a diffuse texture, then process it
                 if (string.IsNullOrEmpty(material.DiffuseTexture) == false)
                 {
@@ -1916,214 +2031,34 @@ namespace Gdk.Content
             // Track the destination file
             Context.AddOutputDependency(relativeDestPath);
 
-            // Header
-            // -----------------------
-
             // Create the model file
             FileStream file = File.Create(fullDestPath, 2048, FileOptions.None);
             BinaryWriter writer = new BinaryWriter(file);
 
-            // Version & Flags
-            UInt16 version = 2;
-            UInt16 headerFlags = 0;
-            writer.Write(version);
-            writer.Write(headerFlags);
-
-            // Sub-object counts
-            writer.Write((UInt16) this.ResultModel.Nodes.Count);
-            writer.Write((UInt16) this.ResultModel.MaterialsById.Count);
-            writer.Write((UInt16) this.ResultModel.MeshesById.Count);
-            writer.Write((UInt16) this.ResultModel.SkeletalMeshesById.Count);
-            writer.Write((UInt16) this.ResultModel.MeshInstances.Count);
-            writer.Write((UInt16) this.ResultModel.SkeletalMeshInstances.Count);
-
-            // Nodes
-            // -----------------------
-
-            // Loop through the nodes in index order
-            foreach (Model.Node node in this.ResultModel.Nodes.OrderBy(n => n.Index))
-            {
-                //Context.LogInfo("Parent:" + (node.ParentNode == null ? "NA" : node.ParentNode.Index.ToString()) + "  Node:" + node.Index + "  Id: " + node.Id);
-
-                // Write out the node info
-                BinaryWriterUtilities.WriteString(writer, node.Name);
-                writer.Write((UInt16)(node.ParentNode == null ? 65535 : node.ParentNode.Index));
-                BinaryWriterUtilities.WriteMatrix(writer, node.Transform);
-            }
-
-            // Materials
-            // -----------------------
-            
-            // Loop through the materials in index order
-            foreach (Model.Material material in this.ResultModel.MaterialsById.Values.OrderBy(n => n.Index))
-            {
-                // Write out the material
-                BinaryWriterUtilities.WriteString(writer, material.Id);
-                writer.Write((UInt16)material.Flags);
-                BinaryWriterUtilities.WriteColor(writer, material.Emissive);
-                BinaryWriterUtilities.WriteColor(writer, material.Ambient);
-                BinaryWriterUtilities.WriteColor(writer, material.Diffuse);
-                BinaryWriterUtilities.WriteColor(writer, material.Specular);
-                writer.Write((float)material.Shininess);
-                
-                if ((material.Flags & Model.MaterialFlags.DiffuseTextured) > 0)
-                    BinaryWriterUtilities.WriteString(writer, material.DiffuseTexture);
-                if ((material.Flags & Model.MaterialFlags.BumpTextured) > 0)
-                    BinaryWriterUtilities.WriteString(writer, material.BumpTexture);
-            }
-
-            // Meshes
-            // -----------------------
-            
-            // Loop through the meshes in index order
-            foreach (Model.Mesh mesh in this.ResultModel.MeshesById.Values.OrderBy(n => n.Index))
-            {
-                WriteMesh(writer, mesh);
-            }
-
-            // Skeletal Meshes
-            // -----------------------
-
-            // Loop through the skeletal meshes in index order
-            foreach (Model.SkeletalMesh skeletalMesh in this.ResultModel.SkeletalMeshesById.Values.OrderBy(n => n.Index))
-            {
-                // Write all the mesh details
-                WriteMesh(writer, skeletalMesh);
-
-                // Write the number of joints used by this skeletal mesh
-                writer.Write((UInt16) skeletalMesh.NumJoints);
-
-                // Write out the InvBindMatrices for the joints
-                for (UInt16 jointIndex = 0; jointIndex < skeletalMesh.NumJoints; jointIndex++)
-                {
-                    BinaryWriterUtilities.WriteMatrix(writer, skeletalMesh.JointInvBindMatrices[jointIndex]);
-                }
-            }
-
-            // Mesh Instances
-            // -----------------------
-            
-            // Loop through the mesh instances
-            foreach (Model.MeshInstance meshInstance in this.ResultModel.MeshInstances)
-            {
-                // Write the instanced object indices
-                writer.Write((UInt16)meshInstance.Node.Index);
-                writer.Write((UInt16)meshInstance.Mesh.Index);
-
-                // Write the material assignment table for the mesh
-
-                // Loop through the mesh parts of the mesh
-                foreach (Model.MeshPart meshPart in meshInstance.Mesh.MeshParts)
-                {
-                    // Get the material this mesh part's material symbol is bound to
-                    Model.Material material = meshInstance.MaterialBindings[meshPart.MaterialSymbol];
-
-                    // Write the material index for the material this part is bound to
-                    writer.Write((UInt16)material.Index);
-                }
-            }
-
-            // Skeletal Mesh Instances
-            // -----------------------
-
-            // Loop through the skeletal mesh instances
-            foreach (Model.SkeletalMeshInstance skeletalMeshInstance in this.ResultModel.SkeletalMeshInstances)
-            {
-                // Write the instanced object indices
-                writer.Write((UInt16)skeletalMeshInstance.Node.Index);
-                writer.Write((UInt16)skeletalMeshInstance.Mesh.Index);
-
-                // Write the material assignment table for the skeletal mesh
-
-                // Loop through the mesh parts of the skeletal mesh
-                foreach (Model.MeshPart meshPart in skeletalMeshInstance.Mesh.MeshParts)
-                {
-                    // Get the material this mesh part's material symbol is bound to
-                    Model.Material material = skeletalMeshInstance.MaterialBindings[meshPart.MaterialSymbol];
-
-                    // Write the material index for the material this part is bound to
-                    writer.Write((UInt16)material.Index);
-                }
-
-                // Write the joint to node mappings
-                foreach (Model.Node jointNode in skeletalMeshInstance.JointToNodeMap)
-                {
-                    // Write the index of the node used at this joint
-                    writer.Write((UInt16)jointNode.Index);
-                }
-            }
+            // Write the model to the stream
+            this.ResultModel.WriteToStream(writer);
 
             // Finished
-            // -----------------------
-
             writer.Flush();
             writer.Close();
         }
 
-        private void WriteMesh(BinaryWriter writer, Model.Mesh mesh)
+        #endregion
+
+        #region Utility Methods
+
+        // Internals
+        int nextUniqueId = 1;
+
+        /// <summary>
+        /// Returns a unique integer every time this method is called
+        /// </summary>
+        /// <returns></returns>
+        public int GetUniqueId()
         {
-            // Write out the mesh header
-            BinaryWriterUtilities.WriteString(writer, mesh.Id);
-            writer.Write((UInt16)mesh.Flags);
-            writer.Write((UInt16)mesh.Vertices.Count);
-            writer.Write((UInt16)mesh.Indices.Count);
-            writer.Write((UInt16)mesh.MeshParts.Count);
-
-            // Write the bounding sphere
-            BinaryWriterUtilities.WriteVector3(writer, mesh.BoundingSphere.Center);
-            writer.Write(mesh.BoundingSphere.Radius);
-
-            // Write the vertex data
-            foreach (Model.Vertex vertex in mesh.Vertices)
-            {
-                // Write the position & normal
-                BinaryWriterUtilities.WriteVector3(writer, vertex.Position);
-                BinaryWriterUtilities.WriteVector3(writer, vertex.Normal);
-
-                // Write the optional vertex properties
-                if ((mesh.Flags & Model.MeshFlags.VertexHasColor) > 0)
-                    BinaryWriterUtilities.WriteColor(writer, vertex.Color);
-                if ((mesh.Flags & Model.MeshFlags.VertexHasTexCoords) > 0)
-                    BinaryWriterUtilities.WriteVector2(writer, vertex.TexCoords1);
-                if ((mesh.Flags & Model.MeshFlags.VertexHasTexCoords2) > 0)
-                    BinaryWriterUtilities.WriteVector2(writer, vertex.TexCoords2);
-
-                // Write the bone index/weight propeties
-                if ((mesh.Flags & Model.MeshFlags.SKINNING_TYPE_MASK) == Model.MeshFlags.VertexHasSingleBone)
-                    writer.Write(vertex.BoneIndices[0]);
-                else if ((mesh.Flags & Model.MeshFlags.SKINNING_TYPE_MASK) == Model.MeshFlags.VertexHas2WeightedBones)
-                {
-                    writer.Write(vertex.BoneIndices[0]);
-                    writer.Write(vertex.BoneIndices[1]);
-                    writer.Write(vertex.BoneWeights[0]);
-                    writer.Write(vertex.BoneWeights[1]);
-                }
-                else if ((mesh.Flags & Model.MeshFlags.SKINNING_TYPE_MASK) == Model.MeshFlags.VertexHas4WeightedBones)
-                {
-                    writer.Write(vertex.BoneIndices[0]);
-                    writer.Write(vertex.BoneIndices[1]);
-                    writer.Write(vertex.BoneIndices[2]);
-                    writer.Write(vertex.BoneIndices[3]);
-                    writer.Write(vertex.BoneWeights[0]);
-                    writer.Write(vertex.BoneWeights[1]);
-                    writer.Write(vertex.BoneWeights[2]);
-                    writer.Write(vertex.BoneWeights[3]);
-                }
-            }
-
-            // Write the indices
-            foreach (int index in mesh.Indices)
-            {
-                writer.Write((UInt16)index);
-            }
-
-            // Loop through the mesh parts
-            foreach (Model.MeshPart meshPart in mesh.MeshParts)
-            {
-                writer.Write((UInt16)meshPart.IndexStart);
-                writer.Write((UInt16)meshPart.IndexCount);
-                BinaryWriterUtilities.WriteString(writer, meshPart.MaterialSymbol);
-            }
+            int id = nextUniqueId;
+            nextUniqueId++;
+            return id;
         }
 
         #endregion

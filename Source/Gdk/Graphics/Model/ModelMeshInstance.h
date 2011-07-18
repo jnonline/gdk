@@ -21,6 +21,8 @@ namespace Gdk
 
 		vector<UInt16>	MaterialBindings;		// This vector has 1 entry per mesh part.  Each value is an index into the model materials.
 
+		vector<UInt16>	JointNodes;				// This vector has 1 entry per joint.  Each value is the index of a Node that the joint is bound to
+
 		// CTor/DTor
 		ModelMeshInstance();
 		~ModelMeshInstance();

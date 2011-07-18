@@ -431,22 +431,6 @@
 							RelativePath="..\..\..\Source\Gdk\Graphics\Model\ModelNode.h"
 							>
 						</File>
-						<File
-							RelativePath="..\..\..\Source\Gdk\Graphics\Model\ModelSkeletalMesh.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\Source\Gdk\Graphics\Model\ModelSkeletalMesh.h"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\Source\Gdk\Graphics\Model\ModelSkeletalMeshInstance.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\Source\Gdk\Graphics\Model\ModelSkeletalMeshInstance.h"
-							>
-						</File>
 					</Filter>
 					<Filter
 						Name="Shader"

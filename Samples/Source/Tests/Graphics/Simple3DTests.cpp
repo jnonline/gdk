@@ -6,6 +6,8 @@
 // Includes
 #include "Simple3DTests.h"
 
+Vector3 camOffset = Vector3::ZERO;
+
 // ***********************************************************************
 Simple3DTests::Simple3DTests()
 {
@@ -21,7 +23,8 @@ Simple3DTests::Simple3DTests()
     
 	// Load a test model
 	AssetManager* assetManager = AssetManager::GetSingleton();
-	//skeletalModel = assetManager->Load<Model>("Models/SkeletonWarrior", &assetsPool, NULL);
+	skeletalModel = assetManager->Load<Model>("Models/SkeletonWarrior", &assetsPool, NULL);
+
 }
 
 // ***********************************************************************
@@ -39,6 +42,22 @@ Simple3DTests::~Simple3DTests()
 // ***********************************************************************
 void Simple3DTests::OnUpdate(float elapsedSeconds)
 {
+	Vector2 move = Vector2::ZERO;
+	float speed = viewDistance * 0.5f;
+	if(Keyboard::IsKeyDown(Keys::LeftShift) || Keyboard::IsKeyDown(Keys::RightShift))
+		speed *= 4.0f;
+	if(Keyboard::IsKeyDown(Keys::W))
+		move += Vector2::FromAngle(viewLongitudeAngle + Math::PI) * elapsedSeconds * speed;
+	if(Keyboard::IsKeyDown(Keys::S))
+		move += Vector2::FromAngle(viewLongitudeAngle) * elapsedSeconds * speed;
+	if(Keyboard::IsKeyDown(Keys::D))
+		move += Vector2::FromAngle(viewLongitudeAngle + Math::PI * 1.5f) * elapsedSeconds * speed;
+	if(Keyboard::IsKeyDown(Keys::A))
+		move += Vector2::FromAngle(viewLongitudeAngle + Math::PI * 0.5f) * elapsedSeconds * speed;
+
+	camOffset.X += move.X;
+	camOffset.Z += move.Y;
+
 	// Update the camera
 	// ------------------------------------
     
@@ -57,11 +76,11 @@ void Simple3DTests::OnUpdate(float elapsedSeconds)
 	projection = Matrix3D::CreatePerspectiveFOV(
         Math::PI * 0.4f,
         Application::GetWidth() / (float)Application::GetHeight(),
-        1.0f, 100.0f
+        1.0f, 100.0f + viewDistance * 4.0f
         );
     
 	// Calculate the view matrix
-	view = Matrix3D::CreateLookAt(cameraPosition, cameraLookAt, Vector3::UNIT_Y);
+	view = Matrix3D::CreateLookAt(cameraPosition + camOffset, cameraLookAt + camOffset, Vector3::UNIT_Y);
 }
 
 // ***********************************************************************
@@ -82,21 +101,23 @@ void Simple3DTests::OnDraw()
     
 	// Setup the camera parameters
 	Graphics::GlobalUniforms.WorldUp->SetFloat3(Vector3(0,1,0));
-	Graphics::GlobalUniforms.CameraPosition->SetFloat3(cameraPosition);
+	Graphics::GlobalUniforms.CameraPosition->SetFloat3(cameraPosition + camOffset);
 
 	// Setup lighting
 	// ----------------------------------------------------
 
     // Ambient Light
-	Graphics::GlobalUniforms.AmbientLight->SetFloat3(0.2f, 0.2f, 0.2f);
+	Graphics::GlobalUniforms.AmbientLight->SetFloat3(0.5f, 0.5f, 0.5f);
     
 	// Set the number of active lights
 	Graphics::GlobalUniforms.NumActiveLights->SetInt(1);
     
 	// Setup the Main Light 
 	Graphics::GlobalUniforms.LightPositionsAndFalloffs->SetFloat4(
-        10.0f, 5.0f, 10.0f,     // Light position
-        20.0f,                  // Light falloff distance
+        cameraPosition.X + camOffset.X, // Light position
+		cameraPosition.Y + camOffset.Y, 
+		cameraPosition.Z + camOffset.Z,     
+        viewDistance * 2.0f,                  // Light falloff distance
         0);                     // Light[] Index = 0
     Graphics::GlobalUniforms.LightColors->SetFloat3(
         1.0f, 1.0f, 1.0f
@@ -110,8 +131,8 @@ void Simple3DTests::OnDraw()
     SharedAssets::Models.TestAxis->Draw();
 
 	// Draw the Skeletal model slightly to the right
-	//skeletalModel->World = Matrix3D::CreateTranslation(2.0f, 0.0f, 2.0f);
-	//skeletalModel->Draw();
+	skeletalModel->World = Matrix3D::CreateTranslation(2.0f, 0.0f, 2.0f);
+	skeletalModel->Draw();
     
     // Draw several models with cumulative transforms
     // TODO(P1) more tests

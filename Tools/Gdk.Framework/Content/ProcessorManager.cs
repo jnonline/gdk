@@ -111,7 +111,7 @@ namespace Gdk.Content
             RegisterProcessor(typeof(AtlasProcessor));
             RegisterProcessor(typeof(BMFontProcessor));
             RegisterProcessor(typeof(ShaderProcessor));
-            RegisterProcessor(typeof(ModelProcessor));
+            RegisterProcessor(typeof(Model.ModelProcessor));
         }
 
         /// <summary>

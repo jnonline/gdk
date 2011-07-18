@@ -30,7 +30,7 @@ namespace Gdk
 		// --------------------
 
         // Simple Properties
-        string	Id;
+        string	Name;
 		float	Emissive[4];
         float	Ambient[4];
         float	Diffuse[4];
