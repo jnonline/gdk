@@ -28,7 +28,7 @@ namespace Gdk
             M21 = m21; M22 = m22; M23 = m23; M24 = m24;
             M31 = m31; M32 = m32; M33 = m33; M34 = m34;
             M41 = m41; M42 = m42; M43 = m43; M44 = m44;
-        }
+        }        
 
         /// <summary>
         /// Constructor
@@ -40,6 +40,17 @@ namespace Gdk
             M31 = values[8]; M32 = values[9]; M33 = values[10]; M34 = values[11];
             M41 = values[12]; M42 = values[13]; M43 = values[14]; M44 = values[15];
         }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public Matrix(Matrix original)
+        {
+            M11 = original.M11; M12 = original.M12; M13 = original.M13; M14 = original.M14;
+            M21 = original.M21; M22 = original.M22; M23 = original.M23; M24 = original.M24;
+            M31 = original.M31; M32 = original.M32; M33 = original.M33; M34 = original.M34;
+            M41 = original.M41; M42 = original.M42; M43 = original.M43; M44 = original.M44;
+        }    
 
         #region Properties & Accessors
         
@@ -114,6 +125,9 @@ namespace Gdk
         // Static Matrices
         // -------------------------------
 
+        /// <summary>
+        /// Gets the Identity matrix
+        /// </summary>
         public static Matrix Identity
         {
             get
@@ -123,6 +137,22 @@ namespace Gdk
                     0, 1, 0, 0,
                     0, 0, 1, 0,
                     0, 0, 0, 1
+                    );
+            }
+        }
+
+        /// <summary>
+        /// Gets the Zero matrix
+        /// </summary>
+        public static Matrix Zero
+        {
+            get
+            {
+                return new Matrix(
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0
                     );
             }
         }
@@ -258,6 +288,171 @@ namespace Gdk
                 "{M41:" + this.M41 + " M42:" + this.M42 + " M43:" + this.M43 + " M44:" + this.M44 + "} " +
                 "}";
         }
+        
+        /// <summary>
+        /// Gets the determinant of this matrix
+        /// </summary>
+        public float GetDeterminant()
+        {
+	        float a0 = M11*M22 - M12*M21;
+            float a1 = M11*M23 - M13*M21;
+            float a2 = M11*M24 - M14*M21;
+            float a3 = M12*M23 - M13*M22;
+            float a4 = M12*M24 - M14*M22;
+            float a5 = M13*M24 - M14*M23;
+            float b0 = M31*M42 - M32*M41;
+            float b1 = M31*M43 - M33*M41;
+            float b2 = M31*M44 - M34*M41;
+            float b3 = M32*M43 - M33*M42;
+            float b4 = M32*M44 - M34*M42;
+            float b5 = M33*M44 - M34*M43;
+
+            return ( a0*b5 - a1*b4 + a2*b3 + a3*b2 - a4*b1 + a5*b0 );
+        }
+
+        /// <summary>
+        /// Gets the transpose of this matrix
+        /// </summary>
+        Matrix GetTranspose()
+        {
+	        return new Matrix(
+		        M11, M21, M31, M41, 
+		        M12, M22, M32, M42, 
+		        M13, M23, M33, M43, 
+		        M14, M24, M34, M44
+		        );
+        }
+
+        /// <summary>
+        /// Gets the inverse of this matrix
+        /// </summary>
+        /// <returns></returns>
+        Matrix GetInverse()
+        {
+            // Get the determinant
+	        float a0 = M11*M22 - M12*M21;
+            float a1 = M11*M23 - M13*M21;
+            float a2 = M11*M24 - M14*M21;
+            float a3 = M12*M23 - M13*M22;
+            float a4 = M12*M24 - M14*M22;
+            float a5 = M13*M24 - M14*M23;
+            float b0 = M31*M42 - M32*M41;
+            float b1 = M31*M43 - M33*M41;
+            float b2 = M31*M44 - M34*M41;
+            float b3 = M32*M43 - M33*M42;
+            float b4 = M32*M44 - M34*M42;
+            float b5 = M33*M44 - M34*M43;
+            float det = a0*b5-a1*b4+a2*b3+a3*b2-a4*b1+a5*b0;
+
+            // Verify the matrix is invertable
+	        if (Math.Abs(det) <= float.Epsilon)
+            {
+                return Matrix.Zero;
+            }
+
+            // Generate the inverse
+            Matrix result;
+            result.M11 = + M22*b5 - M23*b4 + M24*b3;
+            result.M21 = - M21*b5 + M23*b2 - M24*b1;
+            result.M31 = + M21*b4 - M22*b2 + M24*b0;
+            result.M41 = - M21*b3 + M22*b1 - M23*b0;
+            result.M12 = - M12*b5 + M13*b4 - M14*b3;
+            result.M22 = + M11*b5 - M13*b2 + M14*b1;
+            result.M32 = - M11*b4 + M12*b2 - M14*b0;
+            result.M42 = + M11*b3 - M12*b1 + M13*b0;
+            result.M13 = + M42*a5 - M43*a4 + M44*a3;
+            result.M23 = - M41*a5 + M43*a2 - M44*a1;
+            result.M33 = + M41*a4 - M42*a2 + M44*a0;
+            result.M43 = - M41*a3 + M42*a1 - M43*a0;
+            result.M14 = - M32*a5 + M33*a4 - M34*a3;
+            result.M24 = + M31*a5 - M33*a2 + M34*a1;
+            result.M34 = - M31*a4 + M32*a2 - M34*a0;
+            result.M44 = + M31*a3 - M32*a1 + M33*a0;
+
+            float inverseDet = 1.0f / det;
+            result *= inverseDet;
+	        return result;
+        }
+
+        /// <summary>
+        /// Decomposes a matrix into its Scale, Rotation, and Translational components.
+        /// This only works if the matrix was originally created from a S*R*T matrix combination.
+        /// </summary>
+        public void Decompose(out Vector3 scale, out Quaternion rotation, out Vector3 translation)
+        {
+            // Make a copy of this matrix, to work with
+            Matrix copy = new Matrix(this);
+
+            // Extract the translation
+            translation = new Vector3(copy.M41, copy.M42, copy.M43);
+
+            // Remove the translational component from the matrix
+            copy.M41 = 0.0f;
+            copy.M42 = 0.0f;
+            copy.M43 = 0.0f;
+
+            // Extract the rotation.  (Using polar decomposition)
+            float variance;
+            int count = 0;
+            Matrix rotationMatrix = new Matrix(copy);
+            do 
+            {
+                Matrix nextRotationMatrix;
+                Matrix rotationInverseTranspose = rotationMatrix.GetTranspose().GetInverse();
+                
+                // Get the next matrix for sampling
+                nextRotationMatrix = (rotationMatrix + rotationInverseTranspose) * 0.5f;
+                
+                // Find the variances in the 3 columns
+                float columnAVariance = 
+                    Math.Abs(rotationMatrix.M11 - nextRotationMatrix.M11) + 
+                    Math.Abs(rotationMatrix.M21 - nextRotationMatrix.M21) +
+                    Math.Abs(rotationMatrix.M31 - nextRotationMatrix.M31);
+                float columnBVariance = 
+                    Math.Abs(rotationMatrix.M12 - nextRotationMatrix.M12) + 
+                    Math.Abs(rotationMatrix.M22 - nextRotationMatrix.M22) +
+                    Math.Abs(rotationMatrix.M32 - nextRotationMatrix.M32);
+                float columnCVariance = 
+                    Math.Abs(rotationMatrix.M13 - nextRotationMatrix.M13) + 
+                    Math.Abs(rotationMatrix.M23 - nextRotationMatrix.M23) +
+                    Math.Abs(rotationMatrix.M33 - nextRotationMatrix.M33);
+
+                // find the largest of the variances
+                variance = Math.Max(Math.Max(columnAVariance, columnBVariance), columnCVariance);
+
+                // Move to the next rotation
+                rotationMatrix = nextRotationMatrix;
+
+                count++;
+
+                // Loop until we run out of iterations or reach our approximate destination
+            } while (count < 100 && variance > float.Epsilon);
+
+            // Extract the scale from the matrix
+            Matrix scaleMatrix = rotationMatrix.GetInverse() * copy;
+            scale = new Vector3(scaleMatrix.M11, scaleMatrix.M22, scaleMatrix.M33);
+
+            // Get the normalized orthagonal matrix
+            Vector3 columnA = new Vector3(copy.M11, copy.M21, copy.M31);
+            Vector3 columnB = new Vector3(copy.M12, copy.M22, copy.M32);
+            Vector3 columnC = new Vector3(copy.M13, copy.M23, copy.M33);
+            Matrix normalizedOrthagonalMatrix = new Matrix(
+                columnA.X, columnB.X, columnC.X, 0,
+                columnA.Y, columnB.Y, columnC.Y, 0,
+                columnA.Z, columnB.Z, columnC.Z, 0,
+                0, 0, 0, 1
+                );
+
+            // The determinate of the normalized matrix will tell us if there is a negative value in the scaling.
+            //   Since 2 or 3 negative axis scales will be encoded as rotations, we simply have to handle the case of 1 negative axis
+            if (normalizedOrthagonalMatrix.GetDeterminant() < 0.0f)
+                scale.X = -scale.X;
+
+            // Convert the rotation to a quaternion
+            rotation = Quaternion.FromRotationMatrix(rotationMatrix);
+
+        }
+ 
 
         #endregion
 
@@ -312,7 +507,7 @@ namespace Gdk
         }
 
         /// <summary>
-        /// Creates a rotation matrix around the given axis by the given kber of radians
+        /// Creates a rotation matrix around the given axis by the given amount of radians
         /// </summary>
         public static Matrix CreateRotationAroundAxis(Vector3 axis, float radians)
         {
@@ -339,6 +534,34 @@ namespace Gdk
                 zz + (cos * (1f - zz)),
                 0f,
                 0f, 0f, 0f, 1f
+                );
+        }
+
+        /// <summary>
+        /// Creates a rotation matrix that represents a quaternion orientation
+        /// </summary>
+        Matrix CreateRotationFromQuaternion(Quaternion quat)
+        {
+	        // Compute a bunch of intermediate float vales
+	        float x2 = 2.0f * quat.X;
+	        float y2 = 2.0f * quat.Y;
+	        float z2 = 2.0f * quat.Z;
+	        float wx2 = x2 * quat.W;
+	        float wy2 = y2 * quat.W;
+	        float wz2 = z2 * quat.W;
+	        float xx2 = x2 * quat.X;
+	        float xy2 = y2 * quat.X;
+	        float xz2 = z2 * quat.X;
+	        float yy2 = y2 * quat.Y;
+	        float yz2 = z2 * quat.Y;
+	        float zz2 = z2 * quat.Z;
+            
+	        // Multiply in the given matrix
+	        return new Matrix(
+                1.0f - (yy2 + zz2),		xy2 - wz2,				xz2 + wy2,				0.0f,
+                xy2 + wz2,				1.0f - (xx2 + zz2),		yz2 - wx2,				0.0f,
+                xz2 - wy2,				yz2 + wx2,				1.0f - (xx2 + yy2),		0.0f,
+                0.0f,					0.0f,					0.0f,					1.0f
                 );
         }
 

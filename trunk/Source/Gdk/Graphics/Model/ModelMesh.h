@@ -57,7 +57,7 @@ namespace Gdk
 	public:
 		
 		// Properties 
-		string	Id;
+		string	Name;
 		UInt16	Flags;
 		UInt16	NumVertices;
 		UInt16	NumIndices;
@@ -67,6 +67,9 @@ namespace Gdk
 		GLuint	IndexBuffer;
 
 		vector<class ModelMeshPart*> MeshParts;
+
+		UInt16				NumJoints;
+		vector<Matrix3D>	JointInvBindMatrices;
 
 		// CTor / DTor
 		ModelMesh();

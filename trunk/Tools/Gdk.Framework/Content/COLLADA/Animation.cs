@@ -85,7 +85,7 @@ namespace Gdk.Content.COLLADA
         public string Id { get; set; }
 
         // Child Objects
-        List<Input> Inputs = new List<Input>();
+        public List<Input> Inputs = new List<Input>();
 
         /// <summary>
         /// CTor

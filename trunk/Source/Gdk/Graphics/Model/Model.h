@@ -20,9 +20,7 @@ namespace Gdk
 		vector<class ModelNode*>					Nodes;
 		vector<class ModelMaterial*>				Materials;
 		vector<class ModelMesh*>					Meshes;
-		vector<class ModelSkeletalMesh*>			SkeletalMeshes;
 		vector<class ModelMeshInstance*>			MeshInstances;
-		vector<class ModelSkeletalMeshInstance*>	SkeletalMeshInstances;
 
 		// Runtime properties
 		Matrix3D	World;
@@ -42,11 +40,8 @@ namespace Gdk
 		// Private CTor
 		Model();
 
-		// Loading Utilities
-		static void ReadMeshData(class ModelMesh* mesh, class Stream* stream);
-
 		// Rendering Utilities
-		void DrawMesh(class ModelMesh* mesh, class ModelMeshInstance* meshInstance, class ModelInstance* modelInstance, bool isSkeletalMesh);
+		void DrawMesh(class ModelMesh* mesh, class ModelMeshInstance* meshInstance, class ModelInstance* modelInstance);
 		void SetupVertexAttributeChannels(class ModelMesh* mesh);
 		class Shader* DetermineShader(class ModelMesh* mesh, class ModelMaterial* material);
 

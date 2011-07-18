@@ -104,6 +104,16 @@ Renderer2D, flush the batch if Quads > max Quads
 		Tests
 		
 	Shader profiles.   GLSL 2.1, GLSL 3.3, GLSL 4.0, GLES 2.0
+	
+	Atlas / Image processing
+		- horizontal pixels must align on 32-bit boundaries..   so 16 bit images with odd Widths, must be forced to even widths...
+		
+	More Math!!
+		2D intersection & containment..  
+			box from points
+			line intersection, etc
+		
+		
 
 	Standardize the attribute/uniform/varying names for shaders..  "a_Position"
 
@@ -114,9 +124,9 @@ Renderer2D, flush the batch if Quads > max Quads
 			Move all Gdk files to the GDK.lib...
 			Remove nibs?? :D
 
-
 	Unit Tests
-		iOS support
+		Memory tracking
+		Debug stats (FPS, mem usage, etc)
 	
 	Shaders..
 		Model (Simplified per-vertex & per-pixel lighting..

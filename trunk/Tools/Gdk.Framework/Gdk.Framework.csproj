@@ -84,6 +84,7 @@
     <Compile Include="Content\DOM\Asset.cs" />
     <Compile Include="Content\DOM\Bundle.cs" />
     <Compile Include="Content\DOM\PlatformType.cs" />
+    <Compile Include="Content\Model\IntermediateMesh.cs" />
     <Compile Include="Content\Model\ModelDOM.cs" />
     <Compile Include="Content\Processors\BMFontProcessor.cs" />
     <Compile Include="Content\Model\ModelProcessor.cs" />
@@ -119,6 +120,7 @@
     <Compile Include="Forms\Common\TextBoxForm.Designer.cs">
       <DependentUpon>TextBoxForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Math\Quaternion.cs" />
     <Compile Include="Math\Sphere3.cs" />
     <Compile Include="Resources\Icons.cs" />
     <Compile Include="Content\Exceptions.cs" />
@@ -142,7 +144,7 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
-    <Compile Include="Utilities\BinaryWriterUtilities.cs" />
+    <Compile Include="Utilities\BinaryWriterExtensions.cs" />
     <Compile Include="Utilities\ExceptionUtilities.cs" />
     <Compile Include="Utilities\StringUtilities.cs" />
     <Compile Include="Utilities\XmlUtilities.cs" />
