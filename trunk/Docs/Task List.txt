@@ -84,21 +84,12 @@ Renderer2D, flush the batch if Quads > max Quads
 == Work Item notes
 ==================================================
 
-	Remove build warings..
-		iOS
-	
-	Fix PCH builds
-		iOS
-
-	Is it possible to hook VC-Clean operation, and delete the Assets folder..
-
 	Get rid of the Build/Edit mode thing,..
 	 
 	Gdk Model v2
 		Animation
 		Custom shaders + Shader Selection
 P1		Optimizer - split Bones into increments of 24
-		
 		Need a way to select different materials within a model instance (instance 1 uses material A for symbol "Skin", instance 2 uses material B, etc	)
 		Support material texture properties..  (pFormat, filtering, wrap, etc, .. from collada)
 		Tests
@@ -108,13 +99,6 @@ P1		Optimizer - split Bones into increments of 24
 			box from points
 			line intersection, etc
 
-	Project deployment fixes
-		iOS & MAC builds 
-			Build to /Bin sub folder
-			Remove all the project dependencies
-			Move all Gdk files to the GDK.lib...
-			Remove nibs?? :D
-
 	Unit Tests
 		Memory tracking
 		Debug stats (FPS, mem usage, etc)
@@ -122,11 +106,7 @@ P1		Optimizer - split Bones into increments of 24
 	Shaders..
 		Model (Simplified per-vertex & per-pixel lighting..
 
-	Code to Revise:
-x		Renderer2D
-x		Sprite
-x		2D Particles
-		
+	Code to Revise:		
 		Billboards
 		Billboard sprite
 		billboard particles..

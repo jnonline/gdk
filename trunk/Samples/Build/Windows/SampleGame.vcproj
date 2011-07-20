@@ -22,6 +22,7 @@
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="1"
+			DeleteExtensionsOnClean="*.skipclean;*.obj;*.ilk;*.tlb;*.tli;*.tlh;*.tmp;*.rsp;*.pgc;*.pgd;*.meta;$(TargetPath)"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -90,7 +91,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="md $(TargetDir)Assets&#x0D;&#x0A;xcopy /D /E /Y &quot;$(ProjectDir)..\..\..\Assets\Build\*&quot; &quot;$(TargetDir)Assets&quot;&#x0D;&#x0A;xcopy /D /E /Y &quot;$(ProjectDir)..\..\..\Source\Platform\Windows\External\dll\*&quot; &quot;$(TargetDir)&quot;&#x0D;&#x0A;"
+				CommandLine=":: Do Cleanup&#x0D;&#x0A;&#x0D;&#x0A;IF EXIST &quot;$(TargetDir)gdk.skipclean&quot;  GOTO SkipClean&#x0D;&#x0A;&#x0D;&#x0A;rd /s /q &quot;$(TargetDir)Assets&quot;&#x0D;&#x0A;IF ERRORLEVEL 1 GOTO Failure&#x0D;&#x0A;&#x0D;&#x0A;rd /s /q &quot;$(TargetDir)Data&quot;&#x0D;&#x0A;IF ERRORLEVEL 1 GOTO Failure&#x0D;&#x0A;&#x0D;&#x0A;del &quot;$(TargetDir)*.dll&quot;&#x0D;&#x0A;IF ERRORLEVEL 1 GOTO Failure&#x0D;&#x0A;&#x0D;&#x0A;echo &quot;While this file exists, the post-build step will not forcably pre-delete all assets &amp; externals&quot; &gt; &quot;$(TargetDir)gdk.skipclean&quot;&#x0D;&#x0A;&#x0D;&#x0A;:SkipClean&#x0D;&#x0A;&#x0D;&#x0A;:: Copy Assets &amp; Externals&#x0D;&#x0A;&#x0D;&#x0A;md $(TargetDir)Assets&#x0D;&#x0A;&#x0D;&#x0A;xcopy /D /E /Y &quot;$(ProjectDir)..\..\..\Assets\Build\*&quot; &quot;$(TargetDir)Assets&quot;&#x0D;&#x0A;IF ERRORLEVEL 1 GOTO Failure&#x0D;&#x0A;&#x0D;&#x0A;xcopy /D /E /Y &quot;$(ProjectDir)..\..\..\Source\Platform\Windows\External\dll\*&quot; &quot;$(TargetDir)&quot;&#x0D;&#x0A;IF ERRORLEVEL 1 GOTO Failure&#x0D;&#x0A;&#x0D;&#x0A;GOTO End&#x0D;&#x0A;&#x0D;&#x0A;:: Handle Failures&#x0D;&#x0A;&#x0D;&#x0A;:Failure&#x0D;&#x0A;echo POSTBUILDSTEP for $(ProjectName) FAILED&#x0D;&#x0A;exit 1&#x0D;&#x0A;&#x0D;&#x0A;:End&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -99,6 +100,7 @@
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="1"
+			DeleteExtensionsOnClean="*.skipclean;*.obj;*.ilk;*.tlb;*.tli;*.tlh;*.tmp;*.rsp;*.pgc;*.pgd;*.meta;$(TargetPath);$(TargetDir)Assets;$(TargetDir)Data"
 			WholeProgramOptimization="1"
 			>
 			<Tool
@@ -170,7 +172,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="md $(TargetDir)Assets&#x0D;&#x0A;xcopy /D /E /Y &quot;$(ProjectDir)..\..\..\Assets\Build\*&quot; &quot;$(TargetDir)Assets&quot;&#x0D;&#x0A;xcopy /D /E /Y &quot;$(ProjectDir)..\..\..\Source\Platform\Windows\External\dll\*&quot; &quot;$(TargetDir)&quot;&#x0D;&#x0A;"
+				CommandLine=":: Do Cleanup&#x0D;&#x0A;&#x0D;&#x0A;IF EXIST &quot;$(TargetDir)gdk.skipclean&quot;  GOTO SkipClean&#x0D;&#x0A;&#x0D;&#x0A;rd /s /q &quot;$(TargetDir)Assets&quot;&#x0D;&#x0A;IF ERRORLEVEL 1 GOTO Failure&#x0D;&#x0A;&#x0D;&#x0A;rd /s /q &quot;$(TargetDir)Data&quot;&#x0D;&#x0A;IF ERRORLEVEL 1 GOTO Failure&#x0D;&#x0A;&#x0D;&#x0A;del &quot;$(TargetDir)*.dll&quot;&#x0D;&#x0A;IF ERRORLEVEL 1 GOTO Failure&#x0D;&#x0A;&#x0D;&#x0A;echo &quot;While this file exists, the post-build step will not forcably pre-delete all assets &amp; externals&quot; &gt; &quot;$(TargetDir)gdk.skipclean&quot;&#x0D;&#x0A;&#x0D;&#x0A;:SkipClean&#x0D;&#x0A;&#x0D;&#x0A;:: Copy Assets &amp; Externals&#x0D;&#x0A;&#x0D;&#x0A;md $(TargetDir)Assets&#x0D;&#x0A;&#x0D;&#x0A;xcopy /D /E /Y &quot;$(ProjectDir)..\..\..\Assets\Build\*&quot; &quot;$(TargetDir)Assets&quot;&#x0D;&#x0A;IF ERRORLEVEL 1 GOTO Failure&#x0D;&#x0A;&#x0D;&#x0A;xcopy /D /E /Y &quot;$(ProjectDir)..\..\..\Source\Platform\Windows\External\dll\*&quot; &quot;$(TargetDir)&quot;&#x0D;&#x0A;IF ERRORLEVEL 1 GOTO Failure&#x0D;&#x0A;&#x0D;&#x0A;GOTO End&#x0D;&#x0A;&#x0D;&#x0A;:: Handle Failures&#x0D;&#x0A;&#x0D;&#x0A;:Failure&#x0D;&#x0A;echo POSTBUILDSTEP for $(ProjectName) FAILED&#x0D;&#x0A;exit 1&#x0D;&#x0A;&#x0D;&#x0A;:End&#x0D;&#x0A;"
 			/>
 		</Configuration>
 	</Configurations>
@@ -606,11 +608,27 @@
 							>
 						</File>
 						<File
+							RelativePath="..\..\..\Source\Gdk\Math\2D\Ray2.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\Source\Gdk\Math\2D\Ray2.h"
+							>
+						</File>
+						<File
 							RelativePath="..\..\..\Source\Gdk\Math\2D\Rectangle2.cpp"
 							>
 						</File>
 						<File
 							RelativePath="..\..\..\Source\Gdk\Math\2D\Rectangle2.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\Source\Gdk\Math\2D\Triangle2.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\Source\Gdk\Math\2D\Triangle2.h"
 							>
 						</File>
 						<File
