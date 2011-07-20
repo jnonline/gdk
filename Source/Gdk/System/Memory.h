@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "GdkLIB.h"
+
 
 // Comment this line to disable memory tracking
 #if defined(DEBUG) || defined(_DEBUG)

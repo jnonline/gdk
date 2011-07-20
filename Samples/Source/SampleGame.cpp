@@ -4,6 +4,7 @@
  */
 
 // Includes
+#include "BasePCH.h"
 #include "SampleGame.h"
 
 using namespace Gdk;

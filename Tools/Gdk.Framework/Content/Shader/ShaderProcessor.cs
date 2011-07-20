@@ -290,7 +290,13 @@ namespace Gdk.Content
             }
 
             // Add this technique to the shader
-            shader.Techniques.Add(technique);            
+            shader.Techniques.Add(technique);
+
+            // Parse the Shader Profile this technique is mapped to
+            // -----------------------------------------------------
+
+            // Get the "Profile" Attribute of the technique
+            technique.Profile = XmlUtilities.GetAttributeEnumValue<ShaderProfile>(xmlTechnique, "Profile", ShaderProfile.Any);
 
             // Parse the Supported/Excluded Platforms & Devices
             // -----------------------------------------------------
@@ -1234,6 +1240,7 @@ namespace Gdk.Content
 
             // Write the shader version & flags
             writer.Write((UInt16)1);
+
             UInt16 shaderFlags = 0;
             shaderFlags |= (UInt16) ShaderFlags.ShaderIsText;      // Shader format: (0)Binary | (1)Text
             writer.Write(shaderFlags);
@@ -1376,6 +1383,9 @@ namespace Gdk.Content
             // Loop through the techniques
             foreach (ShaderTechnique technique in shader.Techniques)
             {
+                // Write the technique profile
+                writer.Write((UInt16)technique.Profile);
+
                 // Write the supported platforms
                 writer.Write((UInt16)technique.SupportedPlatforms.Count);
                 foreach (PlatformType platformType in technique.SupportedPlatforms)

@@ -6,7 +6,7 @@
 #ifndef _GDK_MATH_H
 #define _GDK_MATH_H
 
-#include "GdkLIB.h"
+
 
 // NOTE: this file is named Maths.h instead of Math.h, so the GCC / XCode compilers wont confuse it with the ansi-C math.h
 

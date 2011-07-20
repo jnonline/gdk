@@ -223,7 +223,7 @@ Atlas* Atlas::FromStream(const char *atlasName, Stream* stream, AtlasChildLoader
 
 		// Build the name of the sheet texture
 		char sheetName[256];
-		sprintf(sheetName, "%s_sheet_%d", atlasName, sheetIndex);
+		GDK_SPRINTF(sheetName, 256, "%s_sheet_%d", atlasName, sheetIndex);
 		
 		// Load the sheet texture
 		sheet->Texture = childLoader->LoadTexture(sheetName);

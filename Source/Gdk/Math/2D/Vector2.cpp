@@ -61,7 +61,7 @@ Vector2 Vector2::Parse(const char *str)
 	float x,y;
 
 	// Read the 2 floats from the string
-	sscanf(str, "%f,%f", &x, &y);
+	GDK_SSCANF(str, "%f,%f", &x, &y);
 
 	return Vector2(x,y);
 }
@@ -71,7 +71,7 @@ string Vector2::ToString()
 {
 	// Build a string of the format "1.23,3.21"
 	char temp[32];
-	sprintf(temp, "%f,%f", X, Y);
+	GDK_SPRINTF(temp, 32, "%f,%f", X, Y);
 	return string(temp);
 }
 

@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "GdkLIB.h"
+
 #include "UniformTypes.h"
 #include "../../System/Containers/StringHashMap.h"
 #include "../../Math/2D/Matrix2D.h"

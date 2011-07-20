@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "GdkLIB.h"
+
 #include "AssetProvider.h"
 #include "../System/Containers/SortedVector.h"
 

@@ -46,8 +46,16 @@ void Log::Write(LogLevel::Enum logLevel, const char* file, int line, const wchar
 	// Get the current time
 	time_t currentTime;
 	time( &currentTime );
-	struct tm * timeinfo = localtime(&currentTime);
-
+	struct tm * timeinfo = NULL;
+	
+	#ifdef GDKPLATFORM_WINDOWS
+		struct tm actualTimeInfo;
+		timeinfo = &actualTimeInfo;
+		localtime_s(timeinfo, &currentTime);
+	#else
+		timeinfo = localtime(&currentTime);
+	#endif
+	
 	// Thread lock
 	GDK_BEGIN_CRITICAL_SECTION(LogWriter)
 	{
@@ -96,7 +104,13 @@ void Log::Write(LogLevel::Enum logLevel, const char* file, int line, const wchar
 		}
 
 		// Open the log file
-		FILE* logFile = fopen(logFilePath.c_str(), "a");
+		FILE* logFile = NULL;
+		#ifdef GDKPLATFORM_WINDOWS
+			fopen_s(&logFile, logFilePath.c_str(), "a");
+		#else
+			logFile = fopen(logFilePath.c_str(), "a");
+		#endif
+
 		if(logFile == NULL)
 			return;
 		

@@ -5,9 +5,6 @@
 
 #pragma once
 
-// Includes
-#include "Gdk.h"
-
 using namespace Gdk;
 
 // *******************************************************************

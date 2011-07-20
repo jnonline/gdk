@@ -48,6 +48,7 @@
 	typedef UInt32	DWord;
 
 	// Windows headers
+	#define WIN32_LEAN_AND_MEAN
 	#include <windows.h>
 
 	// OpenGL headers
@@ -56,6 +57,7 @@
 	// Pthreads
     #include "pthread/pthread.h"
 
+	// Map 
 	// Map framebuffer extensions to OpenGL ES equivalents
 	#undef glBindFramebuffer
 	#undef glBindRenderbuffer
@@ -212,4 +214,20 @@ using namespace std;
 // GDK Macros
 
 #define GDK_NOT_USED(x) ((void)(x))
+
+// ---------------------------------------
+// Re-mapping for different platform implementations of standard c++ functions
+
+#ifdef GDKPLATFORM_WINDOWS
+
+	#define GDK_SPRINTF(buffer, bufferSize, format, ...)		sprintf_s(buffer, bufferSize, format, __VA_ARGS__ )
+	#define GDK_SSCANF(buffer, format, ...)						sscanf_s(buffer, format, __VA_ARGS__ )
+
+#else
+
+	#define GDK_SPRINTF(buffer, bufferSize, format, args...)	sprintf(buffer, format, ##args)
+	#define GDK_SSCANF(buffer, format, args...)					sscanf(buffer, format, ##args)
+
+#endif
+
 

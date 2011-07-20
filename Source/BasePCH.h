@@ -4,8 +4,14 @@
  */
 
 
-// GDK includes
+// This include has all the C/C++/STL/Platform headers used by the project/game
+#include "GdkLIB.h"
+
+// This will cause the GDK headers to be built into the PCH
 #include "Gdk.h"
+
+// ATTENTION:   Add other 3rd party libraries here if you want them to be built into the Pre-compiled header
+
 
 // Apple platform PCHs
 #ifdef __APPLE__

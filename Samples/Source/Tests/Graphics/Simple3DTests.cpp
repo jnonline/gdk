@@ -4,6 +4,7 @@
  */
 
 // Includes
+#include "BasePCH.h"
 #include "Simple3DTests.h"
 
 Vector3 camOffset = Vector3::ZERO;
@@ -13,7 +14,7 @@ Simple3DTests::Simple3DTests()
 {
 	// Setup the camera properties
     viewLongitudeAngle = Math::PI * 0.35f;
-    viewLatitudeAngle = Math::PI * 0.2f;
+    viewLatitudeAngle	= Math::PI * 0.2f;
     viewDistance = 10.0f;
     
     // Bind to input events
@@ -23,7 +24,8 @@ Simple3DTests::Simple3DTests()
     
 	// Load a test model
 	AssetManager* assetManager = AssetManager::GetSingleton();
-	skeletalModel = assetManager->Load<Model>("Models/SkeletonWarrior", &assetsPool, NULL);
+	skeletalModel = NULL;
+	//skeletalModel = assetManager->Load<Model>("Models/SkeletonWarrior", &assetsPool, NULL);
 
 }
 
@@ -131,8 +133,11 @@ void Simple3DTests::OnDraw()
     SharedAssets::Models.TestAxis->Draw();
 
 	// Draw the Skeletal model slightly to the right
-	skeletalModel->World = Matrix3D::CreateTranslation(2.0f, 0.0f, 2.0f);
-	skeletalModel->Draw();
+	if(skeletalModel != NULL)
+	{
+		skeletalModel->World = Matrix3D::CreateTranslation(2.0f, 0.0f, 2.0f);
+		skeletalModel->Draw();
+	}
     
     // Draw several models with cumulative transforms
     // TODO(P1) more tests

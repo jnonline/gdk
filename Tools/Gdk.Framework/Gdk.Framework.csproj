@@ -84,7 +84,6 @@
     <Compile Include="Content\DOM\Asset.cs" />
     <Compile Include="Content\DOM\Bundle.cs" />
     <Compile Include="Content\DOM\PlatformType.cs" />
-    <Compile Include="Content\Model\IntermediateMesh.cs" />
     <Compile Include="Content\Model\ModelDOM.cs" />
     <Compile Include="Content\Processors\BMFontProcessor.cs" />
     <Compile Include="Content\Model\ModelProcessor.cs" />

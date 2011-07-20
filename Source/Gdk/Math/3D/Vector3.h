@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "GdkLIB.h"
+
 #include "../2D/Vector2.h"
 
 namespace Gdk

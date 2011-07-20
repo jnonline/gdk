@@ -25,12 +25,9 @@ namespace Gdk
         PC = 1,
         Web = 2,
 
-        iPad1 = 101,
-        iPad2 = 102,
-        iPhone3GS = 113,
-        iPhone4 = 114,
-        iPod3 = 123,
-        iPod4 = 124,
+        iPad = 101,
+        iPhone = 102,
+        iPodTouch = 103,
 
         AndroidPhone = 201,
         AndroidTablet = 202

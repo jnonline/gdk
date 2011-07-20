@@ -207,6 +207,18 @@ namespace Gdk.Content
         }
     }
 
+    // ============================================================================
+    public enum ShaderProfile
+    {
+        Any = 0x0,
+        GLES = 0x1,
+
+        GLSL = 0x2,
+
+        GLSL_3_3 = 0x102,   // The ending 2 must match the GLSL profile id
+        GLSL_4_0 = 0x202,
+    }
+
     // ===============================================================
     public class ShaderTechnique
     {
@@ -215,6 +227,9 @@ namespace Gdk.Content
         // The Shader programs
         public string VertexShaderText = "";
         public string FragmentShaderText = "";
+
+        // Shader Profile for this technique
+        public ShaderProfile Profile = ShaderProfile.Any;
 
         // Platform/Device support/exclusion
         public List<PlatformType> SupportedPlatforms = new List<PlatformType>();

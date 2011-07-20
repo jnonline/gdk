@@ -5,7 +5,6 @@
 
 #pragma once
 
-#include "GdkLIB.h"
 #include "../Graphics/Color.h"
 
 namespace Gdk

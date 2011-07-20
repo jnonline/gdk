@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "GdkLIB.h"
+
 #include "ShaderAttribute.h"
 #include "ShaderTechnique.h"
 #include "SharedUniformValueSet.h"
@@ -107,7 +107,7 @@ namespace Gdk
 		// Asset Interfaces
 		static const AssetType::Enum ASSET_TYPE = AssetType::Shader;
 		static Shader* FromAsset(AssetLoadContext* context);
-		void IgnoreChildAssets() {}
+		void ReleaseChildAssets() {}
 
 		// Utility methods for compiling & linking GL shaders
 		static GLuint CompileGLShaderFromSource(const char *shaderSource, GLenum shaderType);

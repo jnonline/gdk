@@ -102,7 +102,7 @@ void Application::Update(float elapsedSeconds)
         wchar_t temp[64];
 		Vector2 textScale(0.7f, 0.7f);
         swprintf(temp, 64, L"FPS: %d", CurrentFPS);
-        Renderer2D::DrawText(SharedAssets::Fonts.Arial20, temp, Vector2(width - 60.0f, 10), DebugStatsColor, textScale);
+        Renderer2D::DrawText(SharedAssets::Fonts.Arial20, temp, Vector2(width - 80.0f, 10), DebugStatsColor, textScale);
         
         Renderer2D::Flush();
     }

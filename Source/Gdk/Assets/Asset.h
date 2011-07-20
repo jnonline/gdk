@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "GdkLIB.h"
+
 #include "AssetType.h"
 
 namespace Gdk
@@ -16,7 +16,7 @@ namespace Gdk
 	//
 	//	static const AssetType::Enum ASSET_TYPE = AssetType::Texture2D;		// Specifies the type ID of the asset
 	//	static TYPE* FromAsset(AssetLoadContext* context)					// Creates a new instance of the asset from the given context
-	//  void IgnoreChildAssets();											// Tells the asset to ignore deletion of child assets, as they are being deleted by the asset manager
+	//  void ReleaseChildAssets();											// Tells the asset to releasedany child assets it loaded
 
 	// ============================================================================
 
@@ -79,7 +79,7 @@ namespace Gdk
 
 		// Virtuals
 		virtual void InternalLoadAsset(AssetLoadContext* context) = 0;
-		virtual void IgnoreChildAssets() = 0;
+		virtual void ReleaseChildAssets() = 0;
 
 	public:
 
@@ -136,10 +136,10 @@ namespace Gdk
 			this->instance = T::FromAsset(context);
 		}
 
-		// Tells the asset to ignore / NULL-out it's child assets
-		void IgnoreChildAssets()
+		// Tells the asset to release it's child assets
+		void ReleaseChildAssets()
 		{
-			this->instance->IgnoreChildAssets();
+			this->instance->ReleaseChildAssets();
 		}
 
 	public:

@@ -26,11 +26,11 @@ Priority	System			Task
 2			Assets			Default Instances (for use when async is busy)
 2			Assets			Async / Background load (Using GL Shared Pools..  so it work on iOS, etc)
 
-2			Net			tcp/ip
-2			Net			HttpRequest
+2			Net				tcp/ip
+2			Net				HttpRequest
 
-2			Input\Gamepad		Need gamepad support
-2			Input\Camera		Camera Support!..  load into a texture!.. video?  update thread perhaps...
+2			Input\Gamepad	Need gamepad support
+2			Input\Camera	Camera Support!..  load into a texture!.. video?  update thread perhaps...
 2			Input\Mouse		CaptureMouse() - lock the mouse into the client region of the window...
 3			Input\Mouse		Add support for multi-mouse, multi-KB
 
@@ -84,10 +84,16 @@ Renderer2D, flush the batch if Quads > max Quads
 == Work Item notes
 ==================================================
 
-	AssetManager - 
-		Get rid of 'ignore child assets'.... somehow...
-		Models should NOT have the 'ownedAssets' property..  this should maybe be a pool?
-
+	Remove build warings..
+x		Win
+		Mac
+		iOS
+	
+	Fix PCH builds
+x		Win
+		Mac
+		iOS
+	
 	Post-Build PC
 		Add " " around paths
 
@@ -96,26 +102,18 @@ Renderer2D, flush the batch if Quads > max Quads
 	Get rid of the Build/Edit mode thing,..
 	 
 	Gdk Model v2
-		Skinning
 		Animation
 		Custom shaders + Shader Selection
+		Optimizer - split Bones into increments of 24
+		
 		Need a way to select different materials within a model instance (instance 1 uses material A for symbol "Skin", instance 2 uses material B, etc	)
 		Support material texture properties..  (pFormat, filtering, wrap, etc, .. from collada)
 		Tests
-		
-	Shader profiles.   GLSL 2.1, GLSL 3.3, GLSL 4.0, GLES 2.0
 	
-	Atlas / Image processing
-		- horizontal pixels must align on 32-bit boundaries..   so 16 bit images with odd Widths, must be forced to even widths...
-		
 	More Math!!
 		2D intersection & containment..  
 			box from points
 			line intersection, etc
-		
-		
-
-	Standardize the attribute/uniform/varying names for shaders..  "a_Position"
 
 	Project deployment fixes
 		iOS & MAC builds 
@@ -246,7 +244,7 @@ Whats New
 
 Getting Started
 	Syncing
-	Build & Ren Samples
+	Build & Run Samples
 	Making your own Project
 
 Content

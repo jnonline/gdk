@@ -5,7 +5,7 @@
 
 
 // Includes
-#include "Module.h"
+#include "BasePCH.h"
 
 #include "Samples/Tanks3D/Tanks3DModule.h"
 
@@ -24,7 +24,7 @@ vector<class ModuleRegistration*> Module::registeredModules;
 void Module::Init()
 {
     // Samples
-    //RegisterModule<Tanks3DModule>(L"Tanks 3D", ModuleCategory::Samples);
+    RegisterModule<Tanks3DModule>(L"Tanks 3D", ModuleCategory::Samples);
 
     // Tests
     RegisterModule<Simple3DTests>(L"Simple 3D Tests", ModuleCategory::Tests);

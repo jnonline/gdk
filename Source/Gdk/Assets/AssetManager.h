@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "GdkLIB.h"
+
 #include "Asset.h"
 #include "AssetPool.h"
 #include "AssetProvider.h"

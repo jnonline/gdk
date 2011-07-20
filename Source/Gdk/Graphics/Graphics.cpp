@@ -25,6 +25,7 @@ string Graphics::vendorString;
 string Graphics::rendererString;
 string Graphics::versionString;
 GLint Graphics::supportedTextureUnits;
+ShaderProfile::Enum Graphics::shaderProfile;
 
 // Basics
 bool Graphics::currentRedWriteMask;
@@ -86,6 +87,8 @@ void Graphics::Init()
 	// Setup the initial render states
 	// -------------------------------
 
+	// Get the 
+
 	// Get various System/OpenGL graphics properties
 	glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &supportedTextureUnits);
 	if(supportedTextureUnits > TextureUnit::MaxUnits)
@@ -105,6 +108,29 @@ void Graphics::Init()
 	{
 		currentTextureIds[i] = GL_INVALID_VALUE;
 	}
+
+	// Determine the maximum supported shader profile
+	if(Device::GetDeviceType() == DeviceType::PC)
+	{
+		// PC Device, Using GLSL
+		shaderProfile = ShaderProfile::GLSL;
+
+		// Check for higher level profiles
+		char* shaderVersionString = (char*) glGetString(GL_SHADING_LANGUAGE_VERSION);
+		int majorSL = 0, minorSL = 0;
+		GDK_SSCANF(shaderVersionString, "%d.%d", &majorSL, &minorSL);
+		
+		if(majorSL >= 4)
+			shaderProfile = ShaderProfile::GLSL_4_0;
+		if(majorSL >= 3 && minorSL >= 3)
+			shaderProfile = ShaderProfile::GLSL_3_3;
+	}
+	else
+	{
+		// Mobile or Web device, using GLES
+		shaderProfile = ShaderProfile::GLES;
+	}
+
 
 	// Basics
 	SetColorWriteMask(true, true, true, true, true);

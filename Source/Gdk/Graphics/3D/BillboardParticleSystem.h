@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "GdkLIB.h"
+
 #include "../../Math/Maths.h"
 #include "../../Math/3D/Vector3.h"
 #include "../../Math/3D/Matrix3D.h"
