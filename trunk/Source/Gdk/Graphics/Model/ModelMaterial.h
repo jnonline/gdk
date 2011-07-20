@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "GdkLIB.h"
+
 #include "../Color.h"
 #include "../Texture2D.h"
 

@@ -4,6 +4,7 @@
  */
 
 // Includes
+#include "BasePCH.h"
 #include "UnitTestsModule.h"
 
 #define COMPARE_FLOAT(a, b) (((a) >= ((b) - Math::ZERO_TOLERANCE)) && ((a) <= ((b) + Math::ZERO_TOLERANCE)))

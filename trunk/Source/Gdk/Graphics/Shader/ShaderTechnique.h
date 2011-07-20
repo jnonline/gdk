@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "GdkLIB.h"
+
 #include "ShaderUniform.h"
 #include "ShaderAttribute.h"
 
@@ -20,6 +20,7 @@ namespace Gdk
 		// ------------------------------
 		
 		string Name;
+		ShaderProfile::Enum		Profile;
 
 		// Uniforms used by this technique
 		ShaderUniformVector		Uniforms;

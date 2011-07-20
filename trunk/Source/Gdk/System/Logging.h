@@ -29,7 +29,7 @@
 
 #pragma once
 
-#include "GdkLIB.h"
+
 
 // Comment this line to disable logging
 #if defined(DEBUG) || defined(_DEBUG)

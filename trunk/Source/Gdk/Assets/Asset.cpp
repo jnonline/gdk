@@ -30,6 +30,9 @@ int AssetBase::Release()
 	this->referenceCount--;
 	int tempRefCount = this->referenceCount;
 
+	// Tell the asset to release it's child assets
+	ReleaseChildAssets();
+
 	// Did the ref count hit 0?
 	if(this->referenceCount <= 0)
 	{

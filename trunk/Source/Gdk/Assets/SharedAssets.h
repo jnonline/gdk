@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "GdkLIB.h"
+
 #include "AssetPool.h"
 
 // Max number of quads supported by the gdk

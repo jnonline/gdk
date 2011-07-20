@@ -263,6 +263,10 @@ namespace Gdk.Content
                 }
             }
 
+            // Make sure the sheet width is even, to prevent bugs with 32-bit memory boundarys
+            if ((bestFit.OutWidth & 1) == 1)
+                bestFit.OutWidth += 1;
+
             // If we got here, then we have a fit
             // Log the sheet size & number of images we're fitting to it
             Context.LogVerbose("  +-- Best Fit Found. Sheet Size(" + bestFit.OutWidth + "x" + bestFit.OutHeight + ") using (" + bestFit.OutImagesFit + " of " + images.Count + " images)");

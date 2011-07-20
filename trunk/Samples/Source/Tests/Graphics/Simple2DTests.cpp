@@ -4,6 +4,7 @@
  */
 
 // Includes
+#include "BasePCH.h"
 #include "Simple2DTests.h"
 
 // ***********************************************************************
@@ -151,9 +152,9 @@ void Simple2DTests::OnDraw()
 	for(int i = 0; i < 10; i++)
 	{
 		if(i % 2 == 0)
-			Renderer2D::DrawRectangle(Rectangle2(-10 + i * 2, sinRectTimer * 10.0f, 1.0f, 1.0f), Color(128,0,128,255));
+			Renderer2D::DrawRectangle(Rectangle2(-10.0f + i * 2.0f, sinRectTimer * 10.0f, 1.0f, 1.0f), Color(128,0,128,255));
 		else
-			Renderer2D::DrawRectangleOutline(Rectangle2(sinRectTimer * 10.0f, -10 + i * 2, 1.0f, 1.0f), Color(255,128,255,255));
+			Renderer2D::DrawRectangleOutline(Rectangle2(sinRectTimer * 10.0f, -10.0f + i * 2.0f, 1.0f, 1.0f), Color(255,128,255,255));
 	}
 
 	// Diamonds

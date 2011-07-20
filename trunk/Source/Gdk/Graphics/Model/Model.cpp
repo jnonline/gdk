@@ -45,12 +45,18 @@ Model::~Model()
 	{
 		GdkDelete(*iter);
 	}
+}
 
-	// Release any owned assets
+// ***********************************************************************
+void Model::ReleaseChildAssets()
+{
+	// Release all the owned assets
 	for(vector<AssetBase*>::iterator assetIter = this->ownedAssets.begin(); assetIter != this->ownedAssets.end(); assetIter++)
 	{
 		(*assetIter)->Release();
 	}
+
+	ownedAssets.clear();
 }
 	 
 // ***********************************************************************
@@ -333,13 +339,6 @@ Model* Model::FromAsset(AssetLoadContext* context)
 	// Return the loaded model
 	return model;
 }	
-
-// ***********************************************************************
-void Model::IgnoreChildAssets()
-{
-	// The asset manager is asking up to ignore assets we reference
-	this->ownedAssets.clear();
-}
 
 // ***********************************************************************
 void Model::SetupVertexAttributeChannels(ModelMesh* mesh)

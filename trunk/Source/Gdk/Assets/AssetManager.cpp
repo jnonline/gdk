@@ -204,9 +204,6 @@ void AssetManager::ReleaseAll()
 		{
 			AssetBase* asset = assetIter->second;
 
-			// Tell the asset to ignore it's child assets
-			asset->IgnoreChildAssets();
-
 			// delete the asset
 			GdkDelete( asset );
 		}

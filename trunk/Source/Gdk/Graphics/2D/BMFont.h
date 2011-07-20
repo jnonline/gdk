@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "GdkLIB.h"
+
 
 #include "../../Math/2D/Vector2.h"
 #include "../../Assets/Asset.h"
@@ -73,7 +73,7 @@ namespace Gdk
 		// Asset Interfaces
 		static const AssetType::Enum ASSET_TYPE = AssetType::BMFont;
 		static BMFont* FromAsset(AssetLoadContext* context);
-		void IgnoreChildAssets() {}
+		void ReleaseChildAssets() {}
 
         
         // Internal types

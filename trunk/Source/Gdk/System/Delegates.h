@@ -51,7 +51,7 @@
 //
 
 #pragma once
-#include "GdkLIB.h"
+
 
 namespace Gdk
 {
@@ -82,6 +82,7 @@ namespace Gdk
 	UInt64 ConvertTypeToUInt64(T t)
 	{
 		UnionTypeToUInt64<T> converter;
+		converter.Output = 0;
 		converter.Input = t;
 		return converter.Output;
 	}
@@ -441,6 +442,11 @@ namespace Gdk
         // CTor
         MulticastDelegate1()
         {
+			int i = 0;
+			if(i == 0)
+			{
+				printf("i");
+			}
         }
 
         // DTor
@@ -537,7 +543,10 @@ namespace Gdk
 			{
 				// Is this the method delegate to remove?
 				Delegate* del = (*iter);
-				if(del->GetType() == DelegateType::Method && del->GetInstance() == instance && del->GetFunctionAddress() == ConvertTypeToUInt64(method))
+				TClass* delInst = (TClass*) del->GetInstance();
+				UInt64 delMethodAddress = del->GetFunctionAddress();
+				UInt64 methodAddress = ConvertTypeToUInt64(method);
+				if(del->GetType() == DelegateType::Method && delInst == instance && delMethodAddress == methodAddress)
 				{
 					// Erase & Delete the delegate
 					delegates.erase(iter);
@@ -776,7 +785,10 @@ namespace Gdk
 			{
 				// Is this the method delegate to remove?
 				Delegate* del = (*iter);
-				if(del->GetType() == DelegateType::Method && del->GetInstance() == instance && del->GetFunctionAddress() == ConvertTypeToUInt64(method))
+				TClass* delInst = (TClass*) del->GetInstance();
+				UInt64 delMethodAddress = del->GetFunctionAddress();
+				UInt64 methodAddress = ConvertTypeToUInt64(method);
+				if(del->GetType() == DelegateType::Method && delInst == instance && delMethodAddress == methodAddress)
 				{
 					// Erase & Delete the delegate
 					delegates.erase(iter);

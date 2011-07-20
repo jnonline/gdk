@@ -5,6 +5,7 @@
 
 
 // Includes
+#include "BasePCH.h"
 #include "UnitTestsModule.h"
 
 // ***********************************************************************

@@ -61,7 +61,7 @@ Vector3 Vector3::Parse(const char *str)
 	float x,y,z;
 
 	// Read the 2 floats from the string
-	sscanf(str, "%f,%f,%f", &x, &y, &z);
+	GDK_SSCANF(str, "%f,%f,%f", &x, &y, &z);
 
 	return Vector3(x,y,z);
 }
@@ -71,7 +71,7 @@ string Vector3::ToString()
 {
 	// Build a string of the format "1.1,2.2,3.3"
 	char temp[48];
-	sprintf(temp, "%f,%f,%f", X, Y, Z);
+	GDK_SPRINTF(temp, 48, "%f,%f,%f", X, Y, Z);
 	return string(temp);
 }
 

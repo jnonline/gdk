@@ -377,8 +377,11 @@ Shader* Shader::FromStream(Stream* stream)
 	// Loop through the techniques
 	for(UInt16 index=0; index < numTechniques; index++)
 	{
-		// Load the technique's Supported/Excluded platforms & devices
+		// Load the technique's profile & Supported/Excluded platforms & devices
 		// ------------------------------------------------------------
+
+		// Load the technique's profile
+		ShaderProfile::Enum shaderProfile = (ShaderProfile::Enum) stream->ReadUInt16();
 
 		// Read the supported platforms
 		UInt16 numSupportedPlatforms = stream->ReadUInt16();
@@ -415,6 +418,19 @@ Shader* Shader::FromStream(Stream* stream)
 		UInt16 platformType = (UInt16) Device::GetPlatformType();
 		UInt16 deviceType = (UInt16) Device::GetDeviceType();
 
+		// Is this profile supported?
+		ShaderProfile::Enum systemShaderProfile = Graphics::GetShaderProfile();
+		if(shaderProfile != ShaderProfile::Any)
+		{
+			// Verify the profile type matches
+			if( (shaderProfile & ShaderProfile::PROFILE_TYPE_MASK) != (systemShaderProfile & ShaderProfile::PROFILE_TYPE_MASK) )
+				techniqueSupported = false;
+
+			// Verify the profile shader version is suppored
+			if( (shaderProfile & ShaderProfile::PROFILE_VERSION_MASK) > (systemShaderProfile & ShaderProfile::PROFILE_VERSION_MASK) )
+				techniqueSupported = false;
+		}
+		
 		// Do we have a strict list of supported platforms?  (0 platforms = all platforms are supported)
 		if(supportedPlatforms.size() > 0)
 		{

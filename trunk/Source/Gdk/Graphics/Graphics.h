@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "GdkLIB.h"
+
 #include "Enums.h"
 #include "Shader/Shader.h"
 #include "Shader/SharedUniformValueSet.h"
@@ -48,16 +48,17 @@ namespace Gdk
 		static Vector2 SymmetricToScreen(Vector2 symmetricCoordinate);	// Converts a symmetric coordinate [-1 to 1] to screen space
 
 		// System Properties
-        static GLuint GetOSFrameBufferId()          { return osFrameBufferId; }
-        static GLuint GetOSColorRenderBufferId()    { return osColorRenderBufferId; }
-        static GLuint GetOSDepthRenderBufferId()    { return osDepthRenderBufferId; }
-        static GLuint GetOSStencilRenderBufferId()    { return osStencilRenderBufferId; }
+        static GLuint GetOSFrameBufferId()				{ return osFrameBufferId; }
+        static GLuint GetOSColorRenderBufferId()		{ return osColorRenderBufferId; }
+        static GLuint GetOSDepthRenderBufferId()		{ return osDepthRenderBufferId; }
+        static GLuint GetOSStencilRenderBufferId()		{ return osStencilRenderBufferId; }
 		
 		// OpenGL Properties
-		static const string& GetGLVendor()			{ return vendorString; }
-		static const string& GetGLRenderer()		{ return rendererString; }
-		static const string& GetGLVersion()			{ return versionString; }
-		static int GetNumSupportedTextureUnits()    { return supportedTextureUnits; }
+		static const string& GetGLVendor()				{ return vendorString; }
+		static const string& GetGLRenderer()			{ return rendererString; }
+		static const string& GetGLVersion()				{ return versionString; }
+		static int GetNumSupportedTextureUnits()		{ return supportedTextureUnits; }
+		static ShaderProfile::Enum GetShaderProfile()	{ return shaderProfile; }
 
 		// Basics
 		static void SetColorWriteMask(bool red, bool green, bool blue, bool alpha, bool forceChange = false);
@@ -176,6 +177,7 @@ namespace Gdk
 		static string rendererString;
 		static string versionString;
 		static GLint supportedTextureUnits;
+		static ShaderProfile::Enum shaderProfile;
 
 		// Basics
 		static bool currentRedWriteMask;

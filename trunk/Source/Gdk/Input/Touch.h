@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "GdkLIB.h"
+
 #include "../Math/2D/Vector2.h"
 #include "../System/Delegates.h"
 

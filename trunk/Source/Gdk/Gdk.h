@@ -95,6 +95,7 @@
 #include "Graphics/Shader/ShaderUniform.h"
 #include "Graphics/Shader/ShaderAttribute.h"
 #include "Graphics/Shader/SharedUniformValueSet.h"
+#include "Graphics/Shader/ShaderTechnique.h"
 #include "Graphics/Shader/Shader.h"
 
 // Graphics/2D
@@ -110,6 +111,8 @@
 
 // Graphics/Model
 #include "Graphics/Model/Model.h"
+#include "Graphics/Model/ModelNode.h"
 #include "Graphics/Model/ModelMaterial.h"
 #include "Graphics/Model/ModelMesh.h"
+#include "Graphics/Model/ModelMeshInstance.h"
 #include "Graphics/Model/ModelInstance.h"

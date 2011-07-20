@@ -4,6 +4,7 @@
  */
 
 // Includes
+#include "BasePCH.h"
 #include "Tanks3DModule.h"
 
 // ***********************************************************************

@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "GdkLIB.h"
+
 #include "../../Assets/AssetType.h"
 #include "../../Math/3D/Matrix3D.h"
 
@@ -33,7 +33,7 @@ namespace Gdk
 		// Asset Interfaces
 		static const AssetType::Enum ASSET_TYPE = AssetType::Model;
 		static Model* FromAsset(AssetLoadContext* context);
-		void IgnoreChildAssets();
+		void ReleaseChildAssets();
 
 	private:
 

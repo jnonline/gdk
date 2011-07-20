@@ -13,24 +13,31 @@ using namespace Gdk;
 FileStream::FileStream(const char *filePath, FileMode::Enum mode)
 {
 	file = NULL;
+	
+	// Select the file mode string for the fopen call
+	const char *fopenMode = "rb";
+	if(mode == FileMode::Write)
+		fopenMode = "wb";
 
-	// First, open the file stream
-	if(mode == FileMode::Read)
-	{
-		file = fopen(filePath, "rb");
-	}
-	else if(mode == FileMode::Write)
-	{
-		file = fopen(filePath, "wb");
-	}
+	// Open the file stream
+	#ifdef GDKPLATFORM_WINDOWS
+		
+		errno_t result = fopen_s(&file, filePath, fopenMode);
 
-#ifdef GDKPLATFORM_WINDOWS
-	// Asset the file opened
-	ASSERT(file != NULL, L"Failed to open the file [%hs] Error(%d): %hs", filePath, errno, _sys_errlist[errno]);
-#else
-    // Asset the file opened
-	ASSERT(file != NULL, L"Failed to open the file [%hs] Error(%d): %hs", filePath, errno, sys_errlist[errno]);
-#endif
+		// Asset the file opened
+		#ifdef GDK_ASSERTS
+		char errString[256];
+		strerror_s(errString, 256, errno);
+		ASSERT(result == 0 && file != NULL, L"Failed to open the file [%hs] Result(%d) Error(%d): %hs", filePath, result, errno, errString);
+		#endif
+	#else
+		
+		file = fopen(filePath, fopenMode);
+
+		// Asset the file opened
+		ASSERT(file != NULL, L"Failed to open the file [%hs] Error(%d): %hs", filePath, errno, sys_errlist[errno]);
+
+	#endif
         
 	this->mode = mode;
 }

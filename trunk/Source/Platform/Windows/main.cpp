@@ -6,7 +6,6 @@
 
 // Includes
 #include "BasePCH.h"
-#include "Gdk.h"
 
 #include <windows.h>
 #include <windowsx.h>
@@ -262,6 +261,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		// Log the exception
 		LOG_ERROR(L"C++ Exception caught!!");
 		LOG_ERROR(L"C++ Exception: %S", ex.what());
+
+		#if !defined(DEBUG)
+			GDK_NOT_USED(ex);
+		#endif
 	}
 	catch(...)
 	{

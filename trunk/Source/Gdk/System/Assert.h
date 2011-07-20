@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "GdkLIB.h"
+
 
 // Use asserts
 #if defined(DEBUG) || defined(_DEBUG)

@@ -6,7 +6,6 @@
 
 // Includes
 #include "BasePCH.h"
-#include "Gdk.h"
 
 #include <windows.h>
 #include <lm.h>
@@ -253,7 +252,7 @@ string GetMACAddress()
 				for(size_t i = 0; i < adapterInfo->AddressLength; i++)
 				{
 					char temp[16];
-					sprintf(temp, "%02x", adapterInfo->Address[i]);
+					GDK_SPRINTF(temp, 16, "%02x", adapterInfo->Address[i]);
 					result.append(temp);
 					if(i < adapterInfo->AddressLength-1)
 						result.append(":");

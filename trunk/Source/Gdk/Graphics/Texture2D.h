@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "GdkLIB.h"
+
 #include "Enums.h"
 #include "../Assets/Asset.h"
 
@@ -41,7 +41,7 @@ namespace Gdk
 		// Asset Interfaces
 		static const AssetType::Enum ASSET_TYPE = AssetType::Texture2D;
 		static Texture2D* FromAsset(AssetLoadContext* context);
-		void IgnoreChildAssets() {}
+		void ReleaseChildAssets() {}
 
 	private:
 

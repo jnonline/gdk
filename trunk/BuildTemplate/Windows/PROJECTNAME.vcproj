@@ -46,8 +46,9 @@
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				UsePrecompiledHeader="0"
-				PrecompiledHeaderThrough=""
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="BasePCH.h"
+				PrecompiledHeaderFile="$(IntDir)\$(TargetName).pch"
 				WarningLevel="3"
 				DebugInformationFormat="4"
 			/>
@@ -89,7 +90,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="md $(TargetDir)Assets&#x0D;&#x0A;xcopy /D /E /Y $(ProjectDir)..\..\Assets\Build\* $(TargetDir)Assets&#x0D;&#x0A;xcopy /D /E /Y $(ProjectDir)..\..\Source\Platform\Windows\External\dll\* $(TargetDir)&#x0D;&#x0A;"
+				CommandLine="md $(TargetDir)Assets&#x0D;&#x0A;xcopy /D /E /Y &quot;$(ProjectDir)..\..\Assets\Build\*&quot; &quot;$(TargetDir)Assets&quot;&#x0D;&#x0A;xcopy /D /E /Y &quot;$(ProjectDir)..\..\Source\Platform\Windows\External\dll\*&quot; &quot;$(TargetDir)&quot;&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -119,12 +120,13 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="../../../Framework/Platform/Windows/External/include;../../../Framework/Source"
+				AdditionalIncludeDirectories="../../Source/Platform/Windows/External/include;../../Source;../../Source/Gdk"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;GDK_PCH;GLEW_STATIC"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
-				UsePrecompiledHeader="1"
-				PrecompiledHeaderThrough="GdkPCH.h"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="BasePCH.h"
+				PrecompiledHeaderFile="$(IntDir)\$(TargetName).pch"
 				WarningLevel="3"
 				DebugInformationFormat="3"
 			/>
@@ -139,9 +141,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="gdk.lib ZLib.lib glew32s.lib opengl32.lib Netapi32.lib Iphlpapi.lib pthreadVCE2.lib"
+				AdditionalDependencies="ZLib.lib glew32s.lib opengl32.lib Netapi32.lib Iphlpapi.lib pthreadVCE2.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../../../Framework/Platform/Windows/External/lib;../../../Framework/Platform/Windows/Bin"
+				AdditionalLibraryDirectories="../../Source/Platform/Windows/External/lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -168,7 +170,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="xcopy /D /E $(ProjectDir)..\..\..\Framework\Assets\Build\* $(TargetDir)Assets&#x0D;&#x0A;xcopy /D /E $(ProjectDir)..\..\Assets\Build\* $(TargetDir)Assets&#x0D;&#x0A;xcopy /D /E /Y $(ProjectDir)..\..\..\Framework\Platform\Windows\External\dll\* $(TargetDir)&#x0D;&#x0A;"
+				CommandLine="md $(TargetDir)Assets&#x0D;&#x0A;xcopy /D /E /Y &quot;$(ProjectDir)..\..\Assets\Build\*&quot; &quot;$(TargetDir)Assets&quot;&#x0D;&#x0A;xcopy /D /E /Y &quot;$(ProjectDir)..\..\Source\Platform\Windows\External\dll\*&quot; &quot;$(TargetDir)&quot;&#x0D;&#x0A;"
 			/>
 		</Configuration>
 	</Configurations>
@@ -181,6 +183,22 @@
 			<File
 				RelativePath="..\..\Source\BasePCH.cpp"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\Source\BasePCH.h"
@@ -417,6 +435,22 @@
 						</File>
 						<File
 							RelativePath="..\..\Source\Gdk\Graphics\Model\ModelMesh.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Source\Gdk\Graphics\Model\ModelMeshInstance.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Source\Gdk\Graphics\Model\ModelMeshInstance.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Source\Gdk\Graphics\Model\ModelNode.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Source\Gdk\Graphics\Model\ModelNode.h"
 							>
 						</File>
 					</Filter>

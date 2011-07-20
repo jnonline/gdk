@@ -717,53 +717,53 @@ void UniformValue::ParseValue(const char* str)
 	switch(this->uniformType)
 	{
 		case UniformTypes::Float:
-			sscanf(str, "%f", (float*)valueBuffer);
+			GDK_SSCANF(str, "%f", (float*)valueBuffer);
 			break;
 
 		case UniformTypes::Float2:
-			sscanf(str, "%f,%f", (float*)valueBuffer, (float*)valueBuffer + 1);
+			GDK_SSCANF(str, "%f,%f", (float*)valueBuffer, (float*)valueBuffer + 1);
 			break;
 
 		case UniformTypes::Float3:
-			sscanf(str, "%f,%f,%f", (float*)valueBuffer, (float*)valueBuffer + 1, (float*)valueBuffer + 2);
+			GDK_SSCANF(str, "%f,%f,%f", (float*)valueBuffer, (float*)valueBuffer + 1, (float*)valueBuffer + 2);
 			break;
 
 		case UniformTypes::Float4:
 			((float*)valueBuffer)[3] = 1.0f;	// In case only 3 elements are specified, default the 4th to 1.0f  (full alpha on color values..)
-			sscanf(str, "%f,%f,%f,%f", (float*)valueBuffer, (float*)valueBuffer + 1, (float*)valueBuffer + 2, (float*)valueBuffer + 3);
+			GDK_SSCANF(str, "%f,%f,%f,%f", (float*)valueBuffer, (float*)valueBuffer + 1, (float*)valueBuffer + 2, (float*)valueBuffer + 3);
 			break;
 
 		case UniformTypes::Int:
 		case UniformTypes::Bool:
 		case UniformTypes::Sampler2D:
 		case UniformTypes::SamplerCube:
-			sscanf(str, "%d", (Int32*)valueBuffer);
+			GDK_SSCANF(str, "%d", (Int32*)valueBuffer);
 			break;
 
 		case UniformTypes::Int2:
 		case UniformTypes::Bool2:
-			sscanf(str, "%d,%d", (Int32*)valueBuffer, (Int32*)valueBuffer + 1);
+			GDK_SSCANF(str, "%d,%d", (Int32*)valueBuffer, (Int32*)valueBuffer + 1);
 			break;
 
 		case UniformTypes::Int3:
 		case UniformTypes::Bool3:
-			sscanf(str, "%d,%d,%d", (Int32*)valueBuffer, (Int32*)valueBuffer + 1, (Int32*)valueBuffer + 2);
+			GDK_SSCANF(str, "%d,%d,%d", (Int32*)valueBuffer, (Int32*)valueBuffer + 1, (Int32*)valueBuffer + 2);
 			break;
 
 		case UniformTypes::Int4:
 		case UniformTypes::Bool4:
-			sscanf(str, "%d,%d,%d,%d", (Int32*)valueBuffer, (Int32*)valueBuffer + 1, (Int32*)valueBuffer + 2, (Int32*)valueBuffer + 3);
+			GDK_SSCANF(str, "%d,%d,%d,%d", (Int32*)valueBuffer, (Int32*)valueBuffer + 1, (Int32*)valueBuffer + 2, (Int32*)valueBuffer + 3);
 			break;
 
 		case UniformTypes::Matrix2:
-			sscanf(str, "%f,%f,%f,%f", 
+			GDK_SSCANF(str, "%f,%f,%f,%f", 
 				(float*)valueBuffer, (float*)valueBuffer + 1, 
 				(float*)valueBuffer + 2, (float*)valueBuffer + 3
 				);
 			break;
 
 		case UniformTypes::Matrix3:
-			sscanf(str, "%f,%f,%f,%f,%f,%f,%f,%f,%f", 
+			GDK_SSCANF(str, "%f,%f,%f,%f,%f,%f,%f,%f,%f", 
 				(float*)valueBuffer,     (float*)valueBuffer + 1, (float*)valueBuffer + 2, 
 				(float*)valueBuffer + 3, (float*)valueBuffer + 4, (float*)valueBuffer + 5,
 				(float*)valueBuffer + 6, (float*)valueBuffer + 7, (float*)valueBuffer + 8
@@ -771,7 +771,7 @@ void UniformValue::ParseValue(const char* str)
 			break;
 
 		case UniformTypes::Matrix4:
-			sscanf(str, "%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f", 
+			GDK_SSCANF(str, "%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f", 
 				(float*)valueBuffer,     (float*)valueBuffer + 1, (float*)valueBuffer + 2, (float*)valueBuffer + 3,
 				(float*)valueBuffer + 4, (float*)valueBuffer + 5, (float*)valueBuffer + 6, (float*)valueBuffer + 7,
 				(float*)valueBuffer + 8, (float*)valueBuffer + 9, (float*)valueBuffer + 10, (float*)valueBuffer + 11,

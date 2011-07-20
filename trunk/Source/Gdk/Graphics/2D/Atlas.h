@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "GdkLIB.h"
+
 #include "../../Math/2D/Vector2.h"
 #include "../../Assets/Asset.h"
 #include "../Texture2D.h"
@@ -137,7 +137,7 @@ namespace Gdk
 		// Asset Interfaces
 		static const AssetType::Enum ASSET_TYPE = AssetType::Atlas;
 		static Atlas* FromAsset(AssetLoadContext* context);
-		void IgnoreChildAssets() {}
+		void ReleaseChildAssets() {}
 	
 	public:
 

@@ -2,7 +2,7 @@
   <!-- Billboard - Textured -->
 
   <Techniques>
-    <Technique Name="PixelLighting">
+    <Technique Name="PixelLighting" Profile="Any">
       <VertexShader>
 	      <![CDATA[
         

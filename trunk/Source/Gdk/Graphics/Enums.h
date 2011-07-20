@@ -5,10 +5,26 @@
 
 #pragma once
 
-#include "GdkLIB.h"
+
 
 namespace Gdk
 {
+	// ============================================================================
+	namespace ShaderProfile
+	{
+		enum Enum
+		{
+			PROFILE_TYPE_MASK = 0xF,
+			Any = 0x0,
+			GLES = 0x1,
+			GLSL = 0x2,
+
+			PROFILE_VERSION_MASK = 0xF0,
+			GLSL_3_3 = 0x10 | GLSL,
+			GLSL_4_0 = 0x20 | GLSL
+		};
+	}
+
 	// ===============================================================
 	namespace PixelFormat
 	{

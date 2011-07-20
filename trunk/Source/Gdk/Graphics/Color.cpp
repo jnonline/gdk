@@ -74,12 +74,12 @@ Color Color::Parse(const char *str)
 	if(len == 6)
 	{
 		// String Format:  "RRGGBB" in hex  (alpha = 255)
-		sscanf(str, "%2X%2X%2X", &r, &g, &b);
+		GDK_SSCANF(str, "%2X%2X%2X", &r, &g, &b);
 	}
 	else if(len == 8)
 	{
 		// String Format:  "RRGGBBAA" in hex
-		sscanf(str, "%2X%2X%2X%2X", &r, &g, &b, &a);
+		GDK_SSCANF(str, "%2X%2X%2X%2X", &r, &g, &b, &a);
 	}
 
 	return Color(r,g,b,a);
@@ -90,7 +90,7 @@ string Color::ToString()
 {
 	// Build a string of the format "RRGGBBAA" in hex
 	char temp[9];
-	sprintf(temp, "%2X%2X%2X%2X", (int)R, (int)G, (int)B,  (int)A);
+	GDK_SPRINTF(temp, 9, "%2X%2X%2X%2X", (int)R, (int)G, (int)B,  (int)A);
 	return string(temp);
 }
 
