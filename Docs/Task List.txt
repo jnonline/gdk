@@ -85,17 +85,10 @@ Renderer2D, flush the batch if Quads > max Quads
 ==================================================
 
 	Remove build warings..
-x		Win
-		Mac
 		iOS
 	
 	Fix PCH builds
-x		Win
-		Mac
 		iOS
-	
-	Post-Build PC
-		Add " " around paths
 
 	Is it possible to hook VC-Clean operation, and delete the Assets folder..
 
@@ -104,7 +97,7 @@ x		Win
 	Gdk Model v2
 		Animation
 		Custom shaders + Shader Selection
-		Optimizer - split Bones into increments of 24
+P1		Optimizer - split Bones into increments of 24
 		
 		Need a way to select different materials within a model instance (instance 1 uses material A for symbol "Skin", instance 2 uses material B, etc	)
 		Support material texture properties..  (pFormat, filtering, wrap, etc, .. from collada)
