@@ -100,6 +100,10 @@
 		D004C1CE13AC884D00797055 /* UnitTestsModule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D004C1C613AC884D00797055 /* UnitTestsModule.cpp */; };
 		D06312A513A42BF800BCB383 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D06312A413A42BF800BCB383 /* AudioToolbox.framework */; };
 		D063A04613AFED2E002E8586 /* InputTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D063A04413AFED2E002E8586 /* InputTests.cpp */; };
+		D07F7F2313D20BEE00574AD3 /* ModelMeshInstance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D07F7F1B13D20BEE00574AD3 /* ModelMeshInstance.cpp */; };
+		D07F7F2413D20BEE00574AD3 /* ModelNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D07F7F1D13D20BEE00574AD3 /* ModelNode.cpp */; };
+		D07F7F2D13D20D4C00574AD3 /* Ray2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D07F7F2A13D20D4C00574AD3 /* Ray2.cpp */; };
+		D07F7F3313D210CA00574AD3 /* Triangle2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D07F7F3013D210CA00574AD3 /* Triangle2.cpp */; };
 		D0C8118713B27E8A0091274F /* Simple2DTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0C8118313B27E8A0091274F /* Simple2DTests.cpp */; };
 		D0C8118813B27E8A0091274F /* Simple3DTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0C8118513B27E8A0091274F /* Simple3DTests.cpp */; };
 /* End PBXBuildFile section */
@@ -289,6 +293,14 @@
 		D06312A413A42BF800BCB383 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		D063A04413AFED2E002E8586 /* InputTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InputTests.cpp; sourceTree = "<group>"; };
 		D063A04513AFED2E002E8586 /* InputTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InputTests.h; sourceTree = "<group>"; };
+		D07F7F1B13D20BEE00574AD3 /* ModelMeshInstance.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ModelMeshInstance.cpp; sourceTree = "<group>"; };
+		D07F7F1C13D20BEE00574AD3 /* ModelMeshInstance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModelMeshInstance.h; sourceTree = "<group>"; };
+		D07F7F1D13D20BEE00574AD3 /* ModelNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ModelNode.cpp; sourceTree = "<group>"; };
+		D07F7F1E13D20BEE00574AD3 /* ModelNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModelNode.h; sourceTree = "<group>"; };
+		D07F7F2A13D20D4C00574AD3 /* Ray2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Ray2.cpp; sourceTree = "<group>"; };
+		D07F7F2B13D20D4C00574AD3 /* Ray2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Ray2.h; sourceTree = "<group>"; };
+		D07F7F3013D210CA00574AD3 /* Triangle2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Triangle2.cpp; sourceTree = "<group>"; };
+		D07F7F3113D210CA00574AD3 /* Triangle2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Triangle2.h; sourceTree = "<group>"; };
 		D0C8118313B27E8A0091274F /* Simple2DTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Simple2DTests.cpp; sourceTree = "<group>"; };
 		D0C8118413B27E8A0091274F /* Simple2DTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Simple2DTests.h; sourceTree = "<group>"; };
 		D0C8118513B27E8A0091274F /* Simple3DTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Simple3DTests.cpp; sourceTree = "<group>"; };
@@ -464,6 +476,10 @@
 		D004C0D413AC881600797055 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				D07F7F1B13D20BEE00574AD3 /* ModelMeshInstance.cpp */,
+				D07F7F1C13D20BEE00574AD3 /* ModelMeshInstance.h */,
+				D07F7F1D13D20BEE00574AD3 /* ModelNode.cpp */,
+				D07F7F1E13D20BEE00574AD3 /* ModelNode.h */,
 				D004C0D513AC881600797055 /* Model.cpp */,
 				D004C0D613AC881600797055 /* Model.h */,
 				D004C0D713AC881600797055 /* ModelInstance.cpp */,
@@ -549,6 +565,10 @@
 		D004C10913AC881600797055 /* 2D */ = {
 			isa = PBXGroup;
 			children = (
+				D07F7F3013D210CA00574AD3 /* Triangle2.cpp */,
+				D07F7F3113D210CA00574AD3 /* Triangle2.h */,
+				D07F7F2A13D20D4C00574AD3 /* Ray2.cpp */,
+				D07F7F2B13D20D4C00574AD3 /* Ray2.h */,
 				D004C10A13AC881600797055 /* Box2.cpp */,
 				D004C10B13AC881600797055 /* Box2.h */,
 				D004C10C13AC881600797055 /* Circle2.cpp */,
@@ -929,6 +949,10 @@
 				D063A04613AFED2E002E8586 /* InputTests.cpp in Sources */,
 				D0C8118713B27E8A0091274F /* Simple2DTests.cpp in Sources */,
 				D0C8118813B27E8A0091274F /* Simple3DTests.cpp in Sources */,
+				D07F7F2313D20BEE00574AD3 /* ModelMeshInstance.cpp in Sources */,
+				D07F7F2413D20BEE00574AD3 /* ModelNode.cpp in Sources */,
+				D07F7F2D13D20D4C00574AD3 /* Ray2.cpp in Sources */,
+				D07F7F3313D210CA00574AD3 /* Triangle2.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -977,12 +1001,12 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/External/include\"",
-					"\"$(SRCROOT)/../../Source/Gdk\"",
+					"\"$(SRCROOT)/../../../Source/Platforms/iOS/External/include\"",
+					"\"$(SRCROOT)/../../../Source/Gdk\"",
 				);
 				INFOPLIST_FILE = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
-				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/External/lib\"";
+				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/../../../Source/Platform/iOS/External/lib\"";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1000,12 +1024,12 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/External/include\"",
-					"\"$(SRCROOT)/../../Source/Gdk\"",
+					"\"$(SRCROOT)/../../../Source/Platforms/iOS/External/include\"",
+					"\"$(SRCROOT)/../../../Source/Gdk\"",
 				);
 				INFOPLIST_FILE = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
-				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/External/lib\"";
+				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/../../../Source/Platform/iOS/External/lib\"";
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1021,16 +1045,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ../../../Source/BasePCH.h;
 				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/../../../Framework/Source\"",
-					"\"$(SRCROOT)/../../../Framework/Platform/iOS/External/include\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "../../../Source/Platform/iOS/Main-Info.plist";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)\"",
-					"\"$(SRCROOT)/../../../Framework/Platform/iOS/External/lib\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
@@ -1045,16 +1062,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ../../../Source/BasePCH.h;
 				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/../../../Framework/Source\"",
-					"\"$(SRCROOT)/../../../Framework/Platform/iOS/External/include\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "../../../Source/Platform/iOS/Main-Info.plist";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)\"",
-					"\"$(SRCROOT)/../../../Framework/Platform/iOS/External/lib\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
