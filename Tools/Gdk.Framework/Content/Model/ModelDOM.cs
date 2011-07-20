@@ -1,4 +1,9 @@
-﻿using System;
+﻿/*
+  Copyright (c) 2011, Raincity Games LLC
+  Licensed under the MIT license: http://www.opensource.org/licenses/mit_license.php
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
