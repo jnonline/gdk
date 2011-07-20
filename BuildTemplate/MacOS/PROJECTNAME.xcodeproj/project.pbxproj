@@ -19,6 +19,10 @@
 		D004C09713AC875F00797055 /* PlatformImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = D004C09013AC875F00797055 /* PlatformImpl.mm */; };
 		D00663A813A025AF00981CC2 /* libz.1.2.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D00663A713A025AF00981CC2 /* libz.1.2.3.dylib */; };
 		D06312F413A81BC100BCB383 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D06312F313A81BC100BCB383 /* IOKit.framework */; };
+		D07F7F6F13D7478C00574AD3 /* ModelMeshInstance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D07F7F6B13D7478C00574AD3 /* ModelMeshInstance.cpp */; };
+		D07F7F7013D7478C00574AD3 /* ModelNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D07F7F6D13D7478C00574AD3 /* ModelNode.cpp */; };
+		D07F7F7513D747A100574AD3 /* Ray2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D07F7F7113D747A100574AD3 /* Ray2.cpp */; };
+		D07F7F7613D747A100574AD3 /* Triangle2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D07F7F7313D747A100574AD3 /* Triangle2.cpp */; };
 		D084AA3B13AC093F004C5077 /* BasePCH.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D084A97913AC093F004C5077 /* BasePCH.cpp */; };
 		D084AA3C13AC093F004C5077 /* Application.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D084A97D13AC093F004C5077 /* Application.cpp */; };
 		D084AA3D13AC093F004C5077 /* AppModel.txt in Resources */ = {isa = PBXBuildFile; fileRef = D084A97F13AC093F004C5077 /* AppModel.txt */; };
@@ -111,6 +115,14 @@
 		D004C09013AC875F00797055 /* PlatformImpl.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PlatformImpl.mm; sourceTree = "<group>"; };
 		D00663A713A025AF00981CC2 /* libz.1.2.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.2.3.dylib; path = usr/lib/libz.1.2.3.dylib; sourceTree = SDKROOT; };
 		D06312F313A81BC100BCB383 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		D07F7F6B13D7478C00574AD3 /* ModelMeshInstance.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ModelMeshInstance.cpp; sourceTree = "<group>"; };
+		D07F7F6C13D7478C00574AD3 /* ModelMeshInstance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModelMeshInstance.h; sourceTree = "<group>"; };
+		D07F7F6D13D7478C00574AD3 /* ModelNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ModelNode.cpp; sourceTree = "<group>"; };
+		D07F7F6E13D7478C00574AD3 /* ModelNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModelNode.h; sourceTree = "<group>"; };
+		D07F7F7113D747A100574AD3 /* Ray2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Ray2.cpp; sourceTree = "<group>"; };
+		D07F7F7213D747A100574AD3 /* Ray2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Ray2.h; sourceTree = "<group>"; };
+		D07F7F7313D747A100574AD3 /* Triangle2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Triangle2.cpp; sourceTree = "<group>"; };
+		D07F7F7413D747A100574AD3 /* Triangle2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Triangle2.h; sourceTree = "<group>"; };
 		D084A97913AC093F004C5077 /* BasePCH.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BasePCH.cpp; path = ../../Source/BasePCH.cpp; sourceTree = "<group>"; };
 		D084A97A13AC093F004C5077 /* BasePCH.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BasePCH.h; path = ../../Source/BasePCH.h; sourceTree = "<group>"; };
 		D084A97D13AC093F004C5077 /* Application.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Application.cpp; sourceTree = "<group>"; };
@@ -469,6 +481,10 @@
 		D084A9AC13AC093F004C5077 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				D07F7F6B13D7478C00574AD3 /* ModelMeshInstance.cpp */,
+				D07F7F6C13D7478C00574AD3 /* ModelMeshInstance.h */,
+				D07F7F6D13D7478C00574AD3 /* ModelNode.cpp */,
+				D07F7F6E13D7478C00574AD3 /* ModelNode.h */,
 				D084A9AD13AC093F004C5077 /* Model.cpp */,
 				D084A9AE13AC093F004C5077 /* Model.h */,
 				D084A9AF13AC093F004C5077 /* ModelInstance.cpp */,
@@ -554,6 +570,10 @@
 		D084A9E113AC093F004C5077 /* 2D */ = {
 			isa = PBXGroup;
 			children = (
+				D07F7F7113D747A100574AD3 /* Ray2.cpp */,
+				D07F7F7213D747A100574AD3 /* Ray2.h */,
+				D07F7F7313D747A100574AD3 /* Triangle2.cpp */,
+				D07F7F7413D747A100574AD3 /* Triangle2.h */,
 				D084A9E213AC093F004C5077 /* Box2.cpp */,
 				D084A9E313AC093F004C5077 /* Box2.h */,
 				D084A9E413AC093F004C5077 /* Circle2.cpp */,
@@ -837,6 +857,10 @@
 				D004C09213AC875F00797055 /* GdkGLView.mm in Sources */,
 				D004C09513AC875F00797055 /* main.mm in Sources */,
 				D004C09713AC875F00797055 /* PlatformImpl.mm in Sources */,
+				D07F7F6F13D7478C00574AD3 /* ModelMeshInstance.cpp in Sources */,
+				D07F7F7013D7478C00574AD3 /* ModelNode.cpp in Sources */,
+				D07F7F7513D747A100574AD3 /* Ray2.cpp in Sources */,
+				D07F7F7613D747A100574AD3 /* Triangle2.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -857,13 +881,13 @@
 				GCC_PREFIX_HEADER = ../../Source/BasePCH.h;
 				HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/../../Source\"",
-					"\"$(SRCROOT)/External/include\"",
+					"\"$(SRCROOT)/../../Source/Platform/MacOS/External/include\"",
 				);
 				INFOPLIST_FILE = "../../Source/Platform/MacOS/Main-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/External/lib\"",
+					"\"$(SRCROOT)/../../Source/Platform/MacOS/External/lib\"",
 				);
 				PRODUCT_NAME = PROJECTNAME;
 			};
@@ -880,13 +904,13 @@
 				GCC_PREFIX_HEADER = ../../Source/BasePCH.h;
 				HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/../../Source\"",
-					"\"$(SRCROOT)/External/include\"",
+					"\"$(SRCROOT)/../../Source/Platform/MacOS/External/include\"",
 				);
 				INFOPLIST_FILE = "../../Source/Platform/MacOS/Main-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/External/lib\"",
+					"\"$(SRCROOT)/../../Source/Platform/MacOS/External/lib\"",
 				);
 				PRODUCT_NAME = PROJECTNAME;
 			};

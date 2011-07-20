@@ -22,7 +22,6 @@ namespace Gdk
 		Rectangle2(float x, float y, float width, float height);
 		Rectangle2(const Vector2& position, const Vector2& size);
 		Rectangle2(const Rectangle2& input);
-		Rectangle2(const Vector2* points, int numPoints);
 
 		// Asssignment Operator
 		inline Rectangle2& operator= (const Rectangle2& input);
@@ -31,22 +30,29 @@ namespace Gdk
 		inline bool operator== (const Rectangle2& input) const;
 		inline bool operator!= (const Rectangle2& input) const;
 
-		// Containment/Intersection Methods
+		// Containment / Intersection Methods
 		inline bool Contains(float x, float y) const;
 		inline bool Contains(const Vector2& point) const;
 		inline bool Intersects(const Rectangle2& rectangle) const;
 
-		// Utility Methods
+		// Point Conversions
+        Vector2 GetCenter();
+        Vector2 GetExtents();
 		Vector2 GetParametricPointInArea(float tx, float ty);
 		Vector2 GetParametricPointOnPerimeter(float t);
 
+        // Line Segment Conversions
 		LineSegment2 GetLeftLineSegment();
 		LineSegment2 GetTopLineSegment();
 		LineSegment2 GetRightLineSegment();
 		LineSegment2 GetBottomLineSegment();
 
-		// Static Utility methods
-		static Rectangle2 Merge(Rectangle2 r1, Rectangle2 r2);
+        // Statics
+        // ----------------------------------------
+        
+		// Static Creation methods
+        static Rectangle2 CreateFromPoints(size_t numPoints, const Vector2* points);
+		static Rectangle2 CreateMerged(Rectangle2 r1, Rectangle2 r2);
 
 		// special constants
 		static const Rectangle2 ZERO;    // (0,0)-(0,0)
@@ -115,5 +121,5 @@ namespace Gdk
 			&& rectangle.Position.Y + rectangle.Size.Y >= Position.Y
 			;
 	}
-
+    
 } // namespace

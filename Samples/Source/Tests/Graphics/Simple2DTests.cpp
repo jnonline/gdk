@@ -259,7 +259,7 @@ void Simple2DTests::OnDraw()
 	Renderer2D::SetWorldTransform(world);
 
 	// Draw some Text
-    wchar_t* sampleText = L"Sample Text...\nNew Line...";
+    const wchar_t* sampleText = L"Sample Text...\nNew Line...";
 	Renderer2D::DrawText(SharedAssets::Fonts.Arial20, sampleText, Vector2::ZERO, Color(255,224,160));
 
 	// Images & Anims & Sprites

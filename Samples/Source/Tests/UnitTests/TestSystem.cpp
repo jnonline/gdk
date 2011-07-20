@@ -161,6 +161,9 @@ void UnitTestsModule::TestSystem()
 		{
 			UInt32 hash = iter->first;
 			int val = iter->second;
+            
+            GDK_NOT_USED(hash);
+            GDK_NOT_USED(val);
 		}
 
 		// Removal
@@ -185,6 +188,8 @@ void UnitTestsModule::TestSystem()
 		for(SortedVector<int>::iterator i = sv.begin(); i < sv.end(); i++)
 		{
 			int val = *i;
+            
+            GDK_NOT_USED(val);
 		}
 
 		ASSERT(sv.front() == 2, L"Sorted vector is NOT sorted");
