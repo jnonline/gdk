@@ -234,7 +234,7 @@ void InputTestsModule::OnDraw()
 }
 
 // ***********************************************************************
-void InputTestsModule::WriteLog(wchar_t* msg, Gdk::Color color)
+void InputTestsModule::WriteLog(const wchar_t* msg, Gdk::Color color)
 {
     // Add a log entry for this touch event
     inputLog.push_back(InputLogLine(msg, color));
@@ -245,7 +245,7 @@ void InputTestsModule::WriteLog(wchar_t* msg, Gdk::Color color)
 }
 
 // ***********************************************************************
-void InputTestsModule::DrawKeyStatusBox(Keys::Enum key, Rectangle2 rect, wchar_t* name)
+void InputTestsModule::DrawKeyStatusBox(Keys::Enum key, Rectangle2 rect, const wchar_t* name)
 {
     // Was the key just now pressed?
     if(Keyboard::IsKeyJustPressed(key))
@@ -272,7 +272,7 @@ void InputTestsModule::DrawKeyStatusBox(Keys::Enum key, Rectangle2 rect, wchar_t
 }
 
 // ***********************************************************************
-void InputTestsModule::DrawMouseButtonStatusBox(MouseButton::Enum button, Rectangle2 rect, wchar_t* name)
+void InputTestsModule::DrawMouseButtonStatusBox(MouseButton::Enum button, Rectangle2 rect, const wchar_t* name)
 {
     // Is the button down
     if(Mouse::IsButtonDown(button))

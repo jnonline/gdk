@@ -43,39 +43,23 @@ Rectangle2::Rectangle2(const Rectangle2& input)
 	Size = input.Size;
 }
 
+
+// ===================================================================================
+// Point Conversion Methods
+// ===================================================================================
+
 // ***********************************************************************
-Rectangle2::Rectangle2(const Vector2* points, int numPoints)
+Vector2 Rectangle2::GetCenter()
 {
-	// Use the first point to set the initial bounds
-	float minX = points[0].X;
-	float maxX = points[0].X;
-	float minY = points[0].Y;
-	float maxY = points[0].Y;
-	
-	// loop through the points & check for new bounds
-	for(int i=1; i<numPoints; i++)
-	{
-		if(points[i].X < minX)
-			minX = points[i].X;
-		else if(points[i].X > maxX)
-			maxX = points[i].X;
-
-		if(points[i].Y < minY)
-			minY = points[i].Y;
-		else if(points[i].Y > maxY)
-			maxY = points[i].Y;
-	}
-
-	this->Position.X = minX;
-	this->Position.Y = minY;
-	this->Size.X = maxX - minX;
-	this->Size.Y = maxY - minY;
+    return Position + Size * 0.5f;
 }
 
+// ***********************************************************************
+Vector2 Rectangle2::GetExtents()
+{
+    return Size * 0.5f;
+}
 
-// ===================================================================================
-// Utility Methods
-// ===================================================================================
 
 // ***********************************************************************
 Vector2 Rectangle2::GetParametricPointInArea(float tx, float ty)
@@ -132,6 +116,11 @@ Vector2 Rectangle2::GetParametricPointOnPerimeter(float t)
 	return Vector2(this->Position.X, this->Position.Y + this->Size.Y * ((1.0f - t) / heightInT));
 }
 
+// ===================================================================================
+// LineSegment Conversion Methods
+// ===================================================================================
+
+
 // ***********************************************************************
 LineSegment2 Rectangle2::GetLeftLineSegment()
 {
@@ -173,9 +162,35 @@ LineSegment2 Rectangle2::GetBottomLineSegment()
 // ===================================================================================
 
 // ***********************************************************************
-Rectangle2 Rectangle2::Merge(Rectangle2 r1, Rectangle2 r2)
+Rectangle2 Rectangle2::CreateFromPoints(size_t numPoints, const Vector2* points)
+{
+	// Use the first point to set the initial bounds
+	float minX = points[0].X;
+	float maxX = points[0].X;
+	float minY = points[0].Y;
+	float maxY = points[0].Y;
+	
+	// loop through the points & check for new bounds
+	for(size_t i=1; i<numPoints; i++)
+	{
+		if(points[i].X < minX)
+			minX = points[i].X;
+		else if(points[i].X > maxX)
+			maxX = points[i].X;
+        
+		if(points[i].Y < minY)
+			minY = points[i].Y;
+		else if(points[i].Y > maxY)
+			maxY = points[i].Y;
+	}
+    
+    return Rectangle2(minX, minY, maxX - minX, maxY - minY);
+}
+
+// ***********************************************************************
+Rectangle2 Rectangle2::CreateMerged(Rectangle2 r1, Rectangle2 r2)
 {
 	// Returns the rectangle that encapsulates the 2 given rectangles
 	Vector2 points[4] = {r1.Position, r1.Position + r1.Size, r2.Position, r2.Position + r2.Size};
-	return Rectangle2(points, 4);
+	return CreateFromPoints(4, points);
 }

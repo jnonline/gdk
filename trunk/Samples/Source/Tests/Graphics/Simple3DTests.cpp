@@ -23,8 +23,8 @@ Simple3DTests::Simple3DTests()
 	Mouse::MouseWheelScroll.AddHandlerMethod(this, &Simple3DTests::OnMouseWheelScroll);
     
 	// Load a test model
-	AssetManager* assetManager = AssetManager::GetSingleton();
 	skeletalModel = NULL;
+    //AssetManager* assetManager = AssetManager::GetSingleton();
 	//skeletalModel = assetManager->Load<Model>("Models/SkeletonWarrior", &assetsPool, NULL);
 
 }
