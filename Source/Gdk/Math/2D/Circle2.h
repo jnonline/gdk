@@ -5,7 +5,8 @@
 
 #pragma once
 
-
+#include "Triangle2.h"
+#include "Rectangle2.h"
 
 namespace Gdk 
 {
@@ -30,14 +31,25 @@ namespace Gdk
 		inline bool operator== (const Circle2& input) const;
 		inline bool operator!= (const Circle2& input) const;
 
-		// Containment/Intersection Methods
+		// Containment Methods
 		inline bool Contains(float x, float y) const;
 		inline bool Contains(const Vector2& point) const;
-		inline bool Intersects(const Circle2& input) const;
+        
+        //inline bool Intersects(const Circle2& input) const;
 
-		// Utility Methods
+		// Point Conversions
 		Vector2 GetParametricPointInArea(float tAngle, float tRadius);
 		Vector2 GetParametricPointOnPerimeter(float tAngle);
+        
+		// Encapsulation Methods
+        static Circle2 FromPoints(size_t numPoints, const Vector2* points);
+		static Circle2 Merge(const Circle2& c1, const Circle2& c2);
+        
+        static Circle2 CircumscribeTriangle(const Triangle2& triangle);
+        static Circle2 CircumscribeTriangle(const Vector2& p1, const Vector2& p2, const Vector2& p3);
+        static Circle2 InscribeTriangle(const Triangle2& triangle);
+        static Circle2 InscribeTriangle(const Vector2& p1, const Vector2& p2, const Vector2& p3);
+        static Circle2 CircumscribeRectangle(const Rectangle2& rect);
 
 		// special constants
 		static const Circle2 ZERO;    // Center(0,0) Radius(0)
@@ -74,7 +86,7 @@ namespace Gdk
 	}
 
 	// ===================================================================================
-	// Containment & Intersection Methods
+	// Containment Methods
 	// ===================================================================================
 
 	// ***********************************************************************
@@ -90,21 +102,8 @@ namespace Gdk
 	// ***********************************************************************
 	inline bool Circle2::Contains(const Vector2& point) const
 	{
-		// Get the distance squared between the circle center & the point
-		float distanceSquared = (this->Center - point).LengthSquared();
-		return distanceSquared <= this->Radius * this->Radius;
+		return Contains(point.X, point.Y);
 	}
 
-	// ***********************************************************************
-	inline bool Circle2::Intersects(const Circle2& input) const
-	{
-		// Get the distance (squared) between the two circle centers 
-		float distanceSquared = (this->Center - input.Center).LengthSquared();
-
-		// Get the total radii of the circles
-		float totalRadii = this->Radius + input.Radius;
-		
-		return distanceSquared <= totalRadii * totalRadii;
-	}
 
 } // namespace

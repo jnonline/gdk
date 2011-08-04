@@ -30,29 +30,25 @@ namespace Gdk
 		inline bool operator== (const Rectangle2& input) const;
 		inline bool operator!= (const Rectangle2& input) const;
 
-		// Containment / Intersection Methods
+		// Containment Methods
 		inline bool Contains(float x, float y) const;
 		inline bool Contains(const Vector2& point) const;
-		inline bool Intersects(const Rectangle2& rectangle) const;
 
 		// Point Conversions
-        Vector2 GetCenter();
-        Vector2 GetExtents();
-		Vector2 GetParametricPointInArea(float tx, float ty);
-		Vector2 GetParametricPointOnPerimeter(float t);
+        Vector2 GetCenter() const;
+        Vector2 GetExtents() const;
+		Vector2 GetParametricPointInArea(float tx, float ty) const;
+		Vector2 GetParametricPointOnPerimeter(float t) const;
 
         // Line Segment Conversions
-		LineSegment2 GetLeftLineSegment();
-		LineSegment2 GetTopLineSegment();
-		LineSegment2 GetRightLineSegment();
-		LineSegment2 GetBottomLineSegment();
+		LineSegment2 GetLeftLineSegment() const;
+		LineSegment2 GetTopLineSegment() const;
+		LineSegment2 GetRightLineSegment() const;
+		LineSegment2 GetBottomLineSegment() const;
 
-        // Statics
-        // ----------------------------------------
-        
-		// Static Creation methods
-        static Rectangle2 CreateFromPoints(size_t numPoints, const Vector2* points);
-		static Rectangle2 CreateMerged(Rectangle2 r1, Rectangle2 r2);
+		// Encapsulation Methods
+        static Rectangle2 FromPoints(size_t numPoints, const Vector2* points);
+		static Rectangle2 Merge(const Rectangle2& r1, const Rectangle2& r2);
 
 		// special constants
 		static const Rectangle2 ZERO;    // (0,0)-(0,0)
@@ -89,7 +85,7 @@ namespace Gdk
 	}
 
 	// ===================================================================================
-	// Containment & Intersection Methods
+	// Containment Methods
 	// ===================================================================================
 
 	// ***********************************************************************
@@ -105,21 +101,7 @@ namespace Gdk
 	// ***********************************************************************
 	inline bool Rectangle2::Contains(const Vector2& point) const
 	{
-		return point.X >= Position.X
-			&& point.Y >= Position.Y
-			&& point.X <= Position.X + Size.X
-			&& point.Y <= Position.Y + Size.Y
-			;
-	}
-
-	// ***********************************************************************
-	inline bool Rectangle2::Intersects(const Rectangle2& rectangle) const
-	{
-		return rectangle.Position.X <= (Position.X + Size.X)
-			&& rectangle.Position.X + rectangle.Size.X >= Position.X
-			&& rectangle.Position.Y <= (Position.Y + Size.Y)
-			&& rectangle.Position.Y + rectangle.Size.Y >= Position.Y
-			;
+		return Contains(point.X, point.Y);
 	}
     
 } // namespace
