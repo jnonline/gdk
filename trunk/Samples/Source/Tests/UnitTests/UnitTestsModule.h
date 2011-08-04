@@ -8,6 +8,97 @@
 // Includes
 #include "../../Module.h"
 
+// Utility macros for Unit Test methods
+#ifdef GDKPLATFORM_WINDOWS
+    #define UNIT_TEST_ASSERT(condition, format, ...)        if(!(condition)) {context->Log->WriteLine(LogLevel::Error, format, __VA_ARGS__); return TestStatus::Fail;}
+#else
+    #define UNIT_TEST_ASSERT(condition, format, args...)    if(!(condition)) {context->Log->WriteLine(LogLevel::Error, format, ##args); return TestStatus::Fail;}
+#endif
+
+// ==============================================
+namespace TestStatus
+{
+    enum Enum
+    {
+        Pass,
+        Fail,
+        Warning,
+        NotRun,
+        Running
+    };
+}
+
+// ==============================================
+class TestLogLine
+{
+public:
+    // Properties
+    wstring Text;
+    LogLevel::Enum Level;
+    
+    // CTor
+    TestLogLine(const wchar_t* text, LogLevel::Enum level)
+        : Text(text), Level(level)
+    {}
+};
+
+// ==============================================
+class TestLog
+{
+public:
+    // Properties
+    vector<TestLogLine*> Lines;
+    int Indent;
+    
+    // CTor / DTor
+    TestLog();
+    ~TestLog();
+    
+    // Write methods
+    void WriteLine(Gdk::LogLevel::Enum logLevel, const wchar_t *format, ...);
+	void Clear();
+};
+
+// ==============================================
+class TestExecutionContext
+{
+public:
+    // Properties
+    class TestTreeNode* TreeNode;
+    TestLog* Log;
+    
+    // Ctor
+    TestExecutionContext(class TestTreeNode* treeNode, TestLog* log)
+        : TreeNode(treeNode), Log(log)
+    {
+    }
+};
+
+// ==============================================
+typedef Delegate1<TestStatus::Enum, TestExecutionContext*> TestDelegate;
+
+// ==============================================
+class TestTreeNode
+{
+public:
+    // Properties
+    wstring Name;
+    TestStatus::Enum Status;
+    TestDelegate* Method;
+    
+    TestTreeNode* Parent;
+    list<TestTreeNode*> Children;
+    
+    // CTor/DTor
+    TestTreeNode(const wchar_t* name, TestDelegate* testMethod = NULL);
+    ~TestTreeNode();
+    
+    // Adding children
+    TestTreeNode* AddChild(TestTreeNode* child);
+    TestTreeNode* AddChild(const wchar_t* name, TestDelegate* testMethod = NULL);
+};
+
+
 // *******************************************************************
 class UnitTestsModule : public Module
 {
@@ -25,47 +116,38 @@ protected:
 	// Input handlers
 	void OnTouchBegan(Touch* touch);
 	void OnMouseDown(MouseButton::Enum button);
+    void OnMouseWheelScroll(float deltaX, float deltaY);
 
-	// Output Display
+	// Test Tree 
 	// -----------------------------
 
-	class DisplayLine
-	{
-	public:
-		wstring		Text;
-		Gdk::Color	Color;
+	TestTreeNode* rootNode;
 
-		DisplayLine(const wchar_t* text, Gdk::Color color) : Text(text), Color(color) {}
-	};
-	deque<DisplayLine> displayLines;
-	float spinnerT;
-
-	Mutex* logMutex;
-
-	// Methods
-	void WriteLine(Gdk::LogLevel::Enum logLevel, const wchar_t *format, ...);
-	void Clear();
-
-	// Tests
+    int currentTestIndex;
+    vector<TestTreeNode*> flatTestTree;
+    
+    float currentLogPosition;
+    TestLog log;    
+    
+    // Methods
+    void BuildTestTree();
+    void RecurseFlattenTree(TestTreeNode* node);
+    
+	// Tests!!!
 	// -----------------------------
 
-	class UnitTestRegistration
-	{
-	public:
-		wstring		Name;
-		Gdk::Color	ButtonColor;
-		Rectangle2	ButtonBounds;
-		void (UnitTestsModule::*StartMethod)();
-		
-		UnitTestRegistration(const wchar_t* name, Gdk::Color buttonColor, void (UnitTestsModule::*startMethod)()) : Name(name), ButtonColor(buttonColor), StartMethod(startMethod) {}
-	};
-
-	vector<UnitTestRegistration> registeredUnitTests;
-
-	void StartTest(UnitTestRegistration& test);
-
-	// Test Methods
-	void TestSystem(void);
-	void TestMath(void);
-
+    #define TESTMETHOD(method)  TestStatus::Enum method(TestExecutionContext* context);
+    
+    // System Tests
+    TESTMETHOD(Test_System_Logging);
+    TESTMETHOD(Test_System_Memory);
+    TESTMETHOD(Test_System_Containers_StringHashMap);
+    TESTMETHOD(Test_System_Containers_SortedVector);
+    
+    // Math Tests
+    TESTMETHOD(Test_Math_Randoms);
+    TESTMETHOD(Test_Math_Vectors);
+    
+    #undef TESTMETHOD
+   
 };
