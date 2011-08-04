@@ -49,20 +49,20 @@ Rectangle2::Rectangle2(const Rectangle2& input)
 // ===================================================================================
 
 // ***********************************************************************
-Vector2 Rectangle2::GetCenter()
+Vector2 Rectangle2::GetCenter() const
 {
     return Position + Size * 0.5f;
 }
 
 // ***********************************************************************
-Vector2 Rectangle2::GetExtents()
+Vector2 Rectangle2::GetExtents() const
 {
     return Size * 0.5f;
 }
 
 
 // ***********************************************************************
-Vector2 Rectangle2::GetParametricPointInArea(float tx, float ty)
+Vector2 Rectangle2::GetParametricPointInArea(float tx, float ty) const
 {
 	// Return a point in the rectangle using the given parametric coordinates within rectangle space
 	return Vector2(
@@ -72,7 +72,7 @@ Vector2 Rectangle2::GetParametricPointInArea(float tx, float ty)
 }
 
 // ***********************************************************************
-Vector2 Rectangle2::GetParametricPointOnPerimeter(float t)
+Vector2 Rectangle2::GetParametricPointOnPerimeter(float t) const
 {
 	// The rectangle perimeter starts at the top left, and goes clockwise
 
@@ -122,7 +122,7 @@ Vector2 Rectangle2::GetParametricPointOnPerimeter(float t)
 
 
 // ***********************************************************************
-LineSegment2 Rectangle2::GetLeftLineSegment()
+LineSegment2 Rectangle2::GetLeftLineSegment() const
 {
 	return LineSegment2(
 		this->Position,
@@ -131,7 +131,7 @@ LineSegment2 Rectangle2::GetLeftLineSegment()
 }
 
 // ***********************************************************************
-LineSegment2 Rectangle2::GetTopLineSegment()
+LineSegment2 Rectangle2::GetTopLineSegment() const
 {
 	return LineSegment2(
 		this->Position,
@@ -140,7 +140,7 @@ LineSegment2 Rectangle2::GetTopLineSegment()
 }
 
 // ***********************************************************************
-LineSegment2 Rectangle2::GetRightLineSegment()
+LineSegment2 Rectangle2::GetRightLineSegment() const
 {
 	return LineSegment2(
 		Vector2(this->Position.X + this->Size.X, this->Position.Y),
@@ -149,7 +149,7 @@ LineSegment2 Rectangle2::GetRightLineSegment()
 }
 
 // ***********************************************************************
-LineSegment2 Rectangle2::GetBottomLineSegment()
+LineSegment2 Rectangle2::GetBottomLineSegment() const
 {
 	return LineSegment2(
 		Vector2(this->Position.X, this->Position.Y + this->Size.Y),
@@ -158,11 +158,11 @@ LineSegment2 Rectangle2::GetBottomLineSegment()
 }
 
 // ===================================================================================
-// Static Utility Methods
+// Encapsulation Methods
 // ===================================================================================
 
 // ***********************************************************************
-Rectangle2 Rectangle2::CreateFromPoints(size_t numPoints, const Vector2* points)
+Rectangle2 Rectangle2::FromPoints(size_t numPoints, const Vector2* points)
 {
 	// Use the first point to set the initial bounds
 	float minX = points[0].X;
@@ -188,9 +188,11 @@ Rectangle2 Rectangle2::CreateFromPoints(size_t numPoints, const Vector2* points)
 }
 
 // ***********************************************************************
-Rectangle2 Rectangle2::CreateMerged(Rectangle2 r1, Rectangle2 r2)
+Rectangle2 Rectangle2::Merge(const Rectangle2& r1, const Rectangle2& r2)
 {
 	// Returns the rectangle that encapsulates the 2 given rectangles
 	Vector2 points[4] = {r1.Position, r1.Position + r1.Size, r2.Position, r2.Position + r2.Size};
-	return CreateFromPoints(4, points);
+	return FromPoints(4, points);
 }
+
+

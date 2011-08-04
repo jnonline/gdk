@@ -46,6 +46,7 @@ namespace Gdk
 		inline float LengthSquared () const;
 		inline float Normalize ();
 		inline float Dot (const Vector2& input) const;
+        inline Vector2 GetPerpendicular() const;
 		inline float GetRotationAngle() const;
 		static Vector2 FromAngle(float angle); 
         
@@ -275,6 +276,12 @@ namespace Gdk
 		return length;
 	}
 
+    // ***********************************************************************
+	inline Vector2 Vector2::GetPerpendicular() const
+    {
+        return Vector2(-Y, X);
+    }
+    
 	// ***********************************************************************
 	inline float Vector2::GetRotationAngle() const
 	{

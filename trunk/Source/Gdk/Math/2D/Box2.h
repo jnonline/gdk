@@ -23,9 +23,9 @@ namespace Gdk
 		Box2 (const Vector2& center, const Vector2& axis0, const Vector2& axis1, float extent0, float extent1);
 		Box2 (const Box2& input);
 
-		// Containment/Intersection Methods
+		// Containment Methods
+        inline bool Contains(float x, float y) const;
 		inline bool Contains(const Vector2& point) const;
-		inline bool Intersects(const Box2& box) const;
 
 		// special constants
 		static const Box2 ZERO;    // (0,0)-(0,0)
@@ -36,10 +36,10 @@ namespace Gdk
 	// ===================================================================================
 
 	// ***********************************************************************
-	inline bool Box2::Contains(const Vector2& point) const
+	inline bool Box2::Contains(float x, float y) const
 	{
 		// Get the vector from the center of the box to the point
-		Vector2 diff = point - this->Center;
+		Vector2 diff(x - this->Center.X, y - this->Center.Y);
 		
 		// Loop through the axis
 		for(int i=0; i<2; i++)
@@ -54,50 +54,11 @@ namespace Gdk
 
 		return true;
 	}
-
-	// ***********************************************************************
-	inline bool Box2::Intersects(const Box2& box) const
+    
+    // ***********************************************************************
+	inline bool Box2::Contains(const Vector2& point) const
 	{
-		// Get the difference vector between the box centers
-		Vector2 diff = box.Center - this->Center;
-
-		// Axis C0+t*A0
-		float absA0dotB0 = Math::Abs(this->Axis[0].Dot(box.Axis[0]));
-		float absA0dotB1 = Math::Abs(this->Axis[0].Dot(box.Axis[1]));
-		float absA0dotDiff = Math::Abs(this->Axis[0].Dot(diff));
-		float sum = this->Extent[0] + box.Extent[0]*absA0dotB0 + box.Extent[1]*absA0dotB1;
-		if (absA0dotDiff > sum)
-		{
-			return false;
-		}
-
-		// Axis C0+t*A1
-		float absA1dotB0 = Math::Abs(this->Axis[1].Dot(box.Axis[0]));
-		float absA1dotB1 = Math::Abs(this->Axis[1].Dot(box.Axis[1]));
-		float absA1dotDiff = Math::Abs(this->Axis[1].Dot(diff));
-		sum = this->Extent[1] + box.Extent[0]*absA1dotB0 + box.Extent[1]*absA1dotB1;
-		if (absA1dotDiff > sum)
-		{
-			return false;
-		}
-
-		// Axis C0+t*B0
-		float absB0dotDiff = Math::Abs(box.Axis[0].Dot(diff));
-		sum = box.Extent[0] + this->Extent[0]*absA0dotB0 + this->Extent[1]*absA1dotB0;
-		if (absB0dotDiff > sum)
-		{
-			return false;
-		}
-
-		// Axis C0+t*B1
-		float absB1dotDiff = Math::Abs(box.Axis[1].Dot(diff));
-		sum = box.Extent[1] + this->Extent[0]*absA0dotB1 + this->Extent[1]*absA1dotB1;
-		if (absB1dotDiff > sum)
-		{
-			return false;
-		}
-
-		return true;
-	}
+        return Contains(point.X, point.Y);
+    }
 
 } // namespace Gdk

@@ -46,6 +46,43 @@ Sphere3::Sphere3(const Sphere3& input)
 // ===================================================================================
 
 // ***********************************************************************
+Sphere3 Sphere3::FromPoints(size_t numPoints, const Vector3* points)
+{
+    if(numPoints == 0)
+        return Sphere3(Vector3::ZERO, 0.0f);
+    
+    // Start with a 0 radius sphere, centered on the first point.
+    Sphere3 result(points[0], 0.0f);
+    
+    // Loop through the rest of the points
+    for(int pointIndex=1; pointIndex < numPoints; pointIndex++)
+    {
+        const Vector3& point = points[pointIndex];
+        
+        // Get the vector from the center of the sphere, to this point
+        Vector3 pointToCenter = result.Center - point;
+        
+        // If the point is already in the sphere, move on to the next point
+        float lenSquared = pointToCenter.LengthSquared();
+        if(lenSquared < (result.Radius * result.Radius))
+            continue;
+        
+        // Calculate the edge of the sphere if we extended it to encapsulate the point
+        Vector3 sphereEdge = pointToCenter;
+        sphereEdge.Normalize();
+        sphereEdge *= result.Radius;
+        sphereEdge += result.Center;
+        
+        // Calculate a new center for the sphere, halfway between the edge of the sphere & this point
+        result.Center = (point + sphereEdge) * 0.5f;
+        result.Radius = (point - sphereEdge).Length() * 0.5f;
+    }
+    
+    return result;
+}
+
+
+// ***********************************************************************
 Sphere3 Sphere3::Merge(const Sphere3& sphere1, const Sphere3& sphere2)
 {
 	// Get the difference vector between the centers
@@ -68,7 +105,7 @@ Sphere3 Sphere3::Merge(const Sphere3& sphere1, const Sphere3& sphere2)
 	float len = Math::Sqrt(lenSquared);
 	Sphere3 result;
 
-	// Are the sphere on different centers?
+	// Are the spheres on different centers?
 	if(len > Math::ZERO_TOLERANCE)
 	{
 		// Calculate the new center of the encapsulating sphere

@@ -33,6 +33,7 @@ namespace Gdk
 		inline bool Contains(const Vector3& point) const;
 
 		// Encapsulation Methods
+        static Sphere3 FromPoints(size_t numPoints, const Vector3* points);
 		static Sphere3 Merge(const Sphere3& sphere1, const Sphere3& sphere2);
 	};
 
