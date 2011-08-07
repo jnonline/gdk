@@ -15,7 +15,7 @@ namespace Gdk
 	public:
 		// Components
 		Vector2 Origin;
-		Vector2 Direction;
+		Vector2 Direction;  // Direction is always assumed to be normalized
 
 		// Constructors
 		Ray2 ();

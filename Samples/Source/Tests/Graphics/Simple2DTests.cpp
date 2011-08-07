@@ -281,7 +281,7 @@ void Simple2DTests::OnDraw()
 
 	this->particleSystem1->Draw();
 	this->particleSystem2->Draw();
-
+    
 	// Flush the 2D renderer
 	Renderer2D::Flush();
 }
