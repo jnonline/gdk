@@ -101,15 +101,15 @@ bool Intersection3::Test(const Ray3& ray, const Sphere3& sphere)
 	if(distSq <= radSq)
 		return true;	// The ray origin is in the sphere
 
-	// Get the dot product of the difference & ray direction vectors
-	float diffDotDirection = diff.Dot(ray.Direction);
+	// Project the difference vector onto the ray
+	float directionDotDiff = ray.Direction.Dot(diff);
 
 	// Is the ray pointing away from the sphere?
-	if(diffDotDirection < 0.0f)
+	if(directionDotDiff < 0.0f)
 		return false;
-
+    
 	// Quadratic has a real root if the discriminant is non-negative
-	return diffDotDirection * diffDotDirection >= (distSq - radSq);
+	return directionDotDiff * directionDotDiff >= (distSq - radSq);
 }
 
 // *************************************************************************************

@@ -34,9 +34,9 @@ Priority	System			Task
 2			Input\Mouse		CaptureMouse() - lock the mouse into the client region of the window...
 3			Input\Mouse		Add support for multi-mouse, multi-KB
 
-1			Game			State management
-1			Game			Entity/Component model
-1			Game			Simple Components
+2			Game			State management
+2			Game			Entity/Component model
+2			Game			Simple Components
 
 2			Externals		sqllite
 2			Externals		XML
@@ -95,9 +95,41 @@ P1		Optimizer - split Bones into increments of 24
 		Tests
 	
 	More Math!!
-		2D intersection & containment..  
-			box from points
-			line intersection, etc
+		Encapsulation
+			Circle2 
+		x		FromPoints
+		x		Merged
+		x		CircumscribeTriangle
+		x		InscribeTriangle
+		x		CircumscribeRect
+
+			Rect2
+		x		FromPoints
+		x		Merged
+			Sphere3
+		x		FromPoints
+		x		Merged
+			
+
+		Point Containment
+		x	Circle2  	Point
+		x	Rect2		Point
+		x	Box2		Point
+		x	Tri2		Point
+
+			Sphere3		Point
+			Box3		Point
+			Tri3		Point
+		
+
+		Intersection
+			2D all prims
+			3D all prims
+
+		Distance
+			Point To Rect,Box,Circle,Sphere
+			Line/Ray to Line/Ray/Circle/Sphere/Etc
+
 
 	Unit Tests
 		Memory tracking

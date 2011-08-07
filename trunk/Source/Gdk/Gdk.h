@@ -54,17 +54,24 @@
 // Math
 #include "Math/Maths.h"
 
+// Math / Random
 #include "Math/Random/Random.h"
 #include "Math/Random/MersenneTwister.h"
 #include "Math/Random/PerlinNoise.h"
 
+// Math / 2D
 #include "Math/2D/Vector2.h"
 #include "Math/2D/Matrix2D.h"
+#include "Math/2D/Ray2.h"
 #include "Math/2D/LineSegment2.h"
 #include "Math/2D/Rectangle2.h"
 #include "Math/2D/Box2.h"
+#include "Math/2D/Triangle2.h"
 #include "Math/2D/Circle2.h"
+#include "Math/2D/Distance2.h"
+#include "Math/2D/Intersection2.h"
 
+// Math / 3D
 #include "Math/3D/Vector3.h"
 #include "Math/3D/Matrix3D.h"
 #include "Math/3D/Quaternion.h"

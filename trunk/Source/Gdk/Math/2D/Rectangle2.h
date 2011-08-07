@@ -5,7 +5,9 @@
 
 #pragma once
 
-
+#include "Vector2.h"
+#include "LineSegment2.h"
+#include "Box2.h"
 
 namespace Gdk 
 {
@@ -45,6 +47,9 @@ namespace Gdk
 		LineSegment2 GetTopLineSegment() const;
 		LineSegment2 GetRightLineSegment() const;
 		LineSegment2 GetBottomLineSegment() const;
+        
+        // Box Conversion
+        Box2 GetAsBox() const;
 
 		// Encapsulation Methods
         static Rectangle2 FromPoints(size_t numPoints, const Vector2* points);

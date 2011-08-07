@@ -134,6 +134,7 @@ TestStatus::Enum UnitTestsModule::Test_System_Containers_StringHashMap(TestExecu
     StringHashMap<int>::Iterator removalIter = hashMap.Find("Foo");
     hashMap.Remove(removalIter);
     
+    return TestStatus::Pass;
 }
 
 // ***********************************************************************
@@ -160,6 +161,8 @@ TestStatus::Enum UnitTestsModule::Test_System_Containers_SortedVector(TestExecut
     context->Log->WriteLine(LogLevel::Info, L"Testing vector is sorted");
     UNIT_TEST_ASSERT(sv.front() == 2, L"Sorted vector is NOT sorted");
     UNIT_TEST_ASSERT(sv.back() == 15, L"Sorted vector is NOT sorted");
+    
+    return TestStatus::Pass;
 }
 
 /*

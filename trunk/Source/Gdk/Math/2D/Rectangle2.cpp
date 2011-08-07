@@ -158,6 +158,19 @@ LineSegment2 Rectangle2::GetBottomLineSegment() const
 }
 
 // ===================================================================================
+// Box Conversion Methods
+// ===================================================================================
+
+
+// ***********************************************************************
+Box2 Rectangle2::GetAsBox() const
+{
+    Vector2 halfSize = this->Size * 0.5f;
+    Vector2 center = this->Position + halfSize;
+	return Box2(center, Vector2::UNIT_X, Vector2::UNIT_Y, halfSize.X, halfSize.Y);
+}
+
+// ===================================================================================
 // Encapsulation Methods
 // ===================================================================================
 
