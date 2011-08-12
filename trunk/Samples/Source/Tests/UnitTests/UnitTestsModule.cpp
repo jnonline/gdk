@@ -107,6 +107,9 @@ UnitTestsModule::UnitTestsModule ()
 {
 	// Bind to Touch & Mouse event handlers
 	TouchInput::TouchBegan.AddHandlerMethod(this, &UnitTestsModule::OnTouchBegan);
+    TouchInput::TouchMoved.AddHandlerMethod(this, &UnitTestsModule::OnTouchMoved);
+    TouchInput::TouchEnded.AddHandlerMethod(this, &UnitTestsModule::OnTouchEnded);
+    
 	Mouse::MouseButtonDown.AddHandlerMethod(this, &UnitTestsModule::OnMouseDown);
     Mouse::MouseWheelScroll.AddHandlerMethod(this, &UnitTestsModule::OnMouseWheelScroll);
     
@@ -114,6 +117,7 @@ UnitTestsModule::UnitTestsModule ()
     this->rootNode = NULL;
     this->currentTestIndex = -1;
     this->currentLogPosition = 0.0f;
+    this->logScrollVelocity = 0.0f;
     
     BuildTestTree();
 }
@@ -123,6 +127,9 @@ UnitTestsModule::~UnitTestsModule()
 {
 	// Unbind the input event handlers
     TouchInput::TouchBegan.RemoveHandlerMethod(this, &UnitTestsModule::OnTouchBegan);
+    TouchInput::TouchMoved.RemoveHandlerMethod(this, &UnitTestsModule::OnTouchMoved);
+    TouchInput::TouchEnded.RemoveHandlerMethod(this, &UnitTestsModule::OnTouchEnded);
+    
 	Mouse::MouseButtonDown.RemoveHandlerMethod(this, &UnitTestsModule::OnMouseDown);
     Mouse::MouseWheelScroll.RemoveHandlerMethod(this, &UnitTestsModule::OnMouseWheelScroll);
     
@@ -224,6 +231,10 @@ void UnitTestsModule::OnUpdate(float elapsedSeconds)
         if(this->currentTestIndex >= this->flatTestTree.size())
             this->currentTestIndex = -1;
     }
+    
+    // Update log scrolling velocity
+    this->currentLogPosition += this->logScrollVelocity;
+    this->logScrollVelocity *= (1.0f - elapsedSeconds * 4.0f);
 }
 
 // ***********************************************************************
@@ -345,6 +356,31 @@ void UnitTestsModule::OnTouchBegan(Touch* touch)
             }
         }
 	}
+}
+
+// ***********************************************************************
+void UnitTestsModule::OnTouchMoved(Touch* touch)
+{
+    // Is this touch un-owned?
+	if(touch->GetOwner() == NULL)
+	{
+        // Scroll the log
+        float deltaY = touch->GetPreviousPosition().Y - touch->GetPosition().Y;
+        currentLogPosition += deltaY * 0.1f;
+        logScrollVelocity = 0.0f;
+    }
+}
+
+// ***********************************************************************
+void UnitTestsModule::OnTouchEnded(Touch* touch)
+{
+    // Is this touch un-owned?
+	if(touch->GetOwner() == NULL)
+	{
+        // Set the log scrolling velocity
+        float deltaY = touch->GetPreviousPosition().Y - touch->GetPosition().Y;
+        logScrollVelocity = deltaY * 0.1f;
+    }
 }
 
 // ***********************************************************************

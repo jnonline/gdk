@@ -23,14 +23,20 @@ Priority	System			Task
 2			System			File/IO to ZIP compressed file store - Consider a ZIPped content blob,  (CompressedSize + ExpandedSize + Blob)
 2			System			memory mapped files
 
+2			Debug			Ingame debugging system / console
+2			Debug				Console variables, Console commands, etc
+2			Debug			Memory tracking (textures, sounds, assets, etc)
+2			Debug			FPS counters & stats
+
 2			Assets			Default Instances (for use when async is busy)
 2			Assets			Async / Background load (Using GL Shared Pools..  so it work on iOS, etc)
 
 2			Net				tcp/ip
 2			Net				HttpRequest
 
-2			Input\Gamepad	Need gamepad support
-2			Input\Camera	Camera Support!..  load into a texture!.. video?  update thread perhaps...
+2			Input\Keyboard		Need iOS Keyboard support (popup keyboard)
+2			Input\Gamepad		Need gamepad support
+2			Input\Camera		Camera Support!..  load into a texture!.. video?  update thread perhaps...
 2			Input\Mouse		CaptureMouse() - lock the mouse into the client region of the window...
 3			Input\Mouse		Add support for multi-mouse, multi-KB
 
@@ -65,6 +71,11 @@ Priority	System			Task
 2			Sound			Effects - Pitch shifting
 3			Sound			Advanced Effects - Vibrato, Chorus, Flanger, Echo, Delay, Reverb,...
 
+1			UI			UI System, (like GDK1)
+1			UI			UIElement base class, manages sizing, positioning, dispatching
+1			UI			UIScreen display screen that manages aspect ratios, sizings, etc
+1			UI			controls, buttons, images, text, etc.
+
 ==================================================
 == Focus!!!
 ==================================================
@@ -91,10 +102,6 @@ P1		Optimizer - split Bones into increments of 24
 		Need a way to select different materials within a model instance (instance 1 uses material A for symbol "Skin", instance 2 uses material B, etc	)
 		Support material texture properties..  (pFormat, filtering, wrap, etc, .. from collada)
 		Tests
-	
-	Unit Tests
-		Memory tracking
-		Debug stats (FPS, mem usage, etc)
 	
 	Shaders..
 		Model (Simplified per-vertex & per-pixel lighting..

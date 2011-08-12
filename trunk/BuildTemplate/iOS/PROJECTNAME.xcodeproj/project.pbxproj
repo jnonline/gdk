@@ -23,6 +23,9 @@
 		D004C07513AC84E400797055 /* PlatformImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = D004C06D13AC84E400797055 /* PlatformImpl.mm */; };
 		D004C07A13AC864200797055 /* Main-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D004C07913AC864200797055 /* Main-Info.plist */; };
 		D06312A513A42BF800BCB383 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D06312A413A42BF800BCB383 /* AudioToolbox.framework */; };
+		D076C4B913F5CD23004469C2 /* Distance3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D076C4B713F5CD23004469C2 /* Distance3.cpp */; };
+		D076C4BF13F5CD2D004469C2 /* Distance2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D076C4BB13F5CD2D004469C2 /* Distance2.cpp */; };
+		D076C4C013F5CD2D004469C2 /* Intersection2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D076C4BD13F5CD2D004469C2 /* Intersection2.cpp */; };
 		D07F7F8D13D74DC900574AD3 /* Ray2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D07F7F8913D74DC900574AD3 /* Ray2.cpp */; };
 		D07F7F8E13D74DC900574AD3 /* Triangle2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D07F7F8B13D74DC900574AD3 /* Triangle2.cpp */; };
 		D07F7F9313D74DDB00574AD3 /* ModelMeshInstance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D07F7F8F13D74DDB00574AD3 /* ModelMeshInstance.cpp */; };
@@ -121,6 +124,12 @@
 		D004C06D13AC84E400797055 /* PlatformImpl.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PlatformImpl.mm; sourceTree = "<group>"; };
 		D004C07913AC864200797055 /* Main-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Main-Info.plist"; sourceTree = "<group>"; };
 		D06312A413A42BF800BCB383 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		D076C4B713F5CD23004469C2 /* Distance3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Distance3.cpp; sourceTree = "<group>"; };
+		D076C4B813F5CD23004469C2 /* Distance3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Distance3.h; sourceTree = "<group>"; };
+		D076C4BB13F5CD2D004469C2 /* Distance2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Distance2.cpp; sourceTree = "<group>"; };
+		D076C4BC13F5CD2D004469C2 /* Distance2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Distance2.h; sourceTree = "<group>"; };
+		D076C4BD13F5CD2D004469C2 /* Intersection2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Intersection2.cpp; sourceTree = "<group>"; };
+		D076C4BE13F5CD2D004469C2 /* Intersection2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Intersection2.h; sourceTree = "<group>"; };
 		D07F7F8913D74DC900574AD3 /* Ray2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Ray2.cpp; sourceTree = "<group>"; };
 		D07F7F8A13D74DC900574AD3 /* Ray2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Ray2.h; sourceTree = "<group>"; };
 		D07F7F8B13D74DC900574AD3 /* Triangle2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Triangle2.cpp; sourceTree = "<group>"; };
@@ -571,6 +580,10 @@
 		D084A86313ABE8B5004C5077 /* 2D */ = {
 			isa = PBXGroup;
 			children = (
+				D076C4BB13F5CD2D004469C2 /* Distance2.cpp */,
+				D076C4BC13F5CD2D004469C2 /* Distance2.h */,
+				D076C4BD13F5CD2D004469C2 /* Intersection2.cpp */,
+				D076C4BE13F5CD2D004469C2 /* Intersection2.h */,
 				D07F7F8913D74DC900574AD3 /* Ray2.cpp */,
 				D07F7F8A13D74DC900574AD3 /* Ray2.h */,
 				D07F7F8B13D74DC900574AD3 /* Triangle2.cpp */,
@@ -594,6 +607,8 @@
 		D084A87013ABE8B5004C5077 /* 3D */ = {
 			isa = PBXGroup;
 			children = (
+				D076C4B713F5CD23004469C2 /* Distance3.cpp */,
+				D076C4B813F5CD23004469C2 /* Distance3.h */,
 				D084A87113ABE8B5004C5077 /* Box3.cpp */,
 				D084A87213ABE8B5004C5077 /* Box3.h */,
 				D084A87313ABE8B5004C5077 /* Frustrum3.cpp */,
@@ -861,6 +876,9 @@
 				D07F7F8E13D74DC900574AD3 /* Triangle2.cpp in Sources */,
 				D07F7F9313D74DDB00574AD3 /* ModelMeshInstance.cpp in Sources */,
 				D07F7F9413D74DDB00574AD3 /* ModelNode.cpp in Sources */,
+				D076C4B913F5CD23004469C2 /* Distance3.cpp in Sources */,
+				D076C4BF13F5CD2D004469C2 /* Distance2.cpp in Sources */,
+				D076C4C013F5CD2D004469C2 /* Intersection2.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
