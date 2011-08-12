@@ -401,6 +401,7 @@ namespace Gdk
 		// Get a batch pointer for the given type of render data
 		static Renderer2DBatchHeader* GetBatch(
 			UInt32 requestedBatchSize,						// Size (in-bytes) of data that will be added to the batch
+            UInt32 numPrimitives,
 			UInt8 primitiveType, 
 			UInt8 vertexType, 
 			GLuint textureId1,

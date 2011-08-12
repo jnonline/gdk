@@ -45,6 +45,7 @@ namespace Gdk
 		inline float Length () const;
 		inline float LengthSquared () const;
 		inline float Normalize ();
+        inline Vector2 GetNormalized() const;
 		inline float Dot (const Vector2& input) const;
         inline Vector2 GetPerpendicular() const;
 		inline float GetRotationAngle() const;
@@ -275,6 +276,18 @@ namespace Gdk
 
 		return length;
 	}
+    
+    // ***********************************************************************
+	inline Vector2 Vector2::GetNormalized() const
+	{
+        // Clone this vector
+		Vector2 normalized(this->X, this->Y);
+        
+        // Normalize the clone
+        normalized.Normalize();
+        
+        return normalized;
+    }
 
     // ***********************************************************************
 	inline Vector2 Vector2::GetPerpendicular() const

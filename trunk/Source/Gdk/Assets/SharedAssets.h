@@ -8,8 +8,8 @@
 
 #include "AssetPool.h"
 
-// Max number of quads supported by the gdk
-#define GDK_MAX_QUADS 1024
+// Max number of quads supported by the gdk in a single batch
+#define GDK_MAX_QUADS 2048
 
 namespace Gdk
 {

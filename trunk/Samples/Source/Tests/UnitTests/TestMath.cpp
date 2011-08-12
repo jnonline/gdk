@@ -464,12 +464,19 @@ TestStatus::Enum UnitTestsModule::Test_Math_Intersection2D(TestExecutionContext 
     
     Vector2 upRight(1.0f,1.0f);
     upRight.Normalize();
-    DO_TEST_FIND(Ray2(Vector2(3.0f, -1.0f), upRight),
+    DO_TEST_FIND(Ray2(Vector2(2.99f, -1.0f), upRight),
                  Box2(Vector2(2.0f, 2.0f), Vector2(0.0f, 1.0f), Vector2(1.0f, 0.0f), 2.0f, 2.0f));
     UNIT_TEST_CHECK(testResult == true, 
-                    L"Test(Ray,Box) - ray is tangent to box" );
+                    L"Test(Ray,Box) - ray barely intersects the box" );
     UNIT_TEST_CHECK(findResult == true && COMPARE_FLOAT(distance, Math::Sqrt(2.0f)), 
-                    L"Find(Ray,Box) - ray is tangent to box" );
+                    L"Find(Ray,Box) - ray barely intersects the box" );
+    
+    DO_TEST_FIND(Ray2(Vector2(3.01f, -1.0f), upRight),
+                 Box2(Vector2(2.0f, 2.0f), Vector2(0.0f, 1.0f), Vector2(1.0f, 0.0f), 2.0f, 2.0f));
+    UNIT_TEST_CHECK(testResult == false, 
+                    L"Test(Ray,Box) - ray barely misses the box" );
+    UNIT_TEST_CHECK(findResult == false, 
+                    L"Find(Ray,Box) - ray barely misses the box" );
     
     DO_TEST_FIND(Ray2(Vector2(-1.0f, 1.0f), Vector2(0.0f, 1.0f)),
                  testBox);
@@ -760,19 +767,18 @@ TestStatus::Enum UnitTestsModule::Test_Math_Intersection3D(TestExecutionContext 
     // Ray -> Box
     // ----------------------
     
-    /*
-    Box2 testBox(Vector2(2.0f, 2.0f), Vector2(1.0f, 1.0f), Vector2(1.0f, -1.0f), 2.0f, 2.0f);
+    Box3 testBox(Vector3(2.0f, 2.0f, 2.0f), Vector3(1,1,0), Vector3(1,-1,0), Vector3(0,0,1), 2.0f, 2.0f, 2.0f);
     testBox.Axis[0].Normalize();
     testBox.Axis[1].Normalize();
     
-    DO_TEST_FIND(Ray2(Vector2(2.0f, 1.0f), Vector2(0.0f, 1.0f)),
+    DO_TEST_FIND(Ray3(Vector3(2.0f, 1.0f, 1.5f), Vector3(0.0f, 1.0f, 0.0f)),
                  testBox);
     UNIT_TEST_CHECK(testResult == true, 
                     L"Test(Ray,Box) - ray starts in box" );
     UNIT_TEST_CHECK(findResult == true && distance == 0.0f, 
                     L"Find(Ray,Box) - ray starts in box" );
     
-    DO_TEST_FIND(Ray2(Vector2(-2.0f, 2.0f), Vector2(1.0f, 0.0f)),
+    DO_TEST_FIND(Ray3(Vector3(-2.0f, 2.0f, 2.0f), Vector3(1.0f, 0.0f, 0.0f)),
                  testBox);
     expected = 4.0f - Math::Sqrt(8.0f);
     UNIT_TEST_CHECK(testResult == true, 
@@ -780,37 +786,169 @@ TestStatus::Enum UnitTestsModule::Test_Math_Intersection3D(TestExecutionContext 
     UNIT_TEST_CHECK(findResult == true && COMPARE_FLOAT(distance, expected), 
                     L"Find(Ray,Box) - ray intersects box" );
     
-    Vector2 upRight(1.0f,1.0f);
-    upRight.Normalize();
-    DO_TEST_FIND(Ray2(Vector2(3.0f, -1.0f), upRight),
-                 Box2(Vector2(2.0f, 2.0f), Vector2(0.0f, 1.0f), Vector2(1.0f, 0.0f), 2.0f, 2.0f));
+    Vector3 upRight3(1.0f, 1.0f, 0.0f);
+    upRight3.Normalize();
+    expected = Math::Sqrt(2.0f);
+    DO_TEST_FIND(Ray3(Vector3(2.99f, -1.0f, 2.0f), upRight3),
+                 Box3(Vector3(2.0f, 2.0f, 2.0f), Vector3(1,0,0), Vector3(0,1,0), Vector3(0,0,1), 2.0f, 2.0f, 2.0f));
     UNIT_TEST_CHECK(testResult == true, 
-                    L"Test(Ray,Box) - ray is tangent to box" );
-    UNIT_TEST_CHECK(findResult == true && COMPARE_FLOAT(distance, Math::Sqrt(2.0f)), 
-                    L"Find(Ray,Box) - ray is tangent to box" );
+                    L"Test(Ray,Box) - ray barely intersects the box" );
+    UNIT_TEST_CHECK(findResult == true && COMPARE_FLOAT(distance, expected), 
+                    L"Find(Ray,Box) - ray barely intersects the box" );
     
-    DO_TEST_FIND(Ray2(Vector2(-1.0f, 1.0f), Vector2(0.0f, 1.0f)),
+    DO_TEST_FIND(Ray3(Vector3(3.01f, -1.0f, 2.0f), upRight3),
+                 Box3(Vector3(2.0f, 2.0f, 2.0f), Vector3(1,0,0), Vector3(0,1,0), Vector3(0,0,1), 2.0f, 2.0f, 2.0f));
+    UNIT_TEST_CHECK(testResult == false, 
+                    L"Test(Ray,Box) - ray barely misses the box" );
+    UNIT_TEST_CHECK(findResult == false, 
+                    L"Find(Ray,Box) - ray barely misses the box" );
+    
+    DO_TEST_FIND(Ray3(Vector3(-1.0f, 2.0f, 3.0f), Vector3(0.0f, 1.0f, 0.0f)),
                  testBox);
     UNIT_TEST_CHECK(testResult == false, 
                     L"Test(Ray,Box) - ray misses box 1" );
     UNIT_TEST_CHECK(findResult == false, 
                     L"Find(Ray,Box) - ray misses box 1" );
     
-    DO_TEST_FIND(Ray2(Vector2(-2.0f, 5.0f), Vector2(1.0f, 0.0f)),
+    DO_TEST_FIND(Ray3(Vector3(-2.0f, 5.0f, 10.0f), Vector3(1.0f, 0.0f, 1.0f)),
                  testBox);
     UNIT_TEST_CHECK(testResult == false, 
                     L"Test(Ray,Box) - ray misses box 2" );
     UNIT_TEST_CHECK(findResult == false, 
                     L"Find(Ray,Box) - ray misses box 2" );
     
-    DO_TEST_FIND(Ray2(Vector2(2.2f, -1.0f), Vector2(0.0f, -1.0f)),
+    DO_TEST_FIND(Ray3(Vector3(2.2f, -1.0f, 2.2f), Vector3(0.0f, -1.0f, 0.0f)),
                  testBox);
     UNIT_TEST_CHECK(testResult == false, 
                     L"Test(Ray,Box) - ray pointing away from box" );
     UNIT_TEST_CHECK(findResult == false, 
                     L"Find(Ray,Box) - ray pointing away from box" );
+    
+    // Plane -> Plane
+    // -----------------
+    
+    DO_TEST(Plane3(Vector3(1,1,1).GetNormalized(), 5.0f),
+            Plane3(Vector3(1,-1,-1).GetNormalized(), 7.0f));
+    UNIT_TEST_CHECK(testResult == true, L"Test(Plane,Plane) - Planes intersect" );
+    
+    DO_TEST(Plane3(Vector3(1,1,1).GetNormalized(), 5.0f),
+            Plane3(Vector3(1,1,1).GetNormalized(), 5.0f));
+    UNIT_TEST_CHECK(testResult == true, L"Test(Plane,Plane) - Planes co-planar" );
+    
+    DO_TEST(Plane3(Vector3(1,1,1).GetNormalized(), 5.0f),
+            Plane3(Vector3(1,1,1).GetNormalized(), 7.0f));
+    UNIT_TEST_CHECK(testResult == false, L"Test(Plane,Plane) - Planes parallel but not co-planar" );
+    
+    // Plane -> Sphere
+    // -----------------
+    
+    DO_TEST(Plane3(Vector3(1,1,1).GetNormalized(), 3.0f),
+            Sphere3(Vector3(2,2,2), 2.0f));
+    UNIT_TEST_CHECK(testResult == true, L"Test(Plane,Sphere) - Plane intersects sphere" );
+    
+    DO_TEST(Plane3(Vector3(1,0,0), 3.99f),
+            Sphere3(Vector3(2,2,2), 2.0f));
+    UNIT_TEST_CHECK(testResult == true, L"Test(Plane,Sphere) - Plane barely touches sphere" );
+    
+    DO_TEST(Plane3(Vector3(1,0,0), 4.01f),
+            Sphere3(Vector3(2,2,2), 2.0f));
+    UNIT_TEST_CHECK(testResult == false, L"Test(Plane,Sphere) - Plane barely misses sphere" );
+    
+    DO_TEST(Plane3(Vector3(1,1,1).GetNormalized(), 6.0f),
+            Sphere3(Vector3(2,2,2), 2.0f));
+    UNIT_TEST_CHECK(testResult == false, L"Test(Plane,Sphere) - Plane does not intersect sphere" );
+    
+    // Plane -> Box
+    // -----------------
+    
+    testBox = Box3(Vector3(2.0f, 2.0f, 2.0f), Vector3(1,1,0), Vector3(1,-1,0), Vector3(0,0,1), 2.0f, 2.0f, 2.0f);
+    testBox.Axis[0].Normalize();
+    testBox.Axis[1].Normalize();
+    
+    DO_TEST(Plane3(Vector3(1,1,1).GetNormalized(), 3.0f),
+            testBox);
+    UNIT_TEST_CHECK(testResult == true, L"Test(Plane,box) - Plane intersects box" );
+    
+    DO_TEST(Plane3(Vector3(0,0,1).GetNormalized(), 3.99f),
+            testBox);
+    UNIT_TEST_CHECK(testResult == true, L"Test(Plane,box) - Plane barely intersects box" );
+    
+    DO_TEST(Plane3(Vector3(0,0,1).GetNormalized(), 4.01f),
+            testBox);
+    UNIT_TEST_CHECK(testResult == false, L"Test(Plane,box) - Plane barely misses box" );
+    
+    DO_TEST(Plane3(Vector3(1,1,1).GetNormalized(), 8.0f),
+            testBox);
+    UNIT_TEST_CHECK(testResult == false, L"Test(Plane,box) - Plane does not intersect box" );
 
-    */
+    
+    // Sphere -> Sphere
+    // -----------------
+    
+    DO_TEST(Sphere3(Vector3(-2.0f, 3.0f, 4.0f), 2.2f),
+            Sphere3(Vector3(2.0f, 3.0f, 4.0f), 2.2f));
+    UNIT_TEST_CHECK(testResult == true, L"Test(Sphere,Sphere) - Spheres intersect" );
+    
+    DO_TEST(Sphere3(Vector3(-2.0f, 3.0f, 4.0f), 10.0f),
+            Sphere3(Vector3(2.0f, 3.0f, 4.0f), 2.0f));
+    UNIT_TEST_CHECK(testResult == true, L"Test(Sphere,Sphere) - Big Sphere encapsulates small Sphere" );
+    
+    DO_TEST(Sphere3(Vector3(-2.0f, 3.0f, 4.0f), 2.0f),
+            Sphere3(Vector3(2.0f, 3.0f, 4.0f), 2.0f));
+    UNIT_TEST_CHECK(testResult == true, L"Test(Sphere,Sphere) - Spheres touch at edge" );
+    
+    DO_TEST(Sphere3(Vector3(-2.0f, 3.0f, 4.0f), 1.9f),
+            Sphere3(Vector3(2.0f, 3.0f, 4.0f), 1.9f));
+    UNIT_TEST_CHECK(testResult == false, L"Test(Sphere,Sphere) - Spheres dont touch 1" );
+    
+    DO_TEST(Sphere3(Vector3(-3.0f, -3.0f, 4.0f), 4.0f),
+            Sphere3(Vector3(3.0f, 3.0f, 4.0f), 4.0f));
+    UNIT_TEST_CHECK(testResult == false, L"Test(Sphere,Sphere) - Spheres dont touch 2" );
+    
+    
+    // Sphere -> Box
+    // -----------------
+    
+    testBox = Box3(Vector3(2.0f, 2.0f, 2.0f), Vector3(1,0,0), Vector3(0,1,0), Vector3(0,0,1), 2.0f, 2.0f, 2.0f);
+    
+    DO_TEST(Sphere3(Vector3(-2.0f, 2.0f, 2.0f), 2.01f),
+            testBox);
+    UNIT_TEST_CHECK(testResult == true, L"Test(Sphere,Box) - Sphere and box intersect" );
+    
+    DO_TEST(Sphere3(Vector3(-2.0f, 2.0f, 2.0f), 8.0f),
+            testBox);
+    UNIT_TEST_CHECK(testResult == true, L"Test(Sphere,Box) - Sphere encapsulates box" );
+
+    DO_TEST(Sphere3(Vector3(1.5, 1.5f, 1.5f), 0.4f),
+            testBox);
+    UNIT_TEST_CHECK(testResult == true, L"Test(Sphere,Box) - Box encapsulates sphere" );
+    
+    DO_TEST(Sphere3(Vector3(-2.0f, 2.0f, 2.0f), 1.99f),
+            testBox);
+    UNIT_TEST_CHECK(testResult == false, L"Test(Sphere,Box) - Sphere and box dont touch" );
+
+    // Box -> Box
+    // -----------------
+    
+    testBox = Box3(Vector3(2.0f, 2.0f, 2.0f), Vector3(1,1,0), Vector3(1,-1,0), Vector3(0,0,1), 2.0f, 2.0f, 2.0f);
+    testBox.Axis[0].Normalize();
+    testBox.Axis[1].Normalize();
+    
+    DO_TEST(Box3(Vector3(-2.82f, 2.0f, 2.0f), Vector3(1,0,0), Vector3(0,1,0), Vector3(0,0,1), 2.0f, 2.0f, 2.0f),
+            testBox);
+    UNIT_TEST_CHECK(testResult == true, L"Test(Box,Box) - Boxes barely intersect" );
+    
+    DO_TEST(Box3(Vector3(-2.83f, 2.0f, 2.0f), Vector3(1,0,0), Vector3(0,1,0), Vector3(0,0,1), 2.0f, 2.0f, 2.0f),
+            testBox);
+    UNIT_TEST_CHECK(testResult == false, L"Test(Box,Box) - Boxes barely miss" );
+    
+    DO_TEST(Box3(Vector3(-2.0f, 2.0f, 2.0f), Vector3(1,0,0), Vector3(0,1,0), Vector3(0,0,1), 8.0f, 8.0f, 8.0f),
+            testBox);
+    UNIT_TEST_CHECK(testResult == true, L"Test(Box,Box) - Big box encapsulates smaller box" );
+    
+    DO_TEST(Box3(Vector3(8.0f, 7.0f, 6.0f), Vector3(1,0,0), Vector3(0,1,0), Vector3(0,0,1), 2.0f, 2.0f, 2.0f),
+            testBox);
+    UNIT_TEST_CHECK(testResult == false, L"Test(Box,Box) - Boxes do not intersect" );
     
     // ------------------
     

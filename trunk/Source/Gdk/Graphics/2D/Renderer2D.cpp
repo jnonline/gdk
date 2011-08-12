@@ -356,6 +356,7 @@ void Renderer2D::LogBatches()
 // ********************************************************************************
 Renderer2DBatchHeader* Renderer2D::GetBatch(
 		UInt32 requestedBatchSize,
+        UInt32 numPrimitives,
 		UInt8 primitiveType, 
 		UInt8 vertexType, 
 		GLuint textureId1,
@@ -395,8 +396,20 @@ Renderer2DBatchHeader* Renderer2D::GetBatch(
 			batch->Z == z &&
 			batch->ShaderPtr == shader)
 		{
-			// Lets use this existing batch
-			return batch;
+            // Is this a quad batch?
+            if(batch->PrimitiveType == Renderer2DPrimitiveType::Quads)
+            {
+                // Make sure we wont pass the max allowed quads per batch
+                if(batch->NumPrimitives + numPrimitives <= GDK_MAX_QUADS)
+                {
+                    return batch;
+                }
+            }
+            else
+            {
+                // Lets use this existing batch
+                return batch;
+            }
 		}
 	}
 
@@ -438,6 +451,7 @@ Renderer2DBatchP2C4 Renderer2D::GetBatchP2C4(
 	// Get a batch for this render data
 	Renderer2DBatchHeader* batchHeader = GetBatch(
 		batchDataSize,
+        numPrimitives,
 		(UInt8)primitiveType,
 		(UInt8)Renderer2DVertexType::P2C4,
 		textureId1, textureId2,
@@ -476,6 +490,7 @@ Renderer2DBatchP2T2C4 Renderer2D::GetBatchP2T2C4(
 	// Get a batch for this render data
 	Renderer2DBatchHeader* batchHeader = GetBatch(
 		batchDataSize,
+        numPrimitives,
 		(UInt8)primitiveType,
 		(UInt8)Renderer2DVertexType::P2T2C4,
 		textureId1, textureId2,
