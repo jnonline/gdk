@@ -33,6 +33,40 @@ short PixelFormat::GetBytesPerPixel(PixelFormat::Enum pixelFormat)
 }
 
 // ***********************************************************************
+GLuint PixelFormat::GetGLTextureFormat(PixelFormat::Enum pixelFormat)
+{
+    switch(pixelFormat)
+	{
+		case PixelFormat::RGB_565:			return GL_RGB;
+		case PixelFormat::RGB_888:			return GL_RGB;
+		case PixelFormat::RGBA_5551:		return GL_RGBA;
+		case PixelFormat::RGBA_4444:		return GL_RGBA;
+		case PixelFormat::RGBA_8888:		return GL_RGBA;
+		case PixelFormat::LUMINANCE_ALPHA:	return GL_LUMINANCE_ALPHA;
+		case PixelFormat::LUMINANCE:		return GL_LUMINANCE;
+		case PixelFormat::ALPHA:			return GL_ALPHA;
+	}
+    return GL_RGB;
+}
+
+// ***********************************************************************
+GLuint PixelFormat::GetGLPixelType(PixelFormat::Enum pixelFormat)
+{
+    switch(pixelFormat)
+	{
+		case PixelFormat::RGB_565:			return GL_UNSIGNED_SHORT_5_6_5;
+		case PixelFormat::RGB_888:			return GL_UNSIGNED_BYTE;
+		case PixelFormat::RGBA_5551:		return GL_UNSIGNED_SHORT_5_5_5_1;
+		case PixelFormat::RGBA_4444:		return GL_UNSIGNED_SHORT_4_4_4_4;
+		case PixelFormat::RGBA_8888:		return GL_UNSIGNED_BYTE;
+		case PixelFormat::LUMINANCE_ALPHA:	return GL_UNSIGNED_BYTE;
+		case PixelFormat::LUMINANCE:		return GL_UNSIGNED_BYTE;
+		case PixelFormat::ALPHA:			return GL_UNSIGNED_BYTE;
+	}
+    return GL_UNSIGNED_BYTE;
+}
+
+// ***********************************************************************
 void BlendMode::GetBlendSettings(
 	BlendMode::Enum blendMode,
 	BlendFactor::Enum& sourceRGBFactor, BlendFactor::Enum& destRGBFactor, BlendEquation::Enum& rgbBlendEquation, 
