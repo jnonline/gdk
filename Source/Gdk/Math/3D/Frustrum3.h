@@ -29,7 +29,7 @@ namespace Gdk
 		inline bool Contains(const Vector3& point) const;
         
         // Calculates the frustrum planes & corners from the given matrix
-        Frustrum3 SetMatrix(const Matrix3D& matrix);
+        void SetMatrix(const Matrix3D& matrix);
         
     private:
         // Internal methods
@@ -75,6 +75,8 @@ namespace Gdk
             if(distance > Math::ZERO_TOLERANCE)
                 return false;
         }
+        
+        return true;
     }
     
     // ***********************************************************************

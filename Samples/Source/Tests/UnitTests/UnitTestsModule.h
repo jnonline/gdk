@@ -128,6 +128,9 @@ protected:
 
 	// Input handlers
 	void OnTouchBegan(Touch* touch);
+    void OnTouchMoved(Touch* touch);
+    void OnTouchEnded(Touch* touch);
+    
 	void OnMouseDown(MouseButton::Enum button);
     void OnMouseWheelScroll(float deltaX, float deltaY);
 
@@ -140,6 +143,7 @@ protected:
     vector<TestTreeNode*> flatTestTree;
     
     float currentLogPosition;
+    float logScrollVelocity;
     TestLog log;    
     
     // Methods

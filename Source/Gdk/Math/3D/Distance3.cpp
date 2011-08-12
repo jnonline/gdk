@@ -58,11 +58,6 @@ float Distance3::PointToBox(const Vector3& point, const Box3& box)
         // Find the closest point on this axis
         closest[i] = diff.Dot(box.Axis[i]);
         
-        
-        Vector3 axis = box.Axis[i];
-        float extent = box.Extent[i];
-        float close = closest[i];
-        
         if (closest[i] < -box.Extent[i])
         {
             delta = closest[i] + box.Extent[i];

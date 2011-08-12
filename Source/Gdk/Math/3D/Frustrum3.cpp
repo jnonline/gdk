@@ -31,7 +31,7 @@ Frustrum3::Frustrum3(const Frustrum3& input)
 }
 
 // ***********************************************************************
-Frustrum3 Frustrum3::SetMatrix(const Matrix3D& matrix)
+void Frustrum3::SetMatrix(const Matrix3D& matrix)
 {
 	Planes[0].Normal.X = -matrix.M13;
     Planes[0].Normal.Y = -matrix.M23;
