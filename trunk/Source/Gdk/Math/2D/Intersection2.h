@@ -61,7 +61,7 @@ namespace Gdk
         // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
         
         // Circle -> Circle
-        static bool Test(const Circle2& circle1, const Circle2& circle1);
+        static bool Test(const Circle2& circle1, const Circle2& circle2);
         
         // Circle -> Rectangle
         static bool Test(const Circle2& circle, const Rectangle2& rect);

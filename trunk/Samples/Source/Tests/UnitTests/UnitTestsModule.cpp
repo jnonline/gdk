@@ -228,7 +228,7 @@ void UnitTestsModule::OnUpdate(float elapsedSeconds)
     
         // Advance to the next test  (stop if we get to the end)
         this->currentTestIndex++;
-        if(this->currentTestIndex >= this->flatTestTree.size())
+        if(this->currentTestIndex >= (int)this->flatTestTree.size())
             this->currentTestIndex = -1;
     }
     
@@ -275,7 +275,7 @@ void UnitTestsModule::OnDraw()
     UInt8 alpha = (UInt8)(scrollOffset * 255);
     
     // Draw the log lines from our current index to the end of the available space
-    for(int logIndex = this->currentLogPosition; 
+    for(int logIndex = (int)this->currentLogPosition; 
             logIndex < numLogLines && currentTextY < Application::GetHeight(); 
             logIndex++, currentTextY += textHeight)
     {

@@ -55,7 +55,7 @@ Sphere3 Sphere3::FromPoints(size_t numPoints, const Vector3* points)
     Sphere3 result(points[0], 0.0f);
     
     // Loop through the rest of the points
-    for(int pointIndex=1; pointIndex < numPoints; pointIndex++)
+    for(size_t pointIndex=1; pointIndex < numPoints; pointIndex++)
     {
         const Vector3& point = points[pointIndex];
         

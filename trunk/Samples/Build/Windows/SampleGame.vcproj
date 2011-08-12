@@ -592,6 +592,22 @@
 							>
 						</File>
 						<File
+							RelativePath="..\..\..\Source\Gdk\Math\2D\Distance2.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\Source\Gdk\Math\2D\Distance2.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\Source\Gdk\Math\2D\Intersection2.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\Source\Gdk\Math\2D\Intersection2.h"
+							>
+						</File>
+						<File
 							RelativePath="..\..\..\Source\Gdk\Math\2D\LineSegment2.cpp"
 							>
 						</File>
@@ -649,6 +665,14 @@
 						</File>
 						<File
 							RelativePath="..\..\..\Source\Gdk\Math\3D\Box3.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\Source\Gdk\Math\3D\Distance3.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\Source\Gdk\Math\3D\Distance3.h"
 							>
 						</File>
 						<File
