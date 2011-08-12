@@ -80,6 +80,7 @@
 #include "Math/3D/Sphere3.h"
 #include "Math/3D/Box3.h"
 #include "Math/3D/Frustrum3.h"
+#include "Math/3D/Distance3.h"
 #include "Math/3D/Intersection3.h"
 
 // Input

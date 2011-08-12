@@ -156,6 +156,10 @@ void UnitTestsModule::BuildTestTree()
     CNODE(this->rootNode, mathTests, L"Math Tests");
         TNODE(mathTests, L"Randoms", Test_Math_Randoms);
         TNODE(mathTests, L"Vectors", Test_Math_Vectors);
+        TNODE(mathTests, L"Distance 2D", Test_Math_Distance2D);
+        TNODE(mathTests, L"Intersection 2D", Test_Math_Intersection2D);
+        TNODE(mathTests, L"Distance 3D", Test_Math_Distance3D);
+        TNODE(mathTests, L"Intersection 3D", Test_Math_Intersection3D);
     
     // -----------------------
     

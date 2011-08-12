@@ -106,9 +106,16 @@ P1		Optimizer - split Bones into increments of 24
 			Rect2
 		x		FromPoints
 		x		Merged
+
 			Sphere3
 		x		FromPoints
 		x		Merged
+				CircumscribeTriangle
+				CircumscribeAABox
+
+			AABox
+				FromPoints
+				Merged
 			
 
 		Point Containment
@@ -118,18 +125,23 @@ P1		Optimizer - split Bones into increments of 24
 		x	Tri2		Point
 
 			Sphere3		Point
+			AABox3		Point
 			Box3		Point
 			Tri3		Point
 		
 
 		Intersection
-			2D all prims
-			3D all prims
+			2D & 3D
+				Test - all prims
+				Find - Ray vs all prims
 
 		Distance
-			Point To Rect,Box,Circle,Sphere
-			Line/Ray to Line/Ray/Circle/Sphere/Etc
-
+			Point To 
+				Rect,
+				Box,
+				Line
+				LineSegment
+				Ray
 
 	Unit Tests
 		Memory tracking

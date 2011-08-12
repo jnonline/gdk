@@ -4,7 +4,7 @@
  */
 
 #include "BasePCH.h"
-#include "Distance2.h"
+#include "Distance3.h"
 
 using namespace Gdk;
 
@@ -13,10 +13,10 @@ using namespace Gdk;
 // ===================================================================================
 
 // *************************************************************************************
-float Distance2::PointToRay(const Vector2& point, const Ray2& ray)
+float Distance3::PointToRay(const Vector3& point, const Ray3& ray)
 {
-    Vector2 diff = point - ray.Origin;
-    Vector2 closest;
+    Vector3 diff = point - ray.Origin;
+    Vector3 closest;
     
     // Project the difference vector onto the ray vector
     float projection = ray.Direction.Dot(diff);
@@ -36,56 +36,33 @@ float Distance2::PointToRay(const Vector2& point, const Ray2& ray)
 }
 
 // *************************************************************************************
-float Distance2::PointToLineSegment(const Vector2& point, const LineSegment2& lineSegment)
+float Distance3::PointToPlane(const Vector3& point, const Plane3& plane)
 {
-    // Get the direction vector & length of the line segment
-    Vector2 segmentDirection = lineSegment.End - lineSegment.Start;
-    float segmentLength = segmentDirection.Normalize();
- 
-    // Get the vector from the segment starting point to the distance point
-    Vector2 diff = point - lineSegment.Start;
-    Vector2 closest;
-    
-    // Project the difference vector onto the line segment vector
-    float projection = segmentDirection.Dot(diff);
-    
-    // Is the projection before the segment start?
-    if(projection < 0.0f)
-    {
-        // The closest point is the segment start
-        closest = lineSegment.Start;
-    }
-    // Is the projection after the segment end?
-    else if(projection > segmentLength)
-    {
-        // The closest point is the segment end
-        closest = lineSegment.End;
-    }
-    else
-    {
-        // The closest point is the projection onto the line segment vector
-        closest = lineSegment.Start + projection * segmentDirection;
-    }
-        
-    // Return the distance from the point to the closest projection point
-    return (closest - point).Length();
+    // Get the distance from the point to the plane
+    return Math::Abs(plane.Normal.Dot(point) - plane.D);
 }
 
 // *************************************************************************************
-float Distance2::PointToBox(const Vector2& point, const Box2& box)
+float Distance3::PointToBox(const Vector3& point, const Box3& box)
 {
     // Get the vector from the box center to the point
-    Vector2 diff = point - box.Center;
+    Vector3 diff = point - box.Center;
     
     float squaredDistance = 0.0f;
     float delta;
-    float closest[2];
+    float closest[3];
     
-    // Loop through the 2 axes, calculating the closest point along each axis of the box
-    for (int i = 0; i < 2; i++)
+    // Loop through the 3 axes, calculating the closest point along each axis of the box
+    for (int i = 0; i < 3; i++)
     {
         // Find the closest point on this axis
         closest[i] = diff.Dot(box.Axis[i]);
+        
+        
+        Vector3 axis = box.Axis[i];
+        float extent = box.Extent[i];
+        float close = closest[i];
+        
         if (closest[i] < -box.Extent[i])
         {
             delta = closest[i] + box.Extent[i];
@@ -105,18 +82,12 @@ float Distance2::PointToBox(const Vector2& point, const Box2& box)
 }
 
 // *************************************************************************************
-float Distance2::PointToRectangle(const Vector2& point, const Rectangle2& rect)
-{
-    return PointToBox(point, rect.GetAsBox());
-}
-
-// *************************************************************************************
-float Distance2::PointToCircle(const Vector2& point, const Circle2& circle)
+float Distance3::PointToSphere(const Vector3& point, const Sphere3& sphere)
 {
     // Get the distance from the point to the circle center
-    float diff = (point - circle.Center).Length();
+    float diff = (point - sphere.Center).Length();
     
     // Subtract the radius  (and cap the distance as a minimum of 0)
-    float distance = diff - circle.Radius;
+    float distance = diff - sphere.Radius;
     return distance >= 0.0f ? distance : 0.0f;
 }

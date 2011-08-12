@@ -21,23 +21,6 @@ namespace Gdk
     // Test() - Simply returns true if the 2 primitives intersect in some way  (Faster than calling Find())
     // Find() - Finds the actual intersection of 2 primitives.
 
-    
-    // =============================================
-    namespace IntersectionType
-    {
-        enum Enum
-        {
-            None = 0,
-            Point,
-            Ray,
-            LineSegment,
-            Line,
-            //Polygon,
-            //Plane,
-            Unknown,
-        };
-    }
-    
     // =============================================
 	class Intersection2
 	{
@@ -48,17 +31,8 @@ namespace Gdk
 
 	public:
         
-        // Properties
-        // -------------------
-        
-        IntersectionType::Enum      Type;
-        Vector2                     Points[2];
-        
-		// Intersection methods
+		// Ray Intersection methods
 		// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-        
-        // Ray -> Primitive
-        // ------------------------------
         
         // NOTE: the 'distance' out-parameter in the Find methods, is the length along the casting (first) ray
         
@@ -82,7 +56,9 @@ namespace Gdk
         static bool Test(const Ray2& ray, const Box2& box);
         static bool Find(const Ray2& ray1, const Box2& box, float& distance);
 	
-        // -------------------------
+        
+        // Primitive Intersection Methods
+        // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
         
         // Circle -> Circle
         static bool Test(const Circle2& circle1, const Circle2& circle1);

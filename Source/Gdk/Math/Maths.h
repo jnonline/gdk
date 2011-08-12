@@ -9,6 +9,10 @@
 
 
 // NOTE: this file is named Maths.h instead of Math.h, so the GCC / XCode compilers wont confuse it with the ansi-C math.h
+//
+// Most of the complex math for Intersection & Distance methods was adapted from Gamedev.net articles
+// or David Eberly's Books.  (Which are excellent books if you havent read them)
+//
 
 namespace Gdk
 {
@@ -158,6 +162,23 @@ namespace Gdk
 		float actualT = (t - intervals[i]) / (intervals[i+1] - intervals[i]);
 		return Lerp(values[i], values[i+1], actualT);
 	}
+    
+    
+    
+    // =============================================
+    namespace IntersectionType
+    {
+        enum Enum
+        {
+            None = 0,
+            Point,
+            Ray,
+            LineSegment,
+            Line,
+            Plane,
+            Unknown,
+        };
+    }
 
 } // namespace Gdk
 
