@@ -25,10 +25,17 @@ namespace Gdk
 		PixelFormat::Enum Format;
 		GLuint GLTextureId;
 
-		// Methods
-		Texture2D(int width, int height, PixelFormat::Enum pixelFormat, void* pixelData = NULL, bool generateMipMap = false);
+		// CTor/DTor
+		Texture2D(int width, int height, PixelFormat::Enum pixelFormat);
 		~Texture2D();
+        
+        // Set image data
+        void SetImageData(void* pixelData);
+        
+        // Mip maps
+        void GenerateMipMaps();
 
+        // Wrapping & Filtering
 		TextureWrapMode::Enum GetWrapMode()			{ return wrapMode; }
 		void SetWrapMode(TextureWrapMode::Enum value);
 		TextureFilterMode::Enum GetFilterMode()		{ return filterMode; }

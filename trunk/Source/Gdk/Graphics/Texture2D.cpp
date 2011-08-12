@@ -15,7 +15,7 @@ int Texture2D::totalMemoryUsed = 0;
 #define GDKIMAGE_FLAG_MIPMAP		0x01
 
 // -----------------------------------------
-Texture2D::Texture2D(int width, int height, PixelFormat::Enum pixelFormat, void* pixelData, bool generateMipMap)
+Texture2D::Texture2D(int width, int height, PixelFormat::Enum pixelFormat)
 {
 	// Create the GL texture
 	GLuint glTextureId = -1;
@@ -28,36 +28,16 @@ Texture2D::Texture2D(int width, int height, PixelFormat::Enum pixelFormat, void*
 	this->TexelWidth = 1.0f / width;
 	this->TexelHeight = 1.0f / height;
 	this->Format = pixelFormat;
-	this->hasMipMaps = generateMipMap;
 	
-	// Bind the texture into GL
-	glBindTexture(GL_TEXTURE_2D, this->GLTextureId);
+    // Bind the texture
+    Graphics::BindTexture(this->GLTextureId);
 
-	// Determine the GL texture format & type 
-	GLuint glImageFormat = GL_RGBA;
-	GLuint glImageType = GL_UNSIGNED_BYTE;
+	// Determine the GL texture format & pixel type 
+	GLuint glTextureFormat = PixelFormat::GetGLTextureFormat(pixelFormat);
+	GLuint glPixelType = PixelFormat::GetGLPixelType(pixelFormat);
 
-	switch(pixelFormat)
-	{
-		case PixelFormat::RGB_565:			glImageFormat = GL_RGB;				glImageType = GL_UNSIGNED_SHORT_5_6_5;		break;
-		case PixelFormat::RGB_888:			glImageFormat = GL_RGB;				glImageType = GL_UNSIGNED_BYTE;				break;
-		case PixelFormat::RGBA_5551:		glImageFormat = GL_RGBA;			glImageType = GL_UNSIGNED_SHORT_5_5_5_1;	break;
-		case PixelFormat::RGBA_4444:		glImageFormat = GL_RGBA;			glImageType = GL_UNSIGNED_SHORT_4_4_4_4;	break;
-		case PixelFormat::RGBA_8888:		glImageFormat = GL_RGBA;			glImageType = GL_UNSIGNED_BYTE;				break;
-		case PixelFormat::LUMINANCE_ALPHA:	glImageFormat = GL_LUMINANCE_ALPHA;	glImageType = GL_UNSIGNED_BYTE;				break;
-		case PixelFormat::LUMINANCE:		glImageFormat = GL_LUMINANCE;		glImageType = GL_UNSIGNED_BYTE;				break;
-		case PixelFormat::ALPHA:			glImageFormat = GL_ALPHA;			glImageType = GL_UNSIGNED_BYTE;				break;
-	}
-
-	// Load the image data into the GL texture
-	glTexImage2D(GL_TEXTURE_2D, 0, glImageFormat, width, height, 0, glImageFormat, glImageType, (void*)pixelData);
-
-	// Does this texture need mip maps?
-	if(generateMipMap)
-	{
-		// Generate mip maps
-		glGenerateMipmap(GL_TEXTURE_2D);
-	}
+	// Pre-allocate the texture buffers
+	glTexImage2D(GL_TEXTURE_2D, 0, glTextureFormat, width, height, 0, glTextureFormat, glPixelType, NULL);
 
 	// Setup default wrap & filter modes
     if(Math::IsPowerOfTwo((UInt32)this->Width) == true && Math::IsPowerOfTwo((UInt32)this->Height) == true)
@@ -80,6 +60,30 @@ Texture2D::~Texture2D()
 
 	// Decrement the used texture memory counter
 	Texture2D::totalMemoryUsed -= this->memoryUsed;
+}
+
+// ***********************************************************************
+void Texture2D::SetImageData(void* pixelData)
+{
+    // Bind the texture
+    Graphics::BindTexture(this->GLTextureId);
+    
+    // Determine the GL texture format & pixel type 
+	GLuint glTextureFormat = PixelFormat::GetGLTextureFormat(this->Format);
+	GLuint glPixelType = PixelFormat::GetGLPixelType(this->Format);
+    
+    // Load the image data into the GL texture
+	glTexImage2D(GL_TEXTURE_2D, 0, glTextureFormat, this->Width, this->Height, 0, glTextureFormat, glPixelType, (void*)pixelData);
+}
+
+// ***********************************************************************
+void Texture2D::GenerateMipMaps()
+{
+    // Bind the texture
+    Graphics::BindTexture(this->GLTextureId);
+    
+    // Generate mip maps
+    glGenerateMipmap(GL_TEXTURE_2D);
 }
 
 // ***********************************************************************
@@ -165,7 +169,17 @@ Texture2D* Texture2D::FromStream(Stream *stream)
 		);
 
 	// Create the texture 
-	Texture2D *texture = GdkNew Texture2D(width, height, pixelFormat, imageData, (flags & GDKIMAGE_FLAG_MIPMAP) > 0);
+	Texture2D *texture = GdkNew Texture2D(width, height, pixelFormat);
+    
+    // Apply the image data to the texture
+    texture->SetImageData(imageData);
+    
+    // Generate mipmaps if we're supposed to
+    if((flags & GDKIMAGE_FLAG_MIPMAP) > 0)
+        texture->GenerateMipMaps();
+    
+    // Release the image data buffer
+    GdkFree(imageData);
 	
 	return texture;
 }

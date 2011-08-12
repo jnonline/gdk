@@ -41,6 +41,8 @@ namespace Gdk
 		};
 
 		short GetBytesPerPixel(PixelFormat::Enum pixelFormat);
+        GLuint GetGLTextureFormat(PixelFormat::Enum pixelFormat);
+        GLuint GetGLPixelType(PixelFormat::Enum pixelFormat);
 	}
 
 	// ===============================================================

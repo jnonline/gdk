@@ -78,8 +78,6 @@ SSH!
 == Bugs
 ==================================================
 
-Renderer2D, flush the batch if Quads > max Quads
-
 ==================================================
 == Work Item notes
 ==================================================
@@ -94,55 +92,6 @@ P1		Optimizer - split Bones into increments of 24
 		Support material texture properties..  (pFormat, filtering, wrap, etc, .. from collada)
 		Tests
 	
-	More Math!!
-		Encapsulation
-			Circle2 
-		x		FromPoints
-		x		Merged
-		x		CircumscribeTriangle
-		x		InscribeTriangle
-		x		CircumscribeRect
-
-			Rect2
-		x		FromPoints
-		x		Merged
-
-			Sphere3
-		x		FromPoints
-		x		Merged
-				CircumscribeTriangle
-				CircumscribeAABox
-
-			AABox
-				FromPoints
-				Merged
-			
-
-		Point Containment
-		x	Circle2  	Point
-		x	Rect2		Point
-		x	Box2		Point
-		x	Tri2		Point
-
-			Sphere3		Point
-			AABox3		Point
-			Box3		Point
-			Tri3		Point
-		
-
-		Intersection
-			2D & 3D
-				Test - all prims
-				Find - Ray vs all prims
-
-		Distance
-			Point To 
-				Rect,
-				Box,
-				Line
-				LineSegment
-				Ray
-
 	Unit Tests
 		Memory tracking
 		Debug stats (FPS, mem usage, etc)
@@ -179,7 +128,7 @@ Pri 1
 Pri 2
 
 	- Tools::ContentStudio
-		- double click to build..		
+		- double click to build.. / or some way to do faster builds		
 
 	- AtlasProcessor
 		Make File* processing ignore files its already processed
@@ -203,8 +152,6 @@ Pri 3
 ------------------------------------------------
 -- LOD based technique selection
 -------------------------------------------------
-
-!!! Pick techniques like COLLADA PROFILES!  GLSL 2.1,  GLSL 4.0,  GLES 2.0, ...
 
 	TEchnique
 		- LOD Level.. [0.4 - 0.8].. etc
@@ -292,12 +239,6 @@ Gdk/Docs folder..
 	API docs here
 	clearly separate the 'notes'
 
-Adding copyright to all .Net Tools source..
-
-/* 
-  Copyright (c) 2011, Raincity Games LLC
-  Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
-*/
 
 		
 	
