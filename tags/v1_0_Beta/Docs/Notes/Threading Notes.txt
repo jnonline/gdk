@@ -1,0 +1,135 @@
+
+-----------------------------------------
+-- Common Objects
+
+Thread
+	Start
+	IsRunning()
+	Detach
+	ID
+	Kill()
+	Join()
+	.Current
+
+Mutex
+	Lock()
+	bool TryLock()
+	Release()
+
+CriticalSections
+	Start()
+	End()
+
+Atomics
+	AtomicAdd
+	AtomicSub
+
+-----------------------------------------
+-- APIs
+
+Mutex
+
+	GetNamed( const char *name );
+		if( exists)
+			return existing;
+		pthread_mutex_init()
+		map[name] = mutex;
+
+	- internal
+		map<name, Mutex>  - registered mutexes, for cross thread lookup
+
+
+
+Critical Section
+
+	// Static mutex for the critical section
+	static pthread_mutex_t cs_mutex = PTHREAD_MUTEX_INITIALIZER;
+ 
+    // Enter the critical section -- other threads are locked out
+    pthread_mutex_lock( &cs_mutex );
+ 
+    ... do work ...
+ 
+    // Leave the critical section -- other threads can now enter 
+    pthread_mutex_unlock( &cs_mutex );
+    
+    --------
+    
+    
+    Gdk::CriticalSectionStart
+    
+    Gdk::CriticalSectionEnd
+
+
+Events
+	a mutex & 
+	a conditional
+	= locked semafore/event
+	
+	
+---------------------------------------
+Usage 1)   Background asset thread
+
+priority_queue<name>	assetsToLoad;
+map<name, asset>		loadedAssets;
+Thread					bgThread;
+Mutex					*bgMutex;
+Event					*bgSignal;
+bool					shutdown = false;
+
+AssetManager::Init()
+	bgMutex = Mutex::CreateNamed();
+	bgSignal = Event::Create();
+	bgThread = Thread::Create(BGLoader, this, false);
+	
+	
+AssetManager::Shutdown()
+	// shutdown the bg thread (and join it back into us)
+	shutdown = true;
+	bgSignal.Set();
+	bgThread.Join();
+	GdkDelete(bgThread);
+	GdkDelete(bgMutex);
+	GdkDelete(bgSignal);
+	
+Handle = AssetManager.LoadBackground( assetName );
+	mutex.lock();
+	assetsToLoad.add( assetName, priority );
+	mutex.unlock();
+	
+AssetManager::BGLoader()
+	while( true )
+	{
+		// Wait for a signal
+		bgSignal.Wait();
+		bgSignal.Reset();
+		
+		do
+		{
+			// Shutdown?
+			if(shutdown)
+				Thread::Exit();
+			
+			// Check the assets to load queue
+			bgMutex.lock();
+			AssetHandle assetInfo = NULL;
+			if(assetsToLoad.size() > 0)
+				assetInfo = assetsToLoad.next();
+			bgMutex.unlock();
+			
+			// If we have an asset we're supposed to load, do it
+			if(assetInfo != NULL)
+			{
+				Asset *asset = LoadAsset( assetInfo );
+				
+				// Stick the asset on the asset map
+				bgMutex.lock();
+				assets.add(assetInfo.name, asset);
+				bgMutex.unlock();
+			}
+		} while(assetInfo != NULL)
+	}
+	
+
+
+	

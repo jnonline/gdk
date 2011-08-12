@@ -1,0 +1,79 @@
+====== GDK Game Development Kit === Copyright 2011 - Raincity Games ======
+
+This document explains the steps for starting up a new GDK project.
+By the end, you should have a running game on any of the supported GDK platforms :)
+
+====================================================
+==    Starting a new GDK based Project
+====================================================
+
+Create the project  
+----------------------------------
+
+==== On WINDOWS ====
+
+1)  From a cmd shell, Run the "CreateNewProject-WIN" script in the root of this bundle.
+     - Param 1:   Path to your new project..  can be absolute or relative (IE: ../MonkeyFight)
+     - Param 2:   Name of your Game Project.  Must be alphanumeric and not contain any spaces. like a standard C++ identifier  (IE: MonkeyFight)
+
+    Example:   CreateNewProject-WIN  "C:\MonkeyFight"  MonkeyFight	
+
+
+=== On MAC ===
+
+1)  From a bash/terminal shell.  Run the "CreateNewProject-MAC" script in the root of this bundle.
+     - Param 1:   Path to your new project..  can be absolute or relative (IE: ../MonkeyFight)
+     - Param 2:   Name of your Game Project.  Must be alphanumeric and not contain any spaces. like a standard C++ identifier  (IE: MonkeyFight)
+	
+    Example:   ./CreateNewProject-MAC.sh  "../MonkeyFight"  MonkeyFight	
+
+
+Building & Running
+--------------------------------------
+
+1)  You new project folder will have the following directory structure:
+
+    \YourProject
+      \Assets		- All assets for your game project
+      \Build		- Build projects for every supported platform
+      \Source		- Source code for the Gdk library & your starter game
+      \Tools		- Various tools used for building GDK assets
+
+2)  Open the project file for your favorite platform in the \Build folder
+
+3)  Compile & Run your starter game :D
+
+
+Start Coding
+-----------------------
+
+1)  Open up the Source\Game\YourGame.cpp file
+
+2)  This file/class contains the main entry points for your game's execution.  
+    It contains the following methods:
+
+        OnLoadSettings()	: This method is called once, prior to the initialization stage of your game. 
+                                  Here you can specify custom app settings such as your window title, window size, etche
+
+        OnInit()		: This method is called when your game is first initialized.  At this point you are free to begin
+                                  loading assets into your game such as images, models, sounds, etc.
+
+        OnShutdown()		: This method tells your game it is being shut down.  (Either by the user or by the operating system)
+
+        OnUpdate()		: Once per game tick, this update method is called to allow you to update any game state.  
+
+        OnDraw()		: Once per game tick (after the OnUpdate), the OnDraw method is called.  
+                                  This is where you can do any game specific rendering or drawing.
+
+Where do I go from here??
+--------------------------
+
+    Take a look at the various samples & tests in the Gdk/Samples folder.  There are example for 2D/3D rendering, various input mechanisms, etc.
+
+    Peruse the documentation & explanation videos on the GDK website.
+
+    http://code.google.com/p/gdk
+
+
+        
+

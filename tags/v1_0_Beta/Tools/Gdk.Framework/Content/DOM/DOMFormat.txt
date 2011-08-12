@@ -1,0 +1,31 @@
+﻿
+
+<Content>
+
+	<Bundles>
+		<Bundle Name="HighRez" />
+		<Bundle Name="GoodSounds" />
+	</Bundles>
+	
+	<Assets>
+		
+		<Asset Path="Textures/metal.png" Processor="Image" />
+		
+		// Generates a "Base" bundle asset & a customized version in the "HighRez" bundle
+		<Asset Path="Atlas/player.atlas" Processor="Atlas" >
+			<Parameters>
+				<Parameter Name="ImageScale">0.5</Parameter>
+				<Parameter Name="Force32Bit">true</Parameter>
+			</Parameters>
+			<Bundle Name="HiRez">
+				<Parameters Bundle="HiRez" >
+					<Parameter Name="ImageScale">0.8</Parameter>
+				</Parameters>
+			</Bundle>
+		</Asset>
+		
+		<Asset  Path="Music/CoolSong2.ogg" Processor="Sound" />
+		
+	</Assets>
+
+</Content>

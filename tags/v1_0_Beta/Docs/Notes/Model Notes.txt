@@ -1,0 +1,298 @@
+
+----------------------------------------------
+-- Gdk Model - V1
+
+	Skeleton
+		- heirarchy of bones
+	Bone 
+		- Name
+		- Parent
+		- position  (v3)
+		- orientation (quat)
+		
+
+	SkeletalAnimation	
+		- name
+		- bones[]
+			- position_keyframes[]
+				- time
+				- position
+			- orientation_keyframes[]
+				- time
+				- orientation
+		- FPS
+		- TotalTime
+		- TotalFrames
+		
+	Meshes[]
+		- vertex format:  PNTC, PNTCB, PNTCB4
+			Ex: static mesh, bone mesh, bone weight mesh,
+		- vertices (streams)
+			- pos, normal, boneIndices, boneWeights
+		- indices
+		MeshPart
+			- start index
+			- end index
+			- material ref
+			
+		
+	Material
+		Shader
+		Textures[ shaderProperty, texturePath ]
+		Shader Settings[ property, value ]
+			
+	Node Structure...
+	Animations..
+
+	
+
+--------------------------------
+-- COLLADA layout
+
+Root
+	libraries
+		scenes
+		materials
+		images
+		effects
+		geometries
+		controllers
+		cameras
+		lights
+	
+Scene
+	= <visual_scene id="MaxScene">
+	
+Node
+	= <node 
+		id="node-skeleton_head-01" 
+		name="skeleton_head-01" 
+		sid="joint5" 
+		type="JOINT"
+		>
+    = transforms: (translate + rotate) | (matrix)
+		<translate>0.244848 0.05305004 -0.01584041</translate>
+        <rotate>0.6984661 -0.1558475 0.6984674 -197.7163</rotate>
+		|
+        <matrix>1 0 0 0.0407734 0 1 0 0.05301839 0 0 1 -1.965668 0 0 0 1</matrix>
+	
+	= children:
+		instance_light
+		instance_geometry
+		instance_controller
+		instance_camera
+
+Controller
+	type = skin
+	source = (geometry url) skeleton-body
+	- contains indices & weights mapping VERTICES to NODES
+	
+Geometry
+	vertex data
+	triangle blob + material
+	
+Animation
+	Contains animation & keyframes for NODES  (and possible other collada entities)
+
+
+-------------------------------------
+-- Gdk Models - v2
+
+Model
+
+	ChildAssets
+		Textures
+		
+	Materials
+		- Name
+		- Flags		define the shader to use..  DiffuseTex, BumpDiffuseTex, NoTex, Wood, etc..
+		- Ambient, Diffuse, Specular, etc
+		- Textures
+		
+	Meshes
+		- Vertices
+		- Indices
+		- Parts[]
+			- Material
+				- Diffuse Texture
+				- Bump Texture
+				- Other params...
+	
+	SkeletalMeshes
+		- Vertices
+		- Indices
+		- Parts[]
+			- Material
+				- Diffuse Texture
+				- Bump Texture
+				- Other params...
+	
+	Nodes
+		- Nodes...
+		- Transform
+			
+	Animations
+		- Animation
+			- name
+			- total time
+			- Keyframes (time, Node, transform, etc)
+
+ModelInstance - instanced data for a model...
+	- Model
+	
+	- CurrentAnimation
+	- AnimationTime
+	
+	- Nodes	- instanced node tree, with current transforms
+		transforms
+		
+	- Materials - instanced materials.. copies of the base materials
+	
+	
+-------------------------------------
+-- Gdk Model - Runtime format - v3 
+
+	Model
+		- RootNode
+		- Materials[]
+		- Meshes[]
+		- MeshInstances[]
+		  Animations[]
+		  AnimationClips[]
+	
+	Node					[COLLADA:  node]
+		- Name
+		- ChildNodes
+		- Transform
+		
+	Material				[COLLADA:  material]
+		- Name
+		- Flags				[define the material type & shader to use...]
+		- Ambient, Diffuse, Specular, Emissive
+		- Textures   
+			(Diffuse, Bump, etc)
+		
+	Mesh					[COLLADA:  geometry / mesh]
+		- Name
+		- Flags				[vertex attributes / channels]
+		- Vertices
+		- Indices
+		- Parts[]									
+		- NumJoints
+		- InvBindMatrices[]
+		
+	MeshPart				[COLLADA:  mesh / triangles [tristrips, trifans, ...]
+		// - Flags				[type? triagles, fans, strips, etc?]
+		- Start Indices
+		- End Indices
+		- MatSymbol			[this ID is bound to a model.material through the mesh instance]
+		
+	MeshInstance			[COLLADA:  node / instance_geometry]
+		- Mesh Index
+		- Node Index
+		- MaterialBindings[]				[COLLADA:  instance_geometry / bind_material]
+			- [indexer = mesh part index]
+			- Value: Material Index			[binds a Model.Material to a MeshPart.MatSymbol]	
+		  JointNodes[]
+			- [indexer = joint index within SkeletalMesh]
+			- Value: Node Index
+			
+
+			
+	Animations
+		 - see below
+
+
+	ModelInstance - instanced data for a model...
+		- Model Ref
+		
+		- CurrentAnimation
+		- AnimationTime
+		
+		- Nodes	- instanced node tree, with updated transforms for the animation
+			
+		- Material swapping..  <param> driven material bindings (between mesh parts & materials)
+	
+	
+------------------------------------------------------------
+-- Animation Brainstorm - GDK Model v3 Extension
+
+	Animation 
+		- Name
+		- ChildAnimations[]		// Allows animation trees 
+		- NodeAnims[]
+	
+	NodeAnimation
+		- Node Index
+		- TransformKeyFrames[]
+		
+	TransformKeyFrame
+		- Time
+		- Scale
+		- Rotation
+		- TRanslation
+		
+	AnimationClip 
+		- Name
+		- AnimationIndex
+		- StartTime
+		- EndTime
+		
+	
+	AnimationClipInstance
+		- AnimationClipIndex
+		- float T;
+
+	ModelInstance
+		- AnimationClipInstances[]
+		
+		+ UpdateAnimation (time tDelta)
+			- loop though clip instances
+				clipInst.T += tdelta;
+				if(clipInst.T > clipInst.Clip.EndTime)
+					- what action to do at clip end? (stop, restart, ping pong, etc??)
+					- fire event?
+				ApplyAnimation( clipInst.Clip.Anim, clipInst.T );
+				
+		+ ApplyAnimation( anim, t)
+			foreach childAnim in anim
+				ApplyAnimation( childAnim, t)
+			foreach nodeAnim in anim.NodeAnims
+				nodeAnim.Node.LocalMatrix = nodeAnim.GetValueAtT(t);
+						// Looks up the keyframe before & after T, then lerps it with T
+				
+			
+		
+	
+	
+-----------------------
+  - Idea:   Animation = set of (Target + Keyframe data)
+  
+  
+	Animation 
+		- Name
+		- ChildAnimations[]		// Allows animation trees 
+		- MatrixAnims[]			// Set of matrix animations that are applied as part of this animation
+		
+		
+	MatrixAnimation
+		- AnimationTarget
+		- MatrixKeyFrames
+		
+	AnimationTarget
+		- Type				= Node, etc, etc, etc   (Some targetable thing in the model)
+		- Index				= 14
+		
+	MatrixKeyFrames				// Contains a list of TIME / MATRIX pairs, as the keyframes
+		0.0 - Matrix
+		1.0 - Matrix
+		....
+		43.333 - Matrix
+
+
+-- Decompose matrix animation??
+	- Translation + Quaternion + Scaling?
+	- Interpolate seperately.. using Lerp + Slerp?
+	
+		
+		

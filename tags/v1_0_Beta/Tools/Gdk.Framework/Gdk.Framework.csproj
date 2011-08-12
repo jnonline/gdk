@@ -1,0 +1,213 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{6A4198BC-4FB5-4638-A2C0-8F4B628E1F91}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Gdk</RootNamespace>
+    <AssemblyName>Gdk.Framework</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.85.5.452, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\External\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Tao.OpenGl, Version=2.1.0.12, Culture=neutral, PublicKeyToken=1ca010269a4501ef, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\External\Tao.OpenGl.dll</HintPath>
+    </Reference>
+    <Reference Include="Tao.Platform.Windows, Version=1.0.0.5, Culture=neutral, PublicKeyToken=701104b2da67a104, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\External\Tao.Platform.Windows.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Content\Atlas\AtlasProcessor.cs" />
+    <Compile Include="Content\COLLADA\Collada.cs" />
+    <Compile Include="Content\COLLADA\Animation.cs" />
+    <Compile Include="Content\COLLADA\Controller.cs" />
+    <Compile Include="Content\COLLADA\Metadata.cs" />
+    <Compile Include="Content\COLLADA\Transform.cs" />
+    <Compile Include="Content\COLLADA\Scene.cs" />
+    <Compile Include="Content\COLLADA\Rendering.cs" />
+    <Compile Include="Content\COLLADA\Parameters.cs" />
+    <Compile Include="Content\COLLADA\Effects.cs" />
+    <Compile Include="Content\COLLADA\Materials.cs" />
+    <Compile Include="Content\COLLADA\Texturing.cs" />
+    <Compile Include="Content\COLLADA\DataFlow.cs" />
+    <Compile Include="Content\COLLADA\Geometry.cs" />
+    <Compile Include="Content\DOM\Content.cs" />
+    <Compile Include="Content\Atlas\Atlas.cs" />
+    <Compile Include="Content\Atlas\AtlasAnimation.cs" />
+    <Compile Include="Content\Atlas\AtlasImage.cs" />
+    <Compile Include="Content\Atlas\AtlasSheet.cs" />
+    <Compile Include="Content\BuildContext.cs" />
+    <Compile Include="Content\DOM\Asset.cs" />
+    <Compile Include="Content\DOM\Bundle.cs" />
+    <Compile Include="Content\DOM\PlatformType.cs" />
+    <Compile Include="Content\Model\ModelDOM.cs" />
+    <Compile Include="Content\Processors\BMFontProcessor.cs" />
+    <Compile Include="Content\Model\ModelProcessor.cs" />
+    <Compile Include="Content\Shader\ShaderContent.cs" />
+    <Compile Include="Content\Shader\ShaderProcessor.cs" />
+    <Compile Include="Forms\OpenGL\GLForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AssetViewers\AssetViewerHelper.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Forms\AssetViewers\GdkImageViewerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AssetViewers\GdkImageViewerForm.Designer.cs">
+      <DependentUpon>GdkImageViewerForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Common\ColorSelector.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Common\ColorSelector.Designer.cs">
+      <DependentUpon>ColorSelector.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Common\GdkPropertyGrid.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Common\GdkPropertyGrid.Designer.cs">
+      <DependentUpon>GdkPropertyGrid.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Common\TextBoxForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Common\TextBoxForm.Designer.cs">
+      <DependentUpon>TextBoxForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Math\Quaternion.cs" />
+    <Compile Include="Math\Sphere3.cs" />
+    <Compile Include="Resources\Icons.cs" />
+    <Compile Include="Content\Exceptions.cs" />
+    <Compile Include="Content\Logger.cs" />
+    <Compile Include="Content\DependencyTracker.cs" />
+    <Compile Include="Content\ProcessorManager.cs" />
+    <Compile Include="Content\Processor.cs" />
+    <Compile Include="Content\Builder.cs" />
+    <Compile Include="Content\DOM\ParameterSet.cs" />
+    <Compile Include="Content\Processors\Texture2DProcessor.cs" />
+    <Compile Include="Content\Processors\FileProcessor.cs" />
+    <Compile Include="Graphics\Color.cs" />
+    <Compile Include="Graphics\Surface.cs" />
+    <Compile Include="Math\MathUtility.cs" />
+    <Compile Include="Math\Matrix.cs" />
+    <Compile Include="Math\Vector2.cs" />
+    <Compile Include="Math\Vector3.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="Utilities\BinaryWriterExtensions.cs" />
+    <Compile Include="Utilities\ExceptionUtilities.cs" />
+    <Compile Include="Utilities\StringUtilities.cs" />
+    <Compile Include="Utilities\XmlUtilities.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Forms\AssetViewers\GdkImageViewerForm.resx">
+      <DependentUpon>GdkImageViewerForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Common\ColorSelector.resx">
+      <DependentUpon>ColorSelector.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Common\GdkPropertyGrid.resx">
+      <DependentUpon>GdkPropertyGrid.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Common\TextBoxForm.resx">
+      <DependentUpon>TextBoxForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Resources.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Images\AtlasIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Images\AudioIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Images\FileIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Images\FolderIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Images\FontIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Images\ModelIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Images\TextureIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Images\GhostFileIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Images\GhostFolderIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Atlas\AtlasFormat.txt" />
+    <Content Include="Content\DOM\DOMFormat.txt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
