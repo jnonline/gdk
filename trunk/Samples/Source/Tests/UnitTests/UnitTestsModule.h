@@ -10,9 +10,22 @@
 
 // Utility macros for Unit Test methods
 #ifdef GDKPLATFORM_WINDOWS
-    #define UNIT_TEST_ASSERT(condition, format, ...)        if(!(condition)) {context->Log->WriteLine(LogLevel::Error, format, __VA_ARGS__); return TestStatus::Fail;}
+    #define UNIT_TEST_CHECK(condition, format, ...)   \
+        if(condition) {   \
+            context->Log->WriteLine(LogLevel::Info, L"PASS: " format, __VA_ARGS__);   \
+        } else {   \
+            context->Log->WriteLine(LogLevel::Error, L"FAIL: " format, __VA_ARGS__);   \
+            return TestStatus::Fail;   \
+        }
 #else
-    #define UNIT_TEST_ASSERT(condition, format, args...)    if(!(condition)) {context->Log->WriteLine(LogLevel::Error, format, ##args); return TestStatus::Fail;}
+    #define UNIT_TEST_CHECK(condition, format, args...)   \
+        if(condition) {   \
+            context->Log->WriteLine(LogLevel::Info, L"PASS: " format, ##args);   \
+        } else {   \
+            context->Log->WriteLine(LogLevel::Error, L"FAIL: " format, ##args);   \
+            return TestStatus::Fail;   \
+        }
+
 #endif
 
 // ==============================================
@@ -147,6 +160,10 @@ protected:
     // Math Tests
     TESTMETHOD(Test_Math_Randoms);
     TESTMETHOD(Test_Math_Vectors);
+    TESTMETHOD(Test_Math_Distance2D);
+    TESTMETHOD(Test_Math_Intersection2D);
+    TESTMETHOD(Test_Math_Distance3D);
+    TESTMETHOD(Test_Math_Intersection3D);
     
     #undef TESTMETHOD
    

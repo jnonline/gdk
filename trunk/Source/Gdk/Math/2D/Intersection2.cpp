@@ -99,10 +99,15 @@ bool Intersection2::Find(const Ray2& ray, const LineSegment2& lineSegment, float
         }
     }
     
-    distance = 0.0f;
+    // Are the ray & line-segment co-linear
+    if(intersectionType == IntersectionType::Line)
+    {
+        // TODO(P2):  this should probly return true & calculate the distance to the segment
+        return false;
+    }
     
-    // Was there an intersection?
-    return intersectionType != IntersectionType::None;
+    // No intersection
+    return false;
 }
 
 // ===================================================================================
@@ -136,56 +141,34 @@ bool Intersection2::Test(const Ray2& ray, const Circle2& circle)
 // *************************************************************************************
 bool Intersection2::Find(const Ray2& ray, const Circle2& circle, float& distance)
 {
-    // Intersect the linear ray with the circle
-    float t[2];
-    IntersectionType::Enum intersectionType =
-    Intersect_Line_Circle(ray.Origin, ray.Direction, circle.Center, circle.Radius, t);
+    // Get the Ray.Origin -> Circle.Center vector
+	Vector2 diff = circle.Center - ray.Origin;
     
-    // Is there no linear intersection?
-    if(intersectionType == IntersectionType::None)
-    {
-        distance = 0.0f;
-        return false;
-    }
+	float distSq = diff.LengthSquared();
+	float radSq = circle.Radius * circle.Radius;
     
-    // Is the intersection a single point?
-    if(intersectionType == IntersectionType::Point)
-    {
-        // Check if the ray is pointing at or away from the intersection
-        if(t[0] < 0.0f)
-        {
-            // There is a linear intersection, but the ray is pointing the wrong way
-            distance = 0.0f;
-            return false;
-        }
-        
-        // The ray is touches the circle
-        distance = t[0];
-        return true;
-    }
+	// Check if the ray origin is inside the circle
+	if(distSq <= radSq)
+	{
+		// The ray origin is in the circle
+		distance = 0.0f;
+		return true;	
+	}
     
-    // We have an intersection that goes through the circle (2 points)
-
-    // Make sure the intersection points are in front of the ray, and determine the closest intersection
-    if(t[0] >= 0.0f)
-    {
-        if(t[1] >= 0.0f)
-            distance = t[0] < t[1] ? t[0] : t[1];
-        else
-            distance = t[0];
-    }
-    else if(t[1] >= 0.0f)
-    {
-        distance = t[1];
-    }
-    else
-    {
-        // the ray is pointing away from both linear intersections
-        distance = 0.0f;
-        return false;
-    }
+	// Is the ray is pointing away from the circle?
+	float diffDotDirection = diff.Dot(ray.Direction);
+	if(diffDotDirection < 0.0f)
+	{
+		// No intersection
+		return false;
+	}
     
-    return true;
+	float a = distSq - diffDotDirection * diffDotDirection;
+	if(a > radSq)
+		return false;
+    
+    distance = diffDotDirection - Math::Sqrt(radSq - a);
+	return true;
 }
 
 // ===================================================================================
@@ -414,13 +397,15 @@ IntersectionType::Enum  Intersection2::Intersect_Line_Line(
     // Get the dot product of line direction 1 & the perpendicular of line direction 2
     float dir1DotPerpDir2 = direction1.Dot(direction2.GetPerpendicular());
     
-    // If the dot product is 0, the lines intersect at a point
+    // If the dot product is non-zero, the lines intersect at a point
     if (Math::Abs(dir1DotPerpDir2) > Math::ZERO_TOLERANCE)
     {
         // Calculate the T values of the intersection along each line
         float invDir1DotPerpDir2 = 1.0f / dir1DotPerpDir2;
-        t[0] = difference.Dot(direction1.GetPerpendicular()) * invDir1DotPerpDir2;
-        t[1] = difference.Dot(direction2.GetPerpendicular()) * invDir1DotPerpDir2;
+        float diffDotPerpD1 = difference.Dot(direction1.GetPerpendicular());
+        float diffDotPerpD2 = difference.Dot(direction2.GetPerpendicular());
+        t[0] = diffDotPerpD2 * invDir1DotPerpDir2;
+        t[1] = diffDotPerpD1 * invDir1DotPerpDir2;
 
         return IntersectionType::Point;
     }
@@ -510,18 +495,13 @@ IntersectionType::Enum  Intersection2::Intersect_Line_Box(
     // Did any of the box edges clip our line?
     if (notAllClipped)
     {
+        t[0] = startT;
+        t[1] = endT;
+        
         // Where there 2 clip points?
         if (endT > startT)
-        {
-            t[0] = startT;
-            t[1] = endT;
             return IntersectionType::LineSegment;
-        }
-        else
-        {
-            t[0] = startT;
-            return IntersectionType::Point;
-        }
+        return IntersectionType::Point;
     }
 
     // No clipping, so no intersections

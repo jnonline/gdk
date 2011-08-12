@@ -23,7 +23,7 @@ namespace Gdk
 	{
     private:
 		// Internal CTor
-		Distance2();
+		Distance2() {}
 
 	public:
         
@@ -34,6 +34,7 @@ namespace Gdk
         static float PointToLineSegment(const Vector2& point, const LineSegment2& lineSegment);
         static float PointToBox(const Vector2& point, const Box2& box);
         static float PointToRectangle(const Vector2& point, const Rectangle2& rect);
+        static float PointToCircle(const Vector2& point, const Circle2& circle);
 	
     };
 

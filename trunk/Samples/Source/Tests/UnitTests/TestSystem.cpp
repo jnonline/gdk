@@ -62,39 +62,35 @@ public:
 TestStatus::Enum UnitTestsModule::Test_System_Memory(TestExecutionContext *context)
 {
     // Test Single object / default constructor
-    context->Log->WriteLine(LogLevel::Info, L"Single object, default constructor");
     MemTest *memTest1 = GdkNew MemTest();
-    UNIT_TEST_ASSERT(memTest1 != NULL, L"TEST FAIL: Failed to create single instance");
+    UNIT_TEST_CHECK(memTest1 != NULL, L"Single object, default constructor");
     memTest1->i = 1;
     GdkDelete(memTest1);
     
     // Test: Single object, parameterized constructor
     context->Log->WriteLine(LogLevel::Info, L"Single object, parameterized constructor");
     MemTest *memTest2 = GdkNew MemTest(1);
-    UNIT_TEST_ASSERT(memTest2 != NULL, L"TEST FAIL: Failed to create single instance (parametric constructor)");
+    UNIT_TEST_CHECK(memTest2 != NULL, L"Single object, parameterized constructor");
     memTest2->i = 2;
     GdkDelete(memTest2);
     
     // Test 1D object array
-    context->Log->WriteLine(LogLevel::Info, L"1D object array");
     MemTest *memTest3 = GdkNew1DArray<MemTest>(10);
-    UNIT_TEST_ASSERT(memTest3 != NULL, L"TEST FAIL: Failed to 1D array");
+    UNIT_TEST_CHECK(memTest3 != NULL, L"1D object array");
     memTest3[0].i = 321;
     memTest3[1].i = 123;
     GdkDelete1DArray(memTest3);
     
     // Test 2D object array
-    context->Log->WriteLine(LogLevel::Info, L"2D object array");
     MemTest **memTest4 = GdkNew2DArray<MemTest>(2, 3);
-    UNIT_TEST_ASSERT(memTest4 != NULL, L"TEST FAIL: Failed to 2D array");
+    UNIT_TEST_CHECK(memTest4 != NULL, L"2D object array");
     memTest4[0][0].i = 123;
     memTest4[1][2].i = 321;
     GdkDelete2DArray(memTest4);
     
     // Test Alloc / Free
-    context->Log->WriteLine(LogLevel::Info, L"GdkAlloc / GdkFree");
     void* memTest5 = GdkAlloc(100);
-    UNIT_TEST_ASSERT(memTest5 != NULL, L"TEST FAIL: Failed to allocate 100 byte buffer");
+    UNIT_TEST_CHECK(memTest5 != NULL, L"GdkAlloc / GdkFree on 100 byte buffer");
     GdkFree(memTest5);
     
     return TestStatus::Pass;
@@ -111,11 +107,10 @@ TestStatus::Enum UnitTestsModule::Test_System_Containers_StringHashMap(TestExecu
     hashMap.Add("Baz", 2);
     
     // Find
-    context->Log->WriteLine(LogLevel::Info, L"Testing Find() method");
     StringHashMap<int>::Iterator iter1 = hashMap.Find("Gil");
     StringHashMap<int>::Iterator iter2 = hashMap.Find("Poo");
-    UNIT_TEST_ASSERT(iter1 != hashMap.End(), L"Failed to find an existing string hash");
-    UNIT_TEST_ASSERT(iter2 == hashMap.End(), L"Failed to not-find a missing string hash");
+    UNIT_TEST_CHECK(iter1 != hashMap.End(), L"Find() existing value");
+    UNIT_TEST_CHECK(iter2 == hashMap.End(), L"Find() a missing string hash");
     
     // Iteration
     context->Log->WriteLine(LogLevel::Info, L"Testing Iteration");
@@ -158,9 +153,8 @@ TestStatus::Enum UnitTestsModule::Test_System_Containers_SortedVector(TestExecut
         GDK_NOT_USED(val);
     }
     
-    context->Log->WriteLine(LogLevel::Info, L"Testing vector is sorted");
-    UNIT_TEST_ASSERT(sv.front() == 2, L"Sorted vector is NOT sorted");
-    UNIT_TEST_ASSERT(sv.back() == 15, L"Sorted vector is NOT sorted");
+    UNIT_TEST_CHECK(sv.front() == 2, L"Sorted vector front()");
+    UNIT_TEST_CHECK(sv.back() == 15, L"Sorted vector back()");
     
     return TestStatus::Pass;
 }

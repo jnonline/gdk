@@ -30,6 +30,7 @@ namespace Gdk
 		inline bool operator!= (const Sphere3& input) const;
 
 		// Containment Methods
+        inline bool Contains(float x, float y, float z) const;
 		inline bool Contains(const Vector3& point) const;
 
 		// Encapsulation Methods
@@ -71,6 +72,12 @@ namespace Gdk
 	// Containment Methods
 	// ===================================================================================
 
+    // ***********************************************************************
+	inline bool Sphere3::Contains(float x, float y, float z) const
+	{
+		return Contains(Vector3(x,y,z));
+	}
+    
 	// ***********************************************************************
 	inline bool Sphere3::Contains(const Vector3& point) const
 	{

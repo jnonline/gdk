@@ -31,6 +31,7 @@ namespace Gdk
 		inline bool operator!= (const Box3& input) const;
 
 		// Containment Methods
+        inline bool Contains(float x, float y, float x) const;
 		inline bool Contains(const Vector3& point) const;
 	};
 
@@ -83,6 +84,12 @@ namespace Gdk
 	// Containment Methods
 	// ===================================================================================
 
+    // ***********************************************************************
+	inline bool Box3::Contains(float x, float y, float z) const
+	{
+		return Contains(Vector3(x,y,z));
+	}
+    
 	// ***********************************************************************
 	inline bool Box3::Contains(const Vector3& point) const
 	{
