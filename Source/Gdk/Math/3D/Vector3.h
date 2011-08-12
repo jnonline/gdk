@@ -48,9 +48,10 @@ namespace Gdk
         inline Vector2 GetXZ()    { return Vector2(X,Z); }
         
 		// Vector functions
-		inline float Length () const;
-		inline float LengthSquared () const;
-		inline float Normalize ();
+		inline float Length() const;
+		inline float LengthSquared() const;
+		inline float Normalize();               // normalizes in place
+        inline Vector3 GetNormalized() const;   // returns a normalized copy
 		inline float Dot (const Vector3& input) const;
 		inline Vector3 Cross (const Vector3& input) const;
 		inline Vector3 UnitCross (const Vector3& input) const;
@@ -298,6 +299,18 @@ namespace Gdk
 
 		return length;
 	}
+
+    // ***********************************************************************
+	inline Vector3 Vector3::GetNormalized() const
+	{
+        // Clone this vector
+		Vector3 normalized(this->X, this->Y, this->Z);
+        
+        // Normalize the clone
+        normalized.Normalize();
+        
+        return normalized;
+    }
 
 	// ***********************************************************************
 	inline Vector3 Vector3::Cross(const Vector3& input) const
