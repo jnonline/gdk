@@ -31,7 +31,7 @@ namespace Gdk
 		inline bool operator!= (const Box3& input) const;
 
 		// Containment Methods
-        inline bool Contains(float x, float y, float x) const;
+        inline bool Contains(float x, float y, float z) const;
 		inline bool Contains(const Vector3& point) const;
 	};
 

@@ -92,7 +92,7 @@ Circle2 Circle2::FromPoints(size_t numPoints, const Vector2* points)
     Circle2 result(points[0], 0.0f);
     
     // Loop through the rest of the points
-    for(int pointIndex=1; pointIndex < numPoints; pointIndex++)
+    for(size_t pointIndex=1; pointIndex < numPoints; pointIndex++)
     {
         const Vector2& point = points[pointIndex];
         
