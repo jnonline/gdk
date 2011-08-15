@@ -103,6 +103,7 @@
 		D076C4AD13F5C944004469C2 /* Distance2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D076C4A913F5C944004469C2 /* Distance2.cpp */; };
 		D076C4AE13F5C944004469C2 /* Intersection2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D076C4AB13F5C944004469C2 /* Intersection2.cpp */; };
 		D076C4B213F5C954004469C2 /* Distance3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D076C4B013F5C954004469C2 /* Distance3.cpp */; };
+		D076C4DF13F9A698004469C2 /* StarfieldSample.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D076C4DD13F9A698004469C2 /* StarfieldSample.cpp */; };
 		D07F7F2313D20BEE00574AD3 /* ModelMeshInstance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D07F7F1B13D20BEE00574AD3 /* ModelMeshInstance.cpp */; };
 		D07F7F2413D20BEE00574AD3 /* ModelNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D07F7F1D13D20BEE00574AD3 /* ModelNode.cpp */; };
 		D07F7F2D13D20D4C00574AD3 /* Ray2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D07F7F2A13D20D4C00574AD3 /* Ray2.cpp */; };
@@ -302,6 +303,8 @@
 		D076C4AC13F5C944004469C2 /* Intersection2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Intersection2.h; sourceTree = "<group>"; };
 		D076C4B013F5C954004469C2 /* Distance3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Distance3.cpp; sourceTree = "<group>"; };
 		D076C4B113F5C954004469C2 /* Distance3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Distance3.h; sourceTree = "<group>"; };
+		D076C4DD13F9A698004469C2 /* StarfieldSample.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StarfieldSample.cpp; sourceTree = "<group>"; };
+		D076C4DE13F9A698004469C2 /* StarfieldSample.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StarfieldSample.h; sourceTree = "<group>"; };
 		D07F7F1B13D20BEE00574AD3 /* ModelMeshInstance.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ModelMeshInstance.cpp; sourceTree = "<group>"; };
 		D07F7F1C13D20BEE00574AD3 /* ModelMeshInstance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModelMeshInstance.h; sourceTree = "<group>"; };
 		D07F7F1D13D20BEE00574AD3 /* ModelNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ModelNode.cpp; sourceTree = "<group>"; };
@@ -746,6 +749,8 @@
 		D004C1BB13AC884D00797055 /* Samples */ = {
 			isa = PBXGroup;
 			children = (
+				D076C4DD13F9A698004469C2 /* StarfieldSample.cpp */,
+				D076C4DE13F9A698004469C2 /* StarfieldSample.h */,
 				D004C1BC13AC884D00797055 /* Tanks3D */,
 			);
 			path = Samples;
@@ -971,6 +976,7 @@
 				D076C4AD13F5C944004469C2 /* Distance2.cpp in Sources */,
 				D076C4AE13F5C944004469C2 /* Intersection2.cpp in Sources */,
 				D076C4B213F5C954004469C2 /* Distance3.cpp in Sources */,
+				D076C4DF13F9A698004469C2 /* StarfieldSample.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
