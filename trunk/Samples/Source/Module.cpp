@@ -8,6 +8,7 @@
 #include "BasePCH.h"
 
 #include "Samples/Tanks3D/Tanks3DModule.h"
+#include "Samples/StarfieldSample.h"
 
 #include "Tests/Input/InputTests.h"
 #include "Tests/Graphics/Simple2DTests.h"
@@ -31,6 +32,7 @@ void Module::Init()
  
     // Samples
     RegisterModule<Tanks3DModule>(L"Tanks 3D", ModuleCategory::Samples);
+	RegisterModule<StarfieldSample>(L"Starfield", ModuleCategory::Samples);
 }
 
 
