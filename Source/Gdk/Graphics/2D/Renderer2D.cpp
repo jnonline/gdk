@@ -952,6 +952,27 @@ void Renderer2D::DrawTexturedPolyLine(
 // 2D Primitive Rendering
 
 // ********************************************************************
+void Renderer2D::DrawPoint(
+	const Vector2& point, 
+	const Color& color, 
+	BlendMode::Enum blendMode, 
+	float z
+	)
+{
+	Vector2 finalPoint = point;
+	if(applyWorldTransform)
+	{
+		worldTransform.TransformVertexInPlace(finalPoint.X, finalPoint.Y);
+	}
+
+	// Get the batch for this render data
+	Renderer2DBatchP2C4 batch = GetBatchP2C4(1, Renderer2DPrimitiveType::Points, 0, 0, blendMode, z, nonTexturedShader);
+
+	// Add the vertex data
+	batch.AddVertex(finalPoint.X, finalPoint.Y, color.R, color.G, color.B, color.A);
+}
+
+// ********************************************************************
 void Renderer2D::DrawLine(
 	const Vector2& start, const Vector2& end, 
 	const Color& color, 

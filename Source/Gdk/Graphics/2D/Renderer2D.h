@@ -319,6 +319,14 @@ namespace Gdk
 		// 2D Primitive Rendering
 		// ====================================================
 
+		// Points
+		static void DrawPoint(
+			const Vector2& point, 
+			const Color& color = Color::WHITE, 
+			BlendMode::Enum blendMode = BlendMode::Normal, 
+			float z = 0
+			);
+
 		// Lines
 		static void DrawLine(
 			const Vector2& start, const Vector2& end, 

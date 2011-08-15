@@ -972,6 +972,14 @@
 				<Filter
 					Name="Samples"
 					>
+					<File
+						RelativePath="..\..\Source\Samples\StarfieldSample.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\Source\Samples\StarfieldSample.h"
+						>
+					</File>
 					<Filter
 						Name="Tanks3D"
 						>
