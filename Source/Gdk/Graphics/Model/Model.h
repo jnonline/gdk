@@ -38,6 +38,7 @@ namespace Gdk
 	private:
 
 		// Private CTor
+        friend class ModelGenerator;
 		Model();
 
 		// Rendering Utilities

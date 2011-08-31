@@ -50,6 +50,9 @@ extern bool _Gdk_Mac_IsMouseVisible;
     if(Gdk::Application::IsExitRequest())
     {
         [self performSelectorOnMainThread:@selector(closeMyWindow) withObject:nil waitUntilDone:NO];
+        
+        // Stop the display link
+        CVDisplayLinkStop(displayLink);
     }
 	
 	[pool release];
