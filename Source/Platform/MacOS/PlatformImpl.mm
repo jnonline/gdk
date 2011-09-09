@@ -5,6 +5,7 @@
 
 
 #import "BasePCH.h"
+#import "GdkGLView.h"
 
 #import <Cocoa/Cocoa.h>
 #include <sys/sysctl.h>
@@ -19,7 +20,9 @@
 
 using namespace Gdk;
 
-bool _Gdk_Mac_IsMouseVisible = true;
+bool        _Gdk_Mac_IsMouseVisible = true;
+GdkGLView*  _Gdk_Mac_MainGLView = NULL;
+NSWindow*   _Gdk_Mac_MainWindow = NULL;
 
 // Prototypes
 NSString* GetMACAddress();
@@ -121,20 +124,17 @@ void _Gdk_Platform_Mouse_ShowCursor(bool show)
 // ***************************************************************
 void _Gdk_Platform_Mouse_SetPosition(int x, int y)
 {
-    // Get the main Window
-    NSWindow* window = [[NSApplication sharedApplication] mainWindow];
-
-    // Get the GL View
-    NSView* view = [window contentView];
-                    
-    // Convert the mouse coordinate to base coordinates
-    NSPoint localPoint;
-    localPoint.x = x;
-    localPoint.y = y;
-    NSPoint basePoint = [view convertPointToBase:localPoint];
-    NSPoint screenPoint = [window convertBaseToScreen:basePoint];
-    CGWarpMouseCursorPosition(NSPointToCGPoint(screenPoint));
-
+    // Do we have the view & window pointers?
+    if(_Gdk_Mac_MainGLView != NULL && _Gdk_Mac_MainWindow != NULL)
+    {
+        // Convert the mouse coordinate to base coordinates
+        NSPoint localPoint;
+        localPoint.x = x;
+        localPoint.y = y;
+        NSPoint basePoint = [_Gdk_Mac_MainGLView convertPointToBase:localPoint];
+        NSPoint screenPoint = [_Gdk_Mac_MainWindow convertBaseToScreen:basePoint];
+        CGWarpMouseCursorPosition(NSPointToCGPoint(screenPoint));
+    }
 }
 
 /// ===========================================================
