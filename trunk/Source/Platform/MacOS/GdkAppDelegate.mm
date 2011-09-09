@@ -6,6 +6,10 @@
 
 #import "GdkAppDelegate.h"
 #include "Gdk.h"
+#include "GdkGLView.h"
+
+extern GdkGLView* _Gdk_Mac_MainGLView;
+
 
 @implementation GdkAppDelegate
 
@@ -45,6 +49,14 @@
 -(BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender
 {
     return YES;
+}
+
+// ********************************************************************
+-(void)applicationWillTerminate:(NSNotification *)notification   
+{
+    // If the view is still active, tell it to shut down
+    if(_Gdk_Mac_MainGLView != NULL)
+        [_Gdk_Mac_MainGLView shutdownGdk];
 }
 
 @end

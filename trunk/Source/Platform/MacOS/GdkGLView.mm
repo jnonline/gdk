@@ -8,7 +8,7 @@
 #import "Gdk.h"
 
 extern bool _Gdk_Mac_IsMouseVisible;
-
+GdkGLView* _Gdk_Mac_MainGLView;
 
 // --------------------------------------
 @interface GdkGLView (PrivateMethods)
@@ -127,6 +127,9 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
         
 		// Activate the display link
 		CVDisplayLinkStart(displayLink);
+        
+        // Store a global reference to this view
+        _Gdk_Mac_MainGLView = self;
 	}
     
     [pixFormat release];
@@ -207,15 +210,27 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	CGLUnlockContext(cglContext);
 }
 
+// ********************************************************************
+- (void) shutdownGdk
+{	
+    // Only allow this to happen ONCE
+    if(_Gdk_Mac_MainGLView != NULL)
+    {
+        _Gdk_Mac_MainGLView = NULL;
+        
+        // Release the display link
+        CVDisplayLinkRelease(displayLink);
+        
+        // Shutdown the GDK Game
+        Gdk::Application::Platform_ShutdownGame();
+    }
+}
 
 // ********************************************************************
 - (void) dealloc
 {	
-    // Release the display link
-	CVDisplayLinkRelease(displayLink);
-    
-    // Shutdown the GDK Game
-    Gdk::Application::Platform_ShutdownGame();
+    // Shutdown the Gdk 
+    [self shutdownGdk];
 	
     // Release the tracking area
     if (trackingArea)
