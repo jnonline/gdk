@@ -70,41 +70,45 @@ void Application::Update(float elapsedSeconds)
 	Game::Singleton->OnUpdate(elapsedSeconds);
 	
 	// Draw the game
-	Game::Singleton->OnDraw(elapsedSeconds);
+    if(exitRequest == false)
+        Game::Singleton->OnDraw(elapsedSeconds);
 
     // GDK Debug Stats
     // ----------------------
     
-    // Update the FPS counter
-    fpsTimer += elapsedSeconds;
-    fpsCounter++;
-    if(fpsTimer > 1.0f)
+    if(exitRequest == false)
     {
-        fpsTimer -= 1.0f;
-        CurrentFPS = fpsCounter;
-        fpsCounter = 0;
-    }
-    
-    // Render the debug stats
-    if(DebugStatsVisible == true)
-    {
-		// Setup a 2D projection matrix to draw in screen coordinates
-        int w = Application::GetWidth();
-        int h = Application::GetHeight();
-		Matrix3D proj = Matrix3D::CreateOrthoOffCenter(
-			0, (float) w,	// left / right
-			(float) h, 0,	// bottom / top
-			-1.0f, 1.0f		// far / near
-			);
-		Graphics::GlobalUniforms.Projection->SetMatrix4(proj);
-
-		// Draw the FPS string
-        wchar_t temp[64];
-		Vector2 textScale(0.7f, 0.7f);
-        swprintf(temp, 64, L"FPS: %d", CurrentFPS);
-        Renderer2D::DrawText(SharedAssets::Fonts.Arial20, temp, Vector2(width - 80.0f, 10), DebugStatsColor, textScale);
+        // Update the FPS counter
+        fpsTimer += elapsedSeconds;
+        fpsCounter++;
+        if(fpsTimer > 1.0f)
+        {
+            fpsTimer -= 1.0f;
+            CurrentFPS = fpsCounter;
+            fpsCounter = 0;
+        }
         
-        Renderer2D::Flush();
+        // Render the debug stats
+        if(DebugStatsVisible == true)
+        {
+            // Setup a 2D projection matrix to draw in screen coordinates
+            int w = Application::GetWidth();
+            int h = Application::GetHeight();
+            Matrix3D proj = Matrix3D::CreateOrthoOffCenter(
+                0, (float) w,	// left / right
+                (float) h, 0,	// bottom / top
+                -1.0f, 1.0f		// far / near
+                );
+            Graphics::GlobalUniforms.Projection->SetMatrix4(proj);
+
+            // Draw the FPS string
+            wchar_t temp[64];
+            Vector2 textScale(0.7f, 0.7f);
+            swprintf(temp, 64, L"FPS: %d", CurrentFPS);
+            Renderer2D::DrawText(SharedAssets::Fonts.Arial20, temp, Vector2(width - 80.0f, 10), DebugStatsColor, textScale);
+            
+            Renderer2D::Flush();
+        }
     }
     
 	// GDK Post-Update tasks
