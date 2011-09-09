@@ -8,8 +8,8 @@
 #include "Gdk.h"
 #include "GdkGLView.h"
 
-extern GdkGLView* _Gdk_Mac_MainGLView;
-
+extern GdkGLView*   _Gdk_Mac_MainGLView;
+extern NSWindow*    _Gdk_Mac_MainWindow;
 
 @implementation GdkAppDelegate
 

@@ -7,8 +7,9 @@
 #import "GdkGLView.h"
 #import "Gdk.h"
 
-extern bool _Gdk_Mac_IsMouseVisible;
-GdkGLView* _Gdk_Mac_MainGLView;
+extern bool         _Gdk_Mac_IsMouseVisible;
+extern GdkGLView*   _Gdk_Mac_MainGLView;
+extern NSWindow*    _Gdk_Mac_MainWindow;
 
 // --------------------------------------
 @interface GdkGLView (PrivateMethods)
@@ -114,23 +115,9 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 		CGLPixelFormatObj cglPixelFormat = (CGLPixelFormatObj) [[self pixelFormat] CGLPixelFormatObj];
 		CVDisplayLinkSetCurrentCGDisplayFromOpenGLContext(displayLink, cglContext, cglPixelFormat);
 		
-        // GDK Graphics Setup
-        // -----------------------------------
-        
         // Tell the GDK about the default OS frame buffers
         Gdk::Graphics::Platform_SetOSFrameBuffers(0, 0, 0, 0);
-        
-        // Init the GDK Graphics & Game
-        Gdk::Application::Platform_InitGame();
-        
-        // -----------------------------------
-        
-		// Activate the display link
-		CVDisplayLinkStart(displayLink);
-        
-        // Store a global reference to this view
-        _Gdk_Mac_MainGLView = self;
-	}
+    }
     
     [pixFormat release];
     
@@ -143,6 +130,9 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 {
     // The view and window have been created   (awoken from the nib)
     
+    // Setup the window
+    // -----------------------------------
+ 
     // Resize the window to the GDK settings
     NSSize windowSize;
     windowSize.width = Gdk::Application::GetWidth();
@@ -174,6 +164,19 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
                     userInfo: nil];
 	[self addTrackingArea: trackingArea];
 
+    
+    // Setup GDK Graphics & Start the Game
+    // -----------------------------------
+
+    // Store a global reference to the view & window
+    _Gdk_Mac_MainGLView = self;
+    _Gdk_Mac_MainWindow = [self window];
+    
+    // Init the GDK Graphics & Game
+    Gdk::Application::Platform_InitGame();
+    
+    // Activate the display link
+    CVDisplayLinkStart(displayLink);
 }
 
 // ********************************************************************
