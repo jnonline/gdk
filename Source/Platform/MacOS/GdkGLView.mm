@@ -130,6 +130,9 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 {
     // The view and window have been created   (awoken from the nib)
     
+    // Get the GDK application settings
+    Gdk::ApplicationSettings* appSettings = Gdk::Application::Platform_GetInitialAppSettings();
+    
     // Setup the window
     // -----------------------------------
  
@@ -138,6 +141,20 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
     windowSize.width = Gdk::Application::GetWidth();
     windowSize.height = Gdk::Application::GetHeight();
     [[self window] setContentSize:windowSize];
+    
+    // Disable resize?
+    if(appSettings->AllowResize == false)
+    {
+        NSUInteger styleMask = [[self window] styleMask];
+        styleMask &= ~NSResizableWindowMask;
+        [[self window] setStyleMask:styleMask];
+    }
+    
+    // Hide/Show various buttons
+    if(appSettings->ShowMinimizeBox == false)
+        [[[self window] standardWindowButton:NSWindowMiniaturizeButton] setHidden:YES];
+    if(appSettings->ShowMaximizeBox == false)
+        [[[self window] standardWindowButton:NSWindowZoomButton] setHidden:YES];
     
     // Update the window title
     const wchar_t* title = Gdk::Application::GetTitle();

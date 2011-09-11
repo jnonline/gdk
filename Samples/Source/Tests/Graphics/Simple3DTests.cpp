@@ -25,7 +25,7 @@ Simple3DTests::Simple3DTests()
 	// Load a test model
 	skeletalModel = NULL;
     AssetManager* assetManager = AssetManager::GetSingleton();
-	skeletalModel = assetManager->Load<Model>("Models/GHModels/GunHack3", &assetsPool, NULL);
+	//skeletalModel = assetManager->Load<Model>("Models/GHModels/GunHack3", &assetsPool, NULL);
 
 }
 
