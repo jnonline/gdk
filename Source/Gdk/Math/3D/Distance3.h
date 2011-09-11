@@ -26,6 +26,7 @@ namespace Gdk
 		// Point Distance Methods
 		// ---------------------------
         
+        static float PointToPoint(const Vector3& point1, const Vector3& point2);
         static float PointToRay(const Vector3& point, const Ray3& ray);
         static float PointToPlane(const Vector3& point, const Plane3& plane);
         static float PointToBox(const Vector3& point, const Box3& box);

@@ -13,6 +13,12 @@ using namespace Gdk;
 // ===================================================================================
 
 // *************************************************************************************
+float Distance2::PointToPoint(const Vector2& point1, const Vector2& point2)
+{
+    return Vector2::Distance(point1, point2);
+}
+
+// *************************************************************************************
 float Distance2::PointToRay(const Vector2& point, const Ray2& ray)
 {
     Vector2 diff = point - ray.Origin;
