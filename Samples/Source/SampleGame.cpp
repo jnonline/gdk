@@ -27,6 +27,9 @@ bool SampleGame::OnLoadSettings(ApplicationSettings &settings)
 	settings.Title = L"Gdk Sample Game";
 	settings.Width = 640;
 	settings.Height = 480;
+	settings.AllowResize = true;
+	settings.ShowMaximizeBox = true;
+	settings.ShowMinimizeBox = true;
 	settings.FixedTimeStep = 0.02f;
 	settings.UseFixedTimeStep = false;
 	settings.AssetManagerBackgroundThreads = 2;

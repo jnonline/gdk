@@ -12,11 +12,20 @@ namespace Gdk
 	// ******************************************************************
 	struct ApplicationSettings
 	{
+		// Window settings
 		UInt16 Width;
 		UInt16 Height;
 		wstring Title;
+		bool AllowResize;
+		bool ShowMinimizeBox;
+		bool ShowMaximizeBox;
+		//bool FullScreen;
+
+		// Time step settings
 		bool UseFixedTimeStep;
 		float FixedTimeStep;
+
+		// Threading settings
 		int AssetManagerBackgroundThreads;
 	};
 
@@ -35,22 +44,29 @@ namespace Gdk
         static bool DebugStatsVisible;
         static Color DebugStatsColor;
         static int CurrentFPS;
+
         
 	private:
 
 		// Internal Properties
 		// ================================
 
+		// Initial application settings
+		static ApplicationSettings initialAppSettings;
+
+		// Settings
 		static int width;
 		static int height;
 		static bool exitRequest;
 		static bool appIsActive;
 		static bool appIsSuspended;
 		static wstring title;
+
+		// Update loop timers
 		static float secondsSinceLastUpdate;
-        
         static double lastUpdateTime;
         
+		// Debug stats
         static float fpsTimer;
         static int fpsCounter;
 
@@ -80,6 +96,9 @@ namespace Gdk
 		static void Platform_OnActive();
 		static void Platform_OnDeactive();
 		static void Platform_OnResize(int newWidth, int newHeight);
+
+		// Utilities for platform binding
+		static ApplicationSettings* Platform_GetInitialAppSettings() { return &initialAppSettings;}
 
 		// =====================================================
 		// Game -> Application : interfaces

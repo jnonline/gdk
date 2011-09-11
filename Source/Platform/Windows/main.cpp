@@ -36,10 +36,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	if(Gdk::Application::Platform_InitGdk() == false)
 		return 0;
 
-	
-	Gdk::Quaternion q = Gdk::Quaternion::FromAxisAngle(Gdk::Vector3(0,1,0), Gdk::Math::PI * 0.25f);
-	Gdk::Vector3 axis;
-	float a = q.ToAxisAngle(axis);
+	// Get the GDK application settings
+	Gdk::ApplicationSettings* appSettings = Gdk::Application::Platform_GetInitialAppSettings();
 
 	// Create the window
 	// ------------------------------------------------------
@@ -58,11 +56,22 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	wc.lpszClassName = g_className;
 	RegisterClass( &wc );
 	
+	// Determine the window styles to use for this window
+	DWORD windowStyle = WS_CAPTION | WS_SYSMENU | WS_VISIBLE;
+	if(appSettings->AllowResize)
+		windowStyle |= WS_THICKFRAME;
+	if(appSettings->ShowMaximizeBox)
+		windowStyle |= WS_MAXIMIZEBOX;
+	if(appSettings->ShowMinimizeBox)
+		windowStyle |= WS_MINIMIZEBOX;
+	/* NOTE: use: WS_POPUPWINDOW for fullscreen */
+
 	// Create main window
 	g_hWnd = CreateWindow(
 		g_className, Gdk::Application::GetTitle(), 
-		WS_CAPTION | WS_OVERLAPPEDWINDOW | WS_VISIBLE, /* use: WS_POPUPWINDOW for fullscreen */
-		10, 10, Gdk::Application::GetWidth(), Gdk::Application::GetHeight(),
+		windowStyle, 
+		10, 10, 
+		Gdk::Application::GetWidth(), Gdk::Application::GetHeight(),
 		NULL, NULL, hInstance, NULL );
 
 	// Resize the window so the Client Rectangle is the appropriate size (not just the whole window)
