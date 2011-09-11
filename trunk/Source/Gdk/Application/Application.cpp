@@ -35,6 +35,8 @@ double Application::lastUpdateTime = 0.0f;
 float Application::fpsTimer = 0.0f;
 int Application::fpsCounter = 0;
 
+ApplicationSettings Application::initialAppSettings;
+
 
 // Static Event Instantiations
 // ======================================
@@ -141,23 +143,30 @@ bool Application::Platform_InitGdk()
 	// Create the game Singleton
 	Game::CreateSingleton();
 
-	// Load the application settings
-	ApplicationSettings appSettings;
-	appSettings.FixedTimeStep = FixedTimeStep;
-	appSettings.UseFixedTimeStep = IsUsingFixedTimeStep;
-	appSettings.AssetManagerBackgroundThreads = 1;
-	if(Game::Singleton->OnLoadSettings(appSettings) == false)
+	// Setup the default application settings
+	initialAppSettings.Width = 480;
+	initialAppSettings.Height = 320;
+	initialAppSettings.Title = L"GDK Application";
+	initialAppSettings.AllowResize = true;
+	initialAppSettings.ShowMinimizeBox = true;
+	initialAppSettings.ShowMaximizeBox = true;
+	initialAppSettings.FixedTimeStep = FixedTimeStep;
+	initialAppSettings.UseFixedTimeStep = IsUsingFixedTimeStep;
+	initialAppSettings.AssetManagerBackgroundThreads = 1;
+
+	// Load the application settings from the game
+	if(Game::Singleton->OnLoadSettings(initialAppSettings) == false)
 		return false;
 
-	// Copy the application settings 
-	IsUsingFixedTimeStep = appSettings.UseFixedTimeStep;
-	FixedTimeStep = appSettings.FixedTimeStep;
-	width = appSettings.Width;
-	height = appSettings.Height;
-	title = appSettings.Title;
+	// Copy the application settings that are dynamic
+	width = initialAppSettings.Width;
+	height = initialAppSettings.Height;
+	title = initialAppSettings.Title;
+	IsUsingFixedTimeStep = initialAppSettings.UseFixedTimeStep;
+	FixedTimeStep = initialAppSettings.FixedTimeStep;
 
 	// Initialize the Singleton asset manager
-	AssetManager::InitSingleton(appSettings.AssetManagerBackgroundThreads);
+	AssetManager::InitSingleton(initialAppSettings.AssetManagerBackgroundThreads);
 
 	// Setup the application states
 	exitRequest = false;
