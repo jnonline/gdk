@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{976A7F51-2C5A-4EF9-9BB4-0E4AEBDB53C9}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Gdk.Framework</RootNamespace>
+    <AssemblyName>Gdk.Framework</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\bin\Debug</OutputPath>
+    <DefineConstants>DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.85.5.452, Culture=neutral, PublicKeyToken=1b03e6acf1164f73">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\External\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core">
+    </Reference>
+    <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <Reference Include="pango-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <Reference Include="Mono.Posix" />
+    <Reference Include="OpenTK, Version=1.0.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\External\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="atk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Math\MathUtility.cs" />
+    <Compile Include="Math\Matrix.cs" />
+    <Compile Include="Math\Quaternion.cs" />
+    <Compile Include="Math\Sphere3.cs" />
+    <Compile Include="Math\Vector2.cs" />
+    <Compile Include="Math\Vector3.cs" />
+    <Compile Include="Utilities\BinaryWriterExtensions.cs" />
+    <Compile Include="Utilities\ExceptionUtilities.cs" />
+    <Compile Include="Utilities\StringUtilities.cs" />
+    <Compile Include="Utilities\XmlUtilities.cs" />
+    <Compile Include="Graphics\Color.cs" />
+    <Compile Include="Graphics\Surface.cs" />
+    <Compile Include="Images\IconsCache.cs" />
+    <Compile Include="Utilities\GDKEnums.cs" />
+    <Compile Include="Content\Build\BuildContext.cs" />
+    <Compile Include="Content\Build\DependencyTracker.cs" />
+    <Compile Include="Content\Build\Exceptions.cs" />
+    <Compile Include="Content\Build\Processor.cs" />
+    <Compile Include="Content\Build\ProcessorManager.cs" />
+    <Compile Include="Content\DOM\Asset.cs" />
+    <Compile Include="Content\DOM\Bundle.cs" />
+    <Compile Include="Content\DOM\ParameterSet.cs" />
+    <Compile Include="Content\Processors\BMFontProcessor.cs" />
+    <Compile Include="Content\Processors\FileProcessor.cs" />
+    <Compile Include="Content\Processors\Texture2DProcessor.cs" />
+    <Compile Include="Content\Processors\Atlas\Atlas.cs" />
+    <Compile Include="Content\Processors\Atlas\AtlasAnimation.cs" />
+    <Compile Include="Content\Processors\Atlas\AtlasImage.cs" />
+    <Compile Include="Content\Processors\Atlas\AtlasProcessor.cs" />
+    <Compile Include="Content\Processors\Atlas\AtlasSheet.cs" />
+    <Compile Include="Content\Processors\Model\ColladaModelProcessor.cs" />
+    <Compile Include="Content\Processors\Model\ModelContent.cs" />
+    <Compile Include="Content\Processors\Model\COLLADA\Animation.cs" />
+    <Compile Include="Content\Processors\Model\COLLADA\Collada.cs" />
+    <Compile Include="Content\Processors\Model\COLLADA\Controller.cs" />
+    <Compile Include="Content\Processors\Model\COLLADA\DataFlow.cs" />
+    <Compile Include="Content\Processors\Model\COLLADA\Effects.cs" />
+    <Compile Include="Content\Processors\Model\COLLADA\Geometry.cs" />
+    <Compile Include="Content\Processors\Model\COLLADA\Materials.cs" />
+    <Compile Include="Content\Processors\Model\COLLADA\Metadata.cs" />
+    <Compile Include="Content\Processors\Model\COLLADA\Parameters.cs" />
+    <Compile Include="Content\Processors\Model\COLLADA\Rendering.cs" />
+    <Compile Include="Content\Processors\Model\COLLADA\Scene.cs" />
+    <Compile Include="Content\Processors\Model\COLLADA\Texturing.cs" />
+    <Compile Include="Content\Processors\Model\COLLADA\Transform.cs" />
+    <Compile Include="Content\Build\ContentBuilder.cs" />
+    <Compile Include="Content\Build\IntermediateBuildData.cs" />
+    <Compile Include="UI\Gtk\GtmlTextBuffer.cs" />
+    <Compile Include="Utilities\PathUtilities.cs" />
+    <Compile Include="UI\Gtk\AssetViewers\AssetViewerHelper.cs" />
+    <Compile Include="gtk-gui\generated.cs" />
+    <Compile Include="UI\Gtk\AssetViewers\GdkImageViewerWindow.cs" />
+    <Compile Include="gtk-gui\Gdk.Framework.UI.GtkSharp.GdkImageViewerWindow.cs" />
+    <Compile Include="UI\Gtk\PropertyGrid.cs" />
+    <Compile Include="gtk-gui\Gdk.Framework.UI.GtkSharp.PropertyGrid.cs" />
+    <Compile Include="UI\Gtk\TestWindow.cs" />
+    <Compile Include="gtk-gui\Gdk.Framework.UI.GtkSharp.TestWindow.cs" />
+    <Compile Include="UI\Gtk\ColorSelector.cs" />
+    <Compile Include="gtk-gui\Gdk.Framework.UI.GtkSharp.ColorSelector.cs" />
+    <Compile Include="Content\Processors\Shader\ShaderContent.cs" />
+    <Compile Include="Content\Processors\Shader\ShaderProcessor.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="UI\" />
+    <Folder Include="UI\Gtk\" />
+    <Folder Include="UI\Gtk\AssetViewers\" />
+    <Folder Include="Content\Processors\Shader\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <EmbeddedResource Include="Images\16x16\Atlas.png" />
+    <EmbeddedResource Include="Images\16x16\Audio.png" />
+    <EmbeddedResource Include="Images\16x16\File.png" />
+    <EmbeddedResource Include="Images\16x16\Folder.png" />
+    <EmbeddedResource Include="Images\16x16\Model.png" />
+    <EmbeddedResource Include="Images\16x16\Shader.png" />
+    <EmbeddedResource Include="Images\16x16\Texture.png" />
+    <EmbeddedResource Include="Images\16x16\Video.png" />
+    <EmbeddedResource Include="Images\16x16\Package.png" />
+    <EmbeddedResource Include="Images\16x16\Font.png" />
+    <EmbeddedResource Include="gtk-gui\gui.stetic">
+      <LogicalName>gui.stetic</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Content\Processors\Atlas\AtlasFormat.txt" />
+    <None Include="UI\Gtk\Gtml-Reference.txt" />
+  </ItemGroup>
+</Project>

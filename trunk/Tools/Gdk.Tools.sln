@@ -1,11 +1,9 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gdk.Framework", "Gdk.Framework\Gdk.Framework.csproj", "{6A4198BC-4FB5-4638-A2C0-8F4B628E1F91}"
+
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gdk.Framework", "Gdk.Framework\Gdk.Framework.csproj", "{976A7F51-2C5A-4EF9-9BB4-0E4AEBDB53C9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gdk.ContentStudio", "Gdk.ContentStudio\Gdk.ContentStudio.csproj", "{0EB89AE2-CE10-4B94-A540-C07DC0A0DCC2}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gdk.AssetViewer", "Gdk.AssetViewer\Gdk.AssetViewer.csproj", "{F09D3D1E-6FD0-4F69-80DF-B4657F946434}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gdk.ContentStudio", "Gdk.ContentStudio\Gdk.ContentStudio.csproj", "{458F9266-108B-4F25-A382-ED4FE583AC26}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,20 +11,16 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6A4198BC-4FB5-4638-A2C0-8F4B628E1F91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6A4198BC-4FB5-4638-A2C0-8F4B628E1F91}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6A4198BC-4FB5-4638-A2C0-8F4B628E1F91}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6A4198BC-4FB5-4638-A2C0-8F4B628E1F91}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0EB89AE2-CE10-4B94-A540-C07DC0A0DCC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0EB89AE2-CE10-4B94-A540-C07DC0A0DCC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0EB89AE2-CE10-4B94-A540-C07DC0A0DCC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0EB89AE2-CE10-4B94-A540-C07DC0A0DCC2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F09D3D1E-6FD0-4F69-80DF-B4657F946434}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F09D3D1E-6FD0-4F69-80DF-B4657F946434}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F09D3D1E-6FD0-4F69-80DF-B4657F946434}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F09D3D1E-6FD0-4F69-80DF-B4657F946434}.Release|Any CPU.Build.0 = Release|Any CPU
+		{458F9266-108B-4F25-A382-ED4FE583AC26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{458F9266-108B-4F25-A382-ED4FE583AC26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{458F9266-108B-4F25-A382-ED4FE583AC26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{458F9266-108B-4F25-A382-ED4FE583AC26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{976A7F51-2C5A-4EF9-9BB4-0E4AEBDB53C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{976A7F51-2C5A-4EF9-9BB4-0E4AEBDB53C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{976A7F51-2C5A-4EF9-9BB4-0E4AEBDB53C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{976A7F51-2C5A-4EF9-9BB4-0E4AEBDB53C9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Gdk.ContentStudio\Gdk.ContentStudio.csproj
 	EndGlobalSection
 EndGlobal
