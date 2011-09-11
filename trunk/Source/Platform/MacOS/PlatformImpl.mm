@@ -53,13 +53,19 @@ string _Gdk_Platform_IO_GetCommonPath(CommonPaths::Enum commonPath)
             
         case CommonPaths::WorkingFolder:
         {
+            // Get the "Library/Application Support" folder
+            NSArray* paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
+			NSString* appSupportFolder = [paths objectAtIndex:0];
+
+            // Append the application name to get "Library/Application Support/MY APP"
+            NSDictionary *infoPList = [[NSBundle mainBundle] infoDictionary];
+            NSString *bundleName = [infoPList objectForKey:@"CFBundleName"];
             
-            // TODO(P1):   This ends up being the "Users/USER/Documents" folder, but should be a working folder in the app folder...
-            
-			// Get the application's "Documents" path
-			NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-			NSString* documentsFolder = [paths objectAtIndex:0];
-			return string([documentsFolder UTF8String]);
+            // Return the combined path
+            return Path::Combine(
+                [appSupportFolder UTF8String],
+                [bundleName UTF8String]
+                );
         }
     }
 
