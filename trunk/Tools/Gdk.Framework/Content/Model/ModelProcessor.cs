@@ -30,6 +30,11 @@ namespace Gdk.Content.Model
         public Dictionary<string, Mesh> MeshesByColladaId = new Dictionary<string, Mesh>();
         public Dictionary<string, Animation> AnimationsByColladaId = new Dictionary<string, Animation>();
 
+
+        // Flags for new errors as we encounter them
+        private bool newError_AnimationChannelHasInvalidTarget = true;
+
+
         /// <summary>
         /// Gets the descriptive details of this processor
         /// </summary>
@@ -370,9 +375,18 @@ namespace Gdk.Content.Model
                     return; // The channel does not target a node
 
                 // Make sure the target points at a matrix transform within the node
-                COLLADA.TransformBase transform = colladaNode.Transforms.First(n => n.Sid == targetParts[1]);
+                COLLADA.TransformBase transform = colladaNode.Transforms.SingleOrDefault(n => n.Sid == targetParts[1]);
                 if (transform == null || (transform is COLLADA.Matrix == false))
+                {
+                    // Is this the first time we've seen this error?
+                    if (newError_AnimationChannelHasInvalidTarget == true)
+                    {
+                        Context.LogWarn("An [animation/channel] node has an un-recognized target \"" + targetParts[1] + "\"");
+                        Context.LogWarn("  Did you BAKE your MATRIX animation & node data?");
+                        newError_AnimationChannelHasInvalidTarget = false;
+                    }
                     return; // This animation is not applied to a node matrix
+                }
 
                 // Find the Node referenced by the address ID
                 Node node = this.ResultModel.RootNode.FindNodeByColladaId(targetParts[0]);
@@ -755,8 +769,10 @@ namespace Gdk.Content.Model
                 if (string.IsNullOrEmpty(skinnedMesh.Name) == true)
                     skinnedMesh.Name = controller.Id;
 
-                // Clone the source mesh flags & primitives
+                // Copy the mesh flags
                 skinnedMesh.Flags = sourceMesh.Flags;
+
+                // Clone the source mesh primitives (triangles)
                 foreach (KeyValuePair<string, List<Triangle>> triangleBlobEntry in sourceMesh.TrianglesByMaterialSymbol)
                 {
                     // Clone the triangles assigned to this material
@@ -1993,6 +2009,15 @@ namespace Gdk.Content.Model
         /// </summary>
         public void ProcessDependentTexture(ref string textureRelPath, PixelFormats pixelFormat)
         {
+            // If the path is referenced via "file:" we attempt to use the file as if it locally exists
+            if (textureRelPath.StartsWith("file:") == true)
+            {
+                string localPath = Path.GetFileName(textureRelPath);
+                Context.LogWarn("Texture file is referenced by a full absolute path, will try using a local relative path of [" + localPath + "].");
+                Context.LogWarn("Original full path: [" + textureRelPath + "]");
+                textureRelPath = localPath;
+            }
+
             // Build the relative & full path to the output gdkimage
             string outputRelPath = Path.Combine(Path.GetDirectoryName(Asset.Path), textureRelPath);
             outputRelPath = Path.ChangeExtension(outputRelPath, "gdkimage");
