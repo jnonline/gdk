@@ -20,8 +20,8 @@ StarfieldSample::StarfieldSample()
 	for(size_t i=0; i<NUM_STARS; i++)
 	{
 		Star &star = stars[i];
-		star.Position.X = Gdk::Random::FromInterval(0, Application::GetWidth());
-		star.Position.Y = Gdk::Random::FromInterval(0, Application::GetHeight());
+		star.Position.X = (float) Gdk::Random::FromInterval(0, Application::GetWidth());
+		star.Position.Y = (float) Gdk::Random::FromInterval(0, Application::GetHeight());
 		star.Intensity = RANDOM_INTENSITY;
 	}
 }
