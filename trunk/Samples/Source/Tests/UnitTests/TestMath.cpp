@@ -252,6 +252,12 @@ TestStatus::Enum UnitTestsModule::Test_Math_Distance2D(TestExecutionContext *con
 {
     float distance;
     
+    // Point - Point
+    distance = Distance2::PointToPoint(Vector2(1.5f, 0.5f), Vector2(1.5f, 2.5f));
+    UNIT_TEST_CHECK(distance == 2.0f, L"Distance2::PointToPoint() - point distance test 1");
+    distance = Distance2::PointToPoint(Vector2(2.5f, 2.5f), Vector2(-2.5f, -2.5f));
+    UNIT_TEST_CHECK(COMPARE_FLOAT(distance, Math::Sqrt(50.0f)), L"Distance2::PointToPoint() - point distance test 2");
+    
     // Point - Ray
     Ray2 testRay(Vector2(1.0f, 1.0f), Vector2(1.0f, 0.0f));
     
@@ -620,6 +626,12 @@ TestStatus::Enum UnitTestsModule::Test_Math_Intersection2D(TestExecutionContext 
 TestStatus::Enum UnitTestsModule::Test_Math_Distance3D(TestExecutionContext *context)
 {
     float distance;
+    
+    // Point - Point
+    distance = Distance3::PointToPoint(Vector3(1.5f, 1.5f, 0.5f), Vector3(1.5f, 1.5f, 2.5f));
+    UNIT_TEST_CHECK(distance == 2.0f, L"Distance3::PointToPoint() - point distance test 1");
+    distance = Distance3::PointToPoint(Vector3(2.5f, 2.5f, 2.5f), Vector3(-2.5f, -2.5f, -2.5f));
+    UNIT_TEST_CHECK(COMPARE_FLOAT(distance, Math::Sqrt(75.0f)), L"Distance3::PointToPoint() - point distance test 2");
     
     // Point - Ray
     Ray3 testRay(Vector3(2.0f, 2.0f, 2.0f), Vector3(1.0f, 0.0f, 0.0f));

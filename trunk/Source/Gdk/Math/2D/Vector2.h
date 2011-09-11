@@ -49,7 +49,8 @@ namespace Gdk
 		inline float Dot (const Vector2& input) const;
         inline Vector2 GetPerpendicular() const;
 		inline float GetRotationAngle() const;
-		static Vector2 FromAngle(float angle); 
+		inline static Vector2 FromAngle(float angle);
+        inline static float Distance(const Vector2& v1, const Vector2& v2);
         
         // Coordinate System Conversion Methods
         void ToPolarCoordinate(float& r, float& theta);
@@ -300,5 +301,22 @@ namespace Gdk
 	{
 		return Math::ATan2(Y, X);	
 	}
+    
+    // ***********************************************************************
+    inline Vector2 Vector2::FromAngle(float angle)
+    {
+        return Vector2( 
+            Math::Cos(angle), 
+            Math::Sin(angle) 
+            );
+    }
+    
+    // ***********************************************************************
+    inline float Vector2::Distance(const Vector2& v1, const Vector2& v2)
+    {
+        float x = v1.X - v2.X;
+        float y = v1.Y - v2.Y;
+        return Math::Sqrt(x*x + y*y);
+    }
 
 } // namespace

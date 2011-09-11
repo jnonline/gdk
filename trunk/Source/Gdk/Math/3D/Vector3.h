@@ -55,6 +55,7 @@ namespace Gdk
 		inline float Dot (const Vector3& input) const;
 		inline Vector3 Cross (const Vector3& input) const;
 		inline Vector3 UnitCross (const Vector3& input) const;
+        inline static float Distance(const Vector3& v1, const Vector3& v2);
         
 		// Interpolation Methods
 		static Vector3 Lerp(const Vector3& start, const Vector3& end, float t);
@@ -322,5 +323,14 @@ namespace Gdk
 			X * input.Y - Y * input.X
 			);
 	}
+    
+    // ***********************************************************************
+    inline float Vector3::Distance(const Vector3& v1, const Vector3& v2)
+    {
+        float x = v1.X - v2.X;
+        float y = v1.Y - v2.Y;
+        float z = v1.Z - v2.Z;
+        return Math::Sqrt(x*x + y*y + z*z);
+    }
 
 } // namespace
