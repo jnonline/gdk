@@ -1,0 +1,40 @@
+
+--------------------------------------
+Supported 
+--------------------------------------
+
+Why? 
+	The Gdk tools needed an easy to use markup for simple text formatting
+	that could be translated into various encodings with ease.
+	
+Supported translations:
+	HTML
+	RTF
+	Pango
+	Gtk.TextBuffer tags
+	
+Usage:
+	Use the tags to enable/disable various feature.  Unlike XML / XHTML, the
+	markup does not require matching start/end tags.  End tags simple disable 
+	a formatting feature.
+	
+	This is <b> bold <u> bold+underline </b> underlined
+
+Tags:
+	<b>				Bold on
+	</b>			Bold off
+	<u>				Underline on
+	</u>			Underline off
+	<i>				Italic on
+	</i> 			Italic off
+	<size:X>		Sets the text size to X  (can be 1-7, default is 3)
+	</size>			Resets the text size to 3, the default
+	<color:RRGGBB>	Sets the text color (default = black)
+	</color> 		Resets the text color to black, the default
+	<link:url>		Starts a link until a </link> is found
+	</link>
+	
+Escape codes:
+	<<				<
+	\t				Tab
+	\n 				New Line	

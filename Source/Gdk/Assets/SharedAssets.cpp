@@ -65,10 +65,10 @@ void SharedAssets::Init()
 	SharedAssets::Atlases.Test = assetManager->Load<Atlas>("Atlas/Test", &Pool, NULL);
 
 	// Atlas Images & Animations
-	SharedAssets::AtlasImages.Test1 = SharedAssets::Atlases.Test->GetImage("Test\\Test1");
-	SharedAssets::AtlasImages.Particle1 = SharedAssets::Atlases.Test->GetImage("Test\\Particle1");
-	SharedAssets::AtlasImages.Particle2 = SharedAssets::Atlases.Test->GetImage("Test\\Particle2");
-	SharedAssets::AtlasImages.Fence = SharedAssets::Atlases.Test->GetImage("Test\\Fence");
+	SharedAssets::AtlasImages.Test1 = SharedAssets::Atlases.Test->GetImage("Test/Test1");
+	SharedAssets::AtlasImages.Particle1 = SharedAssets::Atlases.Test->GetImage("Test/Particle1");
+	SharedAssets::AtlasImages.Particle2 = SharedAssets::Atlases.Test->GetImage("Test/Particle2");
+	SharedAssets::AtlasImages.Fence = SharedAssets::Atlases.Test->GetImage("Test/Fence");
 	SharedAssets::AtlasAnimations.Chopper = SharedAssets::Atlases.Test->GetAnimation("Chopper");
 	
 	// Shared Buffers
