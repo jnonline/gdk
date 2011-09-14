@@ -82,8 +82,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	ptDiff.x = (rcWindow.right - rcWindow.left) - rcClient.right;
 	ptDiff.y = (rcWindow.bottom - rcWindow.top) - rcClient.bottom;
 	MoveWindow(g_hWnd, rcWindow.left, rcWindow.top, 
-		Gdk::Application::GetWidth() + ptDiff.x, 
-		Gdk::Application::GetHeight() + ptDiff.y, 
+		appSettings->Width + ptDiff.x, 
+		appSettings->Height + ptDiff.y, 
 		TRUE);
 	
 	// Show the window
