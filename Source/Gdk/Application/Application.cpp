@@ -49,11 +49,17 @@ Application::ApplicationEventHandler Application::Suspending;
 Application::ApplicationEventHandler Application::Resuming;
 
 // *****************************************************************
+/// @brief
+///     Default Constructor
+// *****************************************************************
 Application::Application ()
 {
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Internal Update method
+// *****************************************************************
 void Application::Update(float elapsedSeconds)
 {
 	// GDK Pre-Update tasks
@@ -119,22 +125,15 @@ void Application::Update(float elapsedSeconds)
 	Keyboard::PostUpdate(elapsedSeconds);
 }
 
-
-// ##########################################################################################
-//
-// Platform Methods
-//
-// ##########################################################################################
-
 // *****************************************************************
-/** Initializes all 1st-tier GDK sub-systems.
- 
- @remarks
-    1st-tier GDK sub-systems are any system that must be initialized before doing any platform specific setup.  Such as getting
-    the initial application settings and setting up memory tracking & logging.  This must be the first GDK method called on a platform
- @note
-    Should only be called by internal GDK platform interfaces.
- */
+/// @brief
+///     Initializes all 1st-tier GDK sub-systems.
+/// @remarks
+///     1st-tier GDK sub-systems are any system that must be initialized before doing any platform specific setup.  Such as getting
+///     the initial application settings and setting up memory tracking & logging.  This must be the first GDK method called on a platform
+/// @note
+///     Should only be called by internal GDK platform interfaces.
+// *****************************************************************
 bool Application::Platform_InitGdk()
 {
 	// Init the GDK Memory 
@@ -185,13 +184,13 @@ bool Application::Platform_InitGdk()
 }
 
 // *****************************************************************
-/** Shuts down the 1st-tier GDK sub-systems.
- 
- @remarks
-    Shuts down all 1st-tier GDK sub-systems in order.  This must be the last GDK method called on a platform
- @note
-    Should only be called by internal GDK platform interfaces.
- */
+/// @brief
+///     Shuts down the 1st-tier GDK sub-systems.
+/// @remarks
+///     Shuts down all 1st-tier GDK sub-systems in order.  This must be the last GDK method called on a platform
+/// @note
+///     Should only be called by internal GDK platform interfaces.
+// *****************************************************************
 void Application::Platform_ShutdownGdk()
 {
 	// Destroy the game singleton
@@ -207,15 +206,15 @@ void Application::Platform_ShutdownGdk()
 }
 
 // *****************************************************************
-/** Initializes the 2nd-tier GDK sub-systems
- 
- @remarks
-    2nd-tier GDK sub-systems are any systems that require an platform-specific or external context to be initialized.  Such as
-    an OpenGL context, a platform windowing system window, or any File system priviledges that must first be created.
-    This method also initializes the Game.  
- @note
-    Should only be called by internal GDK platform interfaces.
- */
+/// @brief
+///     Initializes the 2nd-tier GDK sub-systems
+/// @remarks
+///     2nd-tier GDK sub-systems are any systems that require an platform-specific or external context to be initialized.  Such as
+///     an OpenGL context, a platform windowing system window, or any File system priviledges that must first be created.
+///     This method also initializes the Game.  
+/// @note
+///     Should only be called by internal GDK platform interfaces.
+// *****************************************************************
 bool Application::Platform_InitGame()
 {
 	// Init 2nd Tier GDK Systems
@@ -231,14 +230,14 @@ bool Application::Platform_InitGame()
 }
 
 // *****************************************************************
-/** Shuts down the 2nd-tier GDK sub-systems.
- 
- @remarks
-    Shuts down all 2nd-tier GDK sub-systems in order.  This method must be called before destroying any platform-specific or
-    external contexts.
- @note
-    Should only be called by internal GDK platform interfaces.
- */
+/// @brief
+///     Shuts down the 2nd-tier GDK sub-systems.
+/// @remarks
+///     Shuts down all 2nd-tier GDK sub-systems in order.  This method must be called before 
+///     destroying any platform-specific or external contexts.
+/// @note
+///     Should only be called by internal GDK platform interfaces.
+// *****************************************************************
 void Application::Platform_ShutdownGame()
 {
 	// Fire the Exitting event
@@ -253,13 +252,13 @@ void Application::Platform_ShutdownGame()
 }
 
 // *****************************************************************
-/** The Main Loop interface for GDK platforms
-
- @remarks
-    Internally processes all game-loop based GDK systems.  Including calling the Game::Update and Game::Draw methods
- @note
-    Should only be called by internal GDK platform interfaces.
- */
+/// @brief
+///     The Main Loop interface for GDK platforms
+/// @remarks
+///     Internally processes all game-loop based GDK systems.  Including calling the Game::Update and Game::Draw methods
+/// @note
+///     Should only be called by internal GDK platform interfaces.
+// *****************************************************************
 void Application::Platform_MainLoop()
 {
     // Calculate the number of seconds that have elapsed since the last update
@@ -296,11 +295,11 @@ void Application::Platform_MainLoop()
 }
 
 // *****************************************************************
-/** Tells the GDK about a platform suspending the application
- 
- @note
-    Should only be called by internal GDK platform interfaces.
- */
+/// @brief
+///     Tells the GDK about a platform suspending the application
+/// @note
+///     Should only be called by internal GDK platform interfaces.
+// *****************************************************************
 void Application::Platform_OnSuspend()
 {
 	appIsSuspended = true;
@@ -310,11 +309,11 @@ void Application::Platform_OnSuspend()
 }
 
 // *****************************************************************
-/** Tells the GDK about a platform resuming the application
- 
- @note
-    Should only be called by internal GDK platform interfaces.
- */
+/// @brief
+///     Tells the GDK about a platform resuming the application
+/// @note
+///     Should only be called by internal GDK platform interfaces.
+// *****************************************************************
 void Application::Platform_OnResume()
 {
 	appIsSuspended = false;
@@ -324,11 +323,11 @@ void Application::Platform_OnResume()
 }
 
 // *****************************************************************
-/** Tells the GDK about a platform activating the application
- 
- @note
-    Should only be called by internal GDK platform interfaces.
- */
+/// @brief
+///     Tells the GDK about a platform activating the application
+/// @note
+///     Should only be called by internal GDK platform interfaces.
+// *****************************************************************
 void Application::Platform_OnActive()
 {
 	appIsActive = true;
@@ -338,11 +337,11 @@ void Application::Platform_OnActive()
 }
 
 // *****************************************************************
-/** Tells the GDK about a platform de-activating the application
- 
- @note
-    Should only be called by internal GDK platform interfaces.
- */
+/// @brief
+///     Tells the GDK about a platform de-activating the application
+/// @note
+///     Should only be called by internal GDK platform interfaces.
+// *****************************************************************
 void Application::Platform_OnDeactive()
 {
 	appIsActive = false;
@@ -352,11 +351,11 @@ void Application::Platform_OnDeactive()
 }
 
 // *****************************************************************
-/** Tells the GDK about a platform resizing of the application window
- 
- @note
-    Should only be called by internal GDK platform interfaces.
- */
+/// @brief
+///     Tells the GDK about a platform resizing of the application window
+/// @note
+///     Should only be called by internal GDK platform interfaces.
+// *****************************************************************
 void Application::Platform_OnResize(int newWidth, int newHeight)
 {
 	// Save the new dimensions
@@ -367,90 +366,83 @@ void Application::Platform_OnResize(int newWidth, int newHeight)
 	Resized.Invoke();
 }
 
-// ##########################################################################################
-//
-// Application Control Methods
-//
-// ##########################################################################################
-
 // *****************************************************************
-/** Returns true if an application shutdown has been requested, either by the GDK internally or by calling Application::Exit
- 
- @see 
-    Application::Exit
- */
+/// @brief
+///     Returns true if an application shutdown has been requested, either by the GDK internally or by calling Application::Exit
+/// @see 
+///     Application::Exit
+// *****************************************************************
 bool Application::IsExitRequest()
 {
 	return exitRequest;
 }
 
 // *****************************************************************
-/** Returns true if an application is currently active
- @see
-    Application::Activating
-    Application::Deactivating
- */
+/// @brief
+///     Returns true if an application is currently active
+/// @see
+///     Application::Activating
+///     Application::Deactivating
+// *****************************************************************
 bool Application::IsAppActive()
 {
 	return appIsActive;
 }
 
 // *****************************************************************
-/** Returns true if an application is currently suspended
- @see
-    Application::Resuming
-    Application::Suspending
- */
+/// @brief
+///     Returns true if an application is currently suspended
+/// @see
+///     Application::Resuming
+///     Application::Suspending
+// *****************************************************************
 bool Application::IsAppSuspended()
 {
 	return appIsSuspended;
 }
 
 // *****************************************************************
-/** Tells the GDK to shut the application down (Exit's gracefully)
- */
+/// @brief
+///     Tells the GDK to shut the application down (Exit's gracefully)
+// *****************************************************************
 void Application::Exit()
 {
 	exitRequest = true;
 }
 
-// ##########################################################################################
-//
-// Window Control Methods
-//
-// ##########################################################################################
-
-
 // *****************************************************************
-/** Gets the width of the application window / view
- */
+/// @brief
+///     Gets the width of the application window / view
+// *****************************************************************
 int Application::GetWidth()
 {
 	return width;
 }
 
 // *****************************************************************
-/** Gets the height of the application window / view
- */
+/// @brief
+///     Gets the height of the application window / view
+// *****************************************************************
 int Application::GetHeight()
 {
 	return height;
 }
 
 // *****************************************************************
-/** Gets the text displayed in the application window title
- */
+/// @brief
+///     Gets the text displayed in the application window title
+// *****************************************************************
 const wchar_t* Application::GetTitle()
 {
 	return title.c_str();
 }
 
 // *****************************************************************
-/** Sets the text displayed in the application window title
-
- @param title
-    Text title to be displayed in the application window title bar
- */
+/// @brief
+///     Sets the text displayed in the application window title
+/// @param title
+///     Text title to be displayed in the application window title bar
+// *****************************************************************
 void Application::SetTitle(const wchar_t* title)
 {
 	// Call the platform specific "SetTitle" method
