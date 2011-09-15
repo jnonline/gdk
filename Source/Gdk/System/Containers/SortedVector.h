@@ -15,7 +15,7 @@ namespace Gdk
 	//   the insert() & push_back() methods do not preserve sorting
 
 	template<class T>
-	class SortedVector : public vector<T>
+	class SortedVector : public std::vector<T>
 	{
 	public:
 		
