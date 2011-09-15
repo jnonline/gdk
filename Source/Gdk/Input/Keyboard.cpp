@@ -143,10 +143,35 @@ bool Keyboard::IsKeyJustReleased(Keys::Enum key)
 	return (keyStates[(int)key] & (KBFLAG_KEY_DOWN | KBFLAG_KEY_CHANGED)) == KBFLAG_KEY_CHANGED;
 }
 
+// ********************************************************************
+bool Keyboard::IsAnyKeyDown()
+{
+    // Loop through all the keys, checking if any are down
+    for(int index=0; index<256; index++)
+        if((keyStates[index] & KBFLAG_KEY_DOWN) == KBFLAG_KEY_DOWN)
+            return true;
+    return false;
+}
 
+// ********************************************************************
+bool Keyboard::IsAnyKeyJustPressed()
+{
+	// Loop through all the keys, checking if any are down
+    for(int index=0; index<256; index++)
+        if((keyStates[index] & (KBFLAG_KEY_DOWN | KBFLAG_KEY_CHANGED)) == (KBFLAG_KEY_DOWN | KBFLAG_KEY_CHANGED))
+            return true;
+    return false;
+}
 
-
-
+// ********************************************************************
+bool Keyboard::IsAnyKeyJustReleased()
+{
+	// Loop through all the keys, checking if any are down
+    for(int index=0; index<256; index++)
+        if((keyStates[index] & (KBFLAG_KEY_DOWN | KBFLAG_KEY_CHANGED)) == KBFLAG_KEY_CHANGED)
+            return true;
+    return false;
+}
 
 // ############################################################################
 //

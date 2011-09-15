@@ -60,6 +60,10 @@ namespace Gdk
 		static bool IsKeyToggled(Keys::Enum key);
 		static bool IsKeyJustPressed(Keys::Enum key);
 		static bool IsKeyJustReleased(Keys::Enum key);
+        
+        static bool IsAnyKeyDown();
+        static bool IsAnyKeyJustPressed();
+        static bool IsAnyKeyJustReleased();
 			
 		// Delegates
 		typedef Gdk::MulticastDelegate1<void, Keys::Enum>	KeyboardKeyEventHandler;
