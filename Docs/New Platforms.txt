@@ -35,22 +35,28 @@ NaCl							N/A
 == Project Setup
 ==================================================
 
-	- 1 LIB Project
-		
-		- Contains all the GDK SOurce code & platform specific code implementations
-		- Located in:  [Framework/Platform/XXX]
+
+- The project files must create a standalone executable
+	- Sample app project in [Samples/Build/PLATFORM_NAME]
+	- Starter project in [BuildTemplate/PLATFORM_NAME]
+
+- The project must do the following:
+
+	- Contains all Game/App code 		in [Source/Game]
+	- Contains all Gdk code 		in [Source/Gdk]
+	- Contains all platform specific code	in [Source/Platform/PLATFORM_NAME]
+
+	- Links to external tech dependencies 	in [Source/Platform/PLATFORM_NAME/External]
 	
-	- 1 EXE Project (per app)
-		
-		- Contains all Game/App code
-		- Links to external tech dependencies (see previous section)
-		- Bundles [Framework/Assets/Build] & [Game/Assets/Build] 
-			into the [Assets] folder of the final package	
+	- Copes the [Assets/Build] folder to the final package
 	
 
 ==================================================
 == Main Init/Update/Shutdown Loop control
 ==================================================
+
+- Checkout the Windows main.cpp for a great example...
+
 
 
 	// main() - Initialize everything
