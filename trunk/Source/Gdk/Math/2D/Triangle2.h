@@ -9,36 +9,68 @@
 
 namespace Gdk
 {
-
+    /// @addtogroup Math
+    /// @{
+    /// @addtogroup _2D
+    /// @{
+    
+    // =================================================================================
+    /// @brief
+    ///     Represents a 2D triangle
+    // =================================================================================
 	class Triangle2
 	{
 	public:
-		// Components
+		
+        // Public Properties
+		// =====================================================
+        
+        /// Three vertices of the triangle
 		Vector2 Vertices[3];
 		
-		// Constructors
+        // Public Methods
+		// =====================================================
+        
+        // ---------------------------------
+        /// @name Constructors
+        /// @{
+        
 		Triangle2 ();
 		Triangle2 (const Vector2& v1, const Vector2& v2, const Vector2& v3);
         Triangle2 (const Vector2* vertices);
 		Triangle2 (const Triangle2& input);
         
-        // Containment Methods
+        /// @}
+        // ---------------------------------
+        /// @name Containment Methods
+        /// @{
+        
 		inline bool Contains(float x, float y) const;
 		inline bool Contains(const Vector2& point) const;
+        
+        /// @}
 
 	};
     
-    // ===================================================================================
-	// Containment Methods
-	// ===================================================================================
+    /// @}
+    /// @}
     
-	// ***********************************************************************
+    // Inline Implementations
+	// ====================================
+    
+	// *****************************************************************
+    /// @brief
+    ///     Checks if the triangle contains a given point
+    // *****************************************************************
 	inline bool Triangle2::Contains(float x, float y) const
 	{
         return Contains(Vector2(x,y));
 	}
     
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Checks if the triangle contains a given point
+    // *****************************************************************
 	inline bool Triangle2::Contains(const Vector2& point) const
 	{
 		// Compute 2 vectors for the triangle edges and 1 for the point.  (all from a basis vertex of the triangle)

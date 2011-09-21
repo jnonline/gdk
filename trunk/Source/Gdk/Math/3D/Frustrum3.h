@@ -9,40 +9,83 @@
 
 namespace Gdk
 {
-
+    /// @addtogroup Math
+    /// @{
+    /// @addtogroup _3D
+    /// @{
+    
+    // =================================================================================
+    /// @brief
+    ///     Represents a 3D frustrum.
+    /// @remarks
+    ///     A frustrum is made of 6 planes defining the 6 sides of the frustrum
+	// =================================================================================
 	class Frustrum3
 	{
 	public:
-		// Components
+
+        // Public Properties
+		// =====================================================
+        
+        /// The planar 6 sides of the frustrum.
 		Plane3 Planes[6];
+        
+        /// The 8 corners of the frustrum
         Vector3 Corners[8];
 
-		// Constructors
+        // Public Methods
+		// =====================================================
+        
+        // ---------------------------------
+        /// @name Constructors
+        /// @{
+        
 		Frustrum3(const Matrix3D& matrix);
 		Frustrum3(const Frustrum3& input);
 
-		// Asssignment Operator
+        /// @}
+        // ---------------------------------
+        /// @name Operators
+        /// @{
+        
 		inline Frustrum3& operator= (const Frustrum3& input);
-
-		// Containment
+        
+        /// @}
+        // ---------------------------------
+        /// @name Containment Methods
+        /// @{
+        
         inline bool Contains(float x, float y, float z) const;
 		inline bool Contains(const Vector3& point) const;
+        
+        /// @}
+        // ---------------------------------
+        /// @name Utility Methods
+        /// @{
         
         // Calculates the frustrum planes & corners from the given matrix
         void SetMatrix(const Matrix3D& matrix);
         
+        /// @}
+        
     private:
         // Internal methods
+        void CalculateCorners();
         Ray3 GetIntersectionRay(const Plane3& plane1, const Plane3& plane2);
         Vector3 GetIntersectionPoint(const Plane3& plane, const Ray3& ray);
 
 	};
+    
+    /// @}  _3D
+    /// @}  Math
 
-	// ===================================================================================
-	// Asssignment Operator
-	// ===================================================================================
-
-	// ***********************************************************************
+	// Inline Implementations
+	// ====================================
+    
+	// *****************************************************************
+    /// @brief
+    ///     Assignment operator: copies the values of the given frustrum to this frustrum
+    // *****************************************************************
 	inline Frustrum3& Frustrum3::operator= (const Frustrum3& input)
 	{
 		Planes[0] = input.Planes[0];
@@ -55,11 +98,10 @@ namespace Gdk
 		return *this;
 	}
     
-    // ===================================================================================
-    // Containment Methods
-    // ===================================================================================
-    
-    // ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Checks if the given 3D point is inside this frustrum
+    // *****************************************************************
     bool Frustrum3::Contains(float x, float y, float z) const
     {
         // Loop through the planes
@@ -79,7 +121,10 @@ namespace Gdk
         return true;
     }
     
-    // ***********************************************************************
+    // *****************************************************************
+    /// @brief
+    ///     Checks if the given 3D point is inside this frustrum
+    // *****************************************************************
     bool Frustrum3::Contains(const Vector3& point) const
     {
         return Contains(point.X, point.Y, point.Z);

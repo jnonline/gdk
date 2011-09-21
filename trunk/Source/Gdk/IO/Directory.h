@@ -9,30 +9,38 @@
 
 namespace Gdk
 {
+    /// @addtogroup IO
+    /// @{
+    
+    // =================================================================================
+    /// @brief
+    ///     Static-only interface for creating, deleting, and managing file system directories
+	// =================================================================================
 	class Directory
 	{
-	private:
-		// Static only class
-		Directory();
-
 	public:
-		// Creates a new directory
+        
+        // Public Methods
+		// ================================
+		
+        // ---------------------------------
+        /// @name Methods
+        /// @{
+        
 		static void Create(const char* directoryPath);
-
-		// Checks if a directory exists at the given path
-		static bool Exists(const char* directoryPath);
-
-		// Deletes a directory (and optionally all child files & directories)
+        static bool Exists(const char* directoryPath);
 		static void Delete(const char* directoryPath, bool recursive);
-
-		// Moves / Renames a file
 		static void Move(const char* originalDirectoryPath, const char* newDirectoryPath);
 
+        /// @}
+        
 		// TODO(P2): 
 		//   Get Child Dirs
 		//   Get Child Files
 		//   Search with wildcards!
 	    
 	};
+    
+    /// @} // IO
 
 } // namespace Gdk

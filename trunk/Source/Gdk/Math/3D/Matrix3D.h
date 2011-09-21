@@ -9,23 +9,42 @@
 
 namespace Gdk
 {
-	// NOTE!!
-	//   All Camera/LookAt matrices assume 
-	//		X=Right
-	//		Y=Up
-	//		Z=Towards you
-
-	// *******************************************************
+	/// @addtogroup Math
+    /// @{
+    /// @addtogroup _3D
+    /// @{
+    
+    // =================================================================================
+    /// @brief
+    ///     A matrix for doing transforms in 3D space
+    /// @remarks
+    ///     This 4x4 matrix correctly performs various 3D space transforms such as translation,
+    ///     rotation, scaling, skewing, etc...
+    ///   @par
+    ///     All look-at and orientation matrices assume the following basis:
+    ///     @li - +X = Right
+    ///     @li - +Y = Up
+    ///     @li - +Z = Out the front of the screen
+    // =================================================================================
 	class Matrix3D
 	{
 	public:
-		// Components
+        
+		// Public Properties
+		// =====================================================
+        
 		float M11, M12, M13, M14;
 		float M21, M22, M23, M24;
 		float M31, M32, M33, M34;
 		float M41, M42, M43, M44;
 
-		// Constructors
+        // Public Methods
+		// =====================================================
+        
+        // ---------------------------------
+        /// @name Constructors
+        /// @{
+        
 		Matrix3D(bool identity = true);
 		Matrix3D(float m11, float m12, float m13, float m14, 
                  float m21, float m22, float m23, float m24, 
@@ -34,31 +53,40 @@ namespace Gdk
 		Matrix3D(float *components);
 		Matrix3D(const Matrix3D& input);
 
-		// Asssignment Operator
+        /// @}
+        // ---------------------------------
+        /// @name Operators
+        /// @{
+
 		inline Matrix3D& operator= (const Matrix3D& input);
 
-		// Comparison Operators
 		inline bool operator== (const Matrix3D& input) const;
 		inline bool operator!= (const Matrix3D& input) const;
 
-		// Arithmetic Operators
 		inline Matrix3D operator* (const Matrix3D& input) const;
 		inline Matrix3D operator* (float scalar) const;
 		inline Matrix3D operator/ (float scalar) const;
 		inline Matrix3D operator- () const;
 
-		// Arithmetic Update Operators
 		inline Matrix3D& operator*= (const Matrix3D& input);
 		inline Matrix3D& operator*= (float scalar);
 		inline Matrix3D& operator/= (float scalar);
 
-		// Vector Transformation Methods
-		inline Vector3 TransformVertex(const Vector3& vertex);
-		inline Vector3 TransformNormal(const Vector3& normal);
-		inline void TransformVertexInPlace(float& x, float& y, float& z);
-		inline void TransformNormalInPlace(float& x, float& y, float& z);
-
-		// In-Place Transformation Methods
+        /// @}
+        // ---------------------------------
+        /// @name Vector Transformation Methods
+        /// @{
+        
+		inline Vector3 TransformPoint(const Vector3& point);
+		inline Vector3 TransformDirection(const Vector3& direction);
+		inline void TransformPointInPlace(float& x, float& y, float& z);
+		inline void TransformDirectionInPlace(float& x, float& y, float& z);
+		
+        /// @}
+        // ---------------------------------
+        /// @name In-Place Matrix Transformation Methods
+        /// @{
+        
 		Matrix3D& MakeZero();
 		Matrix3D& MakeIdentity();
 		Matrix3D& Multiply(const Matrix3D& input);
@@ -83,7 +111,11 @@ namespace Gdk
 		Matrix3D& RotateQuaternion(const class Quaternion& quat);
 		Matrix3D& Reflect(const class Plane3& plane);
         
-        // Static Creation Methods
+        /// @}
+        // ---------------------------------
+        /// @name Matrix Creation Methods
+        /// @{
+        
 		static Matrix3D CreateTranslation(const Vector3& translation);
 		static Matrix3D CreateTranslation(float x, float y, float z);
 		static Matrix3D CreateScale(float scalar);
@@ -99,25 +131,47 @@ namespace Gdk
 		static Matrix3D CreateOrtho(float width, float height, float nearPlane, float farPlane);
 		static Matrix3D CreateOrthoOffCenter(float left, float right, float bottom, float top, float nearPlane, float farPlane);
 
-		// Extra Matrix Methods
+        /// @}
+        // ---------------------------------
+        /// @name Utility Methods
+        /// @{
+        
 		Matrix3D GetTranspose();
 		Matrix3D GetInverse();
 		float GetDeterminant();
 
-		// Stream Utilities
 		static Matrix3D ReadFromStream(class Stream* stream);
 		void WriteToStream(class Stream* stream);
 
-		// Special matrices
+		/// @}
+        
+        // Public Constants
+		// =====================================================
+        
+        // ---------------------------------
+        /// @name Static Constants
+        /// @{
+
+        
+		/// The Zero Matrix (all values are 0)
 		static const Matrix3D ZERO;
+        
+        /// The Identity Matrix
 		static const Matrix3D IDENTITY;
+        
+        /// @}
 	};
 	
-	// ===================================================================================
-	// Asssignment Operator
-	// ===================================================================================
-
-	// ***********************************************************************
+	/// @}
+    /// @}
+    
+    // Inline Implementations
+	// ====================================
+    
+	// *****************************************************************
+    /// @brief
+    ///     Assignement operator: copies the values of the given matrix to this matrix
+    // *****************************************************************
 	inline Matrix3D& Matrix3D::operator= (const Matrix3D& input)
 	{
 		M11 = input.M11; M12 = input.M12; M13 = input.M13; M14 = input.M14;
@@ -127,11 +181,10 @@ namespace Gdk
 		return *this;
 	}
 
-	// ===================================================================================
-	// Comparison Operators
-	// ===================================================================================
-
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Equality operator: returns true if two matrices have the same values
+    // *****************************************************************
 	inline bool Matrix3D::operator== (const Matrix3D& input) const
 	{
 		return M11 == input.M11 && M12 == input.M12 && M13 == input.M13 && M14 == input.M14
@@ -140,7 +193,10 @@ namespace Gdk
 			&& M41 == input.M41 && M42 == input.M42 && M43 == input.M43 && M44 == input.M44;
 	}
 
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Inequality operator: returns true if two matrices have different values
+    // *****************************************************************
 	inline bool Matrix3D::operator!= (const Matrix3D& input) const
 	{
 		return M11 != input.M11 || M12 != input.M12 || M13 != input.M13 || M14 != input.M14
@@ -149,11 +205,10 @@ namespace Gdk
 			|| M41 != input.M41 || M42 != input.M42 || M43 != input.M43 || M44 != input.M44;
 	}
 
-	// ===================================================================================
-	// Arithmetic Operators
-	// ===================================================================================
-
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Multiplies two matrices together
+    // *****************************************************************
 	inline Matrix3D Matrix3D::operator* (const Matrix3D& input) const
 	{
 		return Matrix3D(
@@ -179,7 +234,10 @@ namespace Gdk
 			);
 	}
 
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Multiplies a matrix by a scalar
+    // *****************************************************************
 	inline Matrix3D Matrix3D::operator* (float scalar) const
 	{
 		return Matrix3D(
@@ -190,7 +248,10 @@ namespace Gdk
 			);
 	}
 
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Divides a matrix by a scalar
+    // *****************************************************************
 	inline Matrix3D Matrix3D::operator/ (float scalar) const
 	{
 		if(scalar != 0.0f)
@@ -214,7 +275,10 @@ namespace Gdk
 		}
 	}
 
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Negates a matrix
+    // *****************************************************************
 	inline Matrix3D Matrix3D::operator- () const
 	{
 		return Matrix3D(
@@ -225,7 +289,11 @@ namespace Gdk
 			);
 	}
 
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Multiplies a vector by a matrix, effectively transforming the vector as a point.
+    // *****************************************************************
+
 	inline Vector3 operator* (const Vector3& v, const Matrix3D& m)
 	{
 		return Vector3(
@@ -235,11 +303,10 @@ namespace Gdk
 			);
 	}
 
-	// ===================================================================================
-	// Arithmetic Update Operators
-	// ===================================================================================
-
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Multiplies a given matrix into this matrix
+    // *****************************************************************
 	inline Matrix3D& Matrix3D::operator*= (const Matrix3D& input)
 	{
 		float m11 = M11 * input.M11 + M12 * input.M21 + M13 * input.M31 + M14 * input.M41;
@@ -270,7 +337,10 @@ namespace Gdk
 	}
 
 
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Multiplies this matrix by a scalar
+    // *****************************************************************
 	inline Matrix3D& Matrix3D::operator*= (float scalar)
 	{
 		M11 *= scalar; M12 *= scalar; M13 *= scalar; M14 *= scalar;
@@ -280,7 +350,10 @@ namespace Gdk
 		return *this;
 	}
 
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Divides this matrix by a scalar
+    // *****************************************************************
 	inline Matrix3D& Matrix3D::operator/= (float scalar)
 	{
 		if(scalar != 0.0f)
@@ -301,30 +374,52 @@ namespace Gdk
 		return *this;
 	}
 
-	// ===================================================================================
-	// Vector Transformation Methods
-	// ===================================================================================
-
-
-	inline Vector3 Matrix3D::TransformVertex(const Vector3& vertex)
+	// *****************************************************************
+    /// @brief
+    ///     Transforms a point vector by this matrix.
+    /// @remarks
+    ///     The complete transformation of the matrix is applied to the 
+    ///     point.
+    // *****************************************************************
+	inline Vector3 Matrix3D::TransformPoint(const Vector3& point)
 	{
 		return Vector3(
-			vertex.X * M11 + vertex.Y * M21 + vertex.Z * M31 + M41,
-			vertex.X * M12 + vertex.Y * M22 + vertex.Z * M32 + M42,
-			vertex.X * M13 + vertex.Y * M23 + vertex.Z * M33 + M43
+			point.X * M11 + point.Y * M21 + point.Z * M31 + M41,
+			point.X * M12 + point.Y * M22 + point.Z * M32 + M42,
+			point.X * M13 + point.Y * M23 + point.Z * M33 + M43
 			);
 	}
 
-	inline Vector3 Matrix3D::TransformNormal(const Vector3& normal)
+    // *****************************************************************
+    /// @brief
+    ///     Transforms a direction vector by this matrix (ignoring translation).
+    /// @remarks
+    ///     Only the rotation and scale factors of the matrix are applied to 
+    ///     the direction.  The translation component of the matrix will NOT be applied
+    // *****************************************************************
+	inline Vector3 Matrix3D::TransformDirection(const Vector3& direction)
 	{
 		return Vector3(
-			normal.X * M11 + normal.Y * M21 + normal.Z * M31,
-			normal.X * M12 + normal.Y * M22 + normal.Z * M32,
-			normal.X * M13 + normal.Y * M23 + normal.Z * M33
+			direction.X * M11 + direction.Y * M21 + direction.Z * M31,
+			direction.X * M12 + direction.Y * M22 + direction.Z * M32,
+			direction.X * M13 + direction.Y * M23 + direction.Z * M33
 			);
 	}
-
-	inline void Matrix3D::TransformVertexInPlace(float &x, float &y, float &z)
+    
+    // *****************************************************************
+    /// @brief
+    ///     Transforms an (x,y) point by this matrix.
+    /// @remarks
+    ///     The complete transformation of the matrix is applied to the 
+    ///     point directly.
+    /// @param[in,out] x
+    ///     X coordinate of the point to be transformed
+    /// @param[in,out] y
+    ///     Y coordinate of the point to be transformed
+    /// @param[in,out] z
+    ///     Z coordinate of the point to be transformed
+    // *****************************************************************
+	inline void Matrix3D::TransformPointInPlace(float &x, float &y, float &z)
 	{
 		float tempX = x * M11 + y * M21 + z * M31 + M41;
 		float tempY = x * M12 + y * M22 + z * M32 + M42;
@@ -333,7 +428,20 @@ namespace Gdk
 		x = tempX; y = tempY; z = tempZ;
 	}
 
-	inline void Matrix3D::TransformNormalInPlace(float &x, float &y, float &z)
+    // *****************************************************************
+    ///  @brief
+    ///     Transforms an (x,y) direction by this matrix (ignoring translation).
+    /// @remarks
+    ///     Only the rotation and scale factors of the matrix are applied to 
+    ///     the direction.  The translation component of the matrix will NOT be applied
+    /// @param[in,out] x
+    ///     X component of the direction to be transformed
+    /// @param[in,out] y
+    ///     Y component of the direction to be transformed
+    /// @param[in,out] z
+    ///     Z component of the direction to be transformed
+    // *****************************************************************
+	inline void Matrix3D::TransformDirectionInPlace(float &x, float &y, float &z)
 	{
 		float tempX = x * M11 + y * M21 + z * M31;
 		float tempY = x * M12 + y * M22 + z * M32;

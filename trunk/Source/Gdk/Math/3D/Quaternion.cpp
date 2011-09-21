@@ -12,12 +12,18 @@ using namespace Gdk;
 const Quaternion Quaternion::ZERO(0.0f, 0.0f, 0.0f, 0.0f);
 const Quaternion Quaternion::IDENTITY(1.0f, 0.0f, 0.0f, 0.0f);
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Default constructor
+// *****************************************************************
 Quaternion::Quaternion()
 {
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Constructs a quaternion from the given component values
+// *****************************************************************
 Quaternion::Quaternion(float w, float x, float y, float z)
 {
 	W = w;
@@ -26,7 +32,10 @@ Quaternion::Quaternion(float w, float x, float y, float z)
 	Z = z;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Copy constructor
+// *****************************************************************
 Quaternion::Quaternion(const Quaternion& input)
 {
 	W = input.W;
@@ -35,7 +44,10 @@ Quaternion::Quaternion(const Quaternion& input)
 	Z = input.Z;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Calculates the inverse of this quaternion
+// *****************************************************************
 Quaternion Quaternion::Inverse() const
 {
 	float lengthSquared = this->LengthSquared();
@@ -54,13 +66,23 @@ Quaternion Quaternion::Inverse() const
 	return Quaternion(0.0f, 0.0f, 0.0f, 0.0f);
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Calculates the Conjugate of this quaternion
+// *****************************************************************
 Quaternion Quaternion::Conjugate() const
 {
 	return Quaternion(W, -X, -Y, -Z);
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Calculates the axis and angle of rotation that represents this quaternion
+/// @param[out] axis
+///     This axis of rotation
+/// @return
+///     The angle of rotation, in radians.
+// *****************************************************************
 float Quaternion::ToAxisAngle(Vector3& axis) const
 {
 	// The quaternion representing the rotation is
@@ -88,7 +110,14 @@ float Quaternion::ToAxisAngle(Vector3& axis) const
 }
 
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Creates a quaternion that represents a rotation about an arbitrary axis
+/// @param axis
+///     This axis of rotation
+/// @return
+///     The angle of rotation, in radians.
+// *****************************************************************
 Quaternion Quaternion::FromAxisAngle(const Vector3& axis, float angle)
 {
 	float halfAngle = angle * 0.5f;
@@ -103,7 +132,10 @@ Quaternion Quaternion::FromAxisAngle(const Vector3& axis, float angle)
 		);
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Calculates the transformation matrix that matches the rotation in this quaternion
+// *****************************************************************
 Matrix3D Quaternion::ToRotationMatrix() const
 {
 	// Compute a bunch of intermediate float vales
@@ -129,7 +161,12 @@ Matrix3D Quaternion::ToRotationMatrix() const
 		);
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Creates a quaternion that represents the rotation in a transformation matrix
+/// @param matrix
+///     A transformation matrix.
+// *****************************************************************
 Quaternion Quaternion::FromRotationMatrix(const Matrix3D& matrix)
 {
 	float trace = matrix.M11 + matrix.M22 + matrix.M33;
@@ -175,7 +212,16 @@ Quaternion Quaternion::FromRotationMatrix(const Matrix3D& matrix)
 
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Creates a quaternion that represents rotations about the 3 main axes
+/// @param pitch
+///     Angle of rotation about the X axis
+/// @param yaw
+///     Angle of rotation about the Y axis
+/// @param roll
+///     Angle of rotation about the Z axis
+// *****************************************************************
 Quaternion Quaternion::FromPitchYawRoll(float pitch, float yaw, float roll)
 {
 	float halfPitch = pitch * 0.5f;
@@ -196,7 +242,14 @@ Quaternion Quaternion::FromPitchYawRoll(float pitch, float yaw, float roll)
 		);
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Creates a quaternion that rotates from one vector to another
+/// @param start
+///     The initial vector direction
+/// @param end
+///     The end vector direction that the quaternion will rotate to
+// *****************************************************************
 Quaternion Quaternion::FromAlignment(const Vector3& start, const Vector3& end)
 {
 	Vector3 bisector = start + end;
@@ -237,7 +290,16 @@ Quaternion Quaternion::FromAlignment(const Vector3& start, const Vector3& end)
 	return quaternion;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Interpolates between two quaternions using spherical linear interpolation
+/// @param t
+///     t-Value of the interpolation
+/// @param start
+///     The starting quaternion, represented at t=0
+/// @param end
+///     The end quaternion, represented at t=1
+// *****************************************************************
 Quaternion Quaternion::Slerp(float t, const Quaternion& start, const Quaternion& end)
 {
 	float cos = start.Dot(end);
@@ -262,7 +324,18 @@ Quaternion Quaternion::Slerp(float t, const Quaternion& start, const Quaternion&
     return start;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Interpolates between two quaternions using spherical linear interpolation, and adds extra spins.
+/// @param t
+///     t-Value of the interpolation
+/// @param start
+///     The starting quaternion, represented at t=0
+/// @param end
+///     The end quaternion, represented at t=1
+/// @param extraSpins
+///     Whole number of extra spins to use in the interpolation.
+// *****************************************************************
 Quaternion Quaternion::SlerpExtraSpins(float t, const Quaternion& start, const Quaternion& end, int extraSpins)
 {
 	float cos = start.Dot(end);

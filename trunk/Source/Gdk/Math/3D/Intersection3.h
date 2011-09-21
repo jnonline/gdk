@@ -14,14 +14,22 @@
 
 namespace Gdk
 {
-    // =============================================
-    // The Intersection3 class contains methods for testing & finding intersections between 3D math primitives.
-    // Use the appropriate method for each intersection type:
-    //
-    // Test() - Simply returns true if the 2 primitives intersect in some way  (Faster than calling Find())
-    // Find() - Finds the actual intersection of 2 primitives.
+    /// @addtogroup Math
+    /// @{
+    /// @addtogroup _3D
+    /// @{
     
-    // =============================================
+    // =================================================================================
+    /// @brief
+    ///     Provides static methods for testing and finding intersections between 3D primitives
+    /// @remarks
+    ///     @li Test() - The Test methods simply test for an intersection between two primitives, 
+    ///                  which is generally much faster than finding the actual intersection.
+    ///
+    ///     @li Find() - The Find methods find the actual intersection between two primitives, which
+    ///                  may be a complex shape in itself.  This operation is generally slower than
+	///                  simply testing for an intersection
+    // =================================================================================
 	class Intersection3
 	{
     protected:
@@ -31,35 +39,19 @@ namespace Gdk
         
 	public:
         
-		// Ray Intersection Methods
-		// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+        // Public Methods
+		// =====================================================
         
-        // NOTE: the 'distance' out-parameter in the Find methods, is the length along the casting (first) ray
-
-		// Ray -> Plane
-		static bool Test(const Ray3& ray, const Plane3& plane);
-		static bool Find(const Ray3& ray, const Plane3& plane, float& distance);
-
-		// Ray -> Sphere
+        // --------------------------------------------
+        /// @name Test Intersection Methods
+        /// @{
+        
+        static bool Test(const Ray3& ray, const Plane3& plane);
 		static bool Test(const Ray3& ray, const Sphere3& sphere);
-		static bool Find(const Ray3& ray, const Sphere3& sphere, float& distance);
-        
-        // Ray -> Box
 		static bool Test(const Ray3& ray, const Box3& box);
-		static bool Find(const Ray3& ray, const Box3& box, float& distance);
-
-        // Ray -> Frustrum
 		static bool Test(const Ray3& ray, const Frustrum3& frustrum);
-		static bool Find(const Ray3& ray, const Frustrum3& frustrum, float& distance);
 
-        
-        // Primitive Intersection Methods
-        // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-        // Frustrum -> Plane
         static bool Test(const Frustrum3& frustrum, const Plane3& plane);
-        
-        // Frustrum -> Sphere
         static bool Test(const Frustrum3& frustrum, const Sphere3& sphere);
         
         // Frustrum -> Box
@@ -68,33 +60,29 @@ namespace Gdk
         //      "Optimized view frustrum culling algorithms for bounding boxes" : Assarsson & Moller
         //static bool Test(const Frustrum3& frustrum, const Box3& box);
         
-        // -----------------------------
-        
-        // Plane -> Plane
         static bool Test(const Plane3& plane1, const Plane3& plane2);
-        
-        // Plane -> Sphere
         static bool Test(const Plane3& plane, const Sphere3& sphere);
-        
-        // Plane -> Box
         static bool Test(const Plane3& plane, const Box3& box);
         
-        // -----------------------------
-        
-        // Sphere -> Sphere
         static bool Test(const Sphere3& sphere1, const Sphere3& sphere2);
-        
-        // Sphere -> Box
         static bool Test(const Sphere3& sphere, const Box3& box);
         
-        // -----------------------------
-    
-        // Box -> Box
         static bool Test(const Box3& box1, const Box3& box2);
         
+        /// @}
+        // --------------------------------------------
+        /// @name Find Intersection Methods
+        /// @{
         
-        // Utility methods
-        // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+        static bool Find(const Ray3& ray, const Plane3& plane, float& distance);
+        static bool Find(const Ray3& ray, const Sphere3& sphere, float& distance);
+        static bool Find(const Ray3& ray, const Box3& box, float& distance);
+        static bool Find(const Ray3& ray, const Frustrum3& frustrum, float& distance);
+
+        /// @}
+        // --------------------------------------------
+        /// @name Utility methods
+        /// @{
         
         static IntersectionType::Enum Intersect_Line_Box(
             float startT, float endT,
@@ -104,6 +92,10 @@ namespace Gdk
             );
         static bool Clip_Box_Line(float denominator, float numerator, float& t0, float& t1);
         
+        /// @}
 	};
+    
+    /// @}  _3D
+    /// @}  Math
 
 } // namespace

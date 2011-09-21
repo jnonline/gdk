@@ -24,32 +24,49 @@
 
 namespace Gdk
 {
-	// =========================================================
-	class MersenneTwister
+	/// @addtogroup Math
+    /// @{
+    /// @addtogroup Random
+    /// @{
+    
+    // =================================================================================
+    ///	@brief
+    ///		Mersenne Twister based random number generator.
+    // =================================================================================
+    class MersenneTwister
 	{
 	public:
 	    
-		// Instance Methods
-		// ---------------------------------------
-
-		// CTor
+		// Public Methods
+		// =====================================================
+        
+        // ---------------------------------
+        /// @name Methods
+        /// @{
+        
 		MersenneTwister(UInt32 seed);
-
-		// Seed the random
 		void Seed(UInt32 seed);
 
-		// Integer Methods
 		UInt32 GetUInt32();
 		Int32 GetInt32();
 		Int32 FromInterval(Int32 min, Int32 max);
-
-		// Floating Point Methods
-		float GetUnit();							// [ 0, 1]
-		float GetSymmetric();						// [-1, 1]
-		float FromInterval(float min, float max);	// [min, max]
+		
+        float GetUnit();
+		float GetSymmetric();
+		float FromInterval(float min, float max);
+        
+        /// @}
 
 	private:
+        
+        // Public Propertiers
+		// =====================================================
+        
 		UInt32 mt[MERSENNE_TWISTER_N];
 		Int32 mti;
 	};
+    
+    /// @}  Random
+    /// @}  Math
+    
 } // namespace Gdk

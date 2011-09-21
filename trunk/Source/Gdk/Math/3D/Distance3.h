@@ -10,11 +10,15 @@
 
 namespace Gdk
 {
-    // =============================================
-    // The Distance3 class contains methods finding distances between 2D primitives
-    //
+    /// @addtogroup Math
+    /// @{
+    /// @addtogroup _3D
+    /// @{
     
-    // =============================================
+    // =================================================================================
+    /// @brief
+    ///     Provides static methods for finding distances between 3D primitives
+	// =================================================================================
 	class Distance3
 	{
     private:
@@ -23,14 +27,23 @@ namespace Gdk
 
 	public:
         
-		// Point Distance Methods
-		// ---------------------------
+		// Public Methods
+		// =====================================================
+        
+        // ---------------------------------
+        /// @name Methods
+        /// @{
         
         static float PointToPoint(const Vector3& point1, const Vector3& point2);
         static float PointToRay(const Vector3& point, const Ray3& ray);
         static float PointToPlane(const Vector3& point, const Plane3& plane);
         static float PointToBox(const Vector3& point, const Box3& box);
         static float PointToSphere(const Vector3& point, const Sphere3& sphere);
+        
+        /// @}
     };
+    
+    /// @}  _3D
+    /// @}  Math
 
 } // namespace

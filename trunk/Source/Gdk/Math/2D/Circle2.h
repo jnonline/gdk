@@ -10,39 +10,66 @@
 
 namespace Gdk 
 {
-
+    /// @addtogroup Math
+    /// @{
+    /// @addtogroup _2D
+    /// @{
+    
+    // =================================================================================
+    /// @brief
+    ///     Represents a 2D circle.
+    // =================================================================================
 	class Circle2
 	{
 	public:
-		// Components
+
+        // Public Properties
+		// =====================================================
+        
+        /// Center of the circle
 		Vector2 Center;
+        
+        /// Radius of the circle
 		float Radius;
 
-		// Constructors
+        // Public Methods
+		// =====================================================
+        
+        // ---------------------------------
+        /// @name Constructors
+        /// @{
+        
 		Circle2();
 		Circle2(float x, float y, float radius);
 		Circle2(const Vector2& center, float radius);
 		Circle2(const Circle2& input);
-
-		// Asssignment Operator
+        
+        /// @}
+        // ---------------------------------
+        /// @name Operators
+        /// @{
+        
 		inline Circle2& operator= (const Circle2& input);
-
-		// Comparison Operators
 		inline bool operator== (const Circle2& input) const;
 		inline bool operator!= (const Circle2& input) const;
-
-		// Containment Methods
+        
+        /// @}
+        // ---------------------------------
+        /// @name Containment Methods
+        /// @{
+        
 		inline bool Contains(float x, float y) const;
 		inline bool Contains(const Vector2& point) const;
         
-        //inline bool Intersects(const Circle2& input) const;
-
-		// Point Conversions
-		Vector2 GetParametricPointInArea(float tAngle, float tRadius);
+        /// @}
+        // ---------------------------------
+        /// @name Geometric Methods
+        /// @{
+        
+        Vector2 GetParametricPointInArea(float tAngle, float tRadius);
 		Vector2 GetParametricPointOnPerimeter(float tAngle);
         
-		// Encapsulation Methods
-        static Circle2 FromPoints(size_t numPoints, const Vector2* points);
+		static Circle2 FromPoints(size_t numPoints, const Vector2* points);
 		static Circle2 Merge(const Circle2& c1, const Circle2& c2);
         
         static Circle2 CircumscribeTriangle(const Triangle2& triangle);
@@ -51,15 +78,34 @@ namespace Gdk
         static Circle2 InscribeTriangle(const Vector2& p1, const Vector2& p2, const Vector2& p3);
         static Circle2 CircumscribeRectangle(const Rectangle2& rect);
 
-		// special constants
+        /// @}
+        
+        // Public Constants
+		// =====================================================
+        
+        // ---------------------------------
+        /// @name Static Constants
+        /// @{
+        
+        /// Zero circle centered at (0,0) with radius 0
 		static const Circle2 ZERO;    // Center(0,0) Radius(0)
+        
+        /// Unit circle centered at (0,0) with radius 1.0
+        static const Circle2 UNIT;
+        
+        /// @}
 	};
 
-	// ===================================================================================
-	// Asssignment Operator
-	// ===================================================================================
-
-	// ***********************************************************************
+	/// @}
+    /// @}
+    
+    // Inline Implementations
+	// ====================================
+    
+	// *****************************************************************
+    /// @brief
+    ///     Assignement operator: copies the values of the given circle to this circle
+    // *****************************************************************
 	inline Circle2& Circle2::operator= (const Circle2& input)
 	{
 		Center = input.Center;
@@ -67,30 +113,31 @@ namespace Gdk
 		return *this;
 	}
 
-	// ===================================================================================
-	// Comparison Operators
-	// ===================================================================================
-
-	// ***********************************************************************
-	inline bool Circle2::operator== (const Circle2& input) const
+	// *****************************************************************
+    /// @brief
+    ///     Equality operator: returns true if two circles have the same center and radius
+    // *****************************************************************
+    inline bool Circle2::operator== (const Circle2& input) const
 	{
 		return 
 			Center == input.Center && Radius == input.Radius;
 	}
 
-	// ***********************************************************************
+    // *****************************************************************
+    /// @brief
+    ///     Inequality operator: returns true if two circles have a different center or radius
+    // *****************************************************************
 	inline bool Circle2::operator!= (const Circle2& input) const
 	{
 		return 
 			Center != input.Center || Radius != input.Radius;
 	}
 
-	// ===================================================================================
-	// Containment Methods
-	// ===================================================================================
-
-	// ***********************************************************************
-	inline bool Circle2::Contains(float x, float y) const
+    // *****************************************************************
+    /// @brief
+    ///     Checks if the circle contains a given point
+    // *****************************************************************
+    inline bool Circle2::Contains(float x, float y) const
 	{
 		// Get the distance squared between the circle center & the point
 		float xDiff = x - this->Center.X;
@@ -99,7 +146,10 @@ namespace Gdk
 		return distanceSquared <= this->Radius * this->Radius;
 	}
 
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Checks if the circle contains a given point
+    // *****************************************************************
 	inline bool Circle2::Contains(const Vector2& point) const
 	{
 		return Contains(point.X, point.Y);

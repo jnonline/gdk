@@ -12,18 +12,23 @@ using namespace Gdk;
 const Matrix2D Matrix2D::ZERO(false);
 const Matrix2D Matrix2D::IDENTITY(true);
 
-// ===================================================================================
-// Constructors
-// ===================================================================================
-
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Constructs a new matrix.
+/// @param identity
+///     If true (default), the matrix values will be set to the identity matrix.  
+///     Otherwise the matrix values will be undefined.
+// *****************************************************************
 Matrix2D::Matrix2D(bool identity)
 {
 	if(identity)
 		MakeIdentity();
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Constructs a new matrix from a set of values
+// *****************************************************************
 Matrix2D::Matrix2D(float m11, float m12, float m13, float m21, float m22, float m23, float m31, float m32, float m33)
 {
 	M11 = m11;	M12 = m12;	M13 = m13;
@@ -31,7 +36,10 @@ Matrix2D::Matrix2D(float m11, float m12, float m13, float m21, float m22, float 
 	M31 = m31;	M32 = m32;	M33 = m33;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Copy constructor
+// *****************************************************************
 Matrix2D::Matrix2D(const Matrix2D& input)
 {
 	M11 = input.M11;	M12 = input.M12;	M13 = input.M13;
@@ -40,11 +48,10 @@ Matrix2D::Matrix2D(const Matrix2D& input)
 }
 
 
-// ===================================================================================
-// In-Place Transformations
-// ===================================================================================
-
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Sets all the values of the matrix to 0
+// *****************************************************************
 Matrix2D& Matrix2D::MakeZero()
 {
 	M11 = 0.0f;		M12 = 0.0f;		M13 = 0.0f;
@@ -53,7 +60,10 @@ Matrix2D& Matrix2D::MakeZero()
 	return *this;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Sets the values of the matrix to be the identity matrix
+// *****************************************************************
 Matrix2D& Matrix2D::MakeIdentity()
 {
 	M11 = 1.0f;		M12 = 0.0f;		M13 = 0.0f;
@@ -62,7 +72,10 @@ Matrix2D& Matrix2D::MakeIdentity()
 	return *this;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Multiplies this matrix with a given matrix
+// *****************************************************************
 Matrix2D& Matrix2D::Multiply(const Matrix2D& input)
 {
 	float m11 = M11 * input.M11 + M12 * input.M21 + M13 * input.M31;
@@ -81,7 +94,10 @@ Matrix2D& Matrix2D::Multiply(const Matrix2D& input)
 	return *this;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Multiplies this matrix with a given matrix (as direct values)
+// *****************************************************************
 Matrix2D& Matrix2D::Multiply(float m11, float m12, float m13, float m21, float m22, float m23, float m31, float m32, float m33)
 {
 	float finalM11 = M11 * m11 + M12 * m21 + M13 * m31;
@@ -100,7 +116,10 @@ Matrix2D& Matrix2D::Multiply(float m11, float m12, float m13, float m21, float m
 	return *this;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Multiplies a given matrix by this matrix
+// *****************************************************************
 Matrix2D& Matrix2D::PreMultiply(const Matrix2D& input)
 {
     float m11 = input.M11 * M11 + input.M12 * M21 + input.M13 * M31;
@@ -119,7 +138,10 @@ Matrix2D& Matrix2D::PreMultiply(const Matrix2D& input)
 	return *this;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Multiplies a given matrix (as direct values) with this matrix
+// *****************************************************************
 Matrix2D& Matrix2D::PreMultiply(float m11, float m12, float m13, float m21, float m22, float m23, float m31, float m32, float m33)
 {
     float finalM11 = m11 * M11 + m12 * M21 + m13 * M31;
@@ -138,8 +160,12 @@ Matrix2D& Matrix2D::PreMultiply(float m11, float m12, float m13, float m21, floa
 	return *this;
 }
 
-
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Applies a translation to this matrix's current transform
+/// @param translation
+///     A direction vector representing the translation
+// *****************************************************************
 Matrix2D& Matrix2D::Translate(const Vector2& translation)
 {
 	Multiply(
@@ -150,7 +176,14 @@ Matrix2D& Matrix2D::Translate(const Vector2& translation)
 	return *this;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Applies a translation to this matrix's current transform
+/// @param x
+///     X-component of the translation vector
+/// @param y
+///     Y-component of the translation vector
+// *****************************************************************
 Matrix2D& Matrix2D::Translate(float x, float y)
 {
 	Multiply(
@@ -161,7 +194,12 @@ Matrix2D& Matrix2D::Translate(float x, float y)
 	return *this;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Applies uniform scaling to this matrix's current transform
+/// @param scale
+///     The uniform scale factor
+// *****************************************************************
 Matrix2D& Matrix2D::Scale(float scale)
 {
 	Multiply(
@@ -172,7 +210,14 @@ Matrix2D& Matrix2D::Scale(float scale)
 	return *this;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Applies non-uniform scaling to this matrix's current transform
+/// @param sx
+///     The X-component of the non-uniform scale factor
+/// @param sy
+///     The Y-component of the non-uniform scale factor
+// *****************************************************************
 Matrix2D& Matrix2D::Scale(float sx, float sy)
 {
 	Multiply(
@@ -183,7 +228,12 @@ Matrix2D& Matrix2D::Scale(float sx, float sy)
 	return *this;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Applies a rotation to this matrix's current transform
+/// @param angle
+///     The angle of the rotation
+// *****************************************************************
 Matrix2D& Matrix2D::Rotate(float angle)
 {
 	float sinTheta = Math::Sin(angle);
@@ -197,7 +247,23 @@ Matrix2D& Matrix2D::Rotate(float angle)
 	return *this;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Applies scaling, rotation, and translation to this matrix's current transform
+/// @remarks
+///     The transformations are applied in the exact order as defined by the method name:
+///     Scaling, Rotation, then Translation.
+/// @param sx
+///     The X-component of the non-uniform scale factor
+/// @param sy
+///     The Y-component of the non-uniform scale factor
+/// @param tx
+///     The X-component of the translation
+/// @param ty
+///     The Y-component of the translation
+/// @param angle
+///     The angle of the rotation
+// *****************************************************************
 Matrix2D& Matrix2D::ScaleRotateTranslate(float sx, float sy, float tx, float ty, float angle)
 {
 	float sinTheta = Math::Sin(angle);
@@ -211,7 +277,23 @@ Matrix2D& Matrix2D::ScaleRotateTranslate(float sx, float sy, float tx, float ty,
 	return *this;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Applies rotation, scaling, and translation to this matrix's current transform
+/// @remarks
+///     The transformations are applied in the exact order as defined by the method name:
+///     Rotation, Scaling, then Translation.
+/// @param sx
+///     The X-component of the non-uniform scale factor
+/// @param sy
+///     The Y-component of the non-uniform scale factor
+/// @param tx
+///     The X-component of the translation
+/// @param ty
+///     The Y-component of the translation
+/// @param angle
+///     The angle of the rotation
+// *****************************************************************
 Matrix2D& Matrix2D::RotateScaleTranslate(float sx, float sy, float tx, float ty, float angle)
 {
 	float sinTheta = Math::Sin(angle);
@@ -225,11 +307,12 @@ Matrix2D& Matrix2D::RotateScaleTranslate(float sx, float sy, float tx, float ty,
 	return *this;
 }
 
-// ===================================================================================
-// Static Creation Methods
-// ===================================================================================
-
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Creates a transformation matrix that applies a translation
+/// @param translation
+///     A direction vector representing the translation
+// *****************************************************************
 Matrix2D Matrix2D::CreateTranslation(const Vector2& translation)
 {
 	return Matrix2D(
@@ -239,7 +322,14 @@ Matrix2D Matrix2D::CreateTranslation(const Vector2& translation)
 		);
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Creates a transformation matrix that applies a translation
+/// @param x
+///     X-component of the translation vector
+/// @param y
+///     Y-component of the translation vector
+// *****************************************************************
 Matrix2D Matrix2D::CreateTranslation(float x, float y)
 {
 	return Matrix2D(
@@ -249,7 +339,12 @@ Matrix2D Matrix2D::CreateTranslation(float x, float y)
         );
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Creates a transformation matrix that applies uniform scaling
+/// @param scale
+///     The uniform scale factor
+// *****************************************************************
 Matrix2D Matrix2D::CreateScale(float scale)
 {
 	return Matrix2D(
@@ -259,7 +354,14 @@ Matrix2D Matrix2D::CreateScale(float scale)
         );
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Creates a transformation matrix that applies non-uniform scaling
+/// @param sx
+///     The X-component of the non-uniform scale factor
+/// @param sy
+///     The Y-component of the non-uniform scale factor
+// *****************************************************************
 Matrix2D Matrix2D::CreateScale(float sx, float sy)
 {
 	return Matrix2D(
@@ -269,7 +371,12 @@ Matrix2D Matrix2D::CreateScale(float sx, float sy)
 		);
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Creates a transformation matrix that applies a rotation
+/// @param angle
+///     The angle of the rotation
+// *****************************************************************
 Matrix2D Matrix2D::CreateRotation(float angle)
 {
 	float sinTheta = Math::Sin(angle);
@@ -282,7 +389,23 @@ Matrix2D Matrix2D::CreateRotation(float angle)
 		);
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Creates a transformation matrix that applies scaling, rotation, and translation.
+/// @remarks
+///     The transformations are applied in the exact order as defined by the method name:
+///     Scaling, Rotation, then Translation.
+/// @param sx
+///     The X-component of the non-uniform scale factor
+/// @param sy
+///     The Y-component of the non-uniform scale factor
+/// @param tx
+///     The X-component of the translation
+/// @param ty
+///     The Y-component of the translation
+/// @param angle
+///     The angle of the rotation
+// *****************************************************************
 Matrix2D Matrix2D::CreateScaleRotateTranslate(float sx, float sy, float tx, float ty, float angle)
 {
 	float sinTheta = Math::Sin(angle);
@@ -295,7 +418,23 @@ Matrix2D Matrix2D::CreateScaleRotateTranslate(float sx, float sy, float tx, floa
 		);
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Creates a transformation matrix that applies rotation, scaling, and translation.
+/// @remarks
+///     The transformations are applied in the exact order as defined by the method name:
+///     Rotation, Scaling, then Translation.
+/// @param sx
+///     The X-component of the non-uniform scale factor
+/// @param sy
+///     The Y-component of the non-uniform scale factor
+/// @param tx
+///     The X-component of the translation
+/// @param ty
+///     The Y-component of the translation
+/// @param angle
+///     The angle of the rotation
+// *****************************************************************
 Matrix2D Matrix2D::CreateRotateScaleTranslate(float sx, float sy, float tx, float ty, float angle)
 {
 	float sinTheta = Math::Sin(angle);
@@ -308,11 +447,10 @@ Matrix2D Matrix2D::CreateRotateScaleTranslate(float sx, float sy, float tx, floa
 		);
 }
 
-// ===================================================================================
-// Extra Matrix Methods
-// ===================================================================================
-
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Calculates the transpose of this matrix
+// *****************************************************************
 Matrix2D Matrix2D::GetTranspose()
 {
 	return Matrix2D(
@@ -322,7 +460,12 @@ Matrix2D Matrix2D::GetTranspose()
 		);
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Calculates the inverse of this matrix
+/// @remarks
+///     If the matrix is non-invertable, the Zero matrix will be returned instead.
+// *****************************************************************
 Matrix2D Matrix2D::GetInverse()
 {
 	Matrix2D inverse;
@@ -351,7 +494,11 @@ Matrix2D Matrix2D::GetInverse()
 	return inverse;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Calculates the determinant of this matrix
+// *****************************************************************
+
 float Matrix2D::GetDeterminant()
 {
 	return
@@ -360,7 +507,10 @@ float Matrix2D::GetDeterminant()
 		M13 * (M21 * M32 - M22 * M31);
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Checks if this matrix is the identity matrix
+// *****************************************************************
 bool Matrix2D::IsIdentity()
 {
 	if (M11 == 1.0f && M12 == 0.0f && M13 == 0.0f &&
@@ -370,11 +520,10 @@ bool Matrix2D::IsIdentity()
 	return false;
 }
 
-// ===================================================================================
-// Stream Utilities
-// ===================================================================================
-
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Reads a Matrix2D from a stream
+// *****************************************************************
 Matrix2D Matrix2D::ReadFromStream(Stream* stream)
 {
 	Matrix2D result;
@@ -382,7 +531,10 @@ Matrix2D Matrix2D::ReadFromStream(Stream* stream)
 	return result;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Writes this matrix to a stream
+// *****************************************************************
 void Matrix2D::WriteToStream(Stream* stream)
 {
 	stream->Write(this, sizeof(float[9]));

@@ -9,51 +9,76 @@
 
 namespace Gdk
 {
-	// ============================================================================
-
+	/// @addtogroup Input
+    /// @{
+    
+    // =================================================================================
+    ///	@brief
+    ///		Provides access to Motion, Accelerometer, and Gyroscope based input.
+    ///	@remarks 
+    ///		This static-only class contains methods and properties for accessing motion based input.
+    ///     Including inputs from the device accelerometer, gyroscope, compass, etc.
+    // =================================================================================
 	class MotionInput
 	{
 	public: 
 
-        // Methods
-        // --------------------------------------------
-
-        // Checks if the motion input is currently 'shaking' (IE: the user is literally shaking the device)
-        static bool IsShaking()  { return isShaking; }
+        // Public Methods
+		// =====================================================
         
-        // Gets the current accelerometer acceleration data.
-        //  +X = Right, +Y = Up, +Z = Towards the user
-        static Vector3 GetAccelerometerAcceleration()  { return accelerometerAcceleration; }
+        // ---------------------------------
+        /// @name Methods
+        /// @{
         
-        // Events
-        // --------------------------------------------
+        static bool IsShaking();
+        static Vector3 GetAccelerometerAcceleration();
         
-        // Events for device motion
+        /// @}
+        
+        // Public Events
+		// =====================================================
+        
+        /// @name Events
+        /// @{
+        
+		/// @brief
+        ///     This event is raised when the device begins to shake.
         static MulticastDelegate0<void>  ShakingBegan;
+        
+        /// @brief
+        ///     This event is raised when the device stops shaking.
         static MulticastDelegate0<void>  ShakingEnded;
+        
+        /// @}
         
     public:
         
+        // INTERNAL ONLY - Platform Interfaces
+		// =====================================================
+		
+        /// @cond INTERNAL
         
-        // Public Platform Interfaces
-		// ----------------------------------
+        // ---------------------------------
+        /// @name Internal Platform Methods
+        /// @{
         
-		// Input processing
 		static void Platform_ShakingBegan();
 		static void Platform_ShakingEnded();
         static void Platform_UpdateAccelerometer(Vector3 acceleration);
         
+        /// @}
+        
+        /// @endcond
+        
 	private:
 
-		// Internals
-		// --------------------------------------------
+		// Internal Properties
+		// ================================
         
         static bool isShaking;
         static Vector3 accelerometerAcceleration;
-		
-		// Hidden CTor
-		MotionInput() {}
 	};
 
+    /// @} // Input
 
 } // namespace Gdk

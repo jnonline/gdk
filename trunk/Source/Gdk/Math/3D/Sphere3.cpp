@@ -8,16 +8,18 @@
 
 using namespace Gdk;
 
-// ===================================================================================
-// Constructors
-// ===================================================================================
-
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Default constructor
+// *****************************************************************
 Sphere3::Sphere3()
 {
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Constructs a new sphere from a center point and a radius
+// *****************************************************************
 Sphere3::Sphere3(float x, float y, float z, float radius)
 {
 	Center.X = x;
@@ -26,14 +28,20 @@ Sphere3::Sphere3(float x, float y, float z, float radius)
 	Radius = radius;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Constructs a new sphere from a center point and a radius
+// *****************************************************************
 Sphere3::Sphere3(const Vector3& center, float radius)
 {
 	Center = center;
 	Radius = radius;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Copy constructor
+// *****************************************************************
 Sphere3::Sphere3(const Sphere3& input)
 {
 	Center = input.Center;
@@ -41,11 +49,14 @@ Sphere3::Sphere3(const Sphere3& input)
 }
 
 
-// ===================================================================================
-// Encapsulation Methods
-// ===================================================================================
-
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Creates an approximate-fit sphere around a set of points.
+/// @param numPoints
+///     The number of points in the [points] array
+/// @param points
+///     An array of points to be used for finding a fitting sphere
+// *****************************************************************
 Sphere3 Sphere3::FromPoints(size_t numPoints, const Vector3* points)
 {
     if(numPoints == 0)
@@ -82,7 +93,14 @@ Sphere3 Sphere3::FromPoints(size_t numPoints, const Vector3* points)
 }
 
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Creates a best-fit sphere that encapsulates two given spheres
+/// @param c1
+///     First sphere to encapsulate
+/// @param c2
+///     Second sphere to encapsulate
+// *****************************************************************
 Sphere3 Sphere3::Merge(const Sphere3& sphere1, const Sphere3& sphere2)
 {
 	// Get the difference vector between the centers

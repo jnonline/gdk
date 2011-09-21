@@ -75,11 +75,12 @@ void Application::Update(float elapsedSeconds)
 	// -----------------------------
 
 	// Update the game
-	Game::Singleton->OnUpdate(elapsedSeconds);
+    Game* game = Game::GetSingleton();
+	game->OnUpdate(elapsedSeconds);
 	
 	// Draw the game
     if(exitRequest == false)
-        Game::Singleton->OnDraw(elapsedSeconds);
+        game->OnDraw(elapsedSeconds);
 
     // GDK Debug Stats
     // ----------------------
@@ -132,7 +133,7 @@ void Application::Update(float elapsedSeconds)
 ///     1st-tier GDK sub-systems are any system that must be initialized before doing any platform specific setup.  Such as getting
 ///     the initial application settings and setting up memory tracking & logging.  This must be the first GDK method called on a platform
 /// @note
-///     Should only be called by internal GDK platform interfaces.
+///     GDK Internal Use Only
 // *****************************************************************
 bool Application::Platform_InitGdk()
 {
@@ -162,7 +163,8 @@ bool Application::Platform_InitGdk()
 	initialAppSettings.AssetManagerBackgroundThreads = 0;
 
 	// Load the application settings from the game
-	if(Game::Singleton->OnLoadSettings(initialAppSettings) == false)
+    Game* game = Game::GetSingleton();
+	if(game->OnLoadSettings(initialAppSettings) == false)
 		return false;
 
 	// Copy the application settings that are dynamic
@@ -189,13 +191,12 @@ bool Application::Platform_InitGdk()
 /// @remarks
 ///     Shuts down all 1st-tier GDK sub-systems in order.  This must be the last GDK method called on a platform
 /// @note
-///     Should only be called by internal GDK platform interfaces.
+///     GDK Internal Use Only
 // *****************************************************************
 void Application::Platform_ShutdownGdk()
 {
 	// Destroy the game singleton
-	delete Game::Singleton;
-	Game::Singleton = NULL;
+    Game::DestroySingleton();
 
 	// Shutdown GDK Systems
 	AssetManager::ShutdownSingleton();
@@ -213,7 +214,7 @@ void Application::Platform_ShutdownGdk()
 ///     an OpenGL context, a platform windowing system window, or any File system priviledges that must first be created.
 ///     This method also initializes the Game.  
 /// @note
-///     Should only be called by internal GDK platform interfaces.
+///     GDK Internal Use Only
 // *****************************************************************
 bool Application::Platform_InitGame()
 {
@@ -223,7 +224,7 @@ bool Application::Platform_InitGame()
 	Graphics::InitAssetDependencies();
 
 	// Init the game
-	if(Game::Singleton->OnInit() == false)
+	if(Game::GetSingleton()->OnInit() == false)
 		return false;
 
 	return true;
@@ -236,7 +237,7 @@ bool Application::Platform_InitGame()
 ///     Shuts down all 2nd-tier GDK sub-systems in order.  This method must be called before 
 ///     destroying any platform-specific or external contexts.
 /// @note
-///     Should only be called by internal GDK platform interfaces.
+///     GDK Internal Use Only
 // *****************************************************************
 void Application::Platform_ShutdownGame()
 {
@@ -244,7 +245,7 @@ void Application::Platform_ShutdownGame()
 	Exitting.Invoke();
 
 	// Shutdown the game
-	Game::Singleton->OnShutdown();
+	Game::GetSingleton()->OnShutdown();
 
 	// Shutdown 2nd Tier GDK Systems
 	SharedAssets::Shutdown();
@@ -257,7 +258,7 @@ void Application::Platform_ShutdownGame()
 /// @remarks
 ///     Internally processes all game-loop based GDK systems.  Including calling the Game::Update and Game::Draw methods
 /// @note
-///     Should only be called by internal GDK platform interfaces.
+///     GDK Internal Use Only
 // *****************************************************************
 void Application::Platform_MainLoop()
 {
@@ -298,7 +299,7 @@ void Application::Platform_MainLoop()
 /// @brief
 ///     Tells the GDK about a platform suspending the application
 /// @note
-///     Should only be called by internal GDK platform interfaces.
+///     GDK Internal Use Only
 // *****************************************************************
 void Application::Platform_OnSuspend()
 {
@@ -312,7 +313,7 @@ void Application::Platform_OnSuspend()
 /// @brief
 ///     Tells the GDK about a platform resuming the application
 /// @note
-///     Should only be called by internal GDK platform interfaces.
+///     GDK Internal Use Only
 // *****************************************************************
 void Application::Platform_OnResume()
 {
@@ -326,7 +327,7 @@ void Application::Platform_OnResume()
 /// @brief
 ///     Tells the GDK about a platform activating the application
 /// @note
-///     Should only be called by internal GDK platform interfaces.
+///     GDK Internal Use Only
 // *****************************************************************
 void Application::Platform_OnActive()
 {
@@ -340,7 +341,7 @@ void Application::Platform_OnActive()
 /// @brief
 ///     Tells the GDK about a platform de-activating the application
 /// @note
-///     Should only be called by internal GDK platform interfaces.
+///     GDK Internal Use Only
 // *****************************************************************
 void Application::Platform_OnDeactive()
 {
@@ -354,7 +355,7 @@ void Application::Platform_OnDeactive()
 /// @brief
 ///     Tells the GDK about a platform resizing of the application window
 /// @note
-///     Should only be called by internal GDK platform interfaces.
+///     GDK Internal Use Only
 // *****************************************************************
 void Application::Platform_OnResize(int newWidth, int newHeight)
 {

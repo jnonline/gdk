@@ -10,19 +10,30 @@
 
 using namespace Gdk;
 
-// ===================================================================================
-// Ray -> Ray
-// ===================================================================================
-
-// *************************************************************************************
+// *****************************************************************
+/// @brief
+///     Tests if two rays intersect.
+/// @return
+///     true if the primitives intersect, otherwise false.
+// *****************************************************************
 bool Intersection2::Test(const Ray2& ray1, const Ray2& ray2)
 {
-    
     float distance;
     return Find(ray1, ray2, distance);
 }
 
-// *************************************************************************************
+// *****************************************************************
+/// @brief
+///     Finds the intersection between two rays
+/// @param[in] ray1
+///     One of the rays to intersect
+/// @param[in] ray2
+///     One of the rays to intersect
+/// @param[out] distance
+///     The distance from the origin of ray 1 to the point of intersection.  This value is undefined if the method returns false.
+/// @return
+///     true if the primitives intersect, otherwise false.
+// *****************************************************************
 bool Intersection2::Find(const Ray2& ray1, const Ray2& ray2, float& distance)
 {
     // Intersect the 2 rays as 2 lines
@@ -55,18 +66,30 @@ bool Intersection2::Find(const Ray2& ray1, const Ray2& ray2, float& distance)
     return intersectionType != IntersectionType::None;
 }
 
-// ===================================================================================
-// Ray -> LineSegment
-// ===================================================================================
-
-// *************************************************************************************
+// *****************************************************************
+/// @brief
+///     Tests if a ray and a line segment intersect.
+/// @return
+///     true if the primitives intersect, otherwise false.
+// *****************************************************************
 bool Intersection2::Test(const Ray2& ray, const LineSegment2& lineSegment)
 {
     float distance;
     return Find(ray, lineSegment, distance);
 }
 
-// *************************************************************************************
+// *****************************************************************
+/// @brief
+///     Finds the intersection between a ray and a line segment
+/// @param[in] ray
+///     The ray component to intersect
+/// @param[in] lineSegment
+///     The line segment to intersect
+/// @param[out] distance
+///     The distance from the origin of the ray to the point of intersection.  This value is undefined if the method returns false.
+/// @return
+///     true if the primitives intersect, otherwise false.
+// *****************************************************************
 bool Intersection2::Find(const Ray2& ray, const LineSegment2& lineSegment, float& distance)
 {
     // Get the unit direction vector of the line segment
@@ -110,11 +133,12 @@ bool Intersection2::Find(const Ray2& ray, const LineSegment2& lineSegment, float
     return false;
 }
 
-// ===================================================================================
-// Ray -> Circle
-// ===================================================================================
-
-// *************************************************************************************
+// *****************************************************************
+/// @brief
+///     Tests if a ray and a circle intersect.
+/// @return
+///     true if the primitives intersect, otherwise false.
+// *****************************************************************
 bool Intersection2::Test(const Ray2& ray, const Circle2& circle)
 {
     // Get the Ray.Origin -> Circle.Center vector
@@ -138,7 +162,18 @@ bool Intersection2::Test(const Ray2& ray, const Circle2& circle)
 	return diffDotDirection * diffDotDirection >= (distSq - radSq);
 }
 
-// *************************************************************************************
+// *****************************************************************
+/// @brief
+///     Finds the first point of intersection between a ray and a circle
+/// @param[in] ray
+///     The ray component to intersect
+/// @param[in] circle
+///     The circle to intersect
+/// @param[out] distance
+///     The distance from the origin of the ray to the point of intersection.  This value is undefined if the method returns false.
+/// @return
+///     true if the primitives intersect, otherwise false.
+// *****************************************************************
 bool Intersection2::Find(const Ray2& ray, const Circle2& circle, float& distance)
 {
     // Get the Ray.Origin -> Circle.Center vector
@@ -171,18 +206,30 @@ bool Intersection2::Find(const Ray2& ray, const Circle2& circle, float& distance
 	return true;
 }
 
-// ===================================================================================
-// Ray -> Rectangle
-// ===================================================================================
-
-// *************************************************************************************
+// *****************************************************************
+/// @brief
+///     Tests if a ray and a rectangle intersect.
+/// @return
+///     true if the primitives intersect, otherwise false.
+// *****************************************************************
 bool Intersection2::Test(const Ray2& ray, const Rectangle2& rect)
 {
     // Test the ray against the rect (as a box)
     return Test(ray, rect.GetAsBox());
 }
 
-// *************************************************************************************
+// *****************************************************************
+/// @brief
+///     Finds the first point of intersection between a ray and a rectangle
+/// @param[in] ray
+///     The ray component to intersect
+/// @param[in] rectangle
+///     The retangle to intersect
+/// @param[out] distance
+///     The distance from the origin of the ray to the point of intersection.  This value is undefined if the method returns false.
+/// @return
+///     true if the primitives intersect, otherwise false.
+// *****************************************************************
 bool Intersection2::Find(const Ray2& ray, const Rectangle2& rect, float& distance)
 {
     // Intersect the ray against the rect (as a box)
@@ -190,11 +237,12 @@ bool Intersection2::Find(const Ray2& ray, const Rectangle2& rect, float& distanc
 }
 
 
-// ===================================================================================
-// Ray -> Box
-// ===================================================================================
-
-// *************************************************************************************
+// *****************************************************************
+/// @brief
+///     Tests if a ray and an oriented box intersect.
+/// @return
+///     true if the primitives intersect, otherwise false.
+// *****************************************************************
 bool Intersection2::Test(const Ray2& ray, const Box2& box)
 {
     float WdU[2], AWdU[2], DdU[2], ADdU[2];
@@ -227,7 +275,18 @@ bool Intersection2::Test(const Ray2& ray, const Box2& box)
     return LHS <= RHS;
 }
 
-// *************************************************************************************
+// *****************************************************************
+/// @brief
+///     Finds the first point of intersection between a ray and an oriented box
+/// @param[in] ray
+///     The ray component to intersect
+/// @param[in] box
+///     The oriented box to intersect
+/// @param[out] distance
+///     The distance from the origin of the ray to the point of intersection.  This value is undefined if the method returns false.
+/// @return
+///     true if the primitives intersect, otherwise false.
+// *****************************************************************
 bool Intersection2::Find(const Ray2& ray, const Box2& box, float& distance)
 {
     // Do a line/box intersection using ray based T values
@@ -245,11 +304,12 @@ bool Intersection2::Find(const Ray2& ray, const Box2& box, float& distance)
 }
 
 
-// ===================================================================================
-// Circle -> Circle
-// ===================================================================================
-
-// *************************************************************************************
+// *****************************************************************
+/// @brief
+///     Tests if two circles intersect.
+/// @return
+///     true if the primitives intersect, otherwise false.
+// *****************************************************************
 bool Intersection2::Test(const Circle2& circle1, const Circle2& circle2)
 {
 	// Get the distance (squared) between the two circle centers 
@@ -262,11 +322,12 @@ bool Intersection2::Test(const Circle2& circle1, const Circle2& circle2)
     return distanceSquared <= totalRadii * totalRadii;
 }
 
-// ===================================================================================
-// Circle -> Rectangle
-// ===================================================================================
-
-// *************************************************************************************
+// *****************************************************************
+/// @brief
+///     Tests if a circle and a rectangle intersect.
+/// @return
+///     true if the primitives intersect, otherwise false.
+// *****************************************************************
 bool Intersection2::Test(const Circle2& circle, const Rectangle2& rect)
 {
     // Get the distance from the center of the circle to the rectangle
@@ -277,11 +338,12 @@ bool Intersection2::Test(const Circle2& circle, const Rectangle2& rect)
 }
 
 
-// ===================================================================================
-// Circle -> Box
-// ===================================================================================
-
-// *************************************************************************************
+// *****************************************************************
+/// @brief
+///     Tests if a circle and an oriented box intersect.
+/// @return
+///     true if the primitives intersect, otherwise false.
+// *****************************************************************
 bool Intersection2::Test(const Circle2& circle, const Box2& box)
 {
     // Get the distance from the center of the circle to the box
@@ -293,11 +355,12 @@ bool Intersection2::Test(const Circle2& circle, const Box2& box)
 
 
 
-// ===================================================================================
-// Rectangle -> Rectangle
-// ===================================================================================
-
-// *************************************************************************************
+// *****************************************************************
+/// @brief
+///     Tests if two rectangles intersect.
+/// @return
+///     true if the primitives intersect, otherwise false.
+// *****************************************************************
 bool Intersection2::Test(const Rectangle2& rect1, const Rectangle2& rect2)
 {
     // Test if the rectangles intersect
@@ -308,22 +371,24 @@ bool Intersection2::Test(const Rectangle2& rect1, const Rectangle2& rect2)
         ;
 }
 
-// ===================================================================================
-// Rectangle -> Box
-// ===================================================================================
-
-// *************************************************************************************
+// *****************************************************************
+/// @brief
+///     Tests if a rectangle and an oriented box intersect.
+/// @return
+///     true if the primitives intersect, otherwise false.
+// *****************************************************************
 bool Intersection2::Test(const Rectangle2& rect, const Box2& box)
 {
     // Test the rectangle (as a box) against the box
     return Test(rect.GetAsBox(), box);
 }
 
-// ===================================================================================
-// Box -> Box
-// ===================================================================================
-
-// *************************************************************************************
+// *****************************************************************
+/// @brief
+///     Tests if two oriented boxes intersect.
+/// @return
+///     true if the primitives intersect, otherwise false.
+// *****************************************************************
 bool Intersection2::Test(const Box2& box1, const Box2& box2)
 {
     // Get the difference vector between the box centers
@@ -368,16 +433,22 @@ bool Intersection2::Test(const Box2& box1, const Box2& box2)
     return true;
 }
 
-
-
-// ===================================================================================
-// Internal Utility Methods
-// ===================================================================================
-
-// These methods are used to find intersections between like primitives.
-//  For instance, most line/ray/lineSegment tests can be done as lines.
-
-// *************************************************************************************
+// *****************************************************************
+/// @brief
+///     Utility method for intersecting two linear primitive
+/// @param[in] origin1
+///     A point of origin for the first linear primitive
+/// @param[in] direction1
+///     The vector direction for the first linear primitive
+/// @param[in] origin2
+///     A point of origin for the second linear primitive
+/// @param[in] direction2
+///     The vector direction for the second linear primitive
+/// @param[out] t[2]
+///     The distance from the origin of each linear primitive to the point of intersection.
+/// @return
+///     The type of intersection (or non-intersection) for the two primitives
+// *****************************************************************
 IntersectionType::Enum  Intersection2::Intersect_Line_Line(
     const Vector2& origin1, const Vector2& direction1,
     const Vector2& origin2, const Vector2& direction2,
@@ -425,7 +496,25 @@ IntersectionType::Enum  Intersection2::Intersect_Line_Line(
     return IntersectionType::None;
 }
 
-// *************************************************************************************
+// *****************************************************************
+/// @brief
+///     Utility method for intersecting a linear primitive and a circle
+/// @param[in] origin
+///     A point of origin for the linear primitive
+/// @param[in] direction
+///     The vector direction for the linear primitive
+/// @param[in] center
+///     The center of the circle
+/// @param[in] radius
+///     The radius of the circle
+/// @param[out] t[2]
+///     The result in t depends on the following intersection types:
+///     @li None - t is undefined
+///     @li Point - t[0] is the distance from the origin of the ray to the intersection point.
+///     @li LineSegment - t[0] & t[1] are the distances to the first and last points of intersection.
+/// @return
+///     The type of intersection (or non-intersection) for the two primitives
+// *****************************************************************
 IntersectionType::Enum  Intersection2::Intersect_Line_Circle(
     const Vector2& origin, const Vector2& direction,
     const Vector2& center, float radius,
@@ -466,7 +555,27 @@ IntersectionType::Enum  Intersection2::Intersect_Line_Circle(
     return IntersectionType::Point;
 }
 
-// *************************************************************************************
+// *****************************************************************
+/// @brief
+///     Utility method for intersecting a linear primitive and an oriented box
+/// @param startT
+///     The starting t-value along the linear component to start testing
+/// @param endT
+///     The ending t-value along the linear component to stop testing
+/// @param[in] origin
+///     A point of origin for the linear primitive
+/// @param[in] direction
+///     The vector direction for the linear primitive
+/// @param[in] box
+///     The oriented box
+/// @param[out] t[2]
+///     The result in t depends on the following intersection types:
+///     @li None - t is undefined
+///     @li Point - t[0] is the distance from the origin of the ray to the intersection point.
+///     @li LineSegment - t[0] & t[1] are the distances to the first and last points of intersection.
+/// @return
+///     The type of intersection (or non-intersection) for the two primitives
+// *****************************************************************
 IntersectionType::Enum  Intersection2::Intersect_Line_Box(
     float startT, float endT,
     const Vector2& origin, const Vector2& direction,
@@ -508,7 +617,10 @@ IntersectionType::Enum  Intersection2::Intersect_Line_Box(
     return IntersectionType::None;
 }
 
-// *************************************************************************************
+// *****************************************************************
+/// @brief
+///     Internal utility method for quickly clipping a line along a box edge
+// *****************************************************************
 bool Intersection2::Clip_Box_Line(float denominator, float numerator, float& t0, float& t1)
 {
     // Return value is 'true' if line segment intersects the current test

@@ -20,33 +20,50 @@
 
 namespace Gdk
 {
-	// =========================================================
+	/// @addtogroup Math
+    /// @{
+    /// @addtogroup Random
+    /// @{
+    
+    // =================================================================================
+    ///	@brief
+    ///		Exposes simple static methods for generating random numbers
+    // =================================================================================
 	class Random
 	{
 	public:
 		
-		// Static Methods
-		// ---------------------------------------
+        // Public Methods
+		// =====================================================
+        
+        /// The generator mechanism used to generate random numbers
+        static class MersenneTwister Generator;
+        
+		// Public Methods
+		// =====================================================
 
-		// Seeding
+        // ---------------------------------
+        /// @name Methods
+        /// @{
+        
 		static void Seed(UInt32 seed);
 
-		// Integer Methods
 		static UInt32 GetUInt32();
 		static Int32 GetInt32();
 		static Int32 FromInterval(Int32 min, Int32 max);
 
-		// Floating Point Methods
-		static float GetUnit();								// [ 0, 1]
-		static float GetSymmetric();						// [-1, 1]
-		static float FromInterval(float min, float max);	// [min, max]
+		static float GetUnit();
+		static float GetSymmetric();
+		static float FromInterval(float min, float max);
 
-		// The Generator
-		static class MersenneTwister Generator;
-
+        /// @}
+        
 	private:
 		// Internals
 		Random();
 	};
 
+    /// @}  Math
+    /// @}  Random
+    
 } // namespace Gdk

@@ -8,16 +8,24 @@
 
 using namespace Gdk;
 
-// ===================================================================================
-// Constructors
-// ===================================================================================
-
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Default constructor
+// *****************************************************************
 Triangle2::Triangle2()
 {
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Constructs a triangle from the given vertices
+/// @param v1
+///     Vertex 1 of the triangle
+/// @param v2
+///     Vertex 2 of the triangle
+/// @param v3
+///     Vertex 3 of the triangle
+// *****************************************************************
 Triangle2::Triangle2(const Vector2& v1, const Vector2& v2, const Vector2& v3)
 {
 	this->Vertices[0] = v1;
@@ -25,7 +33,12 @@ Triangle2::Triangle2(const Vector2& v1, const Vector2& v2, const Vector2& v3)
     this->Vertices[2] = v3;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Constructs a triangle from an array of vertices
+/// @param vertices
+///     An array of 3 vertices for the new triangle
+// *****************************************************************
 Triangle2::Triangle2(const Vector2* vertices)
 {
 	this->Vertices[0] = vertices[0];
@@ -34,7 +47,10 @@ Triangle2::Triangle2(const Vector2* vertices)
 }
 
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Copy constructor
+// *****************************************************************
 Triangle2::Triangle2(const Triangle2& input)
 {
 	this->Vertices[0] = input.Vertices[0];

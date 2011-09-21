@@ -10,17 +10,20 @@ using namespace Gdk;
 
 // instantiations of static constants
 const Rectangle2 Rectangle2::ZERO(0.0f, 0.0f, 0.0f, 0.0f);
+const Rectangle2 Rectangle2::UNIT(0.0f, 0.0f, 1.0f, 1.0f);
 
-// ===================================================================================
-// Constructors
-// ===================================================================================
-
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Default constructor
+// *****************************************************************
 Rectangle2::Rectangle2()
 {
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Constructs a new rectangle from a given position and size
+// *****************************************************************
 Rectangle2::Rectangle2(float x, float y, float width, float height)
 {
 	Position.X = x;
@@ -29,39 +32,52 @@ Rectangle2::Rectangle2(float x, float y, float width, float height)
 	Size.Y = height;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Constructs a new rectangle from a given position and size
+// *****************************************************************
 Rectangle2::Rectangle2(const Vector2& position, const Vector2& size)
 {
 	Position = position;
 	Size = size;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Copy constructor
+// *****************************************************************
 Rectangle2::Rectangle2(const Rectangle2& input)
 {
 	Position = input.Position;
 	Size = input.Size;
 }
 
-
-// ===================================================================================
-// Point Conversion Methods
-// ===================================================================================
-
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Calculates the center point of the rectangle
+// *****************************************************************
 Vector2 Rectangle2::GetCenter() const
 {
     return Position + Size * 0.5f;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Calculates the extents (half-sizes) of the rectangle
+// *****************************************************************
 Vector2 Rectangle2::GetExtents() const
 {
     return Size * 0.5f;
 }
 
-
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Gets a point within the area of the rectangle using parametric inputs
+/// @param tAngle
+///     Unit t-value (0.0 to 1.0) along the rectangle width
+/// @param tRadius
+///     Unit t-value (0.0 to 1.0) along the rectangle height
+// *****************************************************************
 Vector2 Rectangle2::GetParametricPointInArea(float tx, float ty) const
 {
 	// Return a point in the rectangle using the given parametric coordinates within rectangle space
@@ -71,7 +87,12 @@ Vector2 Rectangle2::GetParametricPointInArea(float tx, float ty) const
 		);
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Gets a point on the perimeter of the rectangle using parametric input
+/// @param t
+///     Unit t-value (0.0 to 1.0) along the perimeter
+// *****************************************************************
 Vector2 Rectangle2::GetParametricPointOnPerimeter(float t) const
 {
 	// The rectangle perimeter starts at the top left, and goes clockwise
@@ -116,12 +137,10 @@ Vector2 Rectangle2::GetParametricPointOnPerimeter(float t) const
 	return Vector2(this->Position.X, this->Position.Y + this->Size.Y * ((1.0f - t) / heightInT));
 }
 
-// ===================================================================================
-// LineSegment Conversion Methods
-// ===================================================================================
-
-
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Creates a line segment that represents the left side of the rectangle
+// *****************************************************************
 LineSegment2 Rectangle2::GetLeftLineSegment() const
 {
 	return LineSegment2(
@@ -130,7 +149,10 @@ LineSegment2 Rectangle2::GetLeftLineSegment() const
 		);
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Creates a line segment that represents the top side of the rectangle
+// *****************************************************************
 LineSegment2 Rectangle2::GetTopLineSegment() const
 {
 	return LineSegment2(
@@ -139,7 +161,10 @@ LineSegment2 Rectangle2::GetTopLineSegment() const
 		);
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Creates a line segment that represents the right side of the rectangle
+// *****************************************************************
 LineSegment2 Rectangle2::GetRightLineSegment() const
 {
 	return LineSegment2(
@@ -148,7 +173,10 @@ LineSegment2 Rectangle2::GetRightLineSegment() const
 		);
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Creates a line segment that represents the bottom side of the rectangle
+// *****************************************************************
 LineSegment2 Rectangle2::GetBottomLineSegment() const
 {
 	return LineSegment2(
@@ -157,12 +185,10 @@ LineSegment2 Rectangle2::GetBottomLineSegment() const
 		);
 }
 
-// ===================================================================================
-// Box Conversion Methods
-// ===================================================================================
-
-
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Creates an oriented Box in the same shape as the rectangle
+// *****************************************************************
 Box2 Rectangle2::GetAsBox() const
 {
     Vector2 halfSize = this->Size * 0.5f;
@@ -170,11 +196,14 @@ Box2 Rectangle2::GetAsBox() const
 	return Box2(center, Vector2::UNIT_X, Vector2::UNIT_Y, halfSize.X, halfSize.Y);
 }
 
-// ===================================================================================
-// Encapsulation Methods
-// ===================================================================================
-
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Creates a best-fit rectangle that encapsulates a set of points
+/// @param numPoints
+///     The number of points in the array
+/// @param points
+///     An array of points
+// *****************************************************************
 Rectangle2 Rectangle2::FromPoints(size_t numPoints, const Vector2* points)
 {
 	// Use the first point to set the initial bounds
@@ -200,7 +229,10 @@ Rectangle2 Rectangle2::FromPoints(size_t numPoints, const Vector2* points)
     return Rectangle2(minX, minY, maxX - minX, maxY - minY);
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Creates a best-fit rectangle that exactly encapsulates two rectangles
+// *****************************************************************
 Rectangle2 Rectangle2::Merge(const Rectangle2& r1, const Rectangle2& r2)
 {
 	// Returns the rectangle that encapsulates the 2 given rectangles

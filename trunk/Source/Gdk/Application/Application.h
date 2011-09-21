@@ -24,7 +24,7 @@ namespace Gdk
     // =================================================================================
 	struct ApplicationSettings
 	{
-        // Properties
+        // Public Properties
 		// ================================
         
         // -----------------------------------
@@ -85,7 +85,7 @@ namespace Gdk
 	{
 	public:
 		// Public Properties
-		// ================================
+		// =====================================================
 
         // ---------------------------------
         /// @name Update Loop Settings
@@ -146,8 +146,13 @@ namespace Gdk
         // Public Types
 		// =====================================================
 		
+        /// @name Delegate Types
+        /// @{
+        
         /// Multicast delegate type for all application events
 		typedef Gdk::MulticastDelegate0<void>	ApplicationEventHandler;
+        
+        /// @}
 
         // Public Events
 		// =====================================================
@@ -199,7 +204,7 @@ namespace Gdk
         // ---------------------------------
         /// @name Internal Platform Methods
         /// @{
- 
+        
 		static bool Platform_InitGdk();
 		static void Platform_ShutdownGdk();
 		static bool Platform_InitGame();

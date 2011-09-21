@@ -343,7 +343,7 @@ Vector2 InputTestsModule::ScreenToWorld(Vector2 screenCoordinate)
     // Second:  Convert the symmetric position to world coordinates
     // by multiplying through the inverse of the projection matrix
     //    (Z is ignored because we're using an orthographic projection matrix)
-    Vector3 worldPosition = inverseProj.TransformVertex(Vector3(symmetricPosition, 0.0f));
+    Vector3 worldPosition = inverseProj.TransformPoint(Vector3(symmetricPosition, 0.0f));
     
     // Return the XY world coordinate
     return worldPosition.GetXY();

@@ -9,20 +9,50 @@
 
 namespace Gdk 
 {
-
+    /// @addtogroup Math
+    /// @{
+    /// @addtogroup _3D
+    /// @{
+    
+    // =================================================================================
+    /// @brief
+    ///     Represents a 3D oriented box.
+    /// @remarks
+    ///     Oriented boxes are defined by a center point, an orthonormal basis for axes, 
+    ///     and extents (half-sizes) along the axes
+    // =================================================================================
 	class Box3
 	{
 	public:
-		// Components
+		
+        // Public Properties
+		// =====================================================
+        
+        /// Center of the box
 		Vector3 Center;
+        
+        /// Three orthonormalized axes of the box
 		Vector3 Axis[3];
+        
+        /// Extent (half-size) of the box along each axis
 		float Extent[3];
 
-		// Constructors
+        // Public Methods
+		// =====================================================
+        
+        // ---------------------------------
+        /// @name Constructors
+        /// @{
+
 		Box3 ();
-		Box3 (const Vector3& center, const Vector3& axis0, const Vector3& axis1, const Vector3& axis2, float extent0, float extent1, float extent2);
+		Box3 (const Vector3& center, const Vector3& axis1, const Vector3& axis2, const Vector3& axis3, float extent1, float extent2, float extent3);
 		Box3 (const Box3& input);
 
+        /// @}
+        // ---------------------------------
+        /// @name Operators
+        /// @{
+        
 		// Asssignment Operator
 		inline Box3& operator= (const Box3& input);
 
@@ -30,16 +60,29 @@ namespace Gdk
 		inline bool operator== (const Box3& input) const;
 		inline bool operator!= (const Box3& input) const;
 
+        /// @}
+        // ---------------------------------
+        /// @name Containment Methods
+        /// @{
+        
 		// Containment Methods
         inline bool Contains(float x, float y, float z) const;
 		inline bool Contains(const Vector3& point) const;
+        
+        /// @}
+        
 	};
 
-	// ===================================================================================
-	// Asssignment Operator
-	// ===================================================================================
-
-	// ***********************************************************************
+	/// @}
+    /// @}
+    
+    // Inline Implementations
+	// ====================================
+    
+	// *****************************************************************
+    /// @brief
+    ///     Assignment operator: copies the values of the given box to this box
+    // *****************************************************************
 	inline Box3& Box3::operator= (const Box3& input)
 	{
 		Axis[0] = input.Axis[0];
@@ -52,11 +95,10 @@ namespace Gdk
 		return *this;
 	}
 
-	// ===================================================================================
-	// Comparison Operators
-	// ===================================================================================
-
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Equality operator:  Returns true if two boxes have the same values
+    // *****************************************************************
 	inline bool Box3::operator== (const Box3& input) const
 	{
 		return Axis[0] == input.Axis[0] 
@@ -68,7 +110,10 @@ namespace Gdk
 			&& Center == Center;
 	}
 
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Inequality operator:  Returns true if two boxes have different values
+    // *****************************************************************
 	inline bool Box3::operator!= (const Box3& input) const
 	{
 		return Axis[0] != input.Axis[0] 
@@ -80,17 +125,19 @@ namespace Gdk
 			|| Center != Center;
 	}
 
-	// ===================================================================================
-	// Containment Methods
-	// ===================================================================================
-
-    // ***********************************************************************
-	inline bool Box3::Contains(float x, float y, float z) const
+	// *****************************************************************
+    /// @brief
+    ///     Checks if the box contains a given point
+    // *****************************************************************
+    inline bool Box3::Contains(float x, float y, float z) const
 	{
 		return Contains(Vector3(x,y,z));
 	}
     
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Checks if the box contains a given point
+    // *****************************************************************
 	inline bool Box3::Contains(const Vector3& point) const
 	{
 		// Get the vector from the center of the box to the point
