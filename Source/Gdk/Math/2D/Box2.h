@@ -9,33 +9,81 @@
 
 namespace Gdk
 {
-
+    /// @addtogroup Math
+    /// @{
+    /// @addtogroup _2D
+    /// @{
+    
+    // =================================================================================
+    /// @brief
+    ///     Represents a 2D oriented box.
+    /// @remarks
+    ///     Oriented boxes are defined by a center point, an orthonormal basis for axes, 
+    ///     and extents (half-sizes) along the axes
+    // =================================================================================
 	class Box2
 	{
 	public:
-		// Components
+		
+        // Public Properties
+		// =====================================================
+        
+        /// Center of the box
 		Vector2 Center;
+        
+        /// Two orthonormalized axes of the box
 		Vector2 Axis[2];
+        
+        /// Extent (half-size) of the box along each axis
 		float Extent[2];
 
-		// Constructors
+		// Public Methods
+		// =====================================================
+        
+        // ---------------------------------
+        /// @name Constructors
+        /// @{
+        
 		Box2 ();
-		Box2 (const Vector2& center, const Vector2& axis0, const Vector2& axis1, float extent0, float extent1);
+		Box2 (const Vector2& center, const Vector2& axis1, const Vector2& axis2, float extent1, float extent2);
 		Box2 (const Box2& input);
 
-		// Containment Methods
+        /// @}
+        // ---------------------------------
+        /// @name Containment Methods
+        /// @{
+        
         inline bool Contains(float x, float y) const;
 		inline bool Contains(const Vector2& point) const;
-
-		// special constants
-		static const Box2 ZERO;    // (0,0)-(0,0)
+        
+        /// @}
+        
+        // Public Constants
+		// =====================================================
+        
+        // ---------------------------------
+        /// @name Static Constants
+        /// @{
+        
+        /// Zero-size (extents=0,0) box, centered at (0,0)
+        static const Box2 ZERO;
+        
+        /// Unit-size (extents=0.5,0.5) box, centered at (0,0)
+        static const Box2 UNIT;
+        
+        /// @}
 	};
 
-	// ===================================================================================
-	// Containment & Intersection Methods
-	// ===================================================================================
-
-	// ***********************************************************************
+	/// @}
+    /// @}
+    
+    // Inline Implementations
+	// ====================================
+    
+	// *****************************************************************
+    /// @brief
+    ///     Checks if the box contains a given point
+    // *****************************************************************
 	inline bool Box2::Contains(float x, float y) const
 	{
 		// Get the vector from the center of the box to the point
@@ -55,7 +103,10 @@ namespace Gdk
 		return true;
 	}
     
-    // ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Checks if the box contains a given point
+    // *****************************************************************
 	inline bool Box2::Contains(const Vector2& point) const
 	{
         return Contains(point.X, point.Y);

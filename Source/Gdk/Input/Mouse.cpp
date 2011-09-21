@@ -22,7 +22,12 @@ Mouse::MouseWheelEventHandler	Mouse::MouseWheelScroll;
 Mouse::MouseEventHandler		Mouse::MouseEnter;
 Mouse::MouseEventHandler		Mouse::MouseLeave;
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Initializes the static Mouse class internal data
+/// @note
+///     GDK Internal Use Only
+// *****************************************************************
 void Mouse::Init()
 {
 	// Set the mouse buttons to all up
@@ -30,12 +35,22 @@ void Mouse::Init()
 		Mouse::buttonsDown[i] = false;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Tells the GDK to update any internal mouse states in the GDK
+/// @note
+///     GDK Internal Use Only
+// *****************************************************************
 void Mouse::Update(float elapsedSeconds)
 {
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Tells the GDK that the mouse has been moved
+/// @note
+///     GDK Internal Use Only
+// *****************************************************************
 void Mouse::Platform_ProcessMouseMove(int x, int y)
 {
     MouseMoveArgs args(x, y, mouseX, mouseY);
@@ -48,7 +63,12 @@ void Mouse::Platform_ProcessMouseMove(int x, int y)
     MouseMove.Invoke(&args);
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Tells the GDK that a mouse button has been pressed
+/// @note
+///     GDK Internal Use Only
+// *****************************************************************
 void Mouse::Platform_ProcessMouseButtonDown(MouseButton::Enum button)
 {
 	buttonsDown[(int)button] = true;
@@ -57,7 +77,12 @@ void Mouse::Platform_ProcessMouseButtonDown(MouseButton::Enum button)
 	MouseButtonDown.Invoke(button);
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Tells the GDK that a mouse button has been released
+/// @note
+///     GDK Internal Use Only
+// *****************************************************************
 void Mouse::Platform_ProcessMouseButtonUp(MouseButton::Enum button)
 {
 	buttonsDown[(int)button] = false;
@@ -66,14 +91,24 @@ void Mouse::Platform_ProcessMouseButtonUp(MouseButton::Enum button)
 	MouseButtonUp.Invoke(button);
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Tells the GDK that the mouse wheel has been scrolled
+/// @note
+///     GDK Internal Use Only
+// *****************************************************************
 void Mouse::Platform_ProcessMouseWheelScroll(float deltaX, float deltaY)
 {
 	// Call the event
 	MouseWheelScroll.Invoke(deltaX, deltaY);
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Tells the GDK that the mouse has entered the application window
+/// @note
+///     GDK Internal Use Only
+// *****************************************************************
 void Mouse::Platform_ProcessMouseEnterApp()
 {
     // Are we not currently in the app?
@@ -86,7 +121,12 @@ void Mouse::Platform_ProcessMouseEnterApp()
     }
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Tells the GDK that the mouse has left the application window
+/// @note
+///     GDK Internal Use Only
+// *****************************************************************
 void Mouse::Platform_ProcessMouseLeaveApp()
 {
     // Are we currently in the app?
@@ -99,45 +139,74 @@ void Mouse::Platform_ProcessMouseLeaveApp()
     }
 }
 
-
-
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Gets the current position of the mouse
+/// @remarks
+///     Returns the X,Y position of the mouse, within the application window.
+// *****************************************************************
 Vector2 Mouse::GetPosition()
 {
 	return Vector2((float)mouseX, (float)mouseY);
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Gets the current X position of the mouse
+// *****************************************************************
 int Mouse::GetX()
 {
 	return mouseX;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Gets the current Y position of the mouse
+// *****************************************************************
 int Mouse::GetY()
 {
 	return mouseY;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Returns true if the given mouse button is currently pressed
+/// @param button
+///     Mouse button to check the state of
+// *****************************************************************
 bool Mouse::IsButtonDown(MouseButton::Enum button)
 {
 	return buttonsDown[(int)button];
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Returns true if the mouse is currently over the application window
+// *****************************************************************
 bool Mouse::IsMouseOverApp()
 {
 	return mouseIsOverApp;
 }
 
-// **********************************************************************
+// *****************************************************************
+/// @brief
+///     Moves the mouse to the given position within the application window
+/// @param x
+///     New X position of the mouse within the application window
+/// @param y
+///     New Y position of the mouse within the application window
+// *****************************************************************
 void Mouse::SetPosition(int x, int y)
 {
 	_Gdk_Platform_Mouse_SetPosition(x,y);
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Shows or Hides the mouse cursor (when it is over the application window)
+/// @param show
+///     Specify true to show the cursor, false to hide the cursor
+// *****************************************************************
 void Mouse::ShowCursor(bool show)
 {
 	_Gdk_Platform_Mouse_ShowCursor(show);

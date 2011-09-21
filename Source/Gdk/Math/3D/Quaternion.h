@@ -9,26 +9,48 @@
 
 namespace Gdk
 {
-
+    /// @addtogroup Math
+    /// @{
+    /// @addtogroup _3D
+    /// @{
+    
+    // =================================================================================
+    /// @brief
+    ///     Represents arbitrary rotations and orientations in 3D space
+    /// @remarks
+    ///     Quaternions are 4D vectors (w,x,y,z) which are used to efficiently rotate about a vector (x, y, z)
+    ///     by the angle theta, where w = cos(theta/2).
+    // =================================================================================
 	class Quaternion
 	{
 	public:
-		// Components
+		
+        // Public Properties
+		// =====================================================
+        
 		float W, X, Y, Z;
 
-		// Constructors
+        // Public Methods
+		// =====================================================
+        
+        // ---------------------------------
+        /// @name Constructors
+        /// @{
+
 		Quaternion();
 		Quaternion(float w, float x, float y, float z);
 		Quaternion(const Quaternion& input);
 
-		// Asssignment Operator
+        /// @}
+        // ---------------------------------
+        /// @name Operators
+        /// @{
+        
 		inline Quaternion& operator= (const Quaternion& input);
 
-		// Comparison Operators
 		inline bool operator== (const Quaternion& input) const;
 		inline bool operator!= (const Quaternion& input) const;
 
-		// Arithmetic Operators
 		inline Quaternion operator+ (const Quaternion& input) const;
 		inline Quaternion operator- (const Quaternion& input) const;
 		inline Quaternion operator* (const Quaternion& input) const;
@@ -36,13 +58,16 @@ namespace Gdk
 		inline Quaternion operator/ (float scalar) const;
 		inline Quaternion operator- () const;
 
-		// Arithmetic Update Operators
 		inline Quaternion& operator+= (const Quaternion& input);
 		inline Quaternion& operator-= (const Quaternion& input);
 		inline Quaternion& operator*= (float scalar);
 		inline Quaternion& operator/= (float scalar);
 
-		// Instance Methods
+        /// @}
+        // ---------------------------------
+        /// @name Common Quaternion Methods
+        /// @{
+        
 		inline float Length() const;
 		inline float LengthSquared() const;
 		inline float Normalize();
@@ -50,7 +75,6 @@ namespace Gdk
 		Quaternion Inverse() const;
 		Quaternion Conjugate() const;
 
-		// Creation / Transformation
 		float ToAxisAngle(Vector3& axis) const;
 		static Quaternion FromAxisAngle(const Vector3& axis, float angle);
 		class Matrix3D ToRotationMatrix() const;
@@ -58,20 +82,42 @@ namespace Gdk
 		static Quaternion FromPitchYawRoll(float pitch, float yaw, float roll);
 		static Quaternion FromAlignment(const Vector3& start, const Vector3& end);	// Creates a quaternion that rotates from V1 to V2
 
-		// Interpolation
+        /// @}
+        // ---------------------------------
+        /// @name Interpolation Methods
+        /// @{
+        
 		static Quaternion Slerp(float t, const Quaternion& start, const Quaternion& end);
 		static Quaternion SlerpExtraSpins (float t, const Quaternion& start, const Quaternion& end, int extraSpins);
 		
-		// Special quaternions
-		static const Quaternion ZERO;		// (0)(0,0,0)
+        /// @}
+        
+        // Public Constants
+		// =====================================================
+        
+        // ---------------------------------
+        /// @name Static Constants
+        /// @{
+        
+		/// Zero quaternion:  All 0s
+		static const Quaternion ZERO;
+        
+        /// Identity quaternion
 		static const Quaternion IDENTITY;	// (1)(0,0,0)
+        
+        /// @}
 	};
 
-	// ===================================================================================
-	// Asssignment Operator
-	// ===================================================================================
-
-	// ***********************************************************************
+	/// @}
+    /// @}
+    
+    // Inline Implementations
+	// ====================================
+    
+	// *****************************************************************
+    /// @brief
+    ///     Assignement operator: copies the values of the given quaternion to this quaternion
+    // *****************************************************************
 	inline Quaternion& Quaternion::operator= (const Quaternion& input)
 	{
 		W = input.W;
@@ -81,11 +127,10 @@ namespace Gdk
 		return *this;
 	}
 
-	// ===================================================================================
-	// Comparison Operators
-	// ===================================================================================
-
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Equality operator: returns true if two quaternions have the same values
+    // *****************************************************************
 	inline bool Quaternion::operator== (const Quaternion& input) const
 	{
 		return
@@ -95,7 +140,10 @@ namespace Gdk
 			Z == input.Z;
 	}
 
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Inequality operator: returns true if two quaternionss have different values
+    // *****************************************************************
 	inline bool Quaternion::operator!= (const Quaternion& input) const
 	{
 		return 
@@ -105,11 +153,10 @@ namespace Gdk
 			Z != input.Z;
 	}
 
-	// ===================================================================================
-	// Arithmetic Operators
-	// ===================================================================================
-
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Adds two quaterions together
+    // *****************************************************************
 	inline Quaternion Quaternion::operator+ (const Quaternion& input) const
 	{
 		return Quaternion(
@@ -120,7 +167,10 @@ namespace Gdk
 			);
 	}
 
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Subtracts one quaternion from another
+    // *****************************************************************
 	inline Quaternion Quaternion::operator- (const Quaternion& input) const
 	{
 		return Quaternion(
@@ -131,7 +181,10 @@ namespace Gdk
 			);
 	}
 
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Multiplies two quaternions.
+    // *****************************************************************
 	inline Quaternion Quaternion::operator* (const Quaternion& input) const
 	{
 		return Quaternion(
@@ -142,7 +195,10 @@ namespace Gdk
 			);
 	}
 
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Multiples a quaternion by a scalar
+    // *****************************************************************
 	inline Quaternion Quaternion::operator* (float scalar) const
 	{
 		return Quaternion(
@@ -153,7 +209,10 @@ namespace Gdk
 			);
 	}
 
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Divides a quaternion by a scalar
+    // *****************************************************************
 	inline Quaternion Quaternion::operator/ (float scalar) const
 	{
 		if(scalar != 0.0f)
@@ -177,7 +236,10 @@ namespace Gdk
 		}
 	}
 
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Negates a quaternion
+    // *****************************************************************
 	inline Quaternion Quaternion::operator- () const
 	{
 		return Quaternion(
@@ -188,7 +250,10 @@ namespace Gdk
 			);
 	}
 
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Multiples a scalar and a quaternion
+    // *****************************************************************
 	inline Quaternion operator* (float scalar, const Quaternion& input)
 	{
 		return Quaternion(
@@ -199,11 +264,10 @@ namespace Gdk
 			);
 	}
 
-	// ===================================================================================
-	// Arithmetic Update Operators
-	// ===================================================================================
-
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Adds a quaternion to this quaternion
+    // *****************************************************************
 	inline Quaternion& Quaternion::operator+= (const Quaternion& input)
 	{
 		W += input.W;
@@ -213,7 +277,10 @@ namespace Gdk
 		return *this;
 	}
 
-	// ***********************************************************************
+    // *****************************************************************
+    /// @brief
+    ///     Subtracts a quaternion from this quaternion
+    // *****************************************************************
 	inline Quaternion& Quaternion::operator-= (const Quaternion& input)
 	{
 		W -= input.W;
@@ -223,7 +290,10 @@ namespace Gdk
 		return *this;
 	}
 
-	// ***********************************************************************
+    // *****************************************************************
+    /// @brief
+    ///     Multiples this quaternion by a scalar
+    // *****************************************************************
 	inline Quaternion& Quaternion::operator*= (float scalar)
 	{
 		W *= scalar;
@@ -233,7 +303,10 @@ namespace Gdk
 		return *this;
 	}
 
-	// ***********************************************************************
+    // *****************************************************************
+    /// @brief
+    ///     Divides this quaternion by a scalar
+    // *****************************************************************
 	inline Quaternion& Quaternion::operator/= (float scalar)
 	{
 		if(scalar != 0.0f)
@@ -254,11 +327,10 @@ namespace Gdk
 		return *this;
 	}
 
-	// ===================================================================================
-	// Instance Methods
-	// ===================================================================================
-
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Calculates the length of a quaterion
+    // *****************************************************************
 	inline float Quaternion::Length() const
 	{
 		return Math::Sqrt(
@@ -269,7 +341,10 @@ namespace Gdk
 			);
 	}
 
-	// ***********************************************************************
+    // *****************************************************************
+    /// @brief
+    ///     Calculates the length squared of a quaterion
+    // *****************************************************************
 	inline float Quaternion::LengthSquared() const
 	{
 		return
@@ -280,7 +355,10 @@ namespace Gdk
 			;
 	}
 
-	// ***********************************************************************
+    // *****************************************************************
+    /// @brief
+    ///     Calculates the Dot product of this quaternion and a given quaterion
+    // *****************************************************************
 	inline float Quaternion::Dot(const Quaternion& input) const
 	{
 		return 
@@ -291,7 +369,10 @@ namespace Gdk
 			;
 	}
 
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Normalizes this quaternion
+    // *****************************************************************
 	inline float Quaternion::Normalize()
 	{
 		float length = Length();

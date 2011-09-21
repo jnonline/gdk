@@ -10,44 +10,65 @@
 
 namespace Gdk
 {
+    /// @addtogroup Math
+    /// @{
+    /// @addtogroup _3D
+    /// @{
+    
+    // =================================================================================
+    /// @brief
+    ///     A vector in 3D space
+    // =================================================================================
 	class Vector3
 	{
 	public:
-		// Components
+		
+        // Public Properties
+		// =====================================================
+        
 		float X, Y, Z;
 
-		// Constructors
+        // Public Methods
+		// =====================================================
+        
+        // ---------------------------------
+        /// @name Constructors
+        /// @{
+
 		Vector3 ();
 		Vector3 (float x, float y, float z);
         Vector3 (const Vector2& xy, float z);
 		Vector3 (const Vector3& input);
 
-		// Asssignment Operator
+        /// @}
+        // ---------------------------------
+        /// @name Operators
+        /// @{
+        
 		inline Vector3& operator= (const Vector3& input);
-
-		// Comparison Operators
 		inline bool operator== (const Vector3& input) const;
 		inline bool operator!= (const Vector3& input) const;
 
-		// Arithmetic Operators
 		inline Vector3 operator+ (const Vector3& input) const;
 		inline Vector3 operator- (const Vector3& input) const;
 		inline Vector3 operator* (float scalar) const;
 		inline Vector3 operator/ (float scalar) const;
 		inline Vector3 operator- () const;
 
-		// Arithmetic Update Operators
 		inline Vector3& operator+= (const Vector3& input);
 		inline Vector3& operator-= (const Vector3& input);
 		inline Vector3& operator*= (float scalar);
 		inline Vector3& operator/= (float scalar);
 
-        // Vector2 accessor functions
+        /// @}
+        // ---------------------------------
+        /// @name Common Vector Methods
+        /// @{
+        
         inline Vector2 GetXY()    { return Vector2(X,Y); }
         inline Vector2 GetYZ()    { return Vector2(Y,Z); }
         inline Vector2 GetXZ()    { return Vector2(X,Z); }
         
-		// Vector functions
 		inline float Length() const;
 		inline float LengthSquared() const;
 		inline float Normalize();               // normalizes in place
@@ -57,35 +78,66 @@ namespace Gdk
 		inline Vector3 UnitCross (const Vector3& input) const;
         inline static float Distance(const Vector3& v1, const Vector3& v2);
         
-		// Interpolation Methods
+        /// @}
+        // ---------------------------------
+        /// @name Interpolation Methods
+        /// @{
+        
 		static Vector3 Lerp(const Vector3& start, const Vector3& end, float t);
 		static Vector3 Hermite(const Vector3& point1, const Vector3& tangent1, const Vector3& point2, const Vector3& tangent2, float t);
 		static Vector3 Bezier(const Vector3& point1, const Vector3& point2, const Vector3& point3, const Vector3& point4, float t);
 		static Vector3 CatmullRom(const Vector3& point1, const Vector3& point2, const Vector3& point3, const Vector3& point4, float t);	// 4 Control Points, t=0=CP2, t=1=CP3
 		static Vector3 Barycentric(const Vector3& point1, const Vector3& point2, const Vector3& point3, float t1, float t2);
 
-		// String conversion methods
+        /// @}
+        // ---------------------------------
+        /// @name Utility Methods
+        /// @{
+        
 		static Vector3 Parse(const char *str);
 		string ToString();
 
-		// Stream Utilities
 		static Vector3 ReadFromStream(class Stream* stream);
 		void WriteToStream(class Stream* stream);
 
-		// special vectors
-		static const Vector3 ZERO;    // (0,0,0)
-		static const Vector3 UNIT_X;  // (1,0,0)
-		static const Vector3 UNIT_Y;  // (0,1,0)
-		static const Vector3 UNIT_Z;  // (0,0,1)
-		static const Vector3 ONE;     // (1,1,1)
+		/// @}
+        
+        // Public Constants
+		// =====================================================
+        
+        // ---------------------------------
+        /// @name Static Constants
+        /// @{
+        
+        /// Vector of zeros:  (0,0,0)
+		static const Vector3 ZERO;
+        
+        /// Unit length vector along the +X axis:  (1,0,0)
+		static const Vector3 UNIT_X;
+        
+        /// Unit length vector along the +Y axis:  (0,1,0)
+		static const Vector3 UNIT_Y;
+        
+        /// Unit length vector along the +Z axis:  (0,0,1)
+		static const Vector3 UNIT_Z;
+        
+        /// Vector of ones:  (1,1,1)
+		static const Vector3 ONE;
+        
+        /// @}
 
 	};
 
-	// ===================================================================================
-	// Asssignment Operator
-	// ===================================================================================
-
-	// ***********************************************************************
+	/// @}
+    /// @}
+    
+    // Inline Implementations
+	// ====================================
+    
+	// *****************************************************************
+    /// @brief
+    ///     Assignement operator: copies the values of the given vector to this vector
+    // *****************************************************************
 	inline Vector3& Vector3::operator= (const Vector3& input)
 	{
 		X = input.X;
@@ -94,11 +146,10 @@ namespace Gdk
 		return *this;
 	}
 
-	// ===================================================================================
-	// Comparison Operators
-	// ===================================================================================
-
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Equality operator: returns true if two vectors have the same values
+    // *****************************************************************
 	inline bool Vector3::operator== (const Vector3& input) const
 	{
 		return 
@@ -107,7 +158,10 @@ namespace Gdk
 			Z == input.Z;
 	}
 
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Inequality operator: returns true if two vectors have different values
+    // *****************************************************************
 	inline bool Vector3::operator!= (const Vector3& input) const
 	{
 		return 
@@ -116,11 +170,10 @@ namespace Gdk
 			Z != input.Z;
 	}
 
-	// ===================================================================================
-	// Arithmetic Operators
-	// ===================================================================================
-
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Adds two vectors
+    // *****************************************************************
 	inline Vector3 Vector3::operator+ (const Vector3& input) const
 	{
 		return Vector3(
@@ -130,7 +183,10 @@ namespace Gdk
 			);
 	}
 
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Subtracts one vector from another
+    // *****************************************************************
 	inline Vector3 Vector3::operator- (const Vector3& input) const
 	{
 		return Vector3(
@@ -140,7 +196,10 @@ namespace Gdk
 			);
 	}
 
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Multiples a vector by a scalar
+    // *****************************************************************
 	inline Vector3 Vector3::operator* (float scalar) const
 	{
 		return Vector3(
@@ -150,7 +209,10 @@ namespace Gdk
 			);
 	}
 
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Divides a vector by a scalar
+    // *****************************************************************
 	inline Vector3 Vector3::operator/ (float scalar) const
 	{
 		if(scalar != 0.0f)
@@ -172,7 +234,10 @@ namespace Gdk
 		}
 	}
 
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Negates a vector
+    // *****************************************************************
 	inline Vector3 Vector3::operator- () const
 	{
 		return Vector3(
@@ -182,7 +247,10 @@ namespace Gdk
 			);
 	}
 
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Multiplies a vector by a scalar
+    // *****************************************************************
 	inline Vector3 operator* (float scalar, const Vector3& input)
 	{
 		return Vector3(
@@ -192,11 +260,10 @@ namespace Gdk
 			);
 	}
 
-	// ===================================================================================
-	// Arithmetic Update Operators
-	// ===================================================================================
-
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Adds a vector into this vector
+    // *****************************************************************
 	inline Vector3& Vector3::operator+= (const Vector3& input)
 	{
 		X += input.X;
@@ -205,7 +272,10 @@ namespace Gdk
 		return *this;
 	}
 
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Subtracts a vector from this vector
+    // *****************************************************************
 	inline Vector3& Vector3::operator-= (const Vector3& input)
 	{
 		X -= input.X;
@@ -214,7 +284,10 @@ namespace Gdk
 		return *this;
 	}
 
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Multiples this vector by a scalar
+    // *****************************************************************
 	inline Vector3& Vector3::operator*= (float scalar)
 	{
 		X *= scalar;
@@ -223,7 +296,10 @@ namespace Gdk
 		return *this;
 	}
 
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Divides this vector by a scalar
+    // *****************************************************************
 	inline Vector3& Vector3::operator/= (float scalar)
 	{
 		if(scalar != 0.0f)
@@ -242,11 +318,10 @@ namespace Gdk
 		return *this;
 	}
 
-	// ===================================================================================
-	// Vector Functions
-	// ===================================================================================
-
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Calculates the length of this vector
+    // *****************************************************************
 	inline float Vector3::Length() const
 	{
 		return Math::Sqrt(
@@ -256,7 +331,12 @@ namespace Gdk
 			);
 	}
 
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Calculates the length squared of this vector.
+    /// @remarks 
+    ///     The squared length of a vector is faster to calculate than the actual length.
+    // *****************************************************************
 	inline float Vector3::LengthSquared() const
 	{
 		return
@@ -266,7 +346,12 @@ namespace Gdk
 			;
 	}
 
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Calculates the dot product of this vector and a given vector
+    /// @param input
+    ///     2nd vector in the dot product calculation
+    // *****************************************************************
 	inline float Vector3::Dot(const Vector3& input) const
 	{
 		return 
@@ -276,7 +361,12 @@ namespace Gdk
 			;
 	}
 
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Normalizes this vector
+    /// @return
+    ///     The original length of the vector (before being normalized) is returned.
+    // *****************************************************************
 	inline float Vector3::Normalize()
 	{
 		float length = Length();
@@ -301,7 +391,10 @@ namespace Gdk
 		return length;
 	}
 
-    // ***********************************************************************
+    // *****************************************************************
+    /// @brief
+    ///     Calculates a normalized version of this vector.  Without changing this vector
+    // *****************************************************************
 	inline Vector3 Vector3::GetNormalized() const
 	{
         // Clone this vector
@@ -313,7 +406,10 @@ namespace Gdk
         return normalized;
     }
 
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Calculates a cross product of this vector and a given vector
+    // *****************************************************************
 	inline Vector3 Vector3::Cross(const Vector3& input) const
 	{
 		// Right handed-rule cross product
@@ -324,7 +420,22 @@ namespace Gdk
 			);
 	}
     
-    // ***********************************************************************
+    // *****************************************************************
+    /// @brief
+    ///     Calculates a normalized cross product of this vector and a given vector
+    // *****************************************************************
+	inline Vector3 Vector3::UnitCross(const Vector3& input) const
+	{
+		// Right handed-rule cross product
+		Vector3 temp = Cross(input);
+        temp.Normalize();
+        return temp;
+	}
+    
+    // *****************************************************************
+    /// @brief
+    ///     Calculates the distance between two points.
+    // *****************************************************************
     inline float Vector3::Distance(const Vector3& v1, const Vector3& v2)
     {
         float x = v1.X - v2.X;

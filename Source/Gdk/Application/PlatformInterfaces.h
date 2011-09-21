@@ -9,7 +9,9 @@
 #include "../Input/Device.h"
 #include "../IO/Path.h"
 
-// This file contains all the interfaces / function prototypes that MUST be implemented for each platform\
+/// @cond INTERNAL
+
+// This file contains all the interfaces / function prototypes that MUST be implemented for each platform
 
 // IO
 string _Gdk_Platform_IO_GetCommonPath(Gdk::CommonPaths::Enum commonPath);
@@ -32,3 +34,6 @@ extern Gdk::DeviceBatteryState::Enum	_Gdk_Platform_Device_GetBatteryState();
 extern float							_Gdk_Platform_Device_GetBatteryLevel();
 extern void                             _Gdk_Platform_Device_Vibrate();
 
+
+
+/// @endcond

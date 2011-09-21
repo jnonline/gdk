@@ -524,10 +524,10 @@ void Renderer2D::DrawTexturedQuad(
 	// Do we need to apply the world transform to the vertices?
 	if(applyWorldTransform)
 	{
-		worldTransform.TransformVertexInPlace(destX1, destY1);
-		worldTransform.TransformVertexInPlace(destX2, destY2);
-		worldTransform.TransformVertexInPlace(destX3, destY3);
-		worldTransform.TransformVertexInPlace(destX4, destY4);
+		worldTransform.TransformPointInPlace(destX1, destY1);
+		worldTransform.TransformPointInPlace(destX2, destY2);
+		worldTransform.TransformPointInPlace(destX3, destY3);
+		worldTransform.TransformPointInPlace(destX4, destY4);
 	}
 
 	// Get the batch for this render data
@@ -569,10 +569,10 @@ void Renderer2D::DrawTexturedQuad(
 	// Do we need to apply the world transform to the vertices?
 	if(applyWorldTransform)
 	{
-		worldTransform.TransformVertexInPlace(destX1, destY1);
-		worldTransform.TransformVertexInPlace(destX2, destY2);
-		worldTransform.TransformVertexInPlace(destX3, destY3);
-		worldTransform.TransformVertexInPlace(destX4, destY4);
+		worldTransform.TransformPointInPlace(destX1, destY1);
+		worldTransform.TransformPointInPlace(destX2, destY2);
+		worldTransform.TransformPointInPlace(destX3, destY3);
+		worldTransform.TransformPointInPlace(destX4, destY4);
 	}
 
 	// Add the vertex data
@@ -611,10 +611,10 @@ void Renderer2D::DrawImage(
 		// Do a full rotate/scale/translate matrix
 		Matrix2D matrix;
 		matrix.ScaleRotateTranslate(scaleX, scaleY, position.X, position.Y, rotation);
-		matrix.TransformVertexInPlace(dx1, dy1);
-		matrix.TransformVertexInPlace(dx2, dy2);
-		matrix.TransformVertexInPlace(dx3, dy3);
-		matrix.TransformVertexInPlace(dx4, dy4);
+		matrix.TransformPointInPlace(dx1, dy1);
+		matrix.TransformPointInPlace(dx2, dy2);
+		matrix.TransformPointInPlace(dx3, dy3);
+		matrix.TransformPointInPlace(dx4, dy4);
 	}
 	else
 	{
@@ -660,10 +660,10 @@ void Renderer2D::DrawImage(
 		// Do a full rotate/scale/translate matrix
 		Matrix2D matrix;
 		matrix.ScaleRotateTranslate(scaleX, scaleY, position.X, position.Y, rotation);
-		matrix.TransformVertexInPlace(dx1, dy1);
-		matrix.TransformVertexInPlace(dx2, dy2);
-		matrix.TransformVertexInPlace(dx3, dy3);
-		matrix.TransformVertexInPlace(dx4, dy4);
+		matrix.TransformPointInPlace(dx1, dy1);
+		matrix.TransformPointInPlace(dx2, dy2);
+		matrix.TransformPointInPlace(dx3, dy3);
+		matrix.TransformPointInPlace(dx4, dy4);
 	}
 	else
 	{
@@ -962,7 +962,7 @@ void Renderer2D::DrawPoint(
 	Vector2 finalPoint = point;
 	if(applyWorldTransform)
 	{
-		worldTransform.TransformVertexInPlace(finalPoint.X, finalPoint.Y);
+		worldTransform.TransformPointInPlace(finalPoint.X, finalPoint.Y);
 	}
 
 	// Get the batch for this render data
@@ -984,8 +984,8 @@ void Renderer2D::DrawLine(
 	Vector2 finalEnd = end;
 	if(applyWorldTransform)
 	{
-		worldTransform.TransformVertexInPlace(finalStart.X, finalStart.Y);
-		worldTransform.TransformVertexInPlace(finalEnd.X, finalEnd.Y);
+		worldTransform.TransformPointInPlace(finalStart.X, finalStart.Y);
+		worldTransform.TransformPointInPlace(finalEnd.X, finalEnd.Y);
 	}
 
 	// Get the batch for this render data
@@ -1018,10 +1018,10 @@ void Renderer2D::DrawRectangle(
 	// Do we have a custom transform?
 	if(applyWorldTransform)
 	{
-		worldTransform.TransformVertexInPlace(positions[0].X, positions[0].Y);
-		worldTransform.TransformVertexInPlace(positions[1].X, positions[1].Y);
-		worldTransform.TransformVertexInPlace(positions[2].X, positions[2].Y);
-		worldTransform.TransformVertexInPlace(positions[3].X, positions[3].Y);
+		worldTransform.TransformPointInPlace(positions[0].X, positions[0].Y);
+		worldTransform.TransformPointInPlace(positions[1].X, positions[1].Y);
+		worldTransform.TransformPointInPlace(positions[2].X, positions[2].Y);
+		worldTransform.TransformPointInPlace(positions[3].X, positions[3].Y);
 	}
 
 	// TL-TR-BL
@@ -1058,10 +1058,10 @@ void Renderer2D::DrawRectangleOutline(
 	// Do we have a custom transform?
 	if(applyWorldTransform)
 	{
-		worldTransform.TransformVertexInPlace(positions[0].X, positions[0].Y);
-		worldTransform.TransformVertexInPlace(positions[1].X, positions[1].Y);
-		worldTransform.TransformVertexInPlace(positions[2].X, positions[2].Y);
-		worldTransform.TransformVertexInPlace(positions[3].X, positions[3].Y);
+		worldTransform.TransformPointInPlace(positions[0].X, positions[0].Y);
+		worldTransform.TransformPointInPlace(positions[1].X, positions[1].Y);
+		worldTransform.TransformPointInPlace(positions[2].X, positions[2].Y);
+		worldTransform.TransformPointInPlace(positions[3].X, positions[3].Y);
 	}
 
 	// Add the 4 Segments
@@ -1103,10 +1103,10 @@ void Renderer2D::DrawDiamond(
 	// Do we have a custom transform?
 	if(applyWorldTransform)
 	{
-		worldTransform.TransformVertexInPlace(positions[0].X, positions[0].Y);
-		worldTransform.TransformVertexInPlace(positions[1].X, positions[1].Y);
-		worldTransform.TransformVertexInPlace(positions[2].X, positions[2].Y);
-		worldTransform.TransformVertexInPlace(positions[3].X, positions[3].Y);
+		worldTransform.TransformPointInPlace(positions[0].X, positions[0].Y);
+		worldTransform.TransformPointInPlace(positions[1].X, positions[1].Y);
+		worldTransform.TransformPointInPlace(positions[2].X, positions[2].Y);
+		worldTransform.TransformPointInPlace(positions[3].X, positions[3].Y);
 	}
 
 	// L-T-R
@@ -1145,10 +1145,10 @@ void Renderer2D::DrawDiamondOutline(
 	// Do we have a custom transform?
 	if(applyWorldTransform)
 	{
-		worldTransform.TransformVertexInPlace(positions[0].X, positions[0].Y);
-		worldTransform.TransformVertexInPlace(positions[1].X, positions[1].Y);
-		worldTransform.TransformVertexInPlace(positions[2].X, positions[2].Y);
-		worldTransform.TransformVertexInPlace(positions[3].X, positions[3].Y);
+		worldTransform.TransformPointInPlace(positions[0].X, positions[0].Y);
+		worldTransform.TransformPointInPlace(positions[1].X, positions[1].Y);
+		worldTransform.TransformPointInPlace(positions[2].X, positions[2].Y);
+		worldTransform.TransformPointInPlace(positions[3].X, positions[3].Y);
 	}
 
 	// Add the 4 segments
@@ -1189,8 +1189,8 @@ void Renderer2D::DrawCircle(
 	Vector2 center = circle.Center;
 	if(applyWorldTransform)
 	{
-		worldTransform.TransformVertexInPlace(center.X, center.Y);
-		worldTransform.TransformVertexInPlace(startX, startY);
+		worldTransform.TransformPointInPlace(center.X, center.Y);
+		worldTransform.TransformPointInPlace(startX, startY);
 	}
 	
 	// Loop through the segments
@@ -1203,7 +1203,7 @@ void Renderer2D::DrawCircle(
 
 		// Transform the end vertex (if we have a transform)
 		if(applyWorldTransform)
-			worldTransform.TransformVertexInPlace(endX, endY);
+			worldTransform.TransformPointInPlace(endX, endY);
 		
 		// Add the Center vertex
 		batch.AddVertex(center.X, center.Y, color.R, color.G, color.B, color.A);
@@ -1240,7 +1240,7 @@ void Renderer2D::DrawCircleOutline(
 	
 	// If we have a custom transform, get the xformd start vertex
 	if(applyWorldTransform)
-		worldTransform.TransformVertexInPlace(startX, startY);
+		worldTransform.TransformPointInPlace(startX, startY);
 
 	// Loop through the segments
 	for(int i = 0; i < segments; i++)
@@ -1252,7 +1252,7 @@ void Renderer2D::DrawCircleOutline(
 
 		// If we have a custom transform, get the xformd end vertex
 		if(applyWorldTransform)
-			worldTransform.TransformVertexInPlace(endX, endY);
+			worldTransform.TransformPointInPlace(endX, endY);
 
 		// Add the segment Start & End vertices
 		batch.AddVertex(endX, endY, color.R, color.G, color.B, color.A);
@@ -1298,8 +1298,8 @@ void Renderer2D::DrawTexturedCircle(
 	Vector2 center = circle.Center;
 	if(applyWorldTransform)
 	{
-		worldTransform.TransformVertexInPlace(center.X, center.Y);
-		worldTransform.TransformVertexInPlace(startX, startY);
+		worldTransform.TransformPointInPlace(center.X, center.Y);
+		worldTransform.TransformPointInPlace(startX, startY);
 	}
 	
 	// Loop through the segments
@@ -1314,7 +1314,7 @@ void Renderer2D::DrawTexturedCircle(
 
 		// Transform the end vertex (if we have a transform)
 		if(applyWorldTransform)
-			worldTransform.TransformVertexInPlace(endX, endY);
+			worldTransform.TransformPointInPlace(endX, endY);
 		
 		// Add the Center vertex
 		batch.AddVertex(center.X, center.Y, centerTC.X, centerTC.Y, color.R, color.G, color.B, color.A);

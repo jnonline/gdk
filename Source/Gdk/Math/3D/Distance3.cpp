@@ -8,17 +8,21 @@
 
 using namespace Gdk;
 
-// ===================================================================================
-// Point Distance Methods
-// ===================================================================================
-
-// *************************************************************************************
+// *****************************************************************
+/// @brief
+///     Calculates the distance between two points
+// *****************************************************************
 float Distance3::PointToPoint(const Vector3& point1, const Vector3& point2)
 {
     return Vector3::Distance(point1, point2);
 }
 
-// *************************************************************************************
+// *****************************************************************
+/// @brief
+///     Calculates the shortest distance between a point and a ray
+/// @return
+///     The shortest distance between the two primitives
+// *****************************************************************
 float Distance3::PointToRay(const Vector3& point, const Ray3& ray)
 {
     Vector3 diff = point - ray.Origin;
@@ -41,14 +45,25 @@ float Distance3::PointToRay(const Vector3& point, const Ray3& ray)
     return (closest - point).Length();
 }
 
-// *************************************************************************************
+// *****************************************************************
+/// @brief
+///     Calculates the shortest distance between a point and a plane
+/// @return
+///     The shortest distance between the two primitives
+// *****************************************************************
+
 float Distance3::PointToPlane(const Vector3& point, const Plane3& plane)
 {
     // Get the distance from the point to the plane
     return Math::Abs(plane.Normal.Dot(point) - plane.D);
 }
 
-// *************************************************************************************
+// *****************************************************************
+/// @brief
+///     Calculates the shortest distance between a point and an oriented box
+/// @return
+///     The shortest distance between the two primitives
+// *****************************************************************
 float Distance3::PointToBox(const Vector3& point, const Box3& box)
 {
     // Get the vector from the box center to the point
@@ -82,7 +97,12 @@ float Distance3::PointToBox(const Vector3& point, const Box3& box)
     return Math::Sqrt(squaredDistance);
 }
 
-// *************************************************************************************
+// *****************************************************************
+/// @brief
+///     Calculates the shortest distance between a point and a sphere
+/// @return
+///     The shortest distance between the two primitives
+// *****************************************************************
 float Distance3::PointToSphere(const Vector3& point, const Sphere3& sphere)
 {
     // Get the distance from the point to the circle center

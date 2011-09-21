@@ -14,12 +14,29 @@ using namespace Gdk;
 
 #define COMPRESSION_BUFFER_SIZE		65536			// Size of temp buffers used for compression
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Default Constructor
+// *****************************************************************
 Stream::Stream()
 {
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Destructor
+// *****************************************************************
+Stream::~Stream()
+{
+}
+
+// *****************************************************************
+/// @brief
+///     Reads a char* string from the stream
+/// @remarks
+///     char* strings are stored as a 2-byte string length, followed by
+///     the actual character data of the string, NOT including the NULL terminator.
+// *****************************************************************
 string Stream::ReadString()
 {
 	// Read the string length
@@ -37,7 +54,13 @@ string Stream::ReadString()
 	return result;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Reads a wchar_t* wide character string from the stream
+/// @remarks
+///     wchar_t* strings are stored as a 2-byte string length, followed by
+///     the 16-bit characters of the string, NOT including the NULL terminator.
+// *****************************************************************
 wstring Stream::ReadWString()
 {
 	// Read the string length
@@ -55,7 +78,13 @@ wstring Stream::ReadWString()
 	return result;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Writes a char* string to the stream
+/// @remarks
+///     wchar_t* strings are stored as a 2-byte string length, followed by
+///     the 16-bit characters of the string, NOT including the NULL terminator.
+// *****************************************************************
 void Stream::WriteString(const char* value)
 {
 	// Add the string length
@@ -66,20 +95,35 @@ void Stream::WriteString(const char* value)
 	Write((Byte*)value, length);
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Writes a wchar_t* wide character string to the stream
+/// @remarks
+///     wchar_t* strings are stored as a 2-byte string length, followed by
+///     the 16-bit characters of the string, NOT including the NULL terminator.
+// *****************************************************************
 void Stream::WriteWString(const wchar_t* value)
 {
 	// Add the string length
 	UInt16 length = wcslen(value);
 	WriteUInt16(length);
 	
-	Write((Byte*)value, length * sizeof(wchar_t));
+    for(int i=0; i<length; i++)
+	WriteUInt16(value[i]);
 }
 
-
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Decompresses this stream into another stream
+/// @param destination
+///     Stream to where the decompressed data is to be written
+/// @param compressionType
+///     Which compression type the data is compressed with
+// *****************************************************************
 bool Stream::Decompress(Stream* destination, CompressionType::Enum compressionType)
 {
+    // TODO(P2): This method should take a # of bytes to decompress...   
+    
 	switch(compressionType)
 	{
 		// ---------------------------------- ZLib ------------------------------------

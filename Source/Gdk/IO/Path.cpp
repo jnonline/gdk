@@ -12,12 +12,16 @@ using namespace Gdk;
 const char Path::PathSeperator  = '/';
 const int Path::MaxPathLength = 256;
 
-// ***********************************************************************
-Path::Path()
-{
-}
-
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Combines two parts of a path.
+/// @remarks
+///     The method will ensure that two parts have a single '/' path delimiter between them.
+/// @param path1
+///     Part 1 of the final path
+/// @param newFilePath
+//      Part 2 of the final path
+// *****************************************************************
 string Path::Combine(const char* path1, const char* path2)
 {
 	string result(path1);
@@ -39,7 +43,15 @@ string Path::Combine(const char* path1, const char* path2)
 	return result;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Gets the Directory part of a path.
+/// @remarks
+///     Returns the entire path before the last path seperator ('/' or '\') in the input path.
+///     For example:  "C:/foo/bar.txt"  returns  "C:/foo"
+/// @param input
+///     Path to get the directory from
+// *****************************************************************
 string Path::GetDirectory(const char* input)
 {
 	int len = strlen(input);
@@ -60,7 +72,15 @@ string Path::GetDirectory(const char* input)
 	return string();
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Gets the FileName part of a path.
+/// @remarks
+///     Returns the entire filename after the last path seperator ('/' or '\') in the input path.
+///     For example:  "C:/foo/bar.txt"  returns  "bar.txt"
+/// @param input
+///     Path to get the filename from
+// *****************************************************************
 string Path::GetFileName(const char* input)
 {
 	int len = strlen(input);
@@ -85,7 +105,16 @@ string Path::GetFileName(const char* input)
 	return string(input);
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Gets the FileName part of a path, without the extension
+/// @remarks
+///     Returns the entire filename between the last path seperator ('/' or '\') in the input path and the last
+///     extension seperator '.'
+///     For example:  "C:/foo/bar.txt"  returns  "bar"
+/// @param input
+///     Path to get the filename from
+// *****************************************************************
 string Path::GetFileNameWithoutExtension(const char* input)
 {
 	// Get the file name
@@ -109,7 +138,51 @@ string Path::GetFileNameWithoutExtension(const char* input)
 	return fileName;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Gets the extension part of a path
+/// @remarks
+///     Returns the path part after the last extension seperator '.' in the input path.
+///     For example:  "C:/foo/bar.txt"  returns  "txt"
+/// @param input
+///     Path to get the extension from
+// *****************************************************************
+string Path::GetExtension(const char*  input)
+{
+	int len = strlen(input);
+	int index = len-1;
+    
+	// If the path ends with a '.' return blank
+	if(input[index] == '.')
+		return string();
+    
+	// Walk backwards to find the last '.' and return everything after it
+	while(index >= 0)
+	{
+		if(input[index] == '.')
+		{
+			string result(input + index + 1);
+			return result;
+		}
+		index--;
+	}
+    
+	// No '.' found, there is no extension
+	return string();
+}
+
+// *****************************************************************
+/// @brief
+///     Changes the extension of a path string
+/// @remarks
+///     If no prior extension exists, the new one is appended.  
+///     The prepended period in the extension is not necessary.
+///     For example:  "C:/foo/bar.txt"  returns  "C:/foo/bar.newExt"
+/// @param input
+///     Path string to be modified.
+/// @param extentsion
+///     New extension for the input path
+// *****************************************************************
 string Path::ChangeExtension(const char* input, const char* extension)
 {
 	int len = strlen(input);
@@ -151,32 +224,14 @@ string Path::ChangeExtension(const char* input, const char* extension)
 	return result;
 }
 
-// ***********************************************************************
-string Path::GetExtension(const char*  input)
-{
-	int len = strlen(input);
-	int index = len-1;
-
-	// If the path ends with a '.' return blank
-	if(input[index] == '.')
-		return string();
-
-	// Walk backwards to find the last '.' and return everything after it
-	while(index >= 0)
-	{
-		if(input[index] == '.')
-		{
-			string result(input + index + 1);
-			return result;
-		}
-		index--;
-	}
-
-	// No '.' found, there is no extension
-	return string();
-}
-
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Gets the root directory of the specified path
+/// @remarks
+///     For example:  "C:/foo/bar.txt"  returns  "C:/"
+/// @param input
+///     Path string to get the root of.
+// *****************************************************************
 string Path::GetPathRoot(const char* input)
 {
 	int index = 0;
@@ -197,7 +252,16 @@ string Path::GetPathRoot(const char* input)
 	return string();
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Gets one of the common paths used by the GDK
+/// @remarks
+///     The GDK automatically manages several paths for you, such as where
+///     the application binaries are, where the assets and resources are, or
+///     where you are allowed to write save files.
+/// @param path
+///     Specifies which common path to get.
+// *****************************************************************
 string Path::GetCommonPath(CommonPaths::Enum path)
 {
 	// Get the platform specific path

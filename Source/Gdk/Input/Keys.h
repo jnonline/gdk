@@ -9,24 +9,34 @@
 
 namespace Gdk
 {
-	// NOTE: These all map to the exact ascii Virtual Key codes.
+    /// @addtogroup Input
+    /// @{
+    
+    // =================================================================================
+    ///	@brief
+    ///		Enumeration of keyboard keys.
+    ///	@remarks 
+    ///		This enumeration contains all standard keyboard keys and various extension keys available 
+    ///     on some OEM keyboards, such as media and browser control keys.
+    /// @see
+    ///     Keyboard
+    // =================================================================================
 	namespace Keys
 	{
 		enum Enum
 		{
             Unknown = 0,
             
-            // Digits / Numbers
-			D0,
-			D1,
-			D2,
-			D3,
-			D4,
-			D5,
-			D6,
-			D7,
-			D8,
-			D9,
+			D0,             ///< Digit - 0
+			D1,             ///< Digit - 1
+			D2,             ///< Digit - 2
+			D3,             ///< Digit - 3
+			D4,             ///< Digit - 4
+			D5,             ///< Digit - 5
+			D6,             ///< Digit - 6
+			D7,             ///< Digit - 7
+			D8,             ///< Digit - 8
+			D9,             ///< Digit - 9
 
 			// Letters
 			A,
@@ -94,14 +104,14 @@ namespace Gdk
             NumPad8,
             NumPad9,
 
-            NumPadAdd,
-            NumPadMinus,
-			NumPadMultiply,
-			NumPadDivide,
-            NumPadEquals,
-            NumPadEnter,
-            NumPadDecimal,
-			NumPadSeparator,
+            NumPadAdd,          ///< Number Pad Plus +
+            NumPadMinus,        ///< Number Pad Minus -
+			NumPadMultiply,     ///< Number Pad Multiply *
+			NumPadDivide,       ///< Number Pad Divide /
+            NumPadEquals,       ///< Number Pad Equals =
+            NumPadEnter,        ///< Number Pad Enter 
+            NumPadDecimal,      ///< Number Pad Decimal .
+			NumPadSeparator,    ///< Number Pad Seperator
             
 			// Modifiers
 			LeftShift,
@@ -110,9 +120,10 @@ namespace Gdk
 			RightControl,
 			LeftAlt,
 			RightAlt,
-			LeftGUI,                // Windows / Apple-Command keys
-			RightGUI,
-            Function,
+            
+			LeftGUI,            ///< Left Windows or Apple-Command key
+			RightGUI,           ///< Right Windows or Apple-Command key
+            Function,           ///< Function or Fn key.  Currently Mac-only
 	        
 			// KB State / Lock buttons
 			CapsLock,
@@ -154,28 +165,29 @@ namespace Gdk
             
             // Misc Keys
             PrintScreen,
-            Application,        // Windows / Menu key 
+            Application,              ///< Windows / Menu key 
 	       
 			// Browser control keys
-			BrowserBack,
-			BrowserFavorites,
-			BrowserForward,
-			BrowserHome,
-			BrowserRefresh,
-			BrowserSearch,
-			BrowserStop,
+			BrowserBack,              ///< Currently Windows-only
+			BrowserFavorites,         ///< Currently Windows-only
+			BrowserForward,           ///< Currently Windows-only
+			BrowserHome,              ///< Currently Windows-only
+			BrowserRefresh,           ///< Currently Windows-only
+			BrowserSearch,            ///< Currently Windows-only
+			BrowserStop,              ///< Currently Windows-only
             
             // Media control keys
             VolumeUp,
             VolumeDown,
             Mute,
-            MediaNext,
-            MediaPrevious,
-			MediaPlay,
-			MediaStop,
+            MediaNext,                ///< Currently Windows-only
+            MediaPrevious,            ///< Currently Windows-only
+			MediaPlay,                ///< Currently Windows-only
+			MediaStop,                ///< Currently Windows-only
             
 		};
 	}
     
+    /// @}
     
 } // namespace Gdk

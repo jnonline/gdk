@@ -252,7 +252,7 @@ void ParticleSystem2D::EmitByNumber(int numParticles)
 		if(this->ParticlesAreRelativeToEmitter == false)
 		{
 			// Transform the particles into world space
-			world.TransformVertexInPlace(newParticle->Position.X, newParticle->Position.Y);
+			world.TransformPointInPlace(newParticle->Position.X, newParticle->Position.Y);
 			newParticle->Orientation += this->Orientation;
 		}
 
@@ -326,7 +326,7 @@ void ParticleSystem2D::Draw()
 			while(batchSize > 0)
 			{
 				// Transform the particle into world coordinates (from emitter local)
-				Vector2 worldPosition = world.TransformVertex(particle->Position);
+				Vector2 worldPosition = world.TransformPoint(particle->Position);
 
 				// Draw this particle
 				float scale = particle->Size  / particle->Image->Width;

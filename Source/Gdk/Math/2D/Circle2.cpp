@@ -10,19 +10,22 @@ using namespace Gdk;
 
 // instantiations of static constants
 const Circle2 Circle2::ZERO(0.0f, 0.0f, 0.0f);
+const Circle2 Circle2::UNIT(0.0f, 0.0f, 1.0f);
 
-// ===================================================================================
-// Constructors
-// ===================================================================================
-
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Default constructor
+// *****************************************************************
 Circle2::Circle2()
 {
 	Center = Vector2::ZERO;
 	Radius = 0.0f;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Constructs a new circle from the given center and radius
+// *****************************************************************
 Circle2::Circle2(float x, float y, float radius)
 {
 	Center.X = x;
@@ -30,25 +33,34 @@ Circle2::Circle2(float x, float y, float radius)
 	Radius = radius;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Constructs a new circle from the given center and radius
+// *****************************************************************
 Circle2::Circle2(const Vector2& position, float radius)
 {
 	Center = position;
 	Radius = radius;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Copy constructor
+// *****************************************************************
 Circle2::Circle2(const Circle2& input)
 {
 	Center = input.Center;
 	Radius = input.Radius;
 }
 
-// ===================================================================================
-// Utility Methods
-// ===================================================================================
-
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Gets a point within the area of the circle using parametric inputs
+/// @param tAngle
+///     Unit t-value (0.0 to 1.0) around the circumference of the circle
+/// @param tRadius
+///     Unit t-value (0.0 to 1.0) along the radius of the circle
+// *****************************************************************
 Vector2 Circle2::GetParametricPointInArea(float tAngle, float tRadius)
 {
 	// Return a point in the circle using the given parametric coordinates within circle space
@@ -63,7 +75,12 @@ Vector2 Circle2::GetParametricPointInArea(float tAngle, float tRadius)
 		);
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Gets a point on the outer perimeter of the circle using a parametric input
+/// @param tAngle
+///     Unit t-value (0.0 to 1.0) around the circumference of the circle
+// *****************************************************************
 Vector2 Circle2::GetParametricPointOnPerimeter(float tAngle)
 {
 	// Return a point on the perimeter of the circle using a parametric coordinate
@@ -77,12 +94,14 @@ Vector2 Circle2::GetParametricPointOnPerimeter(float tAngle)
 		);
 }
 
-
-// ===================================================================================
-// Encapsulation Methods
-// ===================================================================================
-
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Creates an approximate-fit circle around a set of points.
+/// @param numPoints
+///     The number of points in the [points] array
+/// @param points
+///     An array of points to be used for finding a fitting circle
+// *****************************************************************
 Circle2 Circle2::FromPoints(size_t numPoints, const Vector2* points)
 {
     if(numPoints == 0)
@@ -118,7 +137,14 @@ Circle2 Circle2::FromPoints(size_t numPoints, const Vector2* points)
     return result;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Creates a best-fit circle that encapsulates two given circles
+/// @param c1
+///     First circle to encapsulate
+/// @param c2
+///     Second circle to encapsulate
+// *****************************************************************
 Circle2 Circle2::Merge(const Circle2 &c1, const Circle2 &c2)
 {
 	// Get the difference vector between the centers
@@ -159,13 +185,27 @@ Circle2 Circle2::Merge(const Circle2 &c1, const Circle2 &c2)
 	return result;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Creates a circle that perfectly circumscribes a triangle
+/// @param triangle
+///     Triangle to be circumscribed
+// *****************************************************************
 Circle2 Circle2::CircumscribeTriangle(const Triangle2& triangle)
 {
     return CircumscribeTriangle(triangle.Vertices[0], triangle.Vertices[1], triangle.Vertices[2]);
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Creates a circle that perfectly circumscribes a triangle
+/// @param p1
+///     1st of 3 vertices of the triangle
+/// @param p2
+///     2nd of 3 vertices of the triangle
+/// @param p3
+///     3rd of 3 vertices of the triangle
+// *****************************************************************
 Circle2 Circle2::CircumscribeTriangle(const Vector2& p1, const Vector2& p2, const Vector2& p3)
 {
     // Get the edge vectors
@@ -207,13 +247,27 @@ Circle2 Circle2::CircumscribeTriangle(const Vector2& p1, const Vector2& p2, cons
     return Circle2(p1 + solution, solution.Length());
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Creates a circle that perfectly inscribes a triangle
+/// @param triangle
+///     Triangle to be inscribed
+// *****************************************************************
 Circle2 Circle2::InscribeTriangle(const Triangle2& triangle)
 {
     return InscribeTriangle(triangle.Vertices[0], triangle.Vertices[1], triangle.Vertices[2]);
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Creates a circle that perfectly inscribes a triangle
+/// @param p1
+///     1st of 3 vertices of the triangle
+/// @param p2
+///     2nd of 3 vertices of the triangle
+/// @param p3
+///     3rd of 3 vertices of the triangle
+// *****************************************************************
 Circle2 Circle2::InscribeTriangle(const Vector2& p1, const Vector2& p2, const Vector2& p3)
 {
     // Get the 3 edge vectors
@@ -247,7 +301,12 @@ Circle2 Circle2::InscribeTriangle(const Vector2& p1, const Vector2& p2, const Ve
         );
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Creates a circle that perfectly circumscribes a rectangle
+/// @param rectangle
+///     Rectangle to be circumscribed
+// *****************************************************************
 Circle2 Circle2::CircumscribeRectangle(const Rectangle2& rect)
 {
     return Circle2(rect.GetCenter(), rect.GetExtents().Length());

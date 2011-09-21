@@ -22,7 +22,12 @@ Keyboard::KeyboardKeyEventHandler	Keyboard::KeyUp;
 Keyboard::KeyboardKeyEventHandler	Keyboard::KeyToggled;
 Keyboard::KeyboardCharEventHandler	Keyboard::CharTyped;
 
-// ********************************************************************
+// *****************************************************************
+/// @brief
+///     Initializes the static Keyboard class internal data
+/// @note
+///     GDK Internal Use Only
+// *****************************************************************
 void Keyboard::Init()
 {
     // Clear the key states array
@@ -32,13 +37,23 @@ void Keyboard::Init()
     InitScanCodeToKeyTable();
 }
 
-// ********************************************************************
+// *****************************************************************
+/// @brief
+///     Tells the GDK to update any pre-game-update internal keyboard states in the GDK
+/// @note
+///     GDK Internal Use Only
+// *****************************************************************
 void Keyboard::Update(float elapsedSeconds)
 {
 
 }
 
-// ********************************************************************
+// *****************************************************************
+/// @brief
+///     Tells the GDK to update any post-game-update internal keyboard states in the GDK.
+/// @note
+///     GDK Internal Use Only
+// *****************************************************************
 void Keyboard::PostUpdate(float elapsedSeconds)
 {
 	// Loop through the key states
@@ -49,7 +64,12 @@ void Keyboard::PostUpdate(float elapsedSeconds)
 	}
 }
 
-// ********************************************************************
+// *****************************************************************
+/// @brief
+///     Tells the GDK about a key being pressed on the keyboard.
+/// @note
+///     GDK Internal Use Only
+// *****************************************************************
 void Keyboard::Platform_ProcessKeyDown(Keys::Enum key)
 {
 	// Determine if the key was already down
@@ -81,7 +101,12 @@ void Keyboard::Platform_ProcessKeyDown(Keys::Enum key)
 	KeyDown.Invoke(key);
 }
 
-// ********************************************************************
+// *****************************************************************
+/// @brief
+///     Tells the GDK about a key being released on the keyboard.
+/// @note
+///     GDK Internal Use Only
+// *****************************************************************
 void Keyboard::Platform_ProcessKeyUp(Keys::Enum key)
 {
 	// Determine if the key was already up
@@ -98,52 +123,91 @@ void Keyboard::Platform_ProcessKeyUp(Keys::Enum key)
 	}
 }
 
-// ********************************************************************
+// *****************************************************************
+/// @brief
+///     Tells the GDK about a character being typed on the keyboard.
+/// @note
+///     GDK Internal Use Only
+// *****************************************************************
 void Keyboard::Platform_ProcessChar(wchar_t c)
 {
 	// Call the event
 	CharTyped.Invoke(c);
 }
 
-// ********************************************************************
+// *****************************************************************
+/// @brief
+///     Converts an 8-bit scan code to the equivalent Keys enumeration value.
+/// @note
+///     GDK Internal Use Only
+// *****************************************************************
 Keys::Enum Keyboard::Platform_ConvertScanCodeToKey(UInt8 scanCode)
 {
     // Lookup the key for the given scan code
     return (Keys::Enum) scanCodeToKeyTable[scanCode];
 }
 
-
-// ********************************************************************
+// *****************************************************************
+/// @brief
+///     Returns true if the given keyboard key is currently pressed
+/// @param key
+///     Keyboard key to check the state of
+// *****************************************************************
 bool Keyboard::IsKeyDown(Keys::Enum key)
 {
 	return (keyStates[(int)key] & KBFLAG_KEY_DOWN) == KBFLAG_KEY_DOWN;
 }
 
-// ********************************************************************
+// *****************************************************************
+/// @brief
+///     Returns true if the given keyboard key is currently NOT pressed
+/// @param key
+///     Keyboard key to check the state of
+// *****************************************************************
 bool Keyboard::IsKeyUp(Keys::Enum key)
 {
     return (keyStates[(int)key] & KBFLAG_KEY_DOWN) == 0;
 }
 
-// ********************************************************************
+// *****************************************************************
+/// @brief
+///     Returns true if the given keyboard key is in a toggled state.
+/// @remarks
+///     Each time a key is pressed, it's state is swapped between toggled & not toggled
+/// @param key
+///     Keyboard key to check the state of
+// *****************************************************************
 bool Keyboard::IsKeyToggled(Keys::Enum key)
 {
 	return (keyStates[(int)key] & KBFLAG_KEY_TOGGLED) == KBFLAG_KEY_TOGGLED;
 }
 
-// ********************************************************************
+// *****************************************************************
+/// @brief
+///     Returns true if the given keyboard key was pressed since the last frame.
+/// @param key
+///     Keyboard key to check the state of
+// *****************************************************************
 bool Keyboard::IsKeyJustPressed(Keys::Enum key)
 {
 	return (keyStates[(int)key] & (KBFLAG_KEY_DOWN | KBFLAG_KEY_CHANGED)) == (KBFLAG_KEY_DOWN | KBFLAG_KEY_CHANGED);
 }
 
-// ********************************************************************
+// *****************************************************************
+/// @brief
+///     Returns true if the given keyboard key was released since the last frame.
+/// @param key
+///     Keyboard key to check the state of
+// *****************************************************************
 bool Keyboard::IsKeyJustReleased(Keys::Enum key)
 {
 	return (keyStates[(int)key] & (KBFLAG_KEY_DOWN | KBFLAG_KEY_CHANGED)) == KBFLAG_KEY_CHANGED;
 }
 
-// ********************************************************************
+// *****************************************************************
+/// @brief
+///     Returns true if any keyboard key is currently pressed
+// *****************************************************************
 bool Keyboard::IsAnyKeyDown()
 {
     // Loop through all the keys, checking if any are down
@@ -153,7 +217,10 @@ bool Keyboard::IsAnyKeyDown()
     return false;
 }
 
-// ********************************************************************
+// *****************************************************************
+/// @brief
+///     Returns true if any keyboard key was pressed since the last frame.
+// *****************************************************************
 bool Keyboard::IsAnyKeyJustPressed()
 {
 	// Loop through all the keys, checking if any are down
@@ -163,7 +230,10 @@ bool Keyboard::IsAnyKeyJustPressed()
     return false;
 }
 
-// ********************************************************************
+// *****************************************************************
+/// @brief
+///     Returns true if any keyboard key was released since the last frame.
+// *****************************************************************
 bool Keyboard::IsAnyKeyJustReleased()
 {
 	// Loop through all the keys, checking if any are down
@@ -173,12 +243,12 @@ bool Keyboard::IsAnyKeyJustReleased()
     return false;
 }
 
-// ############################################################################
-//
-//    SCAN CODE TO KEY MAPPING TABLES
-//
-// ############################################################################
-
+// *****************************************************************
+/// @brief
+///     Initializes the ScanCode to Key enum mapping table.
+/// @note
+///     GDK Internal Use Only
+// *****************************************************************
 void Keyboard::InitScanCodeToKeyTable()
 {
     

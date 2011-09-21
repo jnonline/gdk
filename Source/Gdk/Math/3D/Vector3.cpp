@@ -15,17 +15,18 @@ const Vector3 Vector3::UNIT_Y(0.0f, 1.0f, 0.0f);
 const Vector3 Vector3::UNIT_Z(0.0f, 0.0f, 1.0f);
 const Vector3 Vector3::ONE(1.0f, 1.0f, 1.0f);
 
-
-// ===================================================================================
-// Constructors
-// ===================================================================================
-
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Default constructor
+// *****************************************************************
 Vector3::Vector3()
 {
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Constructs a new vector from the given x, y, & z
+// *****************************************************************
 Vector3::Vector3(float x, float y, float z)
 {
 	X = x;
@@ -33,7 +34,10 @@ Vector3::Vector3(float x, float y, float z)
 	Z = z;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Constructs a new vector from an (X,Y) vector and a Z value
+// *****************************************************************
 Vector3::Vector3(const Vector2& xy, float z)
 {
 	X = xy.X;
@@ -41,7 +45,10 @@ Vector3::Vector3(const Vector2& xy, float z)
 	Z = z;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Copy constructor
+// *****************************************************************
 Vector3::Vector3(const Vector3& input)
 {
 	X = input.X;
@@ -50,11 +57,12 @@ Vector3::Vector3(const Vector3& input)
 }
 
 
-// ===================================================================================
-// String conversion
-// ===================================================================================
-
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Parses a Vector3 from a string
+/// @param str
+///     A string of the format "%f,%f,%f"
+// *****************************************************************
 Vector3 Vector3::Parse(const char *str)
 {
 	// String format: "1.1,2.2,3.3"
@@ -66,7 +74,12 @@ Vector3 Vector3::Parse(const char *str)
 	return Vector3(x,y,z);
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Creates a string representation of this vector.
+/// @remarks
+///     The resultant string has the format: "%f,%f,%f"
+// *****************************************************************
 string Vector3::ToString()
 {
 	// Build a string of the format "1.1,2.2,3.3"
@@ -75,11 +88,16 @@ string Vector3::ToString()
 	return string(temp);
 }
 
-// ===================================================================================
-// Interpolation Methods
-// ===================================================================================
-
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Calculates the linear interpolation between two vectors
+/// @param start
+///     The 1st vector, represented at t=0
+/// @param end
+///     The 2nd vector, represented at t=1
+/// @param t
+///     The t-value of the interpolation. (usually between 0 and 1, but can be outside that range to extrapolate instead of interpolate)
+// *****************************************************************
 Vector3 Vector3::Lerp(const Vector3& start, const Vector3& end, float t)
 {
 	// Calculate the new point
@@ -90,7 +108,22 @@ Vector3 Vector3::Lerp(const Vector3& start, const Vector3& end, float t)
 		); 
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Calculates an interpolated point along a Hermite Spline.
+/// @remarks
+///     Hermite splines are cubic splines defined by two endpoints and two tangent vectors pointing away from the endpoints
+/// @param point1
+///     The 1st endpoint, represented at t=0
+/// @param tangent1
+///     The tangent vector from the 1st endpoint.
+/// @param point2
+///     The 2nd endpoint, represented at t=1
+/// @param tangent2
+///     The tangent vector from the 2nd endpoint.
+/// @param t
+///     The t-value of the interpolation. (usually between 0 and 1, but can be outside that range to extrapolate instead of interpolate)
+// *****************************************************************
 Vector3 Vector3::Hermite(const Vector3& point1, const Vector3& tangent1, const Vector3& point2, const Vector3& tangent2, float t)
 {
 	// Calculate the Hermite Cooefficients
@@ -109,7 +142,23 @@ Vector3 Vector3::Hermite(const Vector3& point1, const Vector3& tangent1, const V
 		); 
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Calculates an interpolated point along a Bezier Spline.
+/// @remarks
+///     Bezier splines are cubic splines defined by 4 points:  2 end-points that the spline will 
+///     go through and 2 middle control points that the spline will approximate.
+/// @param point1
+///     The 1st endpoint, represented at t=0
+/// @param point2
+///     The control point near the 1st endpoint
+/// @param point3
+///     The control point near the 2nd endpoint
+/// @param point4
+///     The 2nd endpoint, represented at t=1
+/// @param t
+///     The t-value of the interpolation. (usually between 0 and 1, but can be outside that range to extrapolate instead of interpolate)
+// *****************************************************************
 Vector3 Vector3::Bezier(const Vector3& point1, const Vector3& point2, const Vector3& point3, const Vector3& point4, float t)
 {
 	// Bezier splines will go through the endpoints and approximate the 2 middle control points
@@ -130,7 +179,22 @@ Vector3 Vector3::Bezier(const Vector3& point1, const Vector3& point2, const Vect
 		); 
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Calculates an interpolated point along a Catmull-Rom Spline.
+/// @remarks
+///     Catmull Rom splines are defined by 4 points: 2 outer control points and 2 inner endpoints
+/// @param point1
+///     The outer control point near the 1st endpoint
+/// @param point2
+///     The 1st endpoint, represented at t=0
+/// @param point3
+///     The 2nd endpoint, represented at t=1
+/// @param point4
+///     The outer control point near the 2nd endpoint
+/// @param t
+///     The t-value of the interpolation. (usually between 0 and 1, but can be outside that range to extrapolate instead of interpolate)
+// *****************************************************************
 Vector3 Vector3::CatmullRom(const Vector3& point1, const Vector3& point2, const Vector3& point3, const Vector3& point4, float t)
 {
     float t2 = t * t;
@@ -143,7 +207,23 @@ Vector3 Vector3::CatmullRom(const Vector3& point1, const Vector3& point2, const 
 		);
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Calculates an interpolated point from a set of Barycentric Coordinates
+/// @remarks
+///     Barycentric coordinates are defined by two parametric coordinates that interpolate
+///     From one vertex of the triangle to the other 2 vertices.
+/// @param point1
+///     The anchor vertex of the triangle.  Represented by t1=0, t2=0
+/// @param point2
+///     A 2nd vertex of the triangle.  Represented by t1=1, t2=0
+/// @param point3
+///     A 2rd vertex of the triangle.  Represented by t1=0, t2=1
+/// @param t1
+///     A t-value that linear interpolates between point1 and point2
+/// @param t2
+///     A t-value that linear interpolates between point1 and point3
+// *****************************************************************
 Vector3 Vector3::Barycentric(const Vector3& point1, const Vector3& point2, const Vector3& point3, float t1, float t2)
 {
     return Vector3(
@@ -153,11 +233,10 @@ Vector3 Vector3::Barycentric(const Vector3& point1, const Vector3& point2, const
 		);
 }
 
-// ===================================================================================
-// Stream Utilities
-// ===================================================================================
-
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Reads a Vector3 from a stream.
+// *****************************************************************
 Vector3 Vector3::ReadFromStream(Stream* stream)
 {
 	Vector3 result;
@@ -165,7 +244,10 @@ Vector3 Vector3::ReadFromStream(Stream* stream)
 	return result;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Writes this vector to a stream.
+// *****************************************************************
 void Vector3::WriteToStream(Stream* stream)
 {
 	stream->Write(this, sizeof(float[3]));

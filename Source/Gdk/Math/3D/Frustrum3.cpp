@@ -8,17 +8,21 @@
 
 using namespace Gdk;
 
-// ===================================================================================
-// Constructors
-// ===================================================================================
-
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Constructs a new Frustrum by extracting the planar sides from a projection matrix.
+/// @param matrix
+///     A projection matrix from which to extract the frustrum sides
+// *****************************************************************
 Frustrum3::Frustrum3(const Matrix3D& matrix)
 {
     SetMatrix(matrix);
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Copy constructor
+// *****************************************************************
 Frustrum3::Frustrum3(const Frustrum3& input)
 {
     // Copy the planes
@@ -30,7 +34,10 @@ Frustrum3::Frustrum3(const Frustrum3& input)
         Corners[i] = input.Corners[i];
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Sets this frustrum to match a given projection matrix.
+// *****************************************************************
 void Frustrum3::SetMatrix(const Matrix3D& matrix)
 {
 	Planes[0].Normal.X = -matrix.M13;
@@ -68,6 +75,16 @@ void Frustrum3::SetMatrix(const Matrix3D& matrix)
         Planes[i].D /= length;
     }
     
+    // Calculate the corners
+    CalculateCorners();
+}
+
+// *****************************************************************
+/// @brief
+///     Calculates the 8 corners of the frustrum by finding the intersections of the 6 planar sides
+// *****************************************************************
+void Frustrum3::CalculateCorners()
+{
     // Calculate the 8 corners
     Ray3 ray = GetIntersectionRay(Planes[0], Planes[2]);
     Corners[0] = GetIntersectionPoint(Planes[4], ray);
@@ -84,7 +101,12 @@ void Frustrum3::SetMatrix(const Matrix3D& matrix)
 }
 
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Finds a ray at the intersection of two planes
+/// @note
+///     GDK Internal Use Only
+// *****************************************************************
 Ray3 Frustrum3::GetIntersectionRay(const Plane3& plane1, const Plane3& plane2)
 {
     // Calculate a ray on the intersection of the given planes
@@ -95,7 +117,12 @@ Ray3 Frustrum3::GetIntersectionRay(const Plane3& plane1, const Plane3& plane2)
     return Ray3(position, direction);
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Finds a point at the intersection of a ray and a plane
+/// @note
+///     GDK Internal Use Only
+// *****************************************************************
 Vector3 Frustrum3::GetIntersectionPoint(const Plane3& plane, const Ray3& ray)
 {
     // Get the point where the given ray intersects the plane

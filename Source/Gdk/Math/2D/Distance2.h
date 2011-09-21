@@ -14,21 +14,25 @@
 
 namespace Gdk
 {
-    // =============================================
-    // The Distance2 class contains methods finding distances between 2D primitives
-    //
-    
-    // =============================================
-	class Distance2
-	{
-    private:
-		// Internal CTor
-		Distance2() {}
+    /// @addtogroup Math
+    /// @{
+    /// @addtogroup _2D
+    /// @{
 
+    // =================================================================================
+    /// @brief
+    ///     Provides static methods for finding distances between 2D primitives
+	// =================================================================================
+    class Distance2
+	{
 	public:
+
+        // Public Methods
+		// =====================================================
         
-		// Point Distance Methods
-		// ---------------------------
+        // ---------------------------------
+        /// @name Methods
+        /// @{
         
         static float PointToPoint(const Vector2& point1, const Vector2& point2); 
         static float PointToRay(const Vector2& point, const Ray2& ray);
@@ -37,6 +41,10 @@ namespace Gdk
         static float PointToRectangle(const Vector2& point, const Rectangle2& rect);
         static float PointToCircle(const Vector2& point, const Circle2& circle);
 	
+        /// @}
     };
+    
+    /// @}  _2D
+    /// @}  Math
 
 } // namespace

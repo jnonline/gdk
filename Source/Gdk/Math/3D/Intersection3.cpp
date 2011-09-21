@@ -8,11 +8,12 @@
 
 using namespace Gdk;
 
-// ===================================================================================
-// Ray -> Plane
-// ===================================================================================
-
-// *************************************************************************************
+// *****************************************************************
+/// @brief
+///     Tests if a ray and a plane intersect.
+/// @return
+///     true if the primitives intersect, otherwise false.
+// *****************************************************************
 bool Intersection3::Test(const Ray3& ray, const Plane3& plane)
 {
 	float directionDotNormal = ray.Direction.Dot(plane.Normal);
@@ -41,7 +42,18 @@ bool Intersection3::Test(const Ray3& ray, const Plane3& plane)
     return false;
 }
 
-// *************************************************************************************
+// *****************************************************************
+/// @brief
+///     Finds the intersection between a ray and a plane
+/// @param[in] ray
+///     The ray component to intersect
+/// @param[in] plane
+///     The plane to intersect
+/// @param[out] distance
+///     The distance from the origin of the ray to the point of intersection.  This value is undefined if the method returns false.
+/// @return
+///     true if the primitives intersect, otherwise false.
+// *****************************************************************
 bool Intersection3::Find(const Ray3& ray, const Plane3& plane, float& distance)
 {
 	float directionDotNormal = ray.Direction.Dot(plane.Normal);
@@ -74,11 +86,12 @@ bool Intersection3::Find(const Ray3& ray, const Plane3& plane, float& distance)
     return false;
 }
 
-// ===================================================================================
-// Ray -> Sphere
-// ===================================================================================
-
-// *************************************************************************************
+// *****************************************************************
+/// @brief
+///     Tests if a ray and a sphere intersect.
+/// @return
+///     true if the primitives intersect, otherwise false.
+// *****************************************************************
 bool Intersection3::Test(const Ray3& ray, const Sphere3& sphere)
 {
 	// Get the Ray.Origin -> Sphere.Center vector
@@ -102,7 +115,18 @@ bool Intersection3::Test(const Ray3& ray, const Sphere3& sphere)
 	return directionDotDiff * directionDotDiff >= (distSq - radSq);
 }
 
-// *************************************************************************************
+// *****************************************************************
+/// @brief
+///     Finds the intersection between a ray and a sphere
+/// @param[in] ray
+///     The ray component to intersect
+/// @param[in] sphere
+///     The sphere to intersect
+/// @param[out] distance
+///     The distance from the origin of the ray to the nearest point of intersection.  This value is undefined if the method returns false.
+/// @return
+///     true if the primitives intersect, otherwise false.
+// *****************************************************************
 bool Intersection3::Find(const Ray3& ray, const Sphere3& sphere, float& distance)
 {
 	// Get the Ray.Origin -> Sphere.Center vector
@@ -135,11 +159,12 @@ bool Intersection3::Find(const Ray3& ray, const Sphere3& sphere, float& distance
 	return true;
 }
 
-// ===================================================================================
-// Ray -> Box
-// ===================================================================================
-
-// *************************************************************************************
+// *****************************************************************
+/// @brief
+///     Tests if a ray and an oriented box intersect.
+/// @return
+///     true if the primitives intersect, otherwise false.
+// *****************************************************************
 bool Intersection3::Test(const Ray3& ray, const Box3& box)
 {
     float WdU[3], AWdU[3], DdU[3], ADdU[3], AWxDdU[3], RHS;
@@ -198,7 +223,18 @@ bool Intersection3::Test(const Ray3& ray, const Box3& box)
     return true;
 }
 
-// *************************************************************************************
+// *****************************************************************
+/// @brief
+///     Finds the intersection between a ray and an oriented box
+/// @param[in] ray
+///     The ray component to intersect
+/// @param[in] box
+///     The box to intersect
+/// @param[out] distance
+///     The distance from the origin of the ray to the nearest point of intersection.  This value is undefined if the method returns false.
+/// @return
+///     true if the primitives intersect, otherwise false.
+// *****************************************************************
 bool Intersection3::Find(const Ray3& ray, const Box3& box, float& distance)
 {
     // Do a line/box intersection using ray based T values
@@ -215,18 +251,30 @@ bool Intersection3::Find(const Ray3& ray, const Box3& box, float& distance)
     return intersectionType != IntersectionType::None;
 }
 
-// ===================================================================================
-// Ray -> Frustrum
-// ===================================================================================
-
-// *************************************************************************************
+// *****************************************************************
+/// @brief
+///     Tests if a ray and a frustrum intersect.
+/// @return
+///     true if the primitives intersect, otherwise false.
+// *****************************************************************
 bool Intersection3::Test(const Ray3& ray, const Frustrum3& frustrum)
 {
     float distance;
     return Find(ray, frustrum, distance);
 }
 
-// *************************************************************************************
+// *****************************************************************
+/// @brief
+///     Finds the intersection between a ray and a frustrum
+/// @param[in] ray
+///     The ray component to intersect
+/// @param[in] frustrum
+///     The frustrum to intersect
+/// @param[out] distance
+///     The distance from the origin of the ray to the nearest point of intersection.  This value is undefined if the method returns false.
+/// @return
+///     true if the primitives intersect, otherwise false.
+// *****************************************************************
 bool Intersection3::Find(const Ray3& ray, const Frustrum3& frustrum, float& distance)
 {
     distance = 0.0f;
@@ -286,11 +334,12 @@ bool Intersection3::Find(const Ray3& ray, const Frustrum3& frustrum, float& dist
 }
 
 
-// ===================================================================================
-// Frustrum -> Plane
-// ===================================================================================
-
-// *************************************************************************************
+// *****************************************************************
+/// @brief
+///     Tests if a frustrum and a plane intersect.
+/// @return
+///     true if the primitives intersect, otherwise false.
+// *****************************************************************
 bool Intersection3::Test(const Frustrum3& frustrum, const Plane3& plane)
 {
     int sides = 0;
@@ -314,11 +363,12 @@ bool Intersection3::Test(const Frustrum3& frustrum, const Plane3& plane)
     return false;
 }
 
-// ===================================================================================
-// Frustrum -> Sphere
-// ===================================================================================
-
-// *************************************************************************************
+// *****************************************************************
+/// @brief
+///     Tests if a frustrum and a sphere intersect.
+/// @return
+///     true if the primitives intersect, otherwise false.
+// *****************************************************************
 bool Intersection3::Test(const Frustrum3& frustrum, const Sphere3& sphere)
 {
     // Loop through the planes of the frustrum
@@ -336,11 +386,12 @@ bool Intersection3::Test(const Frustrum3& frustrum, const Sphere3& sphere)
     return true;
 }
 
-// ===================================================================================
-// Plane -> Plane
-// ===================================================================================
-
-// *************************************************************************************
+// *****************************************************************
+/// @brief
+///     Tests if two planes intersect.
+/// @return
+///     true if the primitives intersect, otherwise false.
+// *****************************************************************
 bool Intersection3::Test(const Plane3& plane1, const Plane3& plane2)
 {
     // Check if the planes have the same orientation
@@ -355,11 +406,12 @@ bool Intersection3::Test(const Plane3& plane1, const Plane3& plane2)
     return false;
 }
 
-// ===================================================================================
-// Plane -> Sphere
-// ===================================================================================
-
-// *************************************************************************************
+// *****************************************************************
+/// @brief
+///     Tests if a plane and a sphere intersect.
+/// @return
+///     true if the primitives intersect, otherwise false.
+// *****************************************************************
 bool Intersection3::Test(const Plane3& plane, const Sphere3& sphere)
 {
     // Get the distance from the plane to the sphere center
@@ -369,11 +421,12 @@ bool Intersection3::Test(const Plane3& plane, const Sphere3& sphere)
     return Math::Abs(distance) <= sphere.Radius;
 }
 
-// ===================================================================================
-// Plane -> Box
-// ===================================================================================
-
-// *************************************************************************************
+// *****************************************************************
+/// @brief
+///     Tests if a plane and an oriented box intersect.
+/// @return
+///     true if the primitives intersect, otherwise false.
+// *****************************************************************
 bool Intersection3::Test(const Plane3& plane, const Box3& box)
 {
     // Get the distance from the box center, to the corner/edge closest to the plane
@@ -389,11 +442,12 @@ bool Intersection3::Test(const Plane3& plane, const Box3& box)
     return Math::Abs(distance) <= radius;
 }
 
-// ===================================================================================
-// Sphere -> Sphere
-// ===================================================================================
-
-// *************************************************************************************
+// *****************************************************************
+/// @brief
+///     Tests if two spheres intersect.
+/// @return
+///     true if the primitives intersect, otherwise false.
+// *****************************************************************
 bool Intersection3::Test(const Sphere3& sphere1, const Sphere3& sphere2)
 {
     // Get the distance (squared) between the sphere centers
@@ -404,11 +458,12 @@ bool Intersection3::Test(const Sphere3& sphere1, const Sphere3& sphere2)
     return diffSquared <= (totalRadius * totalRadius);
 }
 
-// ===================================================================================
-// Sphere -> Box
-// ===================================================================================
-
-// *************************************************************************************
+// *****************************************************************
+/// @brief
+///     Tests if a sphere and an oriented box intersect.
+/// @return
+///     true if the primitives intersect, otherwise false.
+// *****************************************************************
 bool Intersection3::Test(const Sphere3& sphere, const Box3& box)
 {
     // Get the distance from the box to the sphere center
@@ -418,11 +473,12 @@ bool Intersection3::Test(const Sphere3& sphere, const Box3& box)
     return distance <= sphere.Radius;
 }
 
-// ===================================================================================
-// Box -> Box
-// ===================================================================================
-
-// *************************************************************************************
+// *****************************************************************
+/// @brief
+///     Tests if a two oriented boxes intersect.
+/// @return
+///     true if the primitives intersect, otherwise false.
+// *****************************************************************
 bool Intersection3::Test(const Box3& box1, const Box3& box2)
 {
     const float cutoff = 1.0f - Math::ZERO_TOLERANCE;
@@ -630,16 +686,27 @@ bool Intersection3::Test(const Box3& box1, const Box3& box2)
 }
 
 
-// ===================================================================================
-// Internal Utility Methods
-// ===================================================================================
-
-// These methods are used to find intersections between like primitives.
-//  For instance, most line/ray/lineSegment tests can be done as lines.
-
-
-
-// *************************************************************************************
+// *****************************************************************
+/// @brief
+///     Utility method for intersecting a linear primitive and an oriented box
+/// @param startT
+///     The starting t-value along the linear component to start testing
+/// @param endT
+///     The ending t-value along the linear component to stop testing
+/// @param[in] origin
+///     A point of origin for the linear primitive
+/// @param[in] direction
+///     The vector direction for the linear primitive
+/// @param[in] box
+///     The oriented box
+/// @param[out] t[2]
+///     The result in t depends on the following intersection types:
+///     @li None - t is undefined
+///     @li Point - t[0] is the distance from the origin of the ray to the intersection point.
+///     @li LineSegment - t[0] & t[1] are the distances to the first and last points of intersection.
+/// @return
+///     The type of intersection (or non-intersection) for the two primitives
+// *****************************************************************
 IntersectionType::Enum  Intersection3::Intersect_Line_Box(
     float startT, float endT,
     const Vector3& origin, const Vector3& direction,
@@ -685,7 +752,10 @@ IntersectionType::Enum  Intersection3::Intersect_Line_Box(
     return IntersectionType::None;
 }
 
-// *************************************************************************************
+// *****************************************************************
+/// @brief
+///     Internal utility method for quickly clipping a line along a box plane
+// *****************************************************************
 bool Intersection3::Clip_Box_Line(float denominator, float numerator, float& t0, float& t1)
 {
     // Return value is 'true' if line segment intersects the current test

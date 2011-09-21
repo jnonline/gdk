@@ -222,10 +222,10 @@ void BillboardRenderer::DrawQuad(
 	{
 		Matrix2D mat;
 		mat.Rotate(rotation);
-		mat.TransformVertexInPlace(dx1, dy1);
-		mat.TransformVertexInPlace(dx2, dy2);
-		mat.TransformVertexInPlace(dx3, dy3);
-		mat.TransformVertexInPlace(dx4, dy4);
+		mat.TransformPointInPlace(dx1, dy1);
+		mat.TransformPointInPlace(dx2, dy2);
+		mat.TransformPointInPlace(dx3, dy3);
+		mat.TransformPointInPlace(dx4, dy4);
 	}
 
 	// Add the vertex data

@@ -188,7 +188,7 @@ Vector2 Sprite::GetChildMountPoint(size_t index, bool applySpriteTransforms)
 	{
 		Matrix2D transform(false);
 		Matrix2D::CreateScaleRotateTranslate(this->Scale.X, this->Scale.Y, this->Position.X, this->Position.Y, this->Rotation);
-		return transform.TransformVertex(mountPoint);
+		return transform.TransformPoint(mountPoint);
 	}
 
 	return mountPoint;

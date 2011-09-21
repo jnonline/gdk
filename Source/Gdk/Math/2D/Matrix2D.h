@@ -9,46 +9,75 @@
 
 namespace Gdk
 {
-
+    /// @addtogroup Math
+    /// @{
+    /// @addtogroup _2D
+    /// @{
+    
+    // =================================================================================
+    /// @brief
+    ///     A matrix for doing transforms in 2D space
+    /// @remarks
+    ///     This 3x3 matrix correctly performs various 2D space transforms such as translation,
+    ///     rotation, scaling, skewing, etc...
+    // =================================================================================
 	class Matrix2D
 	{
 	public:
-		// Components
+        
+        // Public Properties
+		// =====================================================
+        
 		float M11, M12, M13;
 		float M21, M22, M23;
 		float M31, M32, M33;
 
-		// Constructors
+        // Public Methods
+		// =====================================================
+        
+        // ---------------------------------
+        /// @name Constructors
+        /// @{
+        
 		Matrix2D(bool identity = true);
 		Matrix2D(float m11, float m12, float m13, float m21, float m22, float m23, float m31, float m32, float m33);
 		Matrix2D(const Matrix2D& input);
 
-		// Asssignment Operator
+        /// @}
+        // ---------------------------------
+        /// @name Operators
+        /// @{
+        
 		inline Matrix2D& operator= (const Matrix2D& input);
 		inline Matrix2D& Set(float m11, float m12, float m13, float m21, float m22, float m23, float m31, float m32, float m33);
 
-		// Comparison Operators
 		inline bool operator== (const Matrix2D& input) const;
 		inline bool operator!= (const Matrix2D& input) const;
 
-		// Arithmetic Operators
 		inline Matrix2D operator* (const Matrix2D& input) const;
 		inline Matrix2D operator* (float scalar) const;
 		inline Matrix2D operator/ (float scalar) const;
 		inline Matrix2D operator- () const;
 
-		// Arithmetic Update Operators
 		inline Matrix2D& operator*= (const Matrix2D& input);
 		inline Matrix2D& operator*= (float scalar);
 		inline Matrix2D& operator/= (float scalar);
 
-		// Vector Transformation Methods
-		inline Vector2 TransformVertex(const Vector2& vertex);
-		inline Vector2 TransformNormal(const Vector2& normal);
-		inline void TransformVertexInPlace(float &x, float &y);
-		inline void TransformNormalInPlace(float &x, float &y);
+        /// @}
+        // ---------------------------------
+        /// @name Vector Transformation Methods
+        /// @{
+        
+		inline Vector2 TransformPoint(const Vector2& point);
+		inline Vector2 TransformDirection(const Vector2& direction);
+		inline void TransformPointInPlace(float &x, float &y);
+		inline void TransformDirectionInPlace(float &x, float &y);
 
-		// In-Place Transformation Methods
+        /// @}
+        // ---------------------------------
+        /// @name In-Place Matrix Transformation Methods
+        /// @{
+        
 		Matrix2D& MakeZero();
 		Matrix2D& MakeIdentity();
 		Matrix2D& Multiply(const Matrix2D& input);
@@ -64,7 +93,11 @@ namespace Gdk
 		Matrix2D& ScaleRotateTranslate(float sx, float sy, float tx, float ty, float angle);
 		Matrix2D& RotateScaleTranslate(float sx, float sy, float tx, float ty, float angle);
 
-		// Static Creation Methods
+        /// @}
+        // ---------------------------------
+        /// @name Matrix Creation Methods
+        /// @{
+        
 		static Matrix2D CreateTranslation(const Vector2& translation);
         static Matrix2D CreateTranslation(float tx, float ty);
 		static Matrix2D CreateScale(float scale);
@@ -73,27 +106,48 @@ namespace Gdk
 		static Matrix2D CreateScaleRotateTranslate(float sx, float sy, float tx, float ty, float angle);
 		static Matrix2D CreateRotateScaleTranslate(float sx, float sy, float tx, float ty, float angle);
 
-		// Extra Matrix Methods
+        /// @}
+        // ---------------------------------
+        /// @name Utility Methods
+        /// @{
+        
 		Matrix2D GetTranspose();
 		Matrix2D GetInverse();
 		float GetDeterminant();
 		bool IsIdentity();
 
-		// Stream Utilities
 		static Matrix2D ReadFromStream(class Stream* stream);
 		void WriteToStream(class Stream* stream);
 
-		// Special matrices
+        /// @}
+        
+        // Public Constants
+		// =====================================================
+        
+        // ---------------------------------
+        /// @name Static Constants
+        /// @{
+        
+		/// The Zero Matrix (all values are 0)
 		static const Matrix2D ZERO;
+        
+        /// The Identity Matrix
 		static const Matrix2D IDENTITY;
+        
+        /// @}
 
 	};
 	
-	// ===================================================================================
-	// Asssignment Operator
-	// ===================================================================================
-
-	// ***********************************************************************
+	/// @}
+    /// @}
+    
+    // Inline Implementations
+	// ====================================
+    
+	// *****************************************************************
+    /// @brief
+    ///     Assignement operator: copies the values of the given matrix to this matrix
+    // *****************************************************************
 	inline Matrix2D& Matrix2D::operator= (const Matrix2D& input)
 	{
 		M11 = input.M11; M12 = input.M12; M13 = input.M13;
@@ -102,7 +156,10 @@ namespace Gdk
 		return *this;
 	}
 
-	// ***********************************************************************
+    // *****************************************************************
+    /// @brief
+    ///     Sets all the values of this matrix
+    // *****************************************************************
 	inline Matrix2D& Matrix2D::Set(float m11, float m12, float m13, float m21, float m22, float m23, float m31, float m32, float m33)
 	{
 		M11 = m11;	M12 = m12;	M13 = m13;
@@ -111,19 +168,21 @@ namespace Gdk
 		return *this;
 	}
 
-	// ===================================================================================
-	// Comparison Operators
-	// ===================================================================================
-
-	// ***********************************************************************
-	inline bool Matrix2D::operator== (const Matrix2D& input) const
+	// *****************************************************************
+    /// @brief
+    ///     Equality operator: returns true if two matrices have the same values
+    // *****************************************************************
+    inline bool Matrix2D::operator== (const Matrix2D& input) const
 	{
 		return M11 == input.M11 && M12 == input.M12 && M13 == input.M13
 			&& M21 == input.M21 && M22 == input.M22 && M23 == input.M23
 			&& M31 == input.M31 && M32 == input.M32 && M33 == input.M33;
 	}
 
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Inequality operator: returns true if two matrices have different values
+    // *****************************************************************
 	inline bool Matrix2D::operator!= (const Matrix2D& input) const
 	{
 		return M11 != input.M11 || M12 != input.M12 || M13 != input.M13
@@ -131,11 +190,10 @@ namespace Gdk
 			|| M31 != input.M31 || M32 != input.M32 || M33 != input.M33;
 	}
 
-	// ===================================================================================
-	// Arithmetic Operators
-	// ===================================================================================
-
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Multiplies two matrices together
+    // *****************************************************************
 	inline Matrix2D Matrix2D::operator* (const Matrix2D& input) const
 	{
 		return Matrix2D(
@@ -151,7 +209,10 @@ namespace Gdk
 			);
 	}
 
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Multiplies a matrix by a scalar
+    // *****************************************************************
 	inline Matrix2D Matrix2D::operator* (float scalar) const
 	{
 		return Matrix2D(
@@ -161,7 +222,10 @@ namespace Gdk
 			);
 	}
 
-	// ***********************************************************************
+    // *****************************************************************
+    /// @brief
+    ///     Divides a matrix by a scalar
+    // *****************************************************************
 	inline Matrix2D Matrix2D::operator/ (float scalar) const
 	{
 		if(scalar != 0.0f)
@@ -183,7 +247,10 @@ namespace Gdk
 		}
 	}
 
-	// ***********************************************************************
+    // *****************************************************************
+    /// @brief
+    ///     Negates a matrix
+    // *****************************************************************
 	inline Matrix2D Matrix2D::operator- () const
 	{
 		return Matrix2D(
@@ -193,7 +260,10 @@ namespace Gdk
 			);
 	}
 
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Multiplies a vector by a matrix, effectively transforming the vector as a point.
+    // *****************************************************************
 	inline Vector2 operator* (const Vector2& v, const Matrix2D& m)
 	{
 		return Vector2(
@@ -202,12 +272,11 @@ namespace Gdk
 			);
 	}
 
-	// ===================================================================================
-	// Arithmetic Update Operators
-	// ===================================================================================
-
-	// ***********************************************************************
-	inline Matrix2D& Matrix2D::operator*= (const Matrix2D& input)
+	// *****************************************************************
+    /// @brief
+    ///     Multiplies a given matrix into this matrix
+    // *****************************************************************
+    inline Matrix2D& Matrix2D::operator*= (const Matrix2D& input)
 	{
 		float m11 = M11 * input.M11 + M12 * input.M21 + M13 * input.M31;
 		float m12 = M11 * input.M12 + M12 * input.M22 + M13 * input.M32;
@@ -226,7 +295,10 @@ namespace Gdk
 	}
 
 
-	// ***********************************************************************
+    // *****************************************************************
+    /// @brief
+    ///     Multiplies this matrix by a scalar
+    // *****************************************************************
 	inline Matrix2D& Matrix2D::operator*= (float scalar)
 	{
 		M11 *= scalar; M12 *= scalar; M13 *= scalar;
@@ -235,7 +307,10 @@ namespace Gdk
 		return *this;
 	}
 
-	// ***********************************************************************
+	// *****************************************************************
+    /// @brief
+    ///     Divides this matrix by a scalar
+    // *****************************************************************
 	inline Matrix2D& Matrix2D::operator/= (float scalar)
 	{
 		if(scalar != 0.0f)
@@ -254,35 +329,66 @@ namespace Gdk
 		return *this;
 	}
 
-	// ===================================================================================
-	// Vector Transformation Methods
-	// ===================================================================================
-
-
-	inline Vector2 Matrix2D::TransformVertex(const Vector2& vertex)
+	// *****************************************************************
+    /// @brief
+    ///     Transforms a point vector by this matrix.
+    /// @remarks
+    ///     The complete transformation of the matrix is applied to the 
+    ///     point.
+    // *****************************************************************
+	inline Vector2 Matrix2D::TransformPoint(const Vector2& point)
 	{
 		return Vector2(
-			vertex.X * M11 + vertex.Y * M21 + M31,
-			vertex.X * M12 + vertex.Y * M22 + M32
+			point.X * M11 + point.Y * M21 + M31,
+			point.X * M12 + point.Y * M22 + M32
 			);
 	}
 
-	inline Vector2 Matrix2D::TransformNormal(const Vector2& normal)
+    // *****************************************************************
+    /// @brief
+    ///     Transforms a direction vector by this matrix (ignoring translation).
+    /// @remarks
+    ///     Only the rotation and scale factors of the matrix are applied to 
+    ///     the direction.  The translation component of the matrix will NOT be applied
+    // *****************************************************************
+	inline Vector2 Matrix2D::TransformDirection(const Vector2& direction)
 	{
 		return Vector2(
-			normal.X * M11 + normal.Y * M21,
-			normal.X * M12 + normal.Y * M22
+			direction.X * M11 + direction.Y * M21,
+			direction.X * M12 + direction.Y * M22
 			);
 	}
 
-	inline void Matrix2D::TransformVertexInPlace(float &x, float &y)
+    // *****************************************************************
+    /// @brief
+    ///     Transforms an (x,y) point by this matrix.
+    /// @remarks
+    ///     The complete transformation of the matrix is applied to the 
+    ///     point directly.
+    /// @param[in,out] x
+    ///     X coordinate of the point to be transformed
+    /// @param[in,out] y
+    ///     Y coordinate of the point to be transformed
+    // *****************************************************************
+	inline void Matrix2D::TransformPointInPlace(float &x, float &y)
 	{
 		float tempX = x * M11 + y * M21 + M31;
 		float tempY = x * M12 + y * M22 + M32;
 		x = tempX; y = tempY;
 	}
 
-	inline void Matrix2D::TransformNormalInPlace(float &x, float &y)
+    // *****************************************************************
+    ///  @brief
+    ///     Transforms an (x,y) direction by this matrix (ignoring translation).
+    /// @remarks
+    ///     Only the rotation and scale factors of the matrix are applied to 
+    ///     the direction.  The translation component of the matrix will NOT be applied
+    /// @param[in,out] x
+    ///     X component of the direction to be transformed
+    /// @param[in,out] y
+    ///     Y component of the direction to be transformed
+    // *****************************************************************
+	inline void Matrix2D::TransformDirectionInPlace(float &x, float &y)
 	{
 		float tempX = x * M11 + y * M21;
 		float tempY = x * M12 + y * M22;

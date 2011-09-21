@@ -8,52 +8,73 @@
 
 
 namespace Gdk
-{
-    // Notes:
-    //  Return Value:   Noise* functions return a unit value from [0.0 to 1.0]
-    //                  CompoundNoise* functions return a value from [0.0 to (1.0 + persistance * 2)]
-    //
-    //  Compound Noise: Multiple octaves of noise are combined doubleing the frequency, 
-    //                  and scaling the amplitude by the persistance for each successive octave
-    //
-    //  Octaves:        The number of octaves to combine (Good values are 4-6)
-    //  Persistance:    The amount of amplitude to apply for each successive octave (Good values are 0.3 (Smooth) to 0.7 (Rough))
+{    
+	/// @addtogroup Math
+    /// @{
+    /// @addtogroup Random
+    /// @{
     
-	// =========================================================
+    // =================================================================================
+    ///	@brief
+    ///		Provides static methods for generating perlin noise in 1, 2, and 3 dimensions     
+    /// @remarks
+    ///     Noise values are generated in the symmetric -1.0 to 1.0 range.
+    /// @par
+    ///     The noise values are generated on whole number coordinate boundarys and any 
+    ///     fractional component is smoothly interpolated.
+    /// @par
+    ///     The noise generator methods will begin to repeat after 256 on the input coordinate(s)
+    // =================================================================================
+
 	class PerlinNoise
 	{
 	public:
 		
 		// Public Methods
-		// ---------------------------------------
+		// =====================================================
 
-        // 1D
+        // ---------------------------------
+        /// @name Methods
+        /// @{
+        
         static float Noise1(float x);
         static float CompoundNoise1(float x, int octaves = 4, float persistence = 0.5f);
         
-		// 2D
         static float Noise2(float x, float y);
         static float CompoundNoise2(float x, float y, int octaves = 4, float persistence = 0.5f);
 
-        // 3D
         static float Noise3(float x, float y, float z);
         static float CompoundNoise3(float x, float y, float z, int octaves = 4, float persistence = 0.5f);
         
-        // Init
+        /// @}
+        
+    public:
+        
+        // INTERNAL ONLY - Platform Interfaces
+		// =====================================================
+		
+        /// @cond INTERNAL
+        
+        // ---------------------------------
+        /// @name Internal Platform Methods
+        /// @{
+        
         static void Init();
+        
+        /// @}
+        
+        /// @endcond
         
 	private:
         
-		// Internals
-        // -----------------
+		// Private Properties
+		// =====================================================        
         
-        // Properties
         static UInt8 noiseTable[];
-            
-        // CTor
-		PerlinNoise();
         
-        // Inlines
+        // Internal Methods
+		// =====================================================
+        
         static inline float Lerp(float t, float a, float b) 
         {
             return a + t * (b - a);
@@ -70,4 +91,7 @@ namespace Gdk
         
 	};
 
+    /// @}  Random
+    /// @}  Math
+    
 } // namespace Gdk

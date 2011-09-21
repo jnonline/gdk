@@ -12,11 +12,13 @@ using namespace Gdk;
 const Matrix3D Matrix3D::ZERO(false);
 const Matrix3D Matrix3D::IDENTITY(true);
 
-// ===================================================================================
-// Constructors
-// ===================================================================================
-
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Constructs a new matrix.
+/// @param identity
+///     If true (default), the matrix values will be set to the identity matrix.  
+///     Otherwise the matrix values will be undefined.
+// *****************************************************************
 Matrix3D::Matrix3D(bool identity)
 {
 	if(identity)
@@ -25,7 +27,10 @@ Matrix3D::Matrix3D(bool identity)
 		MakeZero();
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Constructs a new matrix from a set of values
+// *****************************************************************
 Matrix3D::Matrix3D(float m11, float m12, float m13, float m14, 
 				   float m21, float m22, float m23, float m24, 
 				   float m31, float m32, float m33, float m34,
@@ -37,7 +42,22 @@ Matrix3D::Matrix3D(float m11, float m12, float m13, float m14,
 	M41 = m41;	M42 = m42;	M43 = m43;  M44 = m44;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Constructs a new matrix from an array of values
+// *****************************************************************
+Matrix3D::Matrix3D(float* components)
+{
+	M11 = components[0];	M12 = components[1];	M13 = components[2];   M14 = components[3];
+	M21 = components[4];	M22 = components[5];	M23 = components[6];   M24 = components[7];
+	M31 = components[8];	M32 = components[9];	M33 = components[10];  M34 = components[11];
+	M41 = components[12];	M42 = components[13];	M43 = components[14];  M44 = components[15];
+}
+
+// *****************************************************************
+/// @brief
+///     Copy constructor
+// *****************************************************************
 Matrix3D::Matrix3D(const Matrix3D& input)
 {
 	M11 = input.M11;	M12 = input.M12;	M13 = input.M13;	M14 = input.M14;
@@ -46,12 +66,10 @@ Matrix3D::Matrix3D(const Matrix3D& input)
 	M41 = input.M41;	M42 = input.M42;	M43 = input.M43;	M44 = input.M44;
 }
 
-
-// ===================================================================================
-// In-Place Transformations
-// ===================================================================================
-
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Sets all the values of the matrix to 0
+// *****************************************************************
 Matrix3D& Matrix3D::MakeZero()
 {
 	M11 = 0.0f;		M12 = 0.0f;		M13 = 0.0f;		M14 = 0.0f;
@@ -61,7 +79,10 @@ Matrix3D& Matrix3D::MakeZero()
 	return *this;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Sets the values of the matrix to be the identity matrix
+// *****************************************************************
 Matrix3D& Matrix3D::MakeIdentity()
 {
 	M11 = 1.0f;		M12 = 0.0f;		M13 = 0.0f;		M14 = 0.0f;
@@ -71,7 +92,10 @@ Matrix3D& Matrix3D::MakeIdentity()
 	return *this;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Multiplies this matrix with a given matrix
+// *****************************************************************
 Matrix3D& Matrix3D::Multiply(const Matrix3D& input)
 {
 	float m11 = M11 * input.M11 + M12 * input.M21 + M13 * input.M31 + M14 * input.M41;
@@ -101,7 +125,10 @@ Matrix3D& Matrix3D::Multiply(const Matrix3D& input)
 	return *this;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Multiplies this matrix with a given matrix (as direct values)
+// *****************************************************************
 Matrix3D& Matrix3D::Multiply(float m11, float m12, float m13, float m14, 
                              float m21, float m22, float m23, float m24, 
                              float m31, float m32, float m33, float m34,
@@ -134,7 +161,10 @@ Matrix3D& Matrix3D::Multiply(float m11, float m12, float m13, float m14,
 	return *this;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Multiplies a given matrix by this matrix
+// *****************************************************************
 Matrix3D& Matrix3D::PreMultiply(const Matrix3D& input)
 {
     float m11 = input.M11 * M11 + input.M12 * M21 + input.M13 * M31 + input.M14 * M41;
@@ -164,7 +194,10 @@ Matrix3D& Matrix3D::PreMultiply(const Matrix3D& input)
 	return *this;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Multiplies a given matrix (as direct values) with this matrix
+// *****************************************************************
 Matrix3D& Matrix3D::PreMultiply(float m11, float m12, float m13, float m14, 
                                 float m21, float m22, float m23, float m24, 
                                 float m31, float m32, float m33, float m34,
@@ -197,7 +230,12 @@ Matrix3D& Matrix3D::PreMultiply(float m11, float m12, float m13, float m14,
 	return *this;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Applies a translation to this matrix's current transform
+/// @param translation
+///     A direction vector representing the translation
+// *****************************************************************
 Matrix3D& Matrix3D::Translate(const Vector3& translation)
 {
 	Multiply(
@@ -210,7 +248,16 @@ Matrix3D& Matrix3D::Translate(const Vector3& translation)
 }
 
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Applies a translation to this matrix's current transform
+/// @param x
+///     X-component of the translation vector
+/// @param y
+///     Y-component of the translation vector
+/// @param z
+///     Z-component of the translation vector
+// *****************************************************************
 Matrix3D& Matrix3D::Translate(float x, float y, float z)
 {
 	Multiply(
@@ -222,7 +269,12 @@ Matrix3D& Matrix3D::Translate(float x, float y, float z)
 	return *this;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Applies uniform scaling to this matrix's current transform
+/// @param scale
+///     The uniform scale factor
+// *****************************************************************
 Matrix3D& Matrix3D::Scale(float scalar)
 {
 	Multiply(
@@ -234,7 +286,16 @@ Matrix3D& Matrix3D::Scale(float scalar)
 	return *this;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Applies non-uniform scaling to this matrix's current transform
+/// @param sx
+///     The X-component of the non-uniform scale factor
+/// @param sy
+///     The Y-component of the non-uniform scale factor
+/// @param sz
+///     The D-component of the non-uniform scale factor
+// *****************************************************************
 Matrix3D& Matrix3D::Scale(float sx, float sy, float sz)
 {
 	Multiply(
@@ -246,7 +307,12 @@ Matrix3D& Matrix3D::Scale(float sx, float sy, float sz)
 	return *this;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Applies a rotation around the X-Axis to this matrix's current transform
+/// @param angle
+///     The angle of the rotation
+// *****************************************************************
 Matrix3D& Matrix3D::RotateX(float angle)
 {
 	float sinTheta = Math::Sin(angle);
@@ -261,7 +327,12 @@ Matrix3D& Matrix3D::RotateX(float angle)
 	return *this;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Applies a rotation around the Y-Axis to this matrix's current transform
+/// @param angle
+///     The angle of the rotation
+// *****************************************************************
 Matrix3D& Matrix3D::RotateY(float angle)
 {
 	float sinTheta = Math::Sin(angle);
@@ -276,7 +347,12 @@ Matrix3D& Matrix3D::RotateY(float angle)
 	return *this;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Applies a rotation around the Z-Axis to this matrix's current transform
+/// @param angle
+///     The angle of the rotation
+// *****************************************************************
 Matrix3D& Matrix3D::RotateZ(float angle)
 {
 	float sinTheta = Math::Sin(angle);
@@ -291,7 +367,14 @@ Matrix3D& Matrix3D::RotateZ(float angle)
 	return *this;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Applies a rotation around an arbitrary axis to this matrix's current transform
+/// @param axis
+///     The axis to rotate around
+/// @param angle
+///     The angle of the rotation
+// *****************************************************************
 Matrix3D& Matrix3D::RotateOnAxis(const Vector3& axis, float angle)
 {
 	float sinTheta = Math::Sin(angle);
@@ -327,7 +410,12 @@ Matrix3D& Matrix3D::RotateOnAxis(const Vector3& axis, float angle)
 	return *this;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Applies a quaternion rotation to this matrix's current transform
+/// @param quat
+///     The Quaternion the repressents the rotation
+// *****************************************************************
 Matrix3D& Matrix3D::RotateQuaternion(const class Quaternion& quat)
 {
 	// Compute a bunch of intermediate float vales
@@ -355,7 +443,12 @@ Matrix3D& Matrix3D::RotateQuaternion(const class Quaternion& quat)
 	return *this;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Applies a reflection about a plane to this matrix's current transform
+/// @param plane
+///     The plane of reflection
+// *****************************************************************
 Matrix3D& Matrix3D::Reflect(const class Plane3& plane)
 {
 	// Assumes the plane normal, is normalized...
@@ -376,11 +469,12 @@ Matrix3D& Matrix3D::Reflect(const class Plane3& plane)
 	return *this;
 }
 
-// ===================================================================================
-// Static Creation Methods
-// ===================================================================================
-
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Creates a transformation matrix that applies a translation
+/// @param translation
+///     A direction vector representing the translation
+// *****************************************************************
 Matrix3D Matrix3D::CreateTranslation(const Vector3& translation)
 {
 	return Matrix3D(
@@ -391,8 +485,16 @@ Matrix3D Matrix3D::CreateTranslation(const Vector3& translation)
         );
 }
 
-
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Creates a transformation matrix that applies a translation
+/// @param x
+///     X-component of the translation vector
+/// @param y
+///     Y-component of the translation vector
+/// @param z
+///     Z-component of the translation vector
+// *****************************************************************
 Matrix3D Matrix3D::CreateTranslation(float x, float y, float z)
 {
 	return Matrix3D(
@@ -403,7 +505,12 @@ Matrix3D Matrix3D::CreateTranslation(float x, float y, float z)
         );
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Creates a transformation matrix that applies uniform scaling
+/// @param scale
+///     The uniform scale factor
+// *****************************************************************
 Matrix3D Matrix3D::CreateScale(float scalar)
 {
 	return Matrix3D(
@@ -414,7 +521,14 @@ Matrix3D Matrix3D::CreateScale(float scalar)
         );
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Creates a transformation matrix that applies non-uniform scaling
+/// @param sx
+///     The X-component of the non-uniform scale factor
+/// @param sy
+///     The Y-component of the non-uniform scale factor
+// *****************************************************************
 Matrix3D Matrix3D::CreateScale(float sx, float sy, float sz)
 {
 	return Matrix3D(
@@ -425,7 +539,12 @@ Matrix3D Matrix3D::CreateScale(float sx, float sy, float sz)
         );
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Creates a transformation matrix that applies a rotation around the X axis
+/// @param angle
+///     The angle of the rotation
+// *****************************************************************
 Matrix3D Matrix3D::CreateRotationX(float angle)
 {
 	float sinTheta = Math::Sin(angle);
@@ -439,7 +558,12 @@ Matrix3D Matrix3D::CreateRotationX(float angle)
         );
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Creates a transformation matrix that applies a rotation around the Y axis
+/// @param angle
+///     The angle of the rotation
+// *****************************************************************
 Matrix3D Matrix3D::CreateRotationY(float angle)
 {
 	float sinTheta = Math::Sin(angle);
@@ -453,7 +577,12 @@ Matrix3D Matrix3D::CreateRotationY(float angle)
         );
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Creates a transformation matrix that applies a rotation around the Z axis
+/// @param angle
+///     The angle of the rotation
+// *****************************************************************
 Matrix3D Matrix3D::CreateRotationZ(float angle)
 {
 	float sinTheta = Math::Sin(angle);
@@ -467,7 +596,14 @@ Matrix3D Matrix3D::CreateRotationZ(float angle)
         );
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Creates a transformation matrix that applies a rotation around an arbitrary axis
+/// @param axis
+///     The axis to rotate around
+/// @param angle
+///     The angle of the rotation
+// *****************************************************************
 Matrix3D Matrix3D::CreateRotationOnAxis(const Vector3& axis, float angle)
 {
 	float sinTheta = Math::Sin(angle);
@@ -501,7 +637,12 @@ Matrix3D Matrix3D::CreateRotationOnAxis(const Vector3& axis, float angle)
         );
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Creates a transformation matrix that applies a quaternion rotation
+/// @param quat
+///     The quaternion containing the rotation info
+// *****************************************************************
 Matrix3D Matrix3D::CreateRotationFromQuaternion(const class Quaternion& quat)
 {
 	// Compute a bunch of intermediate float vales
@@ -527,7 +668,12 @@ Matrix3D Matrix3D::CreateRotationFromQuaternion(const class Quaternion& quat)
         );
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Creates a transformation matrix that reflects about a plane
+/// @param plane
+///     The plane of reflection
+// *****************************************************************
 Matrix3D Matrix3D::CreateReflection(const class Plane3& plane)
 {
 	// Assumes the plane normal, is normalized...
@@ -546,7 +692,16 @@ Matrix3D Matrix3D::CreateReflection(const class Plane3& plane)
         );
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Creates a view matrix with an origin and a target direction
+/// @param position
+///     Position of the viewer / camera
+/// @param target
+///     Target direction of the view matrix
+/// @param up
+///     Vector that defines the up direction for the view
+// *****************************************************************
 Matrix3D Matrix3D::CreateLookAt(const Vector3& position, const Vector3& target, const Vector3& up)
 {
 	// Get the direction vector
@@ -567,7 +722,18 @@ Matrix3D Matrix3D::CreateLookAt(const Vector3& position, const Vector3& target, 
         );
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Creates a perspective projection matrix
+/// @param fov
+///     The angle of the field of view.  Must be between 0 and PI (exclusively)
+/// @param aspectRatio
+///     The aspect ratio of the view.  (Usually width/height)
+/// @param nearDistance
+///     Distance to the near clippng plane
+/// @param farDistance
+///     Distance to the far clipping plane
+// *****************************************************************
 Matrix3D Matrix3D::CreatePerspectiveFOV(float fov, float aspectRatio, float nearDistance, float farDistance)
 {
 	// Assume:  0 < fov < PI
@@ -588,7 +754,18 @@ Matrix3D Matrix3D::CreatePerspectiveFOV(float fov, float aspectRatio, float near
         );
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Creates a orthographic projection matrix
+/// @param width
+///     The width of the view
+/// @param aspectRatio
+///     The height of the view
+/// @param nearPlane
+///     Distance to the near clipping plane
+/// @param farPlane
+///     Distance to the far clipping plane
+// *****************************************************************
 Matrix3D Matrix3D::CreateOrtho(float width, float height, float nearPlane, float farPlane)
 {
 	return Matrix3D(
@@ -599,8 +776,22 @@ Matrix3D Matrix3D::CreateOrtho(float width, float height, float nearPlane, float
         );
 }
 
-
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Creates a orthographic projection matrix
+/// @param left
+///     The left side of the view
+/// @param right
+///     The right side of the view
+/// @param bottom
+///     The bottom side of the view
+/// @param top
+///     The top side of the view
+/// @param nearPlane
+///     Distance to the near clipping plane
+/// @param farPlane
+///     Distance to the far clipping plane
+// *****************************************************************
 Matrix3D Matrix3D::CreateOrthoOffCenter(float left, float right, float bottom, float top, float nearPlane, float farPlane)
 {
 	float invHalfX = 2.0f / (right - left);
@@ -615,13 +806,10 @@ Matrix3D Matrix3D::CreateOrthoOffCenter(float left, float right, float bottom, f
         );
 }
 
-
-
-// ===================================================================================
-// Extra Matrix Methods
-// ===================================================================================
-
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Calculates the transpose of this matrix
+// *****************************************************************
 Matrix3D Matrix3D::GetTranspose()
 {
 	return Matrix3D(
@@ -632,7 +820,12 @@ Matrix3D Matrix3D::GetTranspose()
 		);
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Calculates the inverse of this matrix
+/// @remarks
+///     If the matrix is non-invertable, the Zero matrix will be returned instead.
+// *****************************************************************
 Matrix3D Matrix3D::GetInverse()
 {
 	float a0 = M11*M22 - M12*M21;
@@ -677,7 +870,10 @@ Matrix3D Matrix3D::GetInverse()
 	return result;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Calculates the determinant of this matrix
+// *****************************************************************
 float Matrix3D::GetDeterminant()
 {
 	float a0 = M11*M22 - M12*M21;
@@ -696,11 +892,10 @@ float Matrix3D::GetDeterminant()
     return ( a0*b5-a1*b4+a2*b3+a3*b2-a4*b1+a5*b0 );
 }
 
-// ===================================================================================
-// Stream Utilities
-// ===================================================================================
-
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Reads a Matrix3D from a stream
+// *****************************************************************
 Matrix3D Matrix3D::ReadFromStream(Stream* stream)
 {
 	Matrix3D result;
@@ -708,7 +903,10 @@ Matrix3D Matrix3D::ReadFromStream(Stream* stream)
 	return result;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Writes this matrix to a stream
+// *****************************************************************
 void Matrix3D::WriteToStream(Stream* stream)
 {
 	stream->Write(this, sizeof(float[16]));
