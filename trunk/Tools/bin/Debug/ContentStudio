@@ -1,0 +1,30 @@
+#!/bin/sh
+
+MONO_FRAMEWORK_PATH=/Library/Frameworks/Mono.framework/Versions/Current
+export DYLD_FALLBACK_LIBRARY_PATH="$MONO_FRAMEWORK_PATH/lib:/lib:/usr/lib:$DYLD_FALLBACK_LIBRARY_PATH"
+
+#prevent Macports from messing up mono and pkg-config
+export PATH="$MONO_FRAMEWORK_PATH/bin:$PATH"
+
+DIR=$(cd "$(dirname "$0")"; pwd)
+
+# $0 should contain the full path from the root.  EX: /SVN/gdk/tools/bin/debug/<script>
+EXE_PATH="$DIR/Gdk.ContentStudio.exe"
+
+#use stuff bundled into the app bundle
+export MONO_GAC_PREFIX="$DIR:$MONO_GAC_PREFIX"
+export PATH="$DIR:$PATH"
+export DYLD_FALLBACK_LIBRARY_PATH="$DIR:$DYLD_FALLBACK_LIBRARY_PATH"
+
+#mono version check
+if ! "$DIR/mono-version-check" Gdk.ContentStudio 2 10 1 ; then exit 1; fi
+
+# The Mono "External" folder allows users (such as MonoDroid) to install
+# things without worrying that they'll be removed next time mono is upgraded
+# Mono doesn't support it yet so we hack it via env vars for now.
+MONO_FRAMEWORK_EXT=/Library/Frameworks/Mono.framework/External
+
+#launch the app
+exec "mono" "$EXE_PATH" $*
+
+
