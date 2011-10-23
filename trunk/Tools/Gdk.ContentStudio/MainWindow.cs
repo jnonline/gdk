@@ -1447,6 +1447,45 @@ public partial class MainWindow : Gtk.Window
 	}
 	
 	// **********************************************************
+	private void Utility_RecurseCleanFolder(string folderPath, ref int filesDeleted, ref int foldersDeleted, ref int foldersSkipped)
+	{
+		// Loop through the child folders in this folder
+		foreach(string childFolder in System.IO.Directory.GetDirectories(folderPath))
+		{
+			// is this a ".svn" folder?
+			if(System.IO.Path.GetFileName(childFolder) == ".svn")
+			{
+				BuildLog_WriteLine("<color:#C29B2B>Skipping Folder:  " + childFolder + "</color>");
+				foldersSkipped++;
+			}
+			else
+			{
+				// Clean this child folder
+				Utility_RecurseCleanFolder(childFolder, ref filesDeleted, ref foldersDeleted, ref foldersSkipped);
+			}
+		}
+		
+		// Loop through all the files in this folder
+		foreach(string file in System.IO.Directory.GetFiles(folderPath, "*.*"))
+		{
+			// Delete the file
+			BuildLog_WriteLine("Deleting File:   " + file);
+			System.IO.File.Delete(file);
+			filesDeleted++;
+		}
+		
+		// Is this folder empty?
+		if( System.IO.Directory.GetDirectories(folderPath).Count() == 0 &&
+			System.IO.Directory.GetFiles(folderPath).Count() == 0)
+		{
+			// Delete the folder
+			BuildLog_WriteLine("Deleting Folder: " + folderPath);
+			System.IO.Directory.Delete(folderPath);
+			foldersDeleted++;
+		}
+	}
+	
+	// **********************************************************
 	private void UpdateAppUIState()
 	{
 		// Build some state booleans
@@ -1526,12 +1565,17 @@ public partial class MainWindow : Gtk.Window
 		
 		// Clear the build log
 		BuildLog_Clear();
-		BuildLog_Write("Performing Clean...  ");
+		BuildLog_WriteLine("<b><u>Performing Clean...  </u></b>");
 		
+		int filesDeleted = 0;
+		int foldersDeleted = 0;
+		int foldersSkipped = 0;
+	
 		// Delete!
 		try
 		{
-			System.IO.Directory.Delete(bundleBuildFolder, true);
+			// Recursively cleanup
+			Utility_RecurseCleanFolder(bundleBuildFolder, ref filesDeleted, ref foldersDeleted, ref foldersSkipped);
 		}
 		catch(Exception ex)
 		{
@@ -1545,7 +1589,12 @@ public partial class MainWindow : Gtk.Window
 		}
 		
 		// Clean succeeded
-		BuildLog_Write("<color:#008000>Successful</color>\n"); 
+		string finalStats = "\n<b>===== Cleanup Complete: ";
+		finalStats += filesDeleted.ToString() + " Files, ";			
+		finalStats += foldersDeleted.ToString() + " Folders, ";
+		finalStats += "<color:#775F1B>" + foldersSkipped.ToString() + " Skips</color>";
+		finalStats += "=====</b>\n";
+		this.BuildLog_Write(finalStats);
 	}
 	
     // **********************************************************

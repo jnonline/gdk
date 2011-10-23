@@ -30,6 +30,7 @@ bool SampleGame::OnLoadSettings(ApplicationSettings &settings)
 	settings.AllowResize = true;
 	settings.ShowMaximizeBox = true;
 	settings.ShowMinimizeBox = true;
+    settings.ShowCloseBox = true;
 	settings.FixedTimeStep = 0.02f;
 	settings.UseFixedTimeStep = false;
 	settings.AssetManagerBackgroundThreads = 2;
