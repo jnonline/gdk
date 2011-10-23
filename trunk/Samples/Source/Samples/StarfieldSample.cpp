@@ -79,8 +79,8 @@ void StarfieldSample::OnDraw()
 {
 	// Clear the background
 	Graphics::Clear(
-		(ClearBuffers::Enum) (ClearBuffers::Color), 
-		Color::FromNormalized(0.1f, 0.1f, 0.1f, 1.0f),
+		true, false, false,
+        Color::FromNormalized(0.1f, 0.1f, 0.1f, 1.0f),
 		1.0f
 		);
 	

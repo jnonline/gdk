@@ -40,20 +40,20 @@
 #ifdef GDK_MEMORY_TRACKING
 
 namespace Gdk
-{
-
+{    
+	// =================================================================================
+    ///	@brief
+    ///     Provides access to the GDK memory management and tracking system
+    ///
+    /// @todo TODO(P2): Needs documentation, faster tracking, release mode usage, etc...
+    // =================================================================================
 	class Memory
 	{
-		// internal Typedefs & Classes
-		// -----------------------------------
-
-		// Allocator functions types  (exposed as function pointers, so they can be customized by the user)
-	public:
 		typedef void* (*AllocatorFunc)(size_t numBytes, const char* file, int line);
 		typedef void (*DeallocatorFunc)(void* memblock, const char* file, int line);
 
-		// MemoryEntry class:  used to represent data for a single memory allocation
 	private:
+        // MemoryEntry class:  used to represent data for a single memory allocation
 		class MemoryEntry
 		{
 		public:

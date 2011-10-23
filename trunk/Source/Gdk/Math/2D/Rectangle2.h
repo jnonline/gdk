@@ -6,7 +6,7 @@
 #pragma once
 
 #include "Vector2.h"
-#include "LineSegment2.h"
+#include "Segment2.h"
 #include "Box2.h"
 
 namespace Gdk 
@@ -73,10 +73,10 @@ namespace Gdk
 		Vector2 GetParametricPointInArea(float tx, float ty) const;
 		Vector2 GetParametricPointOnPerimeter(float t) const;
 
-		LineSegment2 GetLeftLineSegment() const;
-		LineSegment2 GetTopLineSegment() const;
-		LineSegment2 GetRightLineSegment() const;
-		LineSegment2 GetBottomLineSegment() const;
+		Segment2 GetLeftLineSegment() const;
+		Segment2 GetTopLineSegment() const;
+		Segment2 GetRightLineSegment() const;
+		Segment2 GetBottomLineSegment() const;
         
         Box2 GetAsBox() const;
         

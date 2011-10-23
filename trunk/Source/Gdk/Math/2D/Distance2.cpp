@@ -51,37 +51,33 @@ float Distance2::PointToRay(const Vector2& point, const Ray2& ray)
 /// @return
 ///     The shortest distance between the two primitives
 // *****************************************************************
-float Distance2::PointToLineSegment(const Vector2& point, const LineSegment2& lineSegment)
+float Distance2::PointToSegment(const Vector2& point, const Segment2& segment)
 {
-    // Get the direction vector & length of the line segment
-    Vector2 segmentDirection = lineSegment.End - lineSegment.Start;
-    float segmentLength = segmentDirection.Normalize();
- 
-    // Get the vector from the segment starting point to the distance point
-    Vector2 diff = point - lineSegment.Start;
+    // Get the vector from the segment center to the point
+    Vector2 diff = point - segment.Center;
     Vector2 closest;
     
-    // Project the difference vector onto the line segment vector
-    float projection = segmentDirection.Dot(diff);
+    // Project the segment direction on to the first vector
+    float projection = segment.Direction.Dot(diff);
     
-    // Is the projection before the segment start?
-    if(projection < 0.0f)
+    // Is the projection before the segment start point?
+    if(projection < -segment.Extent)
     {
         // The closest point is the segment start
-        closest = lineSegment.Start;
+        closest = segment.Center - segment.Extent * segment.Direction;
     }
     // Is the projection after the segment end?
-    else if(projection > segmentLength)
+    else if(projection > segment.Extent)
     {
         // The closest point is the segment end
-        closest = lineSegment.End;
+        closest = segment.Center + segment.Extent * segment.Direction;
     }
     else
     {
         // The closest point is the projection onto the line segment vector
-        closest = lineSegment.Start + projection * segmentDirection;
+        closest = segment.Center + projection * segment.Direction;
     }
-        
+ 
     // Return the distance from the point to the closest projection point
     return (closest - point).Length();
 }

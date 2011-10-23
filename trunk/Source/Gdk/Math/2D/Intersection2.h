@@ -10,7 +10,7 @@
 #include "Box2.h"
 #include "Circle2.h"
 #include "Rectangle2.h"
-#include "LineSegment2.h"
+#include "Segment2.h"
 
 namespace Gdk
 {
@@ -42,7 +42,7 @@ namespace Gdk
         /// @{
 		
         static bool Test(const Ray2& ray1, const Ray2& ray2);
-        static bool Test(const Ray2& ray, const LineSegment2& lineSegment);
+        static bool Test(const Ray2& ray, const Segment2& segment);
         static bool Test(const Ray2& ray, const Circle2& circle);
         static bool Test(const Ray2& ray, const Rectangle2& rect);
         static bool Test(const Ray2& ray, const Box2& box);
@@ -63,7 +63,7 @@ namespace Gdk
         /// @{
 		
         static bool Find(const Ray2& ray1, const Ray2& ray2, float& distance);
-        static bool Find(const Ray2& ray1, const LineSegment2& lineSegment, float& distance);
+        static bool Find(const Ray2& ray1, const Segment2& segment, float& distance);
         static bool Find(const Ray2& ray1, const Circle2& circle, float& distance);
         static bool Find(const Ray2& ray1, const Rectangle2& rect, float& distance);
         static bool Find(const Ray2& ray1, const Box2& box, float& distance);

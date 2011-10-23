@@ -10,7 +10,7 @@
 #include "Plane3.h"
 #include "Box3.h"
 #include "Sphere3.h"
-#include "Frustrum3.h"
+#include "Frustum3.h"
 
 namespace Gdk
 {
@@ -49,25 +49,30 @@ namespace Gdk
         static bool Test(const Ray3& ray, const Plane3& plane);
 		static bool Test(const Ray3& ray, const Sphere3& sphere);
 		static bool Test(const Ray3& ray, const Box3& box);
-		static bool Test(const Ray3& ray, const Frustrum3& frustrum);
+        static bool Test(const Ray3& ray, const Capsule3& capsule);
+		static bool Test(const Ray3& ray, const Frustum3& frustum);
 
-        static bool Test(const Frustrum3& frustrum, const Plane3& plane);
-        static bool Test(const Frustrum3& frustrum, const Sphere3& sphere);
+        static bool Test(const Frustum3& frustum, const Plane3& plane);
+        static bool Test(const Frustum3& frustum, const Sphere3& sphere);
         
-        // Frustrum -> Box
+        // Frustum -> Box
         // TODO(P2):  Articles to checkout:
-        //      "Intersection of orthogonal view frustrum and oriented bounding box using seperation axis testing" : Eberly
-        //      "Optimized view frustrum culling algorithms for bounding boxes" : Assarsson & Moller
-        //static bool Test(const Frustrum3& frustrum, const Box3& box);
+        //      "Intersection of orthogonal view Frustum and oriented bounding box using seperation axis testing" : Eberly
+        //      "Optimized view Frustum culling algorithms for bounding boxes" : Assarsson & Moller
+        //static bool Test(const Frustum3& Frustum, const Box3& box);
         
         static bool Test(const Plane3& plane1, const Plane3& plane2);
         static bool Test(const Plane3& plane, const Sphere3& sphere);
         static bool Test(const Plane3& plane, const Box3& box);
+        static bool Test(const Plane3& plane, const Capsule3& capsule);
         
         static bool Test(const Sphere3& sphere1, const Sphere3& sphere2);
         static bool Test(const Sphere3& sphere, const Box3& box);
+        static bool Test(const Sphere3& sphere, const Capsule3& capsule);
         
         static bool Test(const Box3& box1, const Box3& box2);
+        
+        static bool Test(const Capsule3& capsule1, const Capsule3& capsule2);
         
         /// @}
         // --------------------------------------------
@@ -77,7 +82,8 @@ namespace Gdk
         static bool Find(const Ray3& ray, const Plane3& plane, float& distance);
         static bool Find(const Ray3& ray, const Sphere3& sphere, float& distance);
         static bool Find(const Ray3& ray, const Box3& box, float& distance);
-        static bool Find(const Ray3& ray, const Frustrum3& frustrum, float& distance);
+        static bool Find(const Ray3& ray, const Capsule3& capsule, float& distance);
+        static bool Find(const Ray3& ray, const Frustum3& frustum, float& distance);
 
         /// @}
         // --------------------------------------------
@@ -91,6 +97,12 @@ namespace Gdk
             float t[2]
             );
         static bool Clip_Box_Line(float denominator, float numerator, float& t0, float& t1);
+        
+        static IntersectionType::Enum Intersect_Line_Capsule(
+            const Vector3& origin, const Vector3& direction,
+            const Capsule3& capsule,
+            float t[2]
+            );
         
         /// @}
 	};

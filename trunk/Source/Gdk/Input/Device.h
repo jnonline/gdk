@@ -9,7 +9,7 @@
 
 namespace Gdk
 {
-	/// @addtogroup Input
+    /// @addtogroup Input
     /// @{
     
     // =================================================================================
@@ -45,8 +45,13 @@ namespace Gdk
             /// Android-based Tablet
 			AndroidTablet = 202
 		};
-
+        
+        // *****************************************************************
+        /// @brief
+        ///     Gets a display-friendly string from the given enum value
+        // *****************************************************************
 		const char* ToString(DeviceType::Enum value);
+        
 	}
 
 	// =================================================================================
@@ -80,6 +85,10 @@ namespace Gdk
 			NaCl = 6,
 		};
 
+        // *****************************************************************
+        /// @brief
+        ///     Gets a display-friendly string from the given enum value
+        // *****************************************************************
 		const char* ToString(PlatformType::Enum value);
 	}
 
@@ -161,6 +170,10 @@ namespace Gdk
 			LandscapeRight
 		};
         
+        // *****************************************************************
+        /// @brief
+        ///     Gets a display-friendly string from the given enum value
+        // *****************************************************************
         const char* ToString(DeviceOrientation::Enum value);
 	}
 
@@ -184,6 +197,10 @@ namespace Gdk
 			Unplugged,
 		};
         
+        // *****************************************************************
+        /// @brief
+        ///     Gets a display-friendly string from the given enum value
+        // *****************************************************************
         const char* ToString(DeviceBatteryState::Enum value);
 	}
     
@@ -232,6 +249,10 @@ namespace Gdk
             EndSeekBackward,
 		};
         
+        // *****************************************************************
+        /// @brief
+        ///     Gets a display-friendly string from the given enum value
+        // *****************************************************************
         const char* ToString(MediaControlActions::Enum value);
 	}
     

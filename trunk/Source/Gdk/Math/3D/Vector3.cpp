@@ -80,12 +80,56 @@ Vector3 Vector3::Parse(const char *str)
 /// @remarks
 ///     The resultant string has the format: "%f,%f,%f"
 // *****************************************************************
-string Vector3::ToString()
+string Vector3::ToString() const
 {
 	// Build a string of the format "1.1,2.2,3.3"
 	char temp[48];
 	GDK_SPRINTF(temp, 48, "%f,%f,%f", X, Y, Z);
 	return string(temp);
+}
+
+// *****************************************************************
+/// @brief
+///     Creates three vectors that make an orthonormal basis with this vector as one of the axes.
+/// @param[out] u
+///     The first orthonormal basis vector.
+/// @param[out] v
+///     The second orthonormal basis vector.
+/// @param[out] w
+///     The third orthonormal basis vector.  This vector will be on the axis of the source vector
+// *****************************************************************
+void Vector3::GenerateOrthonormalBasis(Vector3& u, Vector3& v, Vector3& w) const
+{
+    // Create the W vector (which is just this vector, normalized)
+    w = *this;
+    w.Normalize();
+    
+    float invLength;
+    
+    // Which component of the source vector is larger, X or Y
+    if(Math::Abs(w.X) >= Math::Abs(w.Y))
+    {
+        // X or Z is the largest component
+        invLength = 1.0f / Math::Sqrt(w.X * w.X + w.Z * w.Z);
+        u.X = -w.Z * invLength;
+        u.Y = 0.0f;
+        u.Z = w.X * invLength;
+        v.X = w.Y * u.Z;
+        v.Y = w.Z * u.X - w.X * u.Z;
+        v.Z = -w.Y * u.X;
+    }
+    else
+    {
+        // Y or Z is the largest component
+        invLength = 1.0f / Math::Sqrt(w.Y * w.Y + w.Z * w.Z);
+        
+        u.X = 0.0f;
+        u.Y = w.Z * invLength;
+        u.Z = -w.Y * invLength;
+        v.X = w.Y * u.Z - w.Z * u.Y;
+        v.Y = -w.X * u.Z;
+        v.Z = w.X * u.Y;
+    }
 }
 
 // *****************************************************************

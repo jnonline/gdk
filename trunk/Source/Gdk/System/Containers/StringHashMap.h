@@ -9,51 +9,85 @@
 
 namespace Gdk
 {
-
-	// ============================================================================
-	// This custom map is used for storing items using a 32-bit string hash code for each object.
-	//
-
+    /// @addtogroup System
+    /// @{
+    /// @addtogroup Containers
+    /// @{
+    
+    // =================================================================================
+    ///	@brief
+    ///		A custom map container that uses string hashes for keys
+    // =================================================================================
 	template<typename TValue>
 	class StringHashMap
 	{
 	public:
 		// Public Types
-		// ===============================
+		// =====================================================
 
+        /// The type of the container values
 		typedef TValue                      ValueType;
+        
+        /// The type of the underlying map
 		typedef map<UInt32, TValue>         Map;
+        
+        /// The iterator type for the underlying map
 		typedef typename Map::iterator		Iterator;
 
-		// The actual Map
-		// ===============================
-
+		// Public Properties
+		// =====================================================
+        
+        /// The underlying map
 		Map Items;
 
 		// Public Methods
-		// ===============================
+		// =====================================================
 
-		// Adds an item to the map by its hash
+        // *****************************************************************
+        /// @brief
+        ///     Adds an object to the map
+        /// @param key
+        ///     Unique key string (which will be hashed)
+        /// @param value
+        ///     The object to add to the map
+        // *****************************************************************
 		void Add(const char* key, TValue value)
 		{
 			UInt32 hash = StringUtilities::FastHash(key);
 			Items[hash] = value;
 		}
 
-		// Removes an item from the map 
+		// *****************************************************************
+        /// @brief
+        ///     Removes an item from the map by its key
+        /// @param key
+        ///     Unique key string
+        // *****************************************************************
 		void Remove(const char* key)
 		{
 			UInt32 hash = StringUtilities::FastHash(key);
 			Items.erase(hash);
 		}
 
-		// Removes an item from the map by it's iterator
+		// *****************************************************************
+        /// @brief
+        ///     Removes an item from the map by its iterator
+        /// @param iter
+        ///     Iterator of the object to be removed
+        // *****************************************************************
 		void Remove(Iterator iter)
 		{
             Items.erase(iter);
         }
 
-		// Finds an item in the map
+		// *****************************************************************
+        /// @brief
+        ///     Finds an object in the map that is assigned to a specific key
+        /// @param key
+        ///     Unique key string
+        /// @return
+        ///     An Iterator to the map entry or End() if the object wasnt found
+        // *****************************************************************
 		Iterator Find(const char* key)
 		{
 			UInt32 hash = StringUtilities::FastHash(key);
@@ -61,23 +95,35 @@ namespace Gdk
 			return result;
         }	
 
-		// Gets the beginning iterator
+		// *****************************************************************
+        /// @brief
+        ///     Gets an iterator at the beginning of the map
+        // *****************************************************************
 		Iterator Begin()
 		{
 			return Items.begin();
 		}
 
-		// Gets the end iterator
+		// *****************************************************************
+        /// @brief
+        ///     Gets an iterator to the end of the map
+        // *****************************************************************
 		Iterator End()
 		{
 			return Items.end();
 		}
 
-		// Clears the hash map
+        // *****************************************************************
+        /// @brief
+        ///     Clears all the items from the map
+        // *****************************************************************
 		void Clear()
 		{
 			Items.clear();
 		}
 	};
+    
+    /// @}
+    /// @}
 
 } // namespace Gdk

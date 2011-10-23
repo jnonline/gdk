@@ -21,9 +21,6 @@ Device::MediaControlActionHandler	Device::MediaControlAction;
 Device::DeviceOrientationHandler	Device::OrientationChanged;
 
 // *****************************************************************
-/// @brief
-///     Gets a display-friendly string from the given enum value
-// *****************************************************************
 const char* DeviceType::ToString(DeviceType::Enum value)
 {
 	static const char* pc = "PC";
@@ -49,9 +46,6 @@ const char* DeviceType::ToString(DeviceType::Enum value)
 }
 
 // *****************************************************************
-/// @brief
-///     Gets a display-friendly string from the given enum value
-// *****************************************************************
 const char* PlatformType::ToString(PlatformType::Enum value)
 {
 	static const char* windows = "Windows";
@@ -75,9 +69,6 @@ const char* PlatformType::ToString(PlatformType::Enum value)
 }
 
 // *****************************************************************
-/// @brief
-///     Gets a display-friendly string from the given enum value
-// *****************************************************************
 const char* DeviceOrientation::ToString(DeviceOrientation::Enum value)
 {
 	static const char* portrait = "Portrait";
@@ -97,9 +88,6 @@ const char* DeviceOrientation::ToString(DeviceOrientation::Enum value)
 }
 
 // *****************************************************************
-/// @brief
-///     Gets a display-friendly string from the given enum value
-// *****************************************************************
 const char* DeviceBatteryState::ToString(DeviceBatteryState::Enum value)
 {
 	static const char* charging = "Charging";
@@ -114,9 +102,6 @@ const char* DeviceBatteryState::ToString(DeviceBatteryState::Enum value)
 	return StringUtilities::Unknown;
 }
 
-// *****************************************************************
-/// @brief
-///     Gets a display-friendly string from the given enum value
 // *****************************************************************
 const char* MediaControlActions::ToString(MediaControlActions::Enum value)
 {

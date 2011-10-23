@@ -154,7 +154,7 @@ void Tanks3DModule::OnDraw()
 
 	// Clear the background
 	Graphics::Clear(
-		(ClearBuffers::Enum) (ClearBuffers::Color | ClearBuffers::Depth), 
+        true, true, false,
 		Color::FromNormalized(0.5f, 0.8f, 0.8f, 1.0f),
 		1.0f
 		);

@@ -14,7 +14,20 @@ int Texture2D::totalMemoryUsed = 0;
 // GDK Image Flags
 #define GDKIMAGE_FLAG_MIPMAP		0x01
 
-// -----------------------------------------
+// *****************************************************************
+/// @brief
+///     Constructs a new texture of the given size and pixel format
+/// @param width
+///     Width of the texture
+/// @param height
+///     Height of the texture 
+/// @param pixelFormat
+///     Pixel format of the texture
+/// @remarks
+///     The texture memory will be allocated in the devices video memory.
+///     The filtering mode will default to Linear
+///     The wrap mode will default to Repeat for PoT textures and Clamp for NPoT textures
+// *****************************************************************
 Texture2D::Texture2D(int width, int height, PixelFormat::Enum pixelFormat)
 {
 	// Create the GL texture
@@ -52,7 +65,10 @@ Texture2D::Texture2D(int width, int height, PixelFormat::Enum pixelFormat)
 	Texture2D::totalMemoryUsed += this->memoryUsed;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Destructor
+// *****************************************************************
 Texture2D::~Texture2D()
 {
 	// Destroy the texture
@@ -62,7 +78,12 @@ Texture2D::~Texture2D()
 	Texture2D::totalMemoryUsed -= this->memoryUsed;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Sets the entire image data for the texture
+/// @param pixelData
+///     A buffer of pixel data with the same size & pixel format as the texture.
+// *****************************************************************
 void Texture2D::SetImageData(void* pixelData)
 {
     // Bind the texture
@@ -76,7 +97,12 @@ void Texture2D::SetImageData(void* pixelData)
 	glTexImage2D(GL_TEXTURE_2D, 0, glTextureFormat, this->Width, this->Height, 0, glTextureFormat, glPixelType, (void*)pixelData);
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Generates mip maps for the texture
+/// @note
+///     See the OpenGL documentation for glGenerateMipmap() for more information
+// *****************************************************************
 void Texture2D::GenerateMipMaps()
 {
     // Bind the texture
@@ -86,7 +112,12 @@ void Texture2D::GenerateMipMaps()
     glGenerateMipmap(GL_TEXTURE_2D);
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Sets the wrapping mode for this texture
+/// @param value
+///     The wrapping mode
+// *****************************************************************
 void Texture2D::SetWrapMode(TextureWrapMode::Enum value)
 {
 	// Bind this texture
@@ -107,7 +138,12 @@ void Texture2D::SetWrapMode(TextureWrapMode::Enum value)
 	this->wrapMode = value;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Sets the filtering mode for the texture
+/// @param value
+///     The filtering mode
+// *****************************************************************
 void Texture2D::SetFilterMode(TextureFilterMode::Enum value)
 {
 	// Bind this texture
@@ -143,7 +179,12 @@ void Texture2D::SetFilterMode(TextureFilterMode::Enum value)
 	}
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Reads a GDK Image from a stream and creates a texture from the image data
+/// @param stream
+///     A stream containing a GDK image the current stream position
+// *****************************************************************
 Texture2D* Texture2D::FromStream(Stream *stream)
 {
 	// Step 1: Load the image header & image data from the file
@@ -184,7 +225,12 @@ Texture2D* Texture2D::FromStream(Stream *stream)
 	return texture;
 }
 
-// -----------------------------------------
+// *****************************************************************
+/// @brief
+///     Creates a texture from a GDK Image file
+/// @param imageFilePath
+///     Path to the GDK Image file
+// *****************************************************************
 Texture2D* Texture2D::FromFile(const char *imageFilePath)
 {
 	// Open the file as a stream
@@ -199,7 +245,12 @@ Texture2D* Texture2D::FromFile(const char *imageFilePath)
 	return texture;
 }
 
-// -----------------------------------------
+// *****************************************************************
+/// @brief
+///     Creates a texture from a given asset
+/// @param context
+///     A buffer of pixel data with the same size & pixel format as the texture.
+// *****************************************************************
 Texture2D* Texture2D::FromAsset(AssetLoadContext* context)
 {
 	// Load the texture from the stream

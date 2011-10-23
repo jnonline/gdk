@@ -77,11 +77,12 @@ GLuint Graphics::currentIndexBufferId = 0;
 SharedUniformValueSet Graphics::GlobalUniformsSet;
 Graphics::_GlobalUniforms Graphics::GlobalUniforms;
 
-// ================================================================================================
-// == Init() / Shutdown()
-// ================================================================================================
-
-// *****************************************************
+// *****************************************************************
+/// @brief
+///     Initializes the GDK Graphics sub-system
+/// @remarks
+///     GDK Internal Use Only
+// *****************************************************************
 void Graphics::Init()
 {
 	// Setup the initial render states
@@ -199,7 +200,12 @@ void Graphics::Init()
 	GlobalUniforms.LightColors->SetFloat3(0.0f, 0.0f, 0.0f, 0);
 }
 
-// *****************************************************
+// *****************************************************************
+/// @brief
+///     Initializes any Graphics systems that depend on assets
+/// @remarks
+///     GDK Internal Use Only
+// *****************************************************************
 void Graphics::InitAssetDependencies()
 {
 	// Initialize Graphics Sub-Managers
@@ -209,7 +215,12 @@ void Graphics::InitAssetDependencies()
 	BillboardRenderer::Init();
 }
 
-// *****************************************************
+// *****************************************************************
+/// @brief
+///     Shuts down the GDK graphics sub-system
+/// @remarks
+///     GDK Internal Use Only
+// *****************************************************************
 void Graphics::Shutdown()
 {
 	// Shutdown Graphics Sub-Managers
@@ -219,7 +230,12 @@ void Graphics::Shutdown()
 	Renderer2D::Shutdown();
 }
 
-// *****************************************************
+// *****************************************************************
+/// @brief
+///     The per-frame update method for the graphics system
+/// @remarks
+///     GDK Internal Use Only
+// *****************************************************************
 void Graphics::Update(float elapsedSeconds)
 {
     // Bind the OS frame buffer
@@ -229,11 +245,12 @@ void Graphics::Update(float elapsedSeconds)
     glViewport(0, 0, Application::GetWidth(), Application::GetHeight());
 }
 
-// ================================================================================================
-// == Platform Interfaces
-// ================================================================================================
-
-// *****************************************************
+// *****************************************************************
+/// @brief
+///     Tells the GDK graphics system about the OS supplied frame buffer & render buffers
+/// @remarks
+///     GDK Internal Use Only
+// *****************************************************************
 void Graphics::Platform_SetOSFrameBuffers(GLuint frameBufferId, GLuint colorRenderBufferId, GLuint depthRenderBufferId, GLuint stencilRenderBufferId)
 {
     osFrameBufferId = frameBufferId;
@@ -242,29 +259,117 @@ void Graphics::Platform_SetOSFrameBuffers(GLuint frameBufferId, GLuint colorRend
     osStencilRenderBufferId = stencilRenderBufferId;
 }
 
-// ================================================================================================
-// == Screen Dimensions & Coordinate Conversions
-// ================================================================================================
-
-// *****************************************************
+// *****************************************************************
+/// @brief
+///     Gets the width of the application window / view
+// *****************************************************************
 int Graphics::GetScreenWidth()
 {
 	return Application::GetWidth();
 }
 
-// *****************************************************
+// *****************************************************************
+/// @brief
+///     Gets the height of the application window / view
+// *****************************************************************
 int Graphics::GetScreenHeight()
 {
 	return Application::GetHeight();
 }
 
-// *****************************************************
+// *****************************************************************
+/// @brief
+///     Gets the size of the application window / view
+// *****************************************************************
 Vector2 Graphics::GetScreenBounds()
 {
 	return Vector2((float)GetScreenWidth(), (float)GetScreenHeight());
 }
 
-// *****************************************************
+// *****************************************************************
+/// @brief
+///     Gets the OpenGL ID of the OS created main frame buffer
+// *****************************************************************
+GLuint Graphics::GetOSFrameBufferId()				
+{
+    return osFrameBufferId; 
+}
+// *****************************************************************
+/// @brief
+///     Gets the OpenGL ID of the OS created main color render buffer
+// *****************************************************************
+GLuint Graphics::GetOSColorRenderBufferId()		
+{
+    return osColorRenderBufferId; 
+}
+
+// *****************************************************************
+/// @brief
+///     Gets the OpenGL ID of the OS created main depth render buffer
+// *****************************************************************
+GLuint Graphics::GetOSDepthRenderBufferId()		
+{
+    return osDepthRenderBufferId; 
+}
+
+// *****************************************************************
+/// @brief
+///     Gets the OpenGL ID of the OS created main stencil render buffer
+// *****************************************************************
+GLuint Graphics::GetOSStencilRenderBufferId()		
+{
+    return osStencilRenderBufferId; 
+}
+
+// *****************************************************************
+/// @brief
+///     Gets the display-friend vendor name of the underlying OpenGL driver
+// *****************************************************************
+const string& Graphics::GetGLVendor()
+{
+    return vendorString; 
+}
+
+// *****************************************************************
+/// @brief
+///     Gets the display-friend renderer name of the underlying OpenGL driver
+// *****************************************************************
+const string& Graphics::GetGLRenderer()
+{
+    return rendererString; 
+}
+
+// *****************************************************************
+/// @brief
+///     Gets the display-friend version of the underlying OpenGL driver
+// *****************************************************************
+const string& Graphics::GetGLVersion()
+{ 
+    return versionString; 
+}
+
+// *****************************************************************
+/// @brief
+///     Gets the number of texture units supported by the underlying graphics system
+// *****************************************************************
+int Graphics::GetNumSupportedTextureUnits()
+{ 
+    return supportedTextureUnits; 
+}
+
+// *****************************************************************
+/// @brief
+///     Gets the best shader profile supported by the underlying graphics system
+// *****************************************************************
+ShaderProfile::Enum Graphics::GetShaderProfile()
+{ 
+    return shaderProfile; 
+}
+
+// *****************************************************************
+/// @brief
+///     Converts a screen coordinate to [0 to 1] unit space
+// *****************************************************************
 Vector2 Graphics::ScreenToUnit(Vector2 screenCoordinate)
 {
 	// Convert the pixel coordinate to [0 to 1) unit space
@@ -274,7 +379,10 @@ Vector2 Graphics::ScreenToUnit(Vector2 screenCoordinate)
 		);
 }
 
-// *****************************************************
+// *****************************************************************
+/// @brief
+///     Converts a screen coordinate to [-1 to 1] symmetric space
+// *****************************************************************
 Vector2 Graphics::ScreenToSymmetric(Vector2 screenCoordinate)
 {
 	// Convert the pixel coordinate to (-1 to 1) symmetric space
@@ -284,7 +392,10 @@ Vector2 Graphics::ScreenToSymmetric(Vector2 screenCoordinate)
 		);
 }
 
-// *****************************************************
+// *****************************************************************
+/// @brief
+///     Converts a unit coordinate [0 to 1] to screen space
+// *****************************************************************
 Vector2 Graphics::UnitToScreen(Vector2 unitCoordinate)
 {
 	// Convert the [0 to 1) unit coordinate to pixel space
@@ -294,7 +405,10 @@ Vector2 Graphics::UnitToScreen(Vector2 unitCoordinate)
 		);
 }
 
-// *****************************************************
+// *****************************************************************
+/// @brief
+///     Converts a symmetric coordinate [-1 to 1] to screen space
+// *****************************************************************
 Vector2 Graphics::SymmetricToScreen(Vector2 symmetricCoordinate)
 {
 	// Convert the (-1 to 1) symmetric coordinate to pixel space
@@ -305,11 +419,21 @@ Vector2 Graphics::SymmetricToScreen(Vector2 symmetricCoordinate)
 }
 
 
-// ================================================================================================
-// == Basics
-// ================================================================================================
-
-// *****************************************************
+// *****************************************************************
+/// @brief
+///     Sets the write mask for the color buffer.
+/// @param red
+///     If true, the red channel will be written to the in framebuffer
+/// @param green
+///     If true, the green channel will be written to the in framebuffer
+/// @param blue
+///     If true, the blue channel will be written to the in framebuffer
+/// @param alpha
+///     If true, the alpha channel will be written to the in framebuffer
+/// @param forceChange
+///     Skips the GDK's graphics state update caching system and forces the 
+///     underlying graphics system to be updated.  (default: false)
+// *****************************************************************
 void Graphics::SetColorWriteMask(bool red, bool green, bool blue, bool alpha, bool forceChange)
 {
 	// Only change state if we need to :)
@@ -323,10 +447,27 @@ void Graphics::SetColorWriteMask(bool red, bool green, bool blue, bool alpha, bo
 	}
 }
 
-// *****************************************************
-void Graphics::Clear(ClearBuffers::Enum buffers, const Color& color, float depth, int stencil)
+// *****************************************************************
+/// @brief
+///     Clears the frame buffer
+/// @param clearColor
+///     If true, the color render buffer will be cleared.  (default: true)
+/// @param clearDepth
+///     If true, the depth render buffer will be cleared.  (default: true)
+/// @param clearStencil
+///     If true, the stencil render buffer will be cleared.  (default: false)
+/// @param color
+///     A color value that the color render buffer will be set to, if clearColor == true.  (default: 0,0,0,0)
+/// @param depth
+///     A float value that the depth render buffer will be set to, if clearDepth == true.  (default: 1.0)
+/// @param stencil
+///     A integer value that the stencil render buffer will be set to, if clearStencil == true.  (default: 0)
+// *****************************************************************
+void Graphics::Clear(
+    bool clearColor, bool clearDepth, bool clearStencil,
+    const Color& color, float depth, int stencil
+    )
 {
-	glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
 	glClearColor(
 		color.R * Color::NORMALIZATION_SCALAR,
 		color.G * Color::NORMALIZATION_SCALAR,
@@ -341,14 +482,28 @@ void Graphics::Clear(ClearBuffers::Enum buffers, const Color& color, float depth
 #endif
 
 	glClearStencil(stencil);
+    
+    // Set the bits of which buffers to clear
+    GLuint buffers = 0;
+    if(clearColor)
+        buffers |= GL_COLOR_BUFFER_BIT;
+    if(clearDepth)
+        buffers |= GL_DEPTH_BUFFER_BIT;
+    if(clearStencil)
+        buffers |= GL_STENCIL_BUFFER_BIT;
+
 	glClear((GLbitfield)buffers);
 }
 
-// ================================================================================================
-// == Culling
-// ================================================================================================
-
-// *****************************************************
+// *****************************************************************
+/// @brief
+///     Sets the current culling mode
+/// @param cullingMode
+///     The culling mode to set
+/// @param forceChange
+///     Skips the GDK's graphics state update caching system and forces the 
+///     underlying graphics system to be updated.  (default: false)
+// *****************************************************************
 void Graphics::SetCullingMode(CullingMode::Enum cullingMode, bool forceChange)
 {
 	// Only change state if we need to :)
@@ -371,11 +526,22 @@ void Graphics::SetCullingMode(CullingMode::Enum cullingMode, bool forceChange)
 	}
 }
 
-// ================================================================================================
-// == Depth
-// ================================================================================================
-
-// *****************************************************
+// *****************************************************************
+/// @brief
+///     Enables or Disables depth testing
+/// @remarks
+///     Depth testing will cause the Z-value of a pixel to be tested
+///     against the depth buffer using the depth test function.  If the 
+///     test passes, the pixel will be written to the frame buffer.
+/// @param enabled
+///     true to enable depth testing.
+/// @param forceChange
+///     Skips the GDK's graphics state update caching system and forces the 
+///     underlying graphics system to be updated.  (default: false)
+/// @note
+///     See the OpenGL documentation for GL_DEPTH_TEST for more information 
+///     on depth testing
+// *****************************************************************
 void Graphics::EnableDepthTest(bool enabled, bool forceChange)
 {
 	// Only change state if we need to
@@ -390,7 +556,21 @@ void Graphics::EnableDepthTest(bool enabled, bool forceChange)
 	}
 }
 
-// *****************************************************
+// *****************************************************************
+/// @brief
+///     Enables or Disables depth writing
+/// @remarks
+///     If enabled, the Z-value of a pixel will be written to the depth buffer.
+///     Assuming the depth test passed or depth testing is disabled.
+/// @param enabled
+///     true to enable depth writing.
+/// @param forceChange
+///     Skips the GDK's graphics state update caching system and forces the 
+///     underlying graphics system to be updated.  (default: false)
+/// @note
+///     See the OpenGL documentation for glDepthMask for more information 
+///     on depth writing
+// *****************************************************************
 void Graphics::EnableDepthWrite(bool enabled, bool forceChange)
 {
 	// Only change state if we need to
@@ -405,7 +585,15 @@ void Graphics::EnableDepthWrite(bool enabled, bool forceChange)
 	}
 }
 
-// *****************************************************
+// *****************************************************************
+/// @brief
+///     Sets the comparison function used for depth testing.
+/// @param depthFunction
+///     The comparison function to use
+/// @param forceChange
+///     Skips the GDK's graphics state update caching system and forces the 
+///     underlying graphics system to be updated.  (default: false)
+// *****************************************************************
 void Graphics::SetDepthTestFunction(CompareFunction::Enum depthFunction, bool forceChange)
 {
 	// Only change state if we need to
@@ -417,7 +605,15 @@ void Graphics::SetDepthTestFunction(CompareFunction::Enum depthFunction, bool fo
 }
 
 
-// *****************************************************
+// *****************************************************************
+/// @brief
+///     Enables or Disables depth biasing
+/// @param enabled
+///     true to enable depth biasing.
+/// @param forceChange
+///     Skips the GDK's graphics state update caching system and forces the 
+///     underlying graphics system to be updated.  (default: false)
+// *****************************************************************
 void Graphics::EnableDepthBias(bool enabled, bool forceChange)
 {
 	// Only change state if we need to
@@ -432,14 +628,27 @@ void Graphics::EnableDepthBias(bool enabled, bool forceChange)
 	}
 }
 
-// *****************************************************
+// *****************************************************************
+/// @brief
+///     Sets the depth bias amount
+/// @remarks
+///     bias = (factor * DZ) + (units * EPSILON)
+///     where:
+///		@li   DZ = change in depth of the current polygon, across the current pixel
+///		@li   EPSILON = minimum noticable change.
+/// @param factor
+///     A scalar applied to the change in the Z-value
+/// @param units
+///     The number of float epsilons to bias by
+/// @param forceChange
+///     Skips the GDK's graphics state update caching system and forces the 
+///     underlying graphics system to be updated.  (default: false)
+/// @note
+///     See the OpenGL documentation for glPolygonOffset() for more information 
+///     on depth biasing
+// *****************************************************************
 void Graphics::SetDepthBias(float factor, float units, bool forceChange)
 {
-	// bias = (factor * DZ) + (units * EPSILON)
-	// where:
-	//		DZ = change in depth of the current polygon, across the current pixel
-	//		EPSILON = minimum noticable change.
-
 	// Only change state if we need to
 	if(currentDepthBiasFactor != factor || currentDepthBiasUnits != units || forceChange)
 	{
@@ -449,11 +658,15 @@ void Graphics::SetDepthBias(float factor, float units, bool forceChange)
 	}
 }
 
-// ================================================================================================
-// == Blending
-// ================================================================================================
-
-// *****************************************************
+// *****************************************************************
+/// @brief
+///     Enables or Disables frame buffer blending
+/// @param enabled
+///     true to enable blending.
+/// @param forceChange
+///     Skips the GDK's graphics state update caching system and forces the 
+///     underlying graphics system to be updated.  (default: false)
+// *****************************************************************
 void Graphics::EnableBlending(bool enabled, bool forceChange)
 {
 	// Only change state if we need to
@@ -468,7 +681,15 @@ void Graphics::EnableBlending(bool enabled, bool forceChange)
 	}
 }
 
-// *****************************************************
+// *****************************************************************
+/// @brief
+///     Sets the constant color value used by the Constant blend factor.
+/// @param color
+///     The color value value for the constant
+/// @param forceChange
+///     Skips the GDK's graphics state update caching system and forces the 
+///     underlying graphics system to be updated.  (default: false)
+// *****************************************************************
 void Graphics::SetBlendColorConstant(const Color& color, bool forceChange)
 {
 	// Only change state if we need to
@@ -480,7 +701,15 @@ void Graphics::SetBlendColorConstant(const Color& color, bool forceChange)
 	}
 }
 
-// *****************************************************
+// *****************************************************************
+/// @brief
+///     Sets up blending to use one of the common GDK blend modes
+/// @param blendMode
+///     The common blend mode to setup
+/// @param forceChange
+///     Skips the GDK's graphics state update caching system and forces the 
+///     underlying graphics system to be updated.  (default: false)
+// *****************************************************************
 void Graphics::SetBlendMode(BlendMode::Enum blendMode, bool forceChange)
 {
 	BlendFactor::Enum sourceRGBFactor;
@@ -505,7 +734,25 @@ void Graphics::SetBlendMode(BlendMode::Enum blendMode, bool forceChange)
 		);
 }
 
-// *****************************************************
+// *****************************************************************
+/// @brief
+///     Sets up the source & destination factors and the equation used for blending
+/// @remarks
+///     For more details on advanced blending setup, see the glBlendEquation() & glBlendFunc()
+///     documentation in OpenGL
+/// @param sourceFactor
+///     Factor to use for the source component of the blend
+/// @param destFactor
+///     Factor to use for the destination component of the blend
+/// @param blendEquation
+///     Blend equation to use when doing the blending
+/// @param forceChange
+///     Skips the GDK's graphics state update caching system and forces the 
+///     underlying graphics system to be updated.  (default: false)
+/// @note
+///     See the OpenGL documentation for glBlendEquation() & glBlendFunc() 
+///     for information on advanced blending setup
+// *****************************************************************
 void Graphics::SetBlendMode(
 	BlendFactor::Enum sourceFactor, BlendFactor::Enum destFactor, BlendEquation::Enum blendEquation,
 	bool forceChange
@@ -529,7 +776,31 @@ void Graphics::SetBlendMode(
 	}
 }
 
-// *****************************************************
+// *****************************************************************
+/// @brief
+///     Sets up the source & destination factors and the equation used for blending.
+/// @remarks
+///     This method allows you to specify different factors and equations for the color
+///     and the alpha channels.
+/// @param sourceRGBFactor
+///     Factor to use for the source color component of the blend
+/// @param destRGBFactor
+///     Factor to use for the destination color component of the blend
+/// @param rgbBlendEquation
+///     Blend equation to use when blending the color value
+/// @param sourceAlphaFactor
+///     Factor to use for the source alpha component of the blend
+/// @param destAlphaFactor
+///     Factor to use for the destination alpha component of the blend
+/// @param alphaBlendEquation
+///     Blend equation to use when blending the alpha value
+/// @param forceChange
+///     Skips the GDK's graphics state update caching system and forces the 
+///     underlying graphics system to be updated.  (default: false)
+/// @note
+///     See the OpenGL documentation for glBlendEquationSeparate() & 
+///     glBlendFuncSeparate() for information on advanced blending setup
+// *****************************************************************
 void Graphics::SetBlendMode(
 	BlendFactor::Enum sourceRGBFactor, BlendFactor::Enum destRGBFactor, BlendEquation::Enum rgbBlendEquation,
 	BlendFactor::Enum sourceAlphaFactor, BlendFactor::Enum destAlphaFactor, BlendEquation::Enum alphaBlendEquation,
@@ -557,11 +828,15 @@ void Graphics::SetBlendMode(
 	}
 }
 
-// ================================================================================================
-// == Texturing
-// ================================================================================================
-
-// *****************************************************
+// *****************************************************************
+/// @brief
+///     Sets the active texture unit used by GL for texture state changes
+/// @param textureUnit
+///     The texture unit to make active.
+/// @param forceChange
+///     Skips the GDK's graphics state update caching system and forces the 
+///     underlying graphics system to be updated.  (default: false)
+// *****************************************************************
 void Graphics::SetActiveTextureUnit(
 	TextureUnit::Enum textureUnit, 
 	bool forceChange
@@ -575,7 +850,19 @@ void Graphics::SetActiveTextureUnit(
 	}
 }
 
-// *****************************************************
+// *****************************************************************
+/// @brief
+///     Binds an OpenGL texture ID to a texture unit.
+/// @param glTextureId
+///     ID of the OpenGL texture to be bound.
+/// @param textureUnit
+///     The texture unit to be bound to
+/// @param textureTarget
+///     The type of texture being bound.
+/// @param forceChange
+///     Skips the GDK's graphics state update caching system and forces the 
+///     underlying graphics system to be updated.  (default: false)
+// *****************************************************************
 void Graphics::BindTexture(
 	GLuint glTextureId, 
 	TextureUnit::Enum textureUnit, 
@@ -597,11 +884,18 @@ void Graphics::BindTexture(
 	}
 }
 
-// ================================================================================================
-// == Scissoring
-// ================================================================================================
-
-// *****************************************************
+// *****************************************************************
+/// @brief
+///     Enables or Disables scissor testing
+/// @param enabled
+///     true to enable scissor testing.
+/// @param forceChange
+///     Skips the GDK's graphics state update caching system and forces the 
+///     underlying graphics system to be updated.  (default: false)
+/// @note
+///     See the OpenGL documentation for GL_SCISSOR_TEST & glScissor()
+///     for information on scissor testing
+// *****************************************************************
 void Graphics::EnableScissorTest(
 	bool enabled, 
 	bool forceChange
@@ -619,7 +913,23 @@ void Graphics::EnableScissorTest(
 	}
 }
 
-// *****************************************************
+// *****************************************************************
+/// @brief
+///     Sets the rectangular screen region used for scissor testing
+/// @param x
+///     X coordinate of the scissor rectangle, in screen/window coordinates
+/// @param y
+///     Y coordinate of the scissor rectangle, in screen/window coordinates
+/// @param width
+///     Width of the scissor rectangle, in screen/window coordinates
+/// @param height
+///     Height of the scissor rectangle, in screen/window coordinates
+/// @param forceChange
+///     Skips the GDK's graphics state update caching system and forces the 
+///     underlying graphics system to be updated.  (default: false)
+/// @note
+///     See the OpenGL documentation for glScissor() for information on scissor testing
+// *****************************************************************
 void Graphics::SetScissorRect(
 	GLint x, GLint y, GLsizei width, GLsizei height,
 	bool forceChange
@@ -641,11 +951,15 @@ void Graphics::SetScissorRect(
 	}
 }
 
-// ================================================================================================
-// == Shaders
-// ================================================================================================
-
-// *****************************************************
+// *****************************************************************
+/// @brief
+///     Sets the active shader program used by GL
+/// @param shaderProgramId
+///     ID of the shader program to set as active
+/// @param forceChange
+///     Skips the GDK's graphics state update caching system and forces the 
+///     underlying graphics system to be updated.  (default: false)
+// *****************************************************************
 void Graphics::SetActiveShaderProgram(GLuint shaderProgramId, bool forceChange)
 {
 	// Only change state if we need to :)
@@ -656,11 +970,20 @@ void Graphics::SetActiveShaderProgram(GLuint shaderProgramId, bool forceChange)
 	}
 }
 
-// ================================================================================================
-// == Vertex Attributes
-// ================================================================================================
-
-// *****************************************************
+// *****************************************************************
+/// @brief
+///     Enables or Disables the vertex attribute array on a given index.
+/// @param index
+///     Index of the vertex attribute array to enable/disable
+/// @param enabled
+///     true to enable the vertex attribute array
+/// @param forceChange
+///     Skips the GDK's graphics state update caching system and forces the 
+///     underlying graphics system to be updated.  (default: false)
+/// @note
+///     See the OpenGL documentation for glEnableVertexAttribArray() for 
+///     information on scissor testing
+// *****************************************************************
 void Graphics::EnableVertexAttribArray(int index, bool enabled, bool forceChange)
 {
 	// Only change state if we need to :)
@@ -674,7 +997,15 @@ void Graphics::EnableVertexAttribArray(int index, bool enabled, bool forceChange
 	}
 }
 
-// *****************************************************
+// *****************************************************************
+/// @brief
+///     Sets the active vertex buffer for use by OpenGL
+/// @param glVertexBufferId
+///     Id of the OpenGL vertex buffer to be bound.
+/// @param forceChange
+///     Skips the GDK's graphics state update caching system and forces the 
+///     underlying graphics system to be updated.  (default: false)
+// *****************************************************************
 void Graphics::BindVertexBuffer(GLuint glVertexBufferId, bool forceChange)
 {
 	// Only change state if we need to :)
@@ -685,7 +1016,15 @@ void Graphics::BindVertexBuffer(GLuint glVertexBufferId, bool forceChange)
 	}
 }
 
-// *****************************************************
+// *****************************************************************
+/// @brief
+///     Sets the active index buffer for use by OpenGL
+/// @param glIndexBufferId
+///     Id of the OpenGL index buffer to be bound.
+/// @param forceChange
+///     Skips the GDK's graphics state update caching system and forces the 
+///     underlying graphics system to be updated.  (default: false)
+// *****************************************************************
 void Graphics::BindIndexBuffer(GLuint glIndexBufferId, bool forceChange)
 {
 	// Only change state if we need to :)

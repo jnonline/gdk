@@ -17,7 +17,6 @@
 
 // System/Containers
 #include "System/Containers/SortedVector.h"
-#include "System/Containers/HashMap.h"
 #include "System/Containers/StringHashMap.h"
 
 // System/Threading
@@ -63,7 +62,7 @@
 #include "Math/2D/Vector2.h"
 #include "Math/2D/Matrix2D.h"
 #include "Math/2D/Ray2.h"
-#include "Math/2D/LineSegment2.h"
+#include "Math/2D/Segment2.h"
 #include "Math/2D/Rectangle2.h"
 #include "Math/2D/Box2.h"
 #include "Math/2D/Triangle2.h"
@@ -76,10 +75,12 @@
 #include "Math/3D/Matrix3D.h"
 #include "Math/3D/Quaternion.h"
 #include "Math/3D/Ray3.h"
+#include "Math/3D/Segment3.h"
 #include "Math/3D/Plane3.h"
 #include "Math/3D/Sphere3.h"
 #include "Math/3D/Box3.h"
-#include "Math/3D/Frustrum3.h"
+#include "Math/3D/Capsule3.h"
+#include "Math/3D/Frustum3.h"
 #include "Math/3D/Distance3.h"
 #include "Math/3D/Intersection3.h"
 

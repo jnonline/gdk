@@ -10,7 +10,6 @@
 namespace Gdk
 {
 	// ============================================================================
-
 	// Critical Sections
 	//	Usage:
 	//
@@ -19,14 +18,32 @@ namespace Gdk
 	//		GDK_END_CRITICAL_SECTION( mySection );
 	//
 
+    /// @addtogroup System
+    /// @{
+    /// @addtogroup Threading
+    /// @{
 
-	// Starts a critical section
+    // *****************************************************************
+    /// @brief
+    ///     Starts a critical section
+    /// @param SECTION_NAME
+    ///     A unique identifier for the section name
+    // *****************************************************************
 	#define GDK_BEGIN_CRITICAL_SECTION( SECTION_NAME ) \
 		static pthread_mutex_t SECTION_NAME = PTHREAD_MUTEX_INITIALIZER; \
 		pthread_mutex_lock( &SECTION_NAME );
 
-	// Ends a critical section
+    // *****************************************************************
+    /// @brief
+    ///     Ends a critical section
+    /// @param SECTION_NAME
+    ///     A unique identifier for the section name
+    // *****************************************************************
 	#define GDK_END_CRITICAL_SECTION( SECTION_NAME ) \
-		pthread_mutex_unlock( &SECTION_NAME );
+		pthread_mutex_unlock( &SECTION_NAME ) \
+        ;
 
+    /// @}
+    /// @}
+    
 } // namespace Gdk

@@ -101,7 +101,7 @@ void Simple2DTests::OnDraw()
 {
 	// Clear the background
 	Graphics::Clear(
-		(ClearBuffers::Enum) (ClearBuffers::Color | ClearBuffers::Depth), 
+		true, true, false,
 		Color::FromNormalized(0.2f, 0.2f, 0.2f, 1.0f),
 		1.0f
 		);

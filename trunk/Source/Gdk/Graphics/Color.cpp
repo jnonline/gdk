@@ -22,19 +22,21 @@ const Color Color::GRAY(90,90,90,255);
 
 const float Color::NORMALIZATION_SCALAR = 1.0f / 255.0f;
 
-// ===================================================================================
-// Constructors
-// ===================================================================================
-
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Default constructor
+// *****************************************************************
 Color::Color()
 {
 	R = G = B = 0;
 	A = 255;
 }
 
-// ***********************************************************************
-Color::Color(Byte r, Byte g, Byte b)
+// *****************************************************************
+/// @brief
+///     Constructs a Color from the given RGB values
+// *****************************************************************
+Color::Color(UInt8 r, UInt8 g, UInt8 b)
 {
 	R = r;
 	G = g;
@@ -42,8 +44,11 @@ Color::Color(Byte r, Byte g, Byte b)
 	A = 255;
 }
 
-// ***********************************************************************
-Color::Color(Byte r, Byte g, Byte b, Byte a)
+// *****************************************************************
+/// @brief
+///     Constructs a Color from the given RGBA values
+// *****************************************************************
+Color::Color(UInt8 r, UInt8 g, UInt8 b, UInt8 a)
 {
 	R = r;
 	G = g;
@@ -51,7 +56,10 @@ Color::Color(Byte r, Byte g, Byte b, Byte a)
 	A = a;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Copy constructor
+// *****************************************************************
 Color::Color(const Color& input)
 {
 	R = input.R;
@@ -60,11 +68,13 @@ Color::Color(const Color& input)
 	A = input.A;
 }
 
-// ===================================================================================
-// String conversion
-// ===================================================================================
-
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Parses a Color from a string
+/// @param str
+///     A string of the format "RRGGBB" or "RRGGBBAA" where each
+///     component value is in hex.  (Example: "FF7F00FF"
+// *****************************************************************
 Color Color::Parse(const char *str)
 {
 	int a=255,r=0,g=0,b=0;
@@ -85,7 +95,12 @@ Color Color::Parse(const char *str)
 	return Color(r,g,b,a);
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Creates a string representation of this color.
+/// @remarks
+///     The resultant string has the format: "RRGGBBAA"
+// *****************************************************************
 string Color::ToString()
 {
 	// Build a string of the format "RRGGBBAA" in hex
@@ -94,11 +109,10 @@ string Color::ToString()
 	return string(temp);
 }
 
-// ===================================================================================
-// Stream Utilities
-// ===================================================================================
-
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Reads a Color from a stream.
+// *****************************************************************
 Color Color::ReadFromStream(Stream* stream)
 {
 	Color result;
@@ -106,19 +120,25 @@ Color Color::ReadFromStream(Stream* stream)
 	return result;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Writes this color to a stream.
+// *****************************************************************
 void Color::WriteToStream(Stream* stream)
 {
 	stream->Write(this, 4);
 }
 
 
-// ===================================================================================
-// Normalization
-// ===================================================================================
-
-
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Calculates the normalized float values of this color
+/// @param output
+///     A float[3] or float[4] array that will receive the color values as normalized floats
+/// @param includeAlpha
+///     If true, the output argument must be a float[4], and that alpha channel will be written last.
+///     If false, the output argument only needs to be a float[3]
+// *****************************************************************
 void Color::Normalize(float* output, bool includeAlpha)
 {
 	output[0] = R * Color::NORMALIZATION_SCALAR;

@@ -9,44 +9,51 @@
 
 namespace Gdk
 {
-	// ============================================================================
-
-	class Mutex
+	/// @addtogroup System
+    /// @{
+    /// @addtogroup Threading
+    /// @{
+    
+	// =================================================================================
+    ///	@brief
+    ///		A synchronization mechanism for guarding non-thread safe resources
+    // =================================================================================
+    class Mutex
 	{
 	public: 
 
 		// Instance Methods
 		// --------------------------------------------
 
-		// DTor
+        // Public Methods
+		// =====================================================
+        
+        // ---------------------------------
+        /// @name Methods
+        /// @{
+        
 		~Mutex();
-
-		// Locks the mutex
-		void Lock();
-
-		// Attempts to lock the mutex.  If the mutex is already locked the method returns false immediately.
-		bool TryLock();
-
-		// Releases the mutex lock
-		void Unlock();
-
-		// Static Methods
-		// --------------------------------------------
-
+        void Lock();
+        bool TryLock();
+        void Unlock();
 		static Mutex* Create();
 
+        /// @}
+        
 	private:
-
-		// Internals
-		// --------------------------------------------
-
-		// CTor
-		Mutex();
+        
+		// Private Methods
+		// =====================================================
+		
+        Mutex();
 
 		// Properties
 		pthread_mutex_t internalMutex;
 	};
 
 	// TODO(P2):  Timeout based locking : pthread_mutex_timedlock()
+    
+    /// @}
+    /// @}
 
 } // namespace Gdk

@@ -38,9 +38,13 @@
 
 namespace Gdk
 {
+    /// @addtogroup System
+    /// @{
 
-	// ============================================================================
-
+	// =================================================================================
+    ///	@brief
+    ///     Enumeration of logging levels
+    // =================================================================================
 	namespace LogLevel
 	{
 		enum Enum
@@ -53,39 +57,65 @@ namespace Gdk
 			Verbose
 		};
 
-		// Methods
+        // *****************************************************************
+        /// @brief
+        ///     Gets a display-friendly string from the given enum value
+        // *****************************************************************
 		const char* ToString(LogLevel::Enum logLevel);
 	}
 
-	// ============================================================================
-
-	class Log
+	// =================================================================================
+    ///	@brief
+    ///     Provides logging functionality to the GDK platform and application.
+    /// @remarks
+    ///     For simplified logging, use the logging macros:
+    ///     LOG_SYSTEM, LOG_INFO, LOG_VERBOSE, LOG_WARN, LOG_ERROR
+    // =================================================================================
+    class Log
 	{
-	private:
-		// Private Hidden CTor - static class only
-		Log();
-
 	public:
-		// Global configuration
-		// ----------------------------
+        
+        // Public Properties
+		// =====================================================
+        
+		// ---------------------------------
+        /// @name Global Settings
+        /// @{
+        
+        /// Enable/Disable the GDK logging system
 		static bool Enabled;
+        
+        /// Sets the maximum logging level that will be written to the log.
 		static LogLevel::Enum MaxLevel;
-
-		// Logging Methods
-		// ----------------------------
+        
+        /// @}
+        
+        // Public Methods
+		// =====================================================
+        
+        // ---------------------------------
+        /// @name Methods
+        /// @{
 
 		static void Write(LogLevel::Enum logLevel, const char* file, int line, const wchar_t *format, ...);
 
+        /// @}
+        
 	private:
-		// ----------------------------
-		// Init / Shutdown control
-		friend class Application;
-		static void Init();
+        
+        // Private Properties
+		// =====================================================
+        
+        static string logFilePath;
+		static wchar_t* msgBuffer;	
+
+		// Private Methods
+		// =====================================================
+
+        static void Init();
 		static void Shutdown();
 
-		// Static buffers for logging
-		static string logFilePath;
-		static wchar_t* msgBuffer;
+        friend class Application;
 	};
 
 	// ============================================================================
@@ -113,6 +143,48 @@ namespace Gdk
 		#define LOG_ERROR(format, ...)
 	#endif
 
-	// ============================================================================
+    // *****************************************************************
+    /// @def LOG_SYSTEM(format, ...)
+    /// @brief 
+    ///     Writes a System-level log message.
+    /// @param format
+    ///     A wprintf style format string to be written to the log.
+    /// @param ...
+    ///     Insertion values for the format string
+    // *****************************************************************
+    /// @def LOG_INFO(format, ...)
+    /// @brief 
+    ///     Writes a Info-level log message.
+    /// @param format
+    ///     A wprintf style format string to be written to the log.
+    /// @param ...
+    ///     Insertion values for the format string
+    // *****************************************************************
+    /// @def LOG_VERBOSE(format, ...)
+    /// @brief 
+    ///     Writes a Verbose-level log message.
+    /// @param format
+    ///     A wprintf style format string to be written to the log.
+    /// @param ...
+    ///     Insertion values for the format string
+    // *****************************************************************
+    /// @def LOG_WARN(format, ...)
+    /// @brief 
+    ///     Writes a Warning-level log message.
+    /// @param format
+    ///     A wprintf style format string to be written to the log.
+    /// @param ...
+    ///     Insertion values for the format string
+    // *****************************************************************
+    /// @def LOG_ERROR(format, ...)
+    /// @brief 
+    ///     Writes a Error-level log message.
+    /// @param format
+    ///     A wprintf style format string to be written to the log.
+    /// @param ...
+    ///     Insertion values for the format string
+    // *****************************************************************
 
+    /// @}
+    
 } // namespace Gdk

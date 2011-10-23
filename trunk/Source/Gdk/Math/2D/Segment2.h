@@ -16,20 +16,23 @@ namespace Gdk
     
     // =================================================================================
     /// @brief
-    ///     Represents a 2D line segment between two points.
+    ///     Represents a 2D line segment
     // =================================================================================
-	class LineSegment2
+	class Segment2
 	{
 	public:
         
 		// Public Properties
 		// =====================================================
         
-        /// Starting point of the line segment
-		Vector2 Start;
+        /// Center point of the segment
+		Vector2 Center;
         
-        /// Ending point of the line segment
-		Vector2 End;
+        /// Direction vector of the segment
+		Vector2 Direction;
+        
+        /// Extent (half-size) of the segment
+        float Extent;
 
         // Public Methods
 		// =====================================================
@@ -38,25 +41,30 @@ namespace Gdk
         /// @name Constructors
         /// @{
         
-		LineSegment2();
-		LineSegment2(const Vector2& start, const Vector2& end);
-		LineSegment2(const LineSegment2& input);
+		Segment2();
+        Segment2(const Vector2& center, const Vector2& direction, float extent);
+		Segment2(const Vector2& start, const Vector2& end);
+		Segment2(const Segment2& input);
 
         /// @}
         // ---------------------------------
         /// @name Operators
         /// @{
         
-		inline LineSegment2& operator= (const LineSegment2& input);
-		inline bool operator== (const LineSegment2& input) const;
-		inline bool operator!= (const LineSegment2& input) const;
+		inline Segment2& operator= (const Segment2& input);
+		inline bool operator== (const Segment2& input) const;
+		inline bool operator!= (const Segment2& input) const;
         
         /// @}
         // ---------------------------------
         /// @name Geometric Methods
         /// @{
         
-		Vector2 GetParametricPoint(float t);
+        float GetLength() const;
+        Vector2 GetEndpoint1() const;
+        Vector2 GetEndpoint2() const;
+        
+		Vector2 GetParametricPoint(float t) const;
         
         /// @}
 	};
@@ -71,10 +79,11 @@ namespace Gdk
     /// @brief
     ///     Assignement operator: copies the values of the given line segment to this line segment
     // *****************************************************************
-	inline LineSegment2& LineSegment2::operator= (const LineSegment2& input)
+	inline Segment2& Segment2::operator= (const Segment2& input)
 	{
-		Start = input.Start;
-		End = input.End;
+		Center = input.Center;
+		Direction = input.Direction;
+        Extent = input.Extent;
 		return *this;
 	}
 
@@ -82,20 +91,20 @@ namespace Gdk
     /// @brief
     ///     Equality operator: returns true if two line segments share the same start and end points
     // *****************************************************************
-    inline bool LineSegment2::operator== (const LineSegment2& input) const
+    inline bool Segment2::operator== (const Segment2& input) const
 	{
 		return 
-			Start == input.Start && End == input.End;
+			Center == input.Center && Direction == input.Direction && Extent == input.Extent;
 	}
 
     // *****************************************************************
     /// @brief
     ///     Equality operator: returns true if two line segments have different start or end points
     // *****************************************************************
-	inline bool LineSegment2::operator!= (const LineSegment2& input) const
+	inline bool Segment2::operator!= (const Segment2& input) const
 	{
 		return 
-			Start != input.Start || End != input.End;
+			Center != input.Center || Direction != input.Direction || Extent != input.Extent;
 	}
 
 } // namespace
