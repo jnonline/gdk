@@ -42,7 +42,6 @@
     <Reference Include="System.Core">
     </Reference>
     <Reference Include="Mono.Posix" />
-    <Reference Include="MonoMac, Version=0.0.0.0, Culture=neutral" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="gtk-gui\gui.stetic">

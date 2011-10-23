@@ -612,14 +612,6 @@
 							>
 						</File>
 						<File
-							RelativePath="..\..\Source\Gdk\Math\2D\LineSegment2.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\..\Source\Gdk\Math\2D\LineSegment2.h"
-							>
-						</File>
-						<File
 							RelativePath="..\..\Source\Gdk\Math\2D\Matrix2D.cpp"
 							>
 						</File>
@@ -641,6 +633,14 @@
 						</File>
 						<File
 							RelativePath="..\..\Source\Gdk\Math\2D\Rectangle2.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Source\Gdk\Math\2D\Segment2.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Source\Gdk\Math\2D\Segment2.h"
 							>
 						</File>
 						<File
@@ -672,6 +672,14 @@
 							>
 						</File>
 						<File
+							RelativePath="..\..\Source\Gdk\Math\3D\Capsule3.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Source\Gdk\Math\3D\Capsule3.h"
+							>
+						</File>
+						<File
 							RelativePath="..\..\Source\Gdk\Math\3D\Distance3.cpp"
 							>
 						</File>
@@ -680,11 +688,11 @@
 							>
 						</File>
 						<File
-							RelativePath="..\..\Source\Gdk\Math\3D\Frustrum3.cpp"
+							RelativePath="..\..\Source\Gdk\Math\3D\Frustum3.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\..\Source\Gdk\Math\3D\Frustrum3.h"
+							RelativePath="..\..\Source\Gdk\Math\3D\Frustum3.h"
 							>
 						</File>
 						<File
@@ -725,6 +733,14 @@
 						</File>
 						<File
 							RelativePath="..\..\Source\Gdk\Math\3D\Ray3.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Source\Gdk\Math\3D\Segment3.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Source\Gdk\Math\3D\Segment3.h"
 							>
 						</File>
 						<File

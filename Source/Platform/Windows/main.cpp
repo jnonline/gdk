@@ -85,7 +85,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		appSettings->Width + ptDiff.x, 
 		appSettings->Height + ptDiff.y, 
 		TRUE);
-	
+
+    // Hide the Close window option?
+    if(appSettings->ShowCloseBox == false)
+    {
+        HMENU hSystemMenu = GetSystemMenu(g_hWnd, FALSE);
+        EnableMenuItem(hSystemMenu, SC_CLOSE, MF_BYCOMMAND | MF_GRAYED);
+    }
+
 	// Show the window
 	ShowWindow(g_hWnd, SW_SHOWNORMAL);
 
