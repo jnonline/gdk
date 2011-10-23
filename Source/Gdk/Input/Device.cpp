@@ -40,6 +40,7 @@ const char* DeviceType::ToString(DeviceType::Enum value)
 		case DeviceType::iPodTouch:			return iPodTouch;
 		case DeviceType::AndroidPhone:		return androidPhone;
 		case DeviceType::AndroidTablet:		return androidTablet;
+        case DeviceType::Unknown:           return StringUtilities::Unknown;
 	};
 
 	return StringUtilities::Unknown;
@@ -63,6 +64,7 @@ const char* PlatformType::ToString(PlatformType::Enum value)
 		case PlatformType::iOS:			return iOS;
 		case PlatformType::Android:		return android;
 		case PlatformType::NaCl:		return naCl;
+        case PlatformType::Unknown:     return StringUtilities::Unknown;
 	};
 
 	return StringUtilities::Unknown;
@@ -82,6 +84,7 @@ const char* DeviceOrientation::ToString(DeviceOrientation::Enum value)
 		case DeviceOrientation::PortraitUpsideDown:		return portraitUpsideDown;
 		case DeviceOrientation::LandscapeLeft:          return landscapeLeft;
 		case DeviceOrientation::LandscapeRight:			return landscapeRight;
+        case DeviceOrientation::Unknown:                return StringUtilities::Unknown;
 	};
     
 	return StringUtilities::Unknown;
@@ -97,6 +100,7 @@ const char* DeviceBatteryState::ToString(DeviceBatteryState::Enum value)
 	{
 		case DeviceBatteryState::Charging:      return charging;
 		case DeviceBatteryState::Unplugged:     return unplugged;
+        case DeviceBatteryState::Unknown:       return StringUtilities::Unknown;
 	};
     
 	return StringUtilities::Unknown;

@@ -37,7 +37,7 @@ extern NSWindow*    _Gdk_Mac_MainWindow;
 	// Add a mutex around to avoid the threads accessing the context simultaneously	when resizing
     CGLContextObj cglContext = (CGLContextObj) [[self openGLContext] CGLContextObj];
 	CGLLockContext(cglContext);
-	
+    
     // Do a GDK update loop!
     Gdk::Application::Platform_MainLoop();
     
@@ -74,6 +74,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
     return result;
 }
 
+
 // ********************************************************************
 - (id) initWithFrame:(NSRect)frameRect
 {
@@ -102,8 +103,8 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
         
         // Synchronize buffer swaps with vertical refresh rate
         GLint swapInt = 1;
-        [[self openGLContext] setValues:&swapInt forParameter:NSOpenGLCPSwapInterval];
-
+        [[self openGLContext] setValues:&swapInt forParameter:NSOpenGLCPSwapInterval]; 
+        
 		// Create a display link capable of being used with all active displays
 		CVDisplayLinkCreateWithActiveCGDisplays(&displayLink);
 		
@@ -155,6 +156,8 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
         [[[self window] standardWindowButton:NSWindowMiniaturizeButton] setHidden:YES];
     if(appSettings->ShowMaximizeBox == false)
         [[[self window] standardWindowButton:NSWindowZoomButton] setHidden:YES];
+    if(appSettings->ShowCloseBox == false)
+        [[[self window] standardWindowButton:NSWindowCloseButton] setHidden:YES];
     
     // Update the window title
     const wchar_t* title = Gdk::Application::GetTitle();

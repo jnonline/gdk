@@ -10,7 +10,10 @@
 @interface GdkGLView : NSOpenGLView {
 	CVDisplayLinkRef displayLink;
     NSTrackingArea* trackingArea;
-
 }
+
+// Public Methods
+- (void) shutdownGdk;
+
 
 @end

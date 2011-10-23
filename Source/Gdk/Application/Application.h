@@ -49,6 +49,9 @@ namespace Gdk
         /// True if the application window will have a maximize box.  Ignored on mobile platforms.
 		bool ShowMaximizeBox;
         
+        /// True if the application window will have a close box.  Ignored on mobile platforms.
+        bool ShowCloseBox;
+        
         /// @}
         
         // -----------------------------------
@@ -98,7 +101,7 @@ namespace Gdk
 		static float FixedTimeStep;
 
 		/// The maximum time step that will be used for an update interval.  (This is the cap for when the application is running slow or has paused for a long period of time)
-		static float MaxTimeStep;               
+		static float MaxTimeStep;         
         
         /// @}
         

@@ -158,6 +158,7 @@ bool Application::Platform_InitGdk()
 	initialAppSettings.AllowResize = true;
 	initialAppSettings.ShowMinimizeBox = true;
 	initialAppSettings.ShowMaximizeBox = true;
+    initialAppSettings.ShowCloseBox = true;
 	initialAppSettings.FixedTimeStep = FixedTimeStep;
 	initialAppSettings.UseFixedTimeStep = IsUsingFixedTimeStep;
 	initialAppSettings.AssetManagerBackgroundThreads = 0;
