@@ -589,7 +589,7 @@ Shader* Model::DetermineShader(ModelMesh* mesh, ModelMaterial* material)
 		else
 			return SharedAssets::Shaders.Model.Mesh.DiffuseTextured;
 	}
-	else if(skinningType = ModelMeshFlags::VertexHas4WeightedBones)
+	else if(skinningType == ModelMeshFlags::VertexHas4WeightedBones)
 	{
 		// Does the material have a diffuse texture?
 		if((material->Flags & ModelMaterialFlags::DiffuseTextured) > 0)

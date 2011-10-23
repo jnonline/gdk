@@ -12,7 +12,6 @@
 		35348B30137E7698002AB9E8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35348B2F137E7698002AB9E8 /* CoreGraphics.framework */; };
 		35348B32137E7698002AB9E8 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35348B31137E7698002AB9E8 /* QuartzCore.framework */; };
 		35348B34137E7698002AB9E8 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35348B33137E7698002AB9E8 /* OpenGLES.framework */; };
-		35348BE8137F15B7002AB9E8 /* libz.1.2.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 35348BE7137F15B7002AB9E8 /* libz.1.2.3.dylib */; };
 		D004C06E13AC84E400797055 /* GdkViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D004C05D13AC84E400797055 /* GdkViewController.xib */; };
 		D004C06F13AC84E400797055 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D004C05F13AC84E400797055 /* InfoPlist.strings */; };
 		D004C07013AC84E400797055 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = D004C06113AC84E400797055 /* MainWindow.xib */; };
@@ -21,7 +20,6 @@
 		D004C07313AC84E400797055 /* GdkViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = D004C06B13AC84E400797055 /* GdkViewController.mm */; };
 		D004C07413AC84E400797055 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = D004C06C13AC84E400797055 /* main.mm */; };
 		D004C07513AC84E400797055 /* PlatformImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = D004C06D13AC84E400797055 /* PlatformImpl.mm */; };
-		D004C07A13AC864200797055 /* Main-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D004C07913AC864200797055 /* Main-Info.plist */; };
 		D06312A513A42BF800BCB383 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D06312A413A42BF800BCB383 /* AudioToolbox.framework */; };
 		D076C4B913F5CD23004469C2 /* Distance3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D076C4B713F5CD23004469C2 /* Distance3.cpp */; };
 		D076C4BF13F5CD2D004469C2 /* Distance2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D076C4BB13F5CD2D004469C2 /* Distance2.cpp */; };
@@ -73,12 +71,10 @@
 		D084A8E713ABE8B5004C5077 /* Stream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D084A86013ABE8B5004C5077 /* Stream.cpp */; };
 		D084A8E813ABE8B5004C5077 /* Box2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D084A86413ABE8B5004C5077 /* Box2.cpp */; };
 		D084A8E913ABE8B5004C5077 /* Circle2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D084A86613ABE8B5004C5077 /* Circle2.cpp */; };
-		D084A8EA13ABE8B5004C5077 /* LineSegment2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D084A86813ABE8B5004C5077 /* LineSegment2.cpp */; };
 		D084A8EB13ABE8B5004C5077 /* Matrix2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D084A86A13ABE8B5004C5077 /* Matrix2D.cpp */; };
 		D084A8EC13ABE8B5004C5077 /* Rectangle2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D084A86C13ABE8B5004C5077 /* Rectangle2.cpp */; };
 		D084A8ED13ABE8B5004C5077 /* Vector2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D084A86E13ABE8B5004C5077 /* Vector2.cpp */; };
 		D084A8EE13ABE8B5004C5077 /* Box3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D084A87113ABE8B5004C5077 /* Box3.cpp */; };
-		D084A8EF13ABE8B5004C5077 /* Frustrum3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D084A87313ABE8B5004C5077 /* Frustrum3.cpp */; };
 		D084A8F013ABE8B5004C5077 /* Intersection3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D084A87513ABE8B5004C5077 /* Intersection3.cpp */; };
 		D084A8F113ABE8B5004C5077 /* Matrix3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D084A87713ABE8B5004C5077 /* Matrix3D.cpp */; };
 		D084A8F213ABE8B5004C5077 /* Plane3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D084A87913ABE8B5004C5077 /* Plane3.cpp */; };
@@ -101,6 +97,11 @@
 		D084A90413ABE8B5004C5077 /* HighResTimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D084A8A613ABE8B5004C5077 /* HighResTimer.cpp */; };
 		D084A90613ABE8B5004C5077 /* PROJECTNAMEGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D084A8AE13ABE8B5004C5077 /* PROJECTNAMEGame.cpp */; };
 		D084A94913ABEB29004C5077 /* BasePCH.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D084A94713ABEB29004C5077 /* BasePCH.cpp */; };
+		D0D371761453DA62002C59CA /* Capsule3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0D371701453DA62002C59CA /* Capsule3.cpp */; };
+		D0D371771453DA62002C59CA /* Frustum3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0D371721453DA62002C59CA /* Frustum3.cpp */; };
+		D0D371781453DA62002C59CA /* Segment3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0D371741453DA62002C59CA /* Segment3.cpp */; };
+		D0D3717B1453DA6D002C59CA /* Segment2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0D371791453DA6D002C59CA /* Segment2.cpp */; };
+		D0D371811453DAF9002C59CA /* libz.1.2.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D0D371801453DAF9002C59CA /* libz.1.2.5.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -110,7 +111,6 @@
 		35348B2F137E7698002AB9E8 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		35348B31137E7698002AB9E8 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		35348B33137E7698002AB9E8 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
-		35348BE7137F15B7002AB9E8 /* libz.1.2.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.2.3.dylib; path = usr/lib/libz.1.2.3.dylib; sourceTree = SDKROOT; };
 		D004C05E13AC84E400797055 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/GdkViewController.xib; sourceTree = "<group>"; };
 		D004C06013AC84E400797055 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D004C06213AC84E400797055 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindow.xib; sourceTree = "<group>"; };
@@ -230,8 +230,6 @@
 		D084A86513ABE8B5004C5077 /* Box2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Box2.h; sourceTree = "<group>"; };
 		D084A86613ABE8B5004C5077 /* Circle2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Circle2.cpp; sourceTree = "<group>"; };
 		D084A86713ABE8B5004C5077 /* Circle2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Circle2.h; sourceTree = "<group>"; };
-		D084A86813ABE8B5004C5077 /* LineSegment2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LineSegment2.cpp; sourceTree = "<group>"; };
-		D084A86913ABE8B5004C5077 /* LineSegment2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LineSegment2.h; sourceTree = "<group>"; };
 		D084A86A13ABE8B5004C5077 /* Matrix2D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Matrix2D.cpp; sourceTree = "<group>"; };
 		D084A86B13ABE8B5004C5077 /* Matrix2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Matrix2D.h; sourceTree = "<group>"; };
 		D084A86C13ABE8B5004C5077 /* Rectangle2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Rectangle2.cpp; sourceTree = "<group>"; };
@@ -240,8 +238,6 @@
 		D084A86F13ABE8B5004C5077 /* Vector2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vector2.h; sourceTree = "<group>"; };
 		D084A87113ABE8B5004C5077 /* Box3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Box3.cpp; sourceTree = "<group>"; };
 		D084A87213ABE8B5004C5077 /* Box3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Box3.h; sourceTree = "<group>"; };
-		D084A87313ABE8B5004C5077 /* Frustrum3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Frustrum3.cpp; sourceTree = "<group>"; };
-		D084A87413ABE8B5004C5077 /* Frustrum3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Frustrum3.h; sourceTree = "<group>"; };
 		D084A87513ABE8B5004C5077 /* Intersection3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Intersection3.cpp; sourceTree = "<group>"; };
 		D084A87613ABE8B5004C5077 /* Intersection3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Intersection3.h; sourceTree = "<group>"; };
 		D084A87713ABE8B5004C5077 /* Matrix3D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Matrix3D.cpp; sourceTree = "<group>"; };
@@ -292,6 +288,15 @@
 		D084A8AF13ABE8B5004C5077 /* PROJECTNAMEGame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PROJECTNAMEGame.h; sourceTree = "<group>"; };
 		D084A94713ABEB29004C5077 /* BasePCH.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BasePCH.cpp; path = ../../Source/BasePCH.cpp; sourceTree = "<group>"; };
 		D084A94813ABEB29004C5077 /* BasePCH.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BasePCH.h; path = ../../Source/BasePCH.h; sourceTree = "<group>"; };
+		D0D371701453DA62002C59CA /* Capsule3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Capsule3.cpp; sourceTree = "<group>"; };
+		D0D371711453DA62002C59CA /* Capsule3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Capsule3.h; sourceTree = "<group>"; };
+		D0D371721453DA62002C59CA /* Frustum3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Frustum3.cpp; sourceTree = "<group>"; };
+		D0D371731453DA62002C59CA /* Frustum3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Frustum3.h; sourceTree = "<group>"; };
+		D0D371741453DA62002C59CA /* Segment3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Segment3.cpp; sourceTree = "<group>"; };
+		D0D371751453DA62002C59CA /* Segment3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Segment3.h; sourceTree = "<group>"; };
+		D0D371791453DA6D002C59CA /* Segment2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Segment2.cpp; sourceTree = "<group>"; };
+		D0D3717A1453DA6D002C59CA /* Segment2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Segment2.h; sourceTree = "<group>"; };
+		D0D371801453DAF9002C59CA /* libz.1.2.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.2.5.dylib; path = usr/lib/libz.1.2.5.dylib; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -299,8 +304,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D0D371811453DAF9002C59CA /* libz.1.2.5.dylib in Frameworks */,
 				D06312A513A42BF800BCB383 /* AudioToolbox.framework in Frameworks */,
-				35348BE8137F15B7002AB9E8 /* libz.1.2.3.dylib in Frameworks */,
 				35348B2C137E7698002AB9E8 /* UIKit.framework in Frameworks */,
 				35348B2E137E7698002AB9E8 /* Foundation.framework in Frameworks */,
 				35348B30137E7698002AB9E8 /* CoreGraphics.framework in Frameworks */,
@@ -315,6 +320,7 @@
 		35348B1C137E7698002AB9E8 = {
 			isa = PBXGroup;
 			children = (
+				D0D371801453DAF9002C59CA /* libz.1.2.5.dylib */,
 				35348B5E137E778F002AB9E8 /* Source */,
 				35348B2A137E7698002AB9E8 /* Frameworks */,
 				356998841388C11A008C666C /* Libraries */,
@@ -358,7 +364,6 @@
 		356998841388C11A008C666C /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				35348BE7137F15B7002AB9E8 /* libz.1.2.3.dylib */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -580,6 +585,8 @@
 		D084A86313ABE8B5004C5077 /* 2D */ = {
 			isa = PBXGroup;
 			children = (
+				D0D371791453DA6D002C59CA /* Segment2.cpp */,
+				D0D3717A1453DA6D002C59CA /* Segment2.h */,
 				D076C4BB13F5CD2D004469C2 /* Distance2.cpp */,
 				D076C4BC13F5CD2D004469C2 /* Distance2.h */,
 				D076C4BD13F5CD2D004469C2 /* Intersection2.cpp */,
@@ -592,8 +599,6 @@
 				D084A86513ABE8B5004C5077 /* Box2.h */,
 				D084A86613ABE8B5004C5077 /* Circle2.cpp */,
 				D084A86713ABE8B5004C5077 /* Circle2.h */,
-				D084A86813ABE8B5004C5077 /* LineSegment2.cpp */,
-				D084A86913ABE8B5004C5077 /* LineSegment2.h */,
 				D084A86A13ABE8B5004C5077 /* Matrix2D.cpp */,
 				D084A86B13ABE8B5004C5077 /* Matrix2D.h */,
 				D084A86C13ABE8B5004C5077 /* Rectangle2.cpp */,
@@ -607,12 +612,16 @@
 		D084A87013ABE8B5004C5077 /* 3D */ = {
 			isa = PBXGroup;
 			children = (
+				D0D371701453DA62002C59CA /* Capsule3.cpp */,
+				D0D371711453DA62002C59CA /* Capsule3.h */,
+				D0D371721453DA62002C59CA /* Frustum3.cpp */,
+				D0D371731453DA62002C59CA /* Frustum3.h */,
+				D0D371741453DA62002C59CA /* Segment3.cpp */,
+				D0D371751453DA62002C59CA /* Segment3.h */,
 				D076C4B713F5CD23004469C2 /* Distance3.cpp */,
 				D076C4B813F5CD23004469C2 /* Distance3.h */,
 				D084A87113ABE8B5004C5077 /* Box3.cpp */,
 				D084A87213ABE8B5004C5077 /* Box3.h */,
-				D084A87313ABE8B5004C5077 /* Frustrum3.cpp */,
-				D084A87413ABE8B5004C5077 /* Frustrum3.h */,
 				D084A87513ABE8B5004C5077 /* Intersection3.cpp */,
 				D084A87613ABE8B5004C5077 /* Intersection3.h */,
 				D084A87713ABE8B5004C5077 /* Matrix3D.cpp */,
@@ -743,6 +752,9 @@
 /* Begin PBXProject section */
 		35348B1E137E7698002AB9E8 /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+			};
 			buildConfigurationList = 35348B21137E7698002AB9E8 /* Build configuration list for PBXProject "PROJECTNAME" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
@@ -770,7 +782,6 @@
 				D004C06E13AC84E400797055 /* GdkViewController.xib in Resources */,
 				D004C06F13AC84E400797055 /* InfoPlist.strings in Resources */,
 				D004C07013AC84E400797055 /* MainWindow.xib in Resources */,
-				D004C07A13AC864200797055 /* Main-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -840,12 +851,10 @@
 				D084A8E713ABE8B5004C5077 /* Stream.cpp in Sources */,
 				D084A8E813ABE8B5004C5077 /* Box2.cpp in Sources */,
 				D084A8E913ABE8B5004C5077 /* Circle2.cpp in Sources */,
-				D084A8EA13ABE8B5004C5077 /* LineSegment2.cpp in Sources */,
 				D084A8EB13ABE8B5004C5077 /* Matrix2D.cpp in Sources */,
 				D084A8EC13ABE8B5004C5077 /* Rectangle2.cpp in Sources */,
 				D084A8ED13ABE8B5004C5077 /* Vector2.cpp in Sources */,
 				D084A8EE13ABE8B5004C5077 /* Box3.cpp in Sources */,
-				D084A8EF13ABE8B5004C5077 /* Frustrum3.cpp in Sources */,
 				D084A8F013ABE8B5004C5077 /* Intersection3.cpp in Sources */,
 				D084A8F113ABE8B5004C5077 /* Matrix3D.cpp in Sources */,
 				D084A8F213ABE8B5004C5077 /* Plane3.cpp in Sources */,
@@ -879,6 +888,10 @@
 				D076C4B913F5CD23004469C2 /* Distance3.cpp in Sources */,
 				D076C4BF13F5CD2D004469C2 /* Distance2.cpp in Sources */,
 				D076C4C013F5CD2D004469C2 /* Intersection2.cpp in Sources */,
+				D0D371761453DA62002C59CA /* Capsule3.cpp in Sources */,
+				D0D371771453DA62002C59CA /* Frustum3.cpp in Sources */,
+				D0D371781453DA62002C59CA /* Segment3.cpp in Sources */,
+				D0D3717B1453DA6D002C59CA /* Segment2.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -971,6 +984,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ../../Source/BasePCH.h;
 				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/../../../Framework/Source\"",
 					"\"$(SRCROOT)/../../../Framework/Platform/iOS/External/include\"",
@@ -995,6 +1009,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ../../Source/BasePCH.h;
 				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/../../../Framework/Source\"",
 					"\"$(SRCROOT)/../../../Framework/Platform/iOS/External/include\"",
