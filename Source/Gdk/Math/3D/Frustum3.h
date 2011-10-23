@@ -16,21 +16,21 @@ namespace Gdk
     
     // =================================================================================
     /// @brief
-    ///     Represents a 3D frustrum.
+    ///     Represents a 3D Frustum.
     /// @remarks
-    ///     A frustrum is made of 6 planes defining the 6 sides of the frustrum
+    ///     A Frustum is made of 6 planes defining the 6 sides of the Frustum
 	// =================================================================================
-	class Frustrum3
+	class Frustum3
 	{
 	public:
 
         // Public Properties
 		// =====================================================
         
-        /// The planar 6 sides of the frustrum.
+        /// The planar 6 sides of the Frustum.
 		Plane3 Planes[6];
         
-        /// The 8 corners of the frustrum
+        /// The 8 corners of the Frustum
         Vector3 Corners[8];
 
         // Public Methods
@@ -40,15 +40,15 @@ namespace Gdk
         /// @name Constructors
         /// @{
         
-		Frustrum3(const Matrix3D& matrix);
-		Frustrum3(const Frustrum3& input);
+		Frustum3(const Matrix3D& matrix);
+		Frustum3(const Frustum3& input);
 
         /// @}
         // ---------------------------------
         /// @name Operators
         /// @{
         
-		inline Frustrum3& operator= (const Frustrum3& input);
+		inline Frustum3& operator= (const Frustum3& input);
         
         /// @}
         // ---------------------------------
@@ -63,7 +63,7 @@ namespace Gdk
         /// @name Utility Methods
         /// @{
         
-        // Calculates the frustrum planes & corners from the given matrix
+        // Calculates the Frustum planes & corners from the given matrix
         void SetMatrix(const Matrix3D& matrix);
         
         /// @}
@@ -84,9 +84,9 @@ namespace Gdk
     
 	// *****************************************************************
     /// @brief
-    ///     Assignment operator: copies the values of the given frustrum to this frustrum
+    ///     Assignment operator: copies the values of the given Frustum to this Frustum
     // *****************************************************************
-	inline Frustrum3& Frustrum3::operator= (const Frustrum3& input)
+	inline Frustum3& Frustum3::operator= (const Frustum3& input)
 	{
 		Planes[0] = input.Planes[0];
 		Planes[1] = input.Planes[1];
@@ -100,9 +100,9 @@ namespace Gdk
     
 	// *****************************************************************
     /// @brief
-    ///     Checks if the given 3D point is inside this frustrum
+    ///     Checks if the given 3D point is inside this Frustum
     // *****************************************************************
-    bool Frustrum3::Contains(float x, float y, float z) const
+    bool Frustum3::Contains(float x, float y, float z) const
     {
         // Loop through the planes
         for(int i=0; i<6; i++)
@@ -123,9 +123,9 @@ namespace Gdk
     
     // *****************************************************************
     /// @brief
-    ///     Checks if the given 3D point is inside this frustrum
+    ///     Checks if the given 3D point is inside this Frustum
     // *****************************************************************
-    bool Frustrum3::Contains(const Vector3& point) const
+    bool Frustum3::Contains(const Vector3& point) const
     {
         return Contains(point.X, point.Y, point.Z);
     }

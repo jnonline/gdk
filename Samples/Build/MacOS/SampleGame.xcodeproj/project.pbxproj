@@ -60,12 +60,10 @@
 		D004C2CB13AC899100797055 /* Stream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D004C25613AC899100797055 /* Stream.cpp */; };
 		D004C2CC13AC899100797055 /* Box2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D004C25A13AC899100797055 /* Box2.cpp */; };
 		D004C2CD13AC899100797055 /* Circle2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D004C25C13AC899100797055 /* Circle2.cpp */; };
-		D004C2CE13AC899100797055 /* LineSegment2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D004C25E13AC899100797055 /* LineSegment2.cpp */; };
 		D004C2CF13AC899100797055 /* Matrix2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D004C26013AC899100797055 /* Matrix2D.cpp */; };
 		D004C2D013AC899100797055 /* Rectangle2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D004C26213AC899100797055 /* Rectangle2.cpp */; };
 		D004C2D113AC899100797055 /* Vector2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D004C26413AC899100797055 /* Vector2.cpp */; };
 		D004C2D213AC899100797055 /* Box3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D004C26713AC899100797055 /* Box3.cpp */; };
-		D004C2D313AC899100797055 /* Frustrum3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D004C26913AC899100797055 /* Frustrum3.cpp */; };
 		D004C2D413AC899100797055 /* Intersection3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D004C26B13AC899100797055 /* Intersection3.cpp */; };
 		D004C2D513AC899100797055 /* Matrix3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D004C26D13AC899100797055 /* Matrix3D.cpp */; };
 		D004C2D613AC899100797055 /* Plane3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D004C26F13AC899100797055 /* Plane3.cpp */; };
@@ -104,8 +102,12 @@
 		D07F7F5113D7400600574AD3 /* Triangle2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D07F7F4E13D7400600574AD3 /* Triangle2.cpp */; };
 		D07F7F5713D7401F00574AD3 /* ModelMeshInstance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D07F7F5313D7401F00574AD3 /* ModelMeshInstance.cpp */; };
 		D07F7F5813D7401F00574AD3 /* ModelNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D07F7F5513D7401F00574AD3 /* ModelNode.cpp */; };
+		D09724C6144D4E210026F53A /* Capsule3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D09724C4144D4E210026F53A /* Capsule3.cpp */; };
+		D09724CA144D507D0026F53A /* Segment3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D09724C8144D507D0026F53A /* Segment3.cpp */; };
 		D0C8121B13B290CB0091274F /* Simple2DTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0C8121713B290CB0091274F /* Simple2DTests.cpp */; };
 		D0C8121C13B290CB0091274F /* Simple3DTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0C8121913B290CB0091274F /* Simple3DTests.cpp */; };
+		D0D371541452872A002C59CA /* Frustum3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0D371521452872A002C59CA /* Frustum3.cpp */; };
+		D0D371571452B7B2002C59CA /* Segment2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0D371551452B7B2002C59CA /* Segment2.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -220,8 +222,6 @@
 		D004C25B13AC899100797055 /* Box2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Box2.h; sourceTree = "<group>"; };
 		D004C25C13AC899100797055 /* Circle2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Circle2.cpp; sourceTree = "<group>"; };
 		D004C25D13AC899100797055 /* Circle2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Circle2.h; sourceTree = "<group>"; };
-		D004C25E13AC899100797055 /* LineSegment2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LineSegment2.cpp; sourceTree = "<group>"; };
-		D004C25F13AC899100797055 /* LineSegment2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LineSegment2.h; sourceTree = "<group>"; };
 		D004C26013AC899100797055 /* Matrix2D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Matrix2D.cpp; sourceTree = "<group>"; };
 		D004C26113AC899100797055 /* Matrix2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Matrix2D.h; sourceTree = "<group>"; };
 		D004C26213AC899100797055 /* Rectangle2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Rectangle2.cpp; sourceTree = "<group>"; };
@@ -230,8 +230,6 @@
 		D004C26513AC899100797055 /* Vector2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vector2.h; sourceTree = "<group>"; };
 		D004C26713AC899100797055 /* Box3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Box3.cpp; sourceTree = "<group>"; };
 		D004C26813AC899100797055 /* Box3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Box3.h; sourceTree = "<group>"; };
-		D004C26913AC899100797055 /* Frustrum3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Frustrum3.cpp; sourceTree = "<group>"; };
-		D004C26A13AC899100797055 /* Frustrum3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Frustrum3.h; sourceTree = "<group>"; };
 		D004C26B13AC899100797055 /* Intersection3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Intersection3.cpp; sourceTree = "<group>"; };
 		D004C26C13AC899100797055 /* Intersection3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Intersection3.h; sourceTree = "<group>"; };
 		D004C26D13AC899100797055 /* Matrix3D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Matrix3D.cpp; sourceTree = "<group>"; };
@@ -256,7 +254,6 @@
 		D004C28113AC899100797055 /* Random.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Random.h; sourceTree = "<group>"; };
 		D004C28313AC899100797055 /* Assert.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Assert.cpp; sourceTree = "<group>"; };
 		D004C28413AC899100797055 /* Assert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Assert.h; sourceTree = "<group>"; };
-		D004C28613AC899100797055 /* HashMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HashMap.h; sourceTree = "<group>"; };
 		D004C28713AC899100797055 /* SortedVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SortedVector.h; sourceTree = "<group>"; };
 		D004C28813AC899100797055 /* StringHashMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringHashMap.h; sourceTree = "<group>"; };
 		D004C28913AC899100797055 /* Delegates.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Delegates.h; sourceTree = "<group>"; };
@@ -307,10 +304,18 @@
 		D07F7F5413D7401F00574AD3 /* ModelMeshInstance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModelMeshInstance.h; sourceTree = "<group>"; };
 		D07F7F5513D7401F00574AD3 /* ModelNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ModelNode.cpp; sourceTree = "<group>"; };
 		D07F7F5613D7401F00574AD3 /* ModelNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModelNode.h; sourceTree = "<group>"; };
+		D09724C4144D4E210026F53A /* Capsule3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Capsule3.cpp; sourceTree = "<group>"; };
+		D09724C5144D4E210026F53A /* Capsule3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Capsule3.h; sourceTree = "<group>"; };
+		D09724C8144D507D0026F53A /* Segment3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Segment3.cpp; sourceTree = "<group>"; };
+		D09724C9144D507D0026F53A /* Segment3.h */ = {isa = PBXFileReference; fileEncoding = 4; path = Segment3.h; sourceTree = "<group>"; };
 		D0C8121713B290CB0091274F /* Simple2DTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Simple2DTests.cpp; sourceTree = "<group>"; };
 		D0C8121813B290CB0091274F /* Simple2DTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Simple2DTests.h; sourceTree = "<group>"; };
 		D0C8121913B290CB0091274F /* Simple3DTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Simple3DTests.cpp; sourceTree = "<group>"; };
 		D0C8121A13B290CB0091274F /* Simple3DTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Simple3DTests.h; sourceTree = "<group>"; };
+		D0D371521452872A002C59CA /* Frustum3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Frustum3.cpp; sourceTree = "<group>"; };
+		D0D371531452872A002C59CA /* Frustum3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Frustum3.h; sourceTree = "<group>"; };
+		D0D371551452B7B2002C59CA /* Segment2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Segment2.cpp; sourceTree = "<group>"; };
+		D0D371561452B7B2002C59CA /* Segment2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Segment2.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -641,6 +646,8 @@
 		D004C25913AC899100797055 /* 2D */ = {
 			isa = PBXGroup;
 			children = (
+				D0D371551452B7B2002C59CA /* Segment2.cpp */,
+				D0D371561452B7B2002C59CA /* Segment2.h */,
 				D076C49B13EBCE93004469C2 /* Distance2.cpp */,
 				D076C49C13EBCE94004469C2 /* Distance2.h */,
 				D076C49713EA6F8E004469C2 /* Intersection2.cpp */,
@@ -653,8 +660,6 @@
 				D004C25B13AC899100797055 /* Box2.h */,
 				D004C25C13AC899100797055 /* Circle2.cpp */,
 				D004C25D13AC899100797055 /* Circle2.h */,
-				D004C25E13AC899100797055 /* LineSegment2.cpp */,
-				D004C25F13AC899100797055 /* LineSegment2.h */,
 				D004C26013AC899100797055 /* Matrix2D.cpp */,
 				D004C26113AC899100797055 /* Matrix2D.h */,
 				D004C26213AC899100797055 /* Rectangle2.cpp */,
@@ -668,12 +673,16 @@
 		D004C26613AC899100797055 /* 3D */ = {
 			isa = PBXGroup;
 			children = (
+				D0D371521452872A002C59CA /* Frustum3.cpp */,
+				D0D371531452872A002C59CA /* Frustum3.h */,
+				D09724C8144D507D0026F53A /* Segment3.cpp */,
+				D09724C9144D507D0026F53A /* Segment3.h */,
+				D09724C4144D4E210026F53A /* Capsule3.cpp */,
+				D09724C5144D4E210026F53A /* Capsule3.h */,
 				D076C49E13EF438F004469C2 /* Distance3.cpp */,
 				D076C49F13EF438F004469C2 /* Distance3.h */,
 				D004C26713AC899100797055 /* Box3.cpp */,
 				D004C26813AC899100797055 /* Box3.h */,
-				D004C26913AC899100797055 /* Frustrum3.cpp */,
-				D004C26A13AC899100797055 /* Frustrum3.h */,
 				D004C26B13AC899100797055 /* Intersection3.cpp */,
 				D004C26C13AC899100797055 /* Intersection3.h */,
 				D004C26D13AC899100797055 /* Matrix3D.cpp */,
@@ -729,7 +738,6 @@
 		D004C28513AC899100797055 /* Containers */ = {
 			isa = PBXGroup;
 			children = (
-				D004C28613AC899100797055 /* HashMap.h */,
 				D004C28713AC899100797055 /* SortedVector.h */,
 				D004C28813AC899100797055 /* StringHashMap.h */,
 			);
@@ -937,12 +945,10 @@
 				D004C2CB13AC899100797055 /* Stream.cpp in Sources */,
 				D004C2CC13AC899100797055 /* Box2.cpp in Sources */,
 				D004C2CD13AC899100797055 /* Circle2.cpp in Sources */,
-				D004C2CE13AC899100797055 /* LineSegment2.cpp in Sources */,
 				D004C2CF13AC899100797055 /* Matrix2D.cpp in Sources */,
 				D004C2D013AC899100797055 /* Rectangle2.cpp in Sources */,
 				D004C2D113AC899100797055 /* Vector2.cpp in Sources */,
 				D004C2D213AC899100797055 /* Box3.cpp in Sources */,
-				D004C2D313AC899100797055 /* Frustrum3.cpp in Sources */,
 				D004C2D413AC899100797055 /* Intersection3.cpp in Sources */,
 				D004C2D513AC899100797055 /* Matrix3D.cpp in Sources */,
 				D004C2D613AC899100797055 /* Plane3.cpp in Sources */,
@@ -977,6 +983,10 @@
 				D076C49D13EBCE95004469C2 /* Distance2.cpp in Sources */,
 				D076C4A013EF4390004469C2 /* Distance3.cpp in Sources */,
 				D076C4D813F9A5F5004469C2 /* StarfieldSample.cpp in Sources */,
+				D09724C6144D4E210026F53A /* Capsule3.cpp in Sources */,
+				D09724CA144D507D0026F53A /* Segment3.cpp in Sources */,
+				D0D371541452872A002C59CA /* Frustum3.cpp in Sources */,
+				D0D371571452B7B2002C59CA /* Segment2.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -268,15 +268,15 @@ TestStatus::Enum UnitTestsModule::Test_Math_Distance2D(TestExecutionContext *con
     distance = Distance2::PointToRay(Vector2(0.0f, 1.0f), testRay);
     UNIT_TEST_CHECK(distance == 1.0f, L"Distance2::PointToRay() - point behind ray");
     
-    // Point - Line Segment
-    LineSegment2 testLineSegment(Vector2(-1.0f, 1.0f), Vector2(1.0f, -1.0f));
+    // Point - Segment
+    Segment2 testSegment(Vector2(-1.0f, 1.0f), Vector2(1.0f, -1.0f));
     
-    distance = Distance2::PointToLineSegment(Vector2(1.0f, 1.0f), testLineSegment);
-    UNIT_TEST_CHECK(distance == Math::Sqrt(2.0f), L"Distance2::PointToLineSegment() - point close to segment");
-    distance = Distance2::PointToLineSegment(Vector2(-0.5f, 0.5f), testLineSegment);
-    UNIT_TEST_CHECK(distance == 0.0f, L"Distance2::PointToLineSegment() - point on segment");
-    distance = Distance2::PointToLineSegment(Vector2(2.0f, -1.0f), testLineSegment);
-    UNIT_TEST_CHECK(distance == 1.0f, L"Distance2::PointToLineSegment() - point diagonal to segment");
+    distance = Distance2::PointToSegment(Vector2(1.0f, 1.0f), testSegment);
+    UNIT_TEST_CHECK(COMPARE_FLOAT(distance, Math::Sqrt(2.0f)), L"Distance2::PointToSegment() - point close to segment");
+    distance = Distance2::PointToSegment(Vector2(-0.5f, 0.5f), testSegment);
+    UNIT_TEST_CHECK(COMPARE_FLOAT(distance, 0.0f), L"Distance2::PointToSegment() - point on segment");
+    distance = Distance2::PointToSegment(Vector2(2.0f, -1.0f), testSegment);
+    UNIT_TEST_CHECK(COMPARE_FLOAT(distance, 1.0f), L"Distance2::PointToSegment() - point diagonal to segment");
     
     // Point - Box    (using a box centered at (2,2) and oriented at (1,1)  (1,-1) with extents of (1,1)
     Box2 testBox(Vector2(2.0f, 2.0f), Vector2(1.0f, 1.0f), Vector2(1.0f, -1.0f), 1.0f, 1.0f);
@@ -288,9 +288,9 @@ TestStatus::Enum UnitTestsModule::Test_Math_Distance2D(TestExecutionContext *con
     distance = Distance2::PointToBox(Vector2(0.0f, 4.0f), testBox);
     UNIT_TEST_CHECK(COMPARE_FLOAT(distance, Math::Sqrt(8.0f) - 1.0f), L"Distance2::PointToBox() - point adjacent to box");
     distance = Distance2::PointToBox(Vector2(2.0f, 3.0f), testBox);
-    UNIT_TEST_CHECK(distance == 0.0f, L"Distance2::PointToBox() - point inside box");
+    UNIT_TEST_CHECK(COMPARE_FLOAT(distance, 0.0f), L"Distance2::PointToBox() - point inside box");
     distance = Distance2::PointToBox(Vector2(2.0f - Math::Sqrt(2.0f), 2.0f), testBox);
-    UNIT_TEST_CHECK(distance == 0.0f, L"Distance2::PointToBox() - point on box corner");
+    UNIT_TEST_CHECK(COMPARE_FLOAT(distance, 0.0f), L"Distance2::PointToBox() - point on box corner");
     
     // Point - Rectangle
     // This internally just uses PointToBox
@@ -355,50 +355,50 @@ TestStatus::Enum UnitTestsModule::Test_Math_Intersection2D(TestExecutionContext 
     UNIT_TEST_CHECK(findResult == false, 
                     L"Find(Ray,Ray) - parallel - non-co-linear" );
     
-    // Ray -> LineSegment
+    // Ray -> Segment
     // ----------------------
     
     DO_TEST_FIND(Ray2(Vector2(2.0f, 0.0f), Vector2(0.0f, 1.0f)),
-                 LineSegment2(Vector2(1.0f, 2.0f), Vector2(2.5f, 2.0f)));
+                 Segment2(Vector2(1.0f, 2.0f), Vector2(2.5f, 2.0f)));
     UNIT_TEST_CHECK(testResult == true, 
-                    L"Test(Ray,LineSegment) - ray intersects segment" );
+                    L"Test(Ray,Segment) - ray intersects segment" );
     UNIT_TEST_CHECK(findResult == true && distance == 2.0f, 
-                    L"Find(Ray,LineSegment) - ray intersects segment" );
+                    L"Find(Ray,Segment) - ray intersects segment" );
     
     DO_TEST_FIND(Ray2(Vector2(2.0f, 0.0f), Vector2(0.0f, -1.0f)),
-                 LineSegment2(Vector2(1.0f, 2.0f), Vector2(2.5f, 2.0f)));
+                 Segment2(Vector2(1.0f, 2.0f), Vector2(2.5f, 2.0f)));
     UNIT_TEST_CHECK(testResult == false, 
-                    L"Test(Ray,LineSegment) - ray pointing away from segment" );
+                    L"Test(Ray,Segment) - ray pointing away from segment" );
     UNIT_TEST_CHECK(findResult == false, 
-                    L"Find(Ray,LineSegment) - ray pointing away from segment" );
+                    L"Find(Ray,Segment) - ray pointing away from segment" );
     
     DO_TEST_FIND(Ray2(Vector2(3.0f, 0.0f), Vector2(0.0f, -1.0f)),
-                 LineSegment2(Vector2(1.0f, 2.0f), Vector2(2.5f, 2.0f)));
+                 Segment2(Vector2(1.0f, 2.0f), Vector2(2.5f, 2.0f)));
     UNIT_TEST_CHECK(testResult == false, 
-                    L"Test(Ray,LineSegment) - ray points outside the segment" );
+                    L"Test(Ray,Segment) - ray points outside the segment" );
     UNIT_TEST_CHECK(findResult == false, 
-                    L"Find(Ray,LineSegment) - ray points outside the segment" );
+                    L"Find(Ray,Segment) - ray points outside the segment" );
     
     DO_TEST_FIND(Ray2(Vector2(0.0f, 1.0f), Vector2(1.0f, 0.0f)),
-                 LineSegment2(Vector2(1.0f, 2.0f), Vector2(2.5f, 2.0f)));
+                 Segment2(Vector2(1.0f, 2.0f), Vector2(2.5f, 2.0f)));
     UNIT_TEST_CHECK(testResult == false, 
-                    L"Test(Ray,LineSegment) - ray & segment are parallel, but not co-linear" );
+                    L"Test(Ray,Segment) - ray & segment are parallel, but not co-linear" );
     UNIT_TEST_CHECK(findResult == false, 
-                    L"Find(Ray,LineSegment) - ray & segment are parallel, but not co-linear" );
+                    L"Find(Ray,Segment) - ray & segment are parallel, but not co-linear" );
     
     DO_TEST_FIND(Ray2(Vector2(-1.0f, 2.0f), Vector2(1.0f, 0.0f)),
-                 LineSegment2(Vector2(1.0f, 2.0f), Vector2(2.5f, 2.0f)));
+                 Segment2(Vector2(1.0f, 2.0f), Vector2(2.5f, 2.0f)));
     UNIT_TEST_CHECK(testResult == false, 
-                    L"Test(Ray,LineSegment) - ray & segment are parallel & co-linear" );
+                    L"Test(Ray,Segment) - ray & segment are parallel & co-linear" );
     UNIT_TEST_CHECK(findResult == false, 
-                    L"Find(Ray,LineSegment) - ray & segment are parallel & co-linear" );
+                    L"Find(Ray,Segment) - ray & segment are parallel & co-linear" );
     
     DO_TEST_FIND(Ray2(Vector2(-1.0f, 2.0f), Vector2(-1.0f, 0.0f)),
-                 LineSegment2(Vector2(1.0f, 2.0f), Vector2(2.5f, 2.0f)));
+                 Segment2(Vector2(1.0f, 2.0f), Vector2(2.5f, 2.0f)));
     UNIT_TEST_CHECK(testResult == false, 
-                    L"Test(Ray,LineSegment) - ray & segment are parallel & co-linear, but ray points away" );
+                    L"Test(Ray,Segment) - ray & segment are parallel & co-linear, but ray points away" );
     UNIT_TEST_CHECK(findResult == false, 
-                    L"Find(Ray,LineSegment) - ray & segment are parallel & co-linear, but ray points away" );
+                    L"Find(Ray,Segment) - ray & segment are parallel & co-linear, but ray points away" );
     
     
     // Ray -> Circle
@@ -643,6 +643,16 @@ TestStatus::Enum UnitTestsModule::Test_Math_Distance3D(TestExecutionContext *con
     distance = Distance3::PointToRay(Vector3(0.0f, 2.0f, 2.0f), testRay);
     UNIT_TEST_CHECK(distance == 2.0f, L"Distance3::PointToRay() - point behind ray");
     
+    // Point - Segment
+    Segment3 testSegment(Vector3(-1.0f, 1.0f, 0.0f), Vector3(1.0f, -1.0f, 0.0f));
+    
+    distance = Distance3::PointToSegment(Vector3(1.0f, 1.0f, 0.0f), testSegment);
+    UNIT_TEST_CHECK(COMPARE_FLOAT(distance, Math::Sqrt(2.0f)), L"Distance3::PointToSegment() - point close to segment");
+    distance = Distance3::PointToSegment(Vector3(-0.5f, 0.5f, 0.0f), testSegment);
+    UNIT_TEST_CHECK(COMPARE_FLOAT(distance, 0.0f), L"Distance3::PointToSegment() - point on segment");
+    distance = Distance3::PointToSegment(Vector3(2.0f, -1.0f, 0.0f), testSegment);
+    UNIT_TEST_CHECK(COMPARE_FLOAT(distance, 1.0f), L"Distance3::PointToSegment() - point diagonal to segment");
+    
     // Point - Plane
     Plane3 testPlane(Vector3(1.0f, 0.0f, 0.0f), 2.0f);
     
@@ -678,6 +688,21 @@ TestStatus::Enum UnitTestsModule::Test_Math_Distance3D(TestExecutionContext *con
     UNIT_TEST_CHECK(COMPARE_FLOAT(distance, 0.0f), L"Distance3::PointToSphere() - point inside sphere");
     distance = Distance3::PointToSphere(Vector3(2.0f, 2.0f, 0.0f), testSphere);
     UNIT_TEST_CHECK(COMPARE_FLOAT(distance, 0.0f), L"Distance3::PointToSphere() - point on sphere edge");
+    
+    // Point - Capsule
+    Capsule3 testCapsule(Vector3(2.0f, 2.0f, 2.0f), Vector3(2.0f, 2.0f, 4.0f), 0.25f);
+    
+    distance = Distance3::PointToCapsule(Vector3(2.0f, 4.0f, 2.0f), testCapsule);
+    UNIT_TEST_CHECK(COMPARE_FLOAT(distance, 1.75f), L"Distance3::PointToCapsule() - point near capsule mid-region");
+    distance = Distance3::PointToCapsule(Vector3(2.0f, 2.0f, 6.0f), testCapsule);
+    UNIT_TEST_CHECK(COMPARE_FLOAT(distance, 1.75f), L"Distance3::PointToCapsule() - point near capsule end");
+    distance = Distance3::PointToCapsule(Vector3(2.05f, 2.05f, 3.0f), testCapsule);
+    UNIT_TEST_CHECK(COMPARE_FLOAT(distance, 0.0f), L"Distance3::PointToCapsule() - point inside capsule");
+    distance = Distance3::PointToCapsule(Vector3(2.0f, 2.25f, 4.0f), testCapsule);
+    UNIT_TEST_CHECK(COMPARE_FLOAT(distance, 0.0f), L"Distance3::PointToCapsule() - point on capsule edge");
+    distance = Distance3::PointToCapsule(Vector3(2.0f, 2.0f, 3.0f), testCapsule);
+    UNIT_TEST_CHECK(COMPARE_FLOAT(distance, 0.0f), L"Distance3::PointToCapsule() - point on capsule segment");
+    
     
     return TestStatus::Pass;
 
@@ -836,6 +861,51 @@ TestStatus::Enum UnitTestsModule::Test_Math_Intersection3D(TestExecutionContext 
     UNIT_TEST_CHECK(findResult == false, 
                     L"Find(Ray,Box) - ray pointing away from box" );
     
+    // Ray -> Capsule
+    // ----------------------
+    
+    DO_TEST_FIND(Ray3(Vector3(2.0f, 2.0f, 1.5f), Vector3(0.0f, 1.0f, 0.0f)),
+                 Capsule3(Vector3(3.0f, 3.0f, -3.0f), Vector3(3.0f, 3.0f, 3.0f), 2.0f));
+    UNIT_TEST_CHECK(testResult == true, 
+                    L"Test(Ray,Capsule) - ray starts in capsule" );
+    UNIT_TEST_CHECK(findResult == true && COMPARE_FLOAT(distance, 0.0f), 
+                    L"Find(Ray,Capsule) - ray starts in capsule" );
+    
+    DO_TEST_FIND(Ray3(Vector3(-3.0f, 3.0f, 2.0f), Vector3(1.0f, 0.0f, 0.0f)),
+                 Capsule3(Vector3(3.0f, 3.0f, -3.0f), Vector3(3.0f, 3.0f, 3.0f), 2.0f));
+    UNIT_TEST_CHECK(testResult == true, 
+                    L"Test(Ray,Capsule) - ray intersects capsule" );
+    UNIT_TEST_CHECK(findResult == true && COMPARE_FLOAT(distance, 4.0f), 
+                    L"Find(Ray,Capsule) - ray intersects capsule" );
+    
+    DO_TEST_FIND(Ray3(Vector3(-3.0f, 1.0f, 2.0f), Vector3(1.0f, 0.0f, 0.0f)),
+                 Capsule3(Vector3(3.0f, 3.0f, -3.0f), Vector3(3.0f, 3.0f, 3.0f), 2.0f));
+    UNIT_TEST_CHECK(testResult == true, 
+                    L"Test(Ray,Capsule) - ray is tangent to capsule" );
+    UNIT_TEST_CHECK(findResult == true && COMPARE_FLOAT(distance, 6.0f), 
+                    L"Find(Ray,Capsule) - ray is tangent to capsule" );
+    
+    DO_TEST_FIND(Ray3(Vector3(-3.0f, -1.0f, 2.0f), Vector3(1.0f, 0.0f, 0.0f)),
+                 Capsule3(Vector3(3.0f, 3.0f, -3.0f), Vector3(3.0f, 3.0f, 3.0f), 2.0f));
+    UNIT_TEST_CHECK(testResult == false, 
+                    L"Test(Ray,Capsule) - ray misses capsule 1" );
+    UNIT_TEST_CHECK(findResult == false, 
+                    L"Find(Ray,Capsule) - ray misses capsule 1" );
+    
+    DO_TEST_FIND(Ray3(Vector3(-2.0f, 5.0f, 5.0f), Vector3(0.0f, 1.0, 0.0f)),
+                 Capsule3(Vector3(3.0f, 3.0f, -3.0f), Vector3(3.0f, 3.0f, 3.0f), 2.0f));
+    UNIT_TEST_CHECK(testResult == false, 
+                    L"Test(Ray,Capsule) - ray misses capsule 2" );
+    UNIT_TEST_CHECK(findResult == false, 
+                    L"Find(Ray,Capsule) - ray misses capsule 2" );
+    
+    DO_TEST_FIND(Ray3(Vector3(-3.0f, 3.0f, 2.0f), Vector3(-1.0f, 0.0f, 0.0f)),
+                 Capsule3(Vector3(3.0f, 3.0f, -3.0f), Vector3(3.0f, 3.0f, 3.0f), 2.0f));
+    UNIT_TEST_CHECK(testResult == false, 
+                    L"Test(Ray,Capsule) - ray pointing away from capsule" );
+    UNIT_TEST_CHECK(findResult == false, 
+                    L"Find(Ray,Capsule) - ray pointing away from capsule" );
+    
     // Plane -> Plane
     // -----------------
     
@@ -893,6 +963,34 @@ TestStatus::Enum UnitTestsModule::Test_Math_Intersection3D(TestExecutionContext 
             testBox);
     UNIT_TEST_CHECK(testResult == false, L"Test(Plane,box) - Plane does not intersect box" );
 
+    // Plane -> Capsule
+    // -----------------
+    
+    DO_TEST(Plane3(Vector3(1,1,1).GetNormalized(), 3.0f),
+            Capsule3(Vector3(3,3,-3), Vector3(3,3,3), 2.0f));
+    UNIT_TEST_CHECK(testResult == true, L"Test(Plane,Capsule) - Plane intersects capsule" );
+    
+    DO_TEST(Plane3(Vector3(0,0,1), 4.99f),
+            Capsule3(Vector3(3,3,-3), Vector3(3,3,3), 2.0f));
+    UNIT_TEST_CHECK(testResult == true, L"Test(Plane,Capsule) - Plane barely touches capsule endcap" );
+    
+    DO_TEST(Plane3(Vector3(1,0,0), 4.99f),
+            Capsule3(Vector3(3,3,-3), Vector3(3,3,3), 2.0f));
+    UNIT_TEST_CHECK(testResult == true, L"Test(Plane,Capsule) - Plane barely touches capsule cylinder edge" );
+    
+    DO_TEST(Plane3(Vector3(0,0,1), 5.01f),
+            Capsule3(Vector3(3,3,-3), Vector3(3,3,3), 2.0f));
+    UNIT_TEST_CHECK(testResult == false, L"Test(Plane,Capsule) - Plane barely misses capsule end cap" );
+    
+    DO_TEST(Plane3(Vector3(1,0,0), 5.01f),
+            Capsule3(Vector3(3,3,-3), Vector3(3,3,3), 2.0f));
+    UNIT_TEST_CHECK(testResult == false, L"Test(Plane,Capsule) - Plane barely misses capsule cylinder edge" );
+    
+    DO_TEST(Plane3(Vector3(1,1,1).GetNormalized(), 8.0f),
+            Capsule3(Vector3(3,3,-3), Vector3(3,3,3), 2.0f));
+    UNIT_TEST_CHECK(testResult == false, L"Test(Plane,Capsule) - Plane does not intersect capsule" );
+    
+
     
     // Sphere -> Sphere
     // -----------------
@@ -917,7 +1015,6 @@ TestStatus::Enum UnitTestsModule::Test_Math_Intersection3D(TestExecutionContext 
             Sphere3(Vector3(3.0f, 3.0f, 4.0f), 4.0f));
     UNIT_TEST_CHECK(testResult == false, L"Test(Sphere,Sphere) - Spheres dont touch 2" );
     
-    
     // Sphere -> Box
     // -----------------
     
@@ -939,6 +1036,37 @@ TestStatus::Enum UnitTestsModule::Test_Math_Intersection3D(TestExecutionContext 
             testBox);
     UNIT_TEST_CHECK(testResult == false, L"Test(Sphere,Box) - Sphere and box dont touch" );
 
+    // Sphere -> Capsule
+    // -----------------
+    
+    DO_TEST(Sphere3(Vector3(3,3,1), 10.0f),
+            Capsule3(Vector3(3,3,-3), Vector3(3,3,3), 2.0f));
+    UNIT_TEST_CHECK(testResult == true, L"Test(Sphere,Capsule) - Sphere encapsulates capsule" );
+    
+    DO_TEST(Sphere3(Vector3(3,3,1), 1.0f),
+            Capsule3(Vector3(3,3,-3), Vector3(3,3,3), 2.0f));
+    UNIT_TEST_CHECK(testResult == true, L"Test(Sphere,Capsule) - Capsule encapsulates sphere" );
+    
+    DO_TEST(Sphere3(Vector3(1.5f, 1.5f, 20.0f), 20.0f),
+            Capsule3(Vector3(3,3,-3), Vector3(3,3,3), 1.0f));
+    UNIT_TEST_CHECK(testResult == true, L"Test(Sphere,Capsule) - Sphere encompasses capsule endpoint, but intercepts cylinder" );
+    
+    DO_TEST(Sphere3(Vector3(5,5,5), 2.0f),
+            Capsule3(Vector3(3,3,-3), Vector3(3,3,3), 2.0f));
+    UNIT_TEST_CHECK(testResult == true, L"Test(Sphere,Capsule) - Sphere touches capsule end cap" );
+    
+    DO_TEST(Sphere3(Vector3(5,5,1), 1.2f),
+            Capsule3(Vector3(3,3,-3), Vector3(3,3,3), 2.0f));
+    UNIT_TEST_CHECK(testResult == true, L"Test(Sphere,Capsule) - Sphere touches capsule cylinder" );
+    
+    DO_TEST(Sphere3(Vector3(3,3,7), 1.99f),
+            Capsule3(Vector3(3,3,-3), Vector3(3,3,3), 2.0f));
+    UNIT_TEST_CHECK(testResult == false, L"Test(Sphere,Capsule) - Sphere barely misses capsule endcap" );
+    
+    DO_TEST(Sphere3(Vector3(5,5,1), 0.5f),
+            Capsule3(Vector3(3,3,-3), Vector3(3,3,3), 2.0f));
+    UNIT_TEST_CHECK(testResult == false, L"Test(Sphere,Capsule) - Sphere barely misses capsule cylinder" );
+    
     // Box -> Box
     // -----------------
     
@@ -962,6 +1090,42 @@ TestStatus::Enum UnitTestsModule::Test_Math_Intersection3D(TestExecutionContext 
             testBox);
     UNIT_TEST_CHECK(testResult == false, L"Test(Box,Box) - Boxes do not intersect" );
     
+    // Capsule -> Capsule
+    // -----------------
+    
+    DO_TEST(Capsule3(Vector3(2,2,-4), Vector3(2,4,4), 5.0f),
+            Capsule3(Vector3(3,3,-3), Vector3(3,3,3), 2.0f));
+    UNIT_TEST_CHECK(testResult == true, L"Test(Capsule,Capsule) - One Capsule encapsulates another" );
+    
+    DO_TEST(Capsule3(Vector3(3,3,-3), Vector3(3,3,3), 1.0f),
+            Capsule3(Vector3(3,0,0), Vector3(3,6,0), 1.0f));
+    UNIT_TEST_CHECK(testResult == true, L"Test(Capsule,Capsule) - Capsules intersect at midpoints (caps dont touch)" );
+    
+    DO_TEST(Capsule3(Vector3(1,0,0), Vector3(4,0,0), 0.75f),
+            Capsule3(Vector3(0,1,0), Vector3(0,4,0), 0.75f));
+    UNIT_TEST_CHECK(testResult == true, L"Test(Capsule,Capsule) - Capsules touch at end caps" );
+    
+    DO_TEST(Capsule3(Vector3(3,3,-3), Vector3(3,3,3), 1.0f),
+            Capsule3(Vector3(5,0,0), Vector3(5,6,0), 1.01f));
+    UNIT_TEST_CHECK(testResult == true, L"Test(Capsule,Capsule) - Capsules touch at cylinder edges" );
+    
+    DO_TEST(Capsule3(Vector3(3,3,-3), Vector3(3,3,3), 1.0f),
+            Capsule3(Vector3(1,3,0), Vector3(-4,3,0), 1.01f));
+    UNIT_TEST_CHECK(testResult == true, L"Test(Capsule,Capsule) - Capsule endcap touches cylinder edge" );
+    
+    DO_TEST(Capsule3(Vector3(1,0,0), Vector3(4,0,0), 0.7f),
+            Capsule3(Vector3(0,1,0), Vector3(0,4,0), 0.7f));
+    UNIT_TEST_CHECK(testResult == false, L"Test(Capsule,Capsule) - Capsule end caps barely miss" );
+    
+    DO_TEST(Capsule3(Vector3(3,3,-3), Vector3(3,3,3), 1.0f),
+            Capsule3(Vector3(5,0,0), Vector3(5,6,0), 0.99f));
+    UNIT_TEST_CHECK(testResult == false, L"Test(Capsule,Capsule) - Capsule cylinder edges barely miss" );
+    
+    DO_TEST(Capsule3(Vector3(3,3,-3), Vector3(3,3,3), 1.0f),
+            Capsule3(Vector3(1,3,0), Vector3(-4,3,0), 0.99f));
+    UNIT_TEST_CHECK(testResult == false, L"Test(Capsule,Capsule) - Capsule endcap barely misses cylinder edge" );
+    
+
     // ------------------
     
     #undef DO_TEST

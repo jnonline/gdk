@@ -20,7 +20,7 @@ namespace Gdk
 		// Public: Shader Properties
 		// ------------------------------
 		
-		// Parameters/Uniforms exposed by this shader
+		/// Uniforms exposed by this shader
 		SharedUniformValueSet	Parameters;
 
 		// Attributes exposed by this shader

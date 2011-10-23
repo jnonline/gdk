@@ -16,7 +16,7 @@ namespace Gdk
 	//
 	//	static const AssetType::Enum ASSET_TYPE = AssetType::Texture2D;		// Specifies the type ID of the asset
 	//	static TYPE* FromAsset(AssetLoadContext* context)					// Creates a new instance of the asset from the given context
-	//  void ReleaseChildAssets();											// Tells the asset to releasedany child assets it loaded
+	//  void ReleaseChildAssets();											// Tells the asset to release any child assets it loaded
 
 	// ============================================================================
 

@@ -4,17 +4,17 @@
  */
 
 #include "BasePCH.h"
-#include "Frustrum3.h"
+#include "Frustum3.h"
 
 using namespace Gdk;
 
 // *****************************************************************
 /// @brief
-///     Constructs a new Frustrum by extracting the planar sides from a projection matrix.
+///     Constructs a new Frustum by extracting the planar sides from a projection matrix.
 /// @param matrix
-///     A projection matrix from which to extract the frustrum sides
+///     A projection matrix from which to extract the Frustum sides
 // *****************************************************************
-Frustrum3::Frustrum3(const Matrix3D& matrix)
+Frustum3::Frustum3(const Matrix3D& matrix)
 {
     SetMatrix(matrix);
 }
@@ -23,7 +23,7 @@ Frustrum3::Frustrum3(const Matrix3D& matrix)
 /// @brief
 ///     Copy constructor
 // *****************************************************************
-Frustrum3::Frustrum3(const Frustrum3& input)
+Frustum3::Frustum3(const Frustum3& input)
 {
     // Copy the planes
     for(int i=0; i<6; i++)  
@@ -36,9 +36,9 @@ Frustrum3::Frustrum3(const Frustrum3& input)
 
 // *****************************************************************
 /// @brief
-///     Sets this frustrum to match a given projection matrix.
+///     Sets this Frustum to match a given projection matrix.
 // *****************************************************************
-void Frustrum3::SetMatrix(const Matrix3D& matrix)
+void Frustum3::SetMatrix(const Matrix3D& matrix)
 {
 	Planes[0].Normal.X = -matrix.M13;
     Planes[0].Normal.Y = -matrix.M23;
@@ -81,9 +81,9 @@ void Frustrum3::SetMatrix(const Matrix3D& matrix)
 
 // *****************************************************************
 /// @brief
-///     Calculates the 8 corners of the frustrum by finding the intersections of the 6 planar sides
+///     Calculates the 8 corners of the Frustum by finding the intersections of the 6 planar sides
 // *****************************************************************
-void Frustrum3::CalculateCorners()
+void Frustum3::CalculateCorners()
 {
     // Calculate the 8 corners
     Ray3 ray = GetIntersectionRay(Planes[0], Planes[2]);
@@ -107,7 +107,7 @@ void Frustrum3::CalculateCorners()
 /// @note
 ///     GDK Internal Use Only
 // *****************************************************************
-Ray3 Frustrum3::GetIntersectionRay(const Plane3& plane1, const Plane3& plane2)
+Ray3 Frustum3::GetIntersectionRay(const Plane3& plane1, const Plane3& plane2)
 {
     // Calculate a ray on the intersection of the given planes
     Vector3 direction = plane1.Normal.Cross(plane2.Normal);
@@ -123,7 +123,7 @@ Ray3 Frustrum3::GetIntersectionRay(const Plane3& plane1, const Plane3& plane2)
 /// @note
 ///     GDK Internal Use Only
 // *****************************************************************
-Vector3 Frustrum3::GetIntersectionPoint(const Plane3& plane, const Ray3& ray)
+Vector3 Frustum3::GetIntersectionPoint(const Plane3& plane, const Ray3& ray)
 {
     // Get the point where the given ray intersects the plane
     float t = (-plane.D - plane.Normal.Dot(ray.Origin)) / plane.Normal.Dot(ray.Direction);

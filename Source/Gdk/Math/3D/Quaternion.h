@@ -18,8 +18,8 @@ namespace Gdk
     /// @brief
     ///     Represents arbitrary rotations and orientations in 3D space
     /// @remarks
-    ///     Quaternions are 4D vectors (w,x,y,z) which are used to efficiently rotate about a vector (x, y, z)
-    ///     by the angle theta, where w = cos(theta/2).
+    ///     Quaternions are 4D vectors (w,x,y,z) which are used to efficiently rotate about a vector (x,y,z)
+    ///     by an angle theta, where w = cos(theta/2).
     // =================================================================================
 	class Quaternion
 	{

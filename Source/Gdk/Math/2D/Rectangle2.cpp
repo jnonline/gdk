@@ -139,11 +139,11 @@ Vector2 Rectangle2::GetParametricPointOnPerimeter(float t) const
 
 // *****************************************************************
 /// @brief
-///     Creates a line segment that represents the left side of the rectangle
+///     Creates a segment that represents the left side of the rectangle
 // *****************************************************************
-LineSegment2 Rectangle2::GetLeftLineSegment() const
+Segment2 Rectangle2::GetLeftLineSegment() const
 {
-	return LineSegment2(
+	return Segment2(
 		this->Position,
 		Vector2(this->Position.X, this->Position.Y + this->Size.Y)
 		);
@@ -151,11 +151,11 @@ LineSegment2 Rectangle2::GetLeftLineSegment() const
 
 // *****************************************************************
 /// @brief
-///     Creates a line segment that represents the top side of the rectangle
+///     Creates a segment that represents the top side of the rectangle
 // *****************************************************************
-LineSegment2 Rectangle2::GetTopLineSegment() const
+Segment2 Rectangle2::GetTopLineSegment() const
 {
-	return LineSegment2(
+	return Segment2(
 		this->Position,
 		Vector2(this->Position.X + this->Size.X, this->Position.Y)
 		);
@@ -163,11 +163,11 @@ LineSegment2 Rectangle2::GetTopLineSegment() const
 
 // *****************************************************************
 /// @brief
-///     Creates a line segment that represents the right side of the rectangle
+///     Creates a segment that represents the right side of the rectangle
 // *****************************************************************
-LineSegment2 Rectangle2::GetRightLineSegment() const
+Segment2 Rectangle2::GetRightLineSegment() const
 {
-	return LineSegment2(
+	return Segment2(
 		Vector2(this->Position.X + this->Size.X, this->Position.Y),
 		Vector2(this->Position.X + this->Size.X, this->Position.Y + this->Size.Y)
 		);
@@ -175,11 +175,11 @@ LineSegment2 Rectangle2::GetRightLineSegment() const
 
 // *****************************************************************
 /// @brief
-///     Creates a line segment that represents the bottom side of the rectangle
+///     Creates a segment that represents the bottom side of the rectangle
 // *****************************************************************
-LineSegment2 Rectangle2::GetBottomLineSegment() const
+Segment2 Rectangle2::GetBottomLineSegment() const
 {
-	return LineSegment2(
+	return Segment2(
 		Vector2(this->Position.X, this->Position.Y + this->Size.Y),
 		Vector2(this->Position.X + this->Size.X, this->Position.Y + this->Size.Y)
 		);

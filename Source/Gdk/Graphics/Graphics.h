@@ -12,69 +12,105 @@
 
 namespace Gdk
 {
-	// =============================================================
-
-	class Graphics
+	/// @addtogroup Graphics
+    /// @{
+    
+    // =================================================================================
+    ///	@brief
+    ///		Provides access to the GDK Graphics system.
+    ///	@remarks 
+    ///		This static-only class contains properties, methods, and events for 
+    ///     controlling the GDK Graphics system. 
+    // =================================================================================
+    class Graphics
 	{
-	private:
-		Graphics();
-	    
-		// Internal: Application Interface Methods
-		// -----------------------------------
-
-		friend class Application;
-
-		// Init / Update
-		static void Init();
-		static void InitAssetDependencies();
-		static void Update(float elapsedSeconds);
-		static void Shutdown();
-
 
 	public:
 
-		// Public: Interfaces
-		// -----------------------------------
+        // Public Methods
+		// =====================================================
+        
+        // ---------------------------------
+        /// @name Screen Size Information
+        /// @{
 
-		// Screen Size & Bounds
 		static int GetScreenWidth();
 		static int GetScreenHeight();
 		static Vector2 GetScreenBounds();
-
-		// Pixel coordinate conversions
+        
+        /// @}
+        // ---------------------------------
+        /// @name OS Framebuffer Information
+        /// @{
+        
+        static GLuint GetOSFrameBufferId();
+        static GLuint GetOSColorRenderBufferId();
+        static GLuint GetOSDepthRenderBufferId();
+        static GLuint GetOSStencilRenderBufferId();
+		
+        /// @}
+        // ---------------------------------
+        /// @name OpenGL Information
+        /// @{
+        
+		static const string& GetGLVendor();
+		static const string& GetGLRenderer();
+		static const string& GetGLVersion();
+		static int GetNumSupportedTextureUnits();
+		static ShaderProfile::Enum GetShaderProfile();
+        
+        /// @}
+        // ---------------------------------
+        /// @name Pixel Coordinate Conversions Methods
+        /// @{
+        
 		static Vector2 ScreenToUnit(Vector2 screenCoordinate);			// Converts a screen coordinate to [0 to 1] unit space
 		static Vector2 ScreenToSymmetric(Vector2 screenCoordinate);		// Converts a screen coordinate to [-1 to 1] symmetric space
 		static Vector2 UnitToScreen(Vector2 unitCoordinate);			// Converts a unit coordinate [0 to 1] to screen space
 		static Vector2 SymmetricToScreen(Vector2 symmetricCoordinate);	// Converts a symmetric coordinate [-1 to 1] to screen space
-
-		// System Properties
-        static GLuint GetOSFrameBufferId()				{ return osFrameBufferId; }
-        static GLuint GetOSColorRenderBufferId()		{ return osColorRenderBufferId; }
-        static GLuint GetOSDepthRenderBufferId()		{ return osDepthRenderBufferId; }
-        static GLuint GetOSStencilRenderBufferId()		{ return osStencilRenderBufferId; }
-		
-		// OpenGL Properties
-		static const string& GetGLVendor()				{ return vendorString; }
-		static const string& GetGLRenderer()			{ return rendererString; }
-		static const string& GetGLVersion()				{ return versionString; }
-		static int GetNumSupportedTextureUnits()		{ return supportedTextureUnits; }
-		static ShaderProfile::Enum GetShaderProfile()	{ return shaderProfile; }
-
-		// Basics
+        
+        /// @}
+        // ---------------------------------
+        /// @name Basic Methods
+        /// @{
+        
+        static void Clear(
+            bool clearColor = true, bool clearDepth = true, bool clearStencil = true,
+            const Color& color = Color::TRANSPARENT_BLACK, float depth = 1.0f, int stencil = 0
+            );
 		static void SetColorWriteMask(bool red, bool green, bool blue, bool alpha, bool forceChange = false);
-		static void Clear(ClearBuffers::Enum buffers = ClearBuffers::Color, const Color& color = Color::TRANSPARENT_BLACK, float depth = 1.0f, int stencil = 0);
+		
+        /// @}
+        // ---------------------------------
+        /// @name Scissoring Control Methods
+        /// @{
+        
+		static void EnableScissorTest(bool enabled, bool forceChange = false);
+		static void SetScissorRect(GLint x, GLint y, GLsizei width, GLsizei height, bool forceChange = false);
 
-		// Culling
+        /// @}
+        // ---------------------------------
+        /// @name Culling Renderstate Methods
+        /// @{
+
 		static void SetCullingMode(CullingMode::Enum cullingMode, bool forceChange = false);
 		
-		// Depth
+        /// @}
+        // ---------------------------------
+        /// @name Depth Renderstate Methods
+        /// @{
+        
 		static void EnableDepthTest(bool enabled, bool forceChange = false);
 		static void EnableDepthWrite(bool enabled, bool forceChange = false);
 		static void SetDepthTestFunction(CompareFunction::Enum depthFunction, bool forceChange = false);
 		static void EnableDepthBias(bool enabled, bool forceChange = false);
 		static void SetDepthBias(float factor, float units, bool forceChange = false);
 
-		// Blending
+		/// @}
+        // ---------------------------------
+        /// @name Blending Renderstate Methods
+        /// @{
+        
 		static void EnableBlending(bool enabled, bool forceChange = false);
 		static void SetBlendColorConstant(const Color& color, bool forceChange = false);
 		static void SetBlendMode(BlendMode::Enum blendMode, bool forceChange = false);
@@ -88,7 +124,11 @@ namespace Gdk
 			bool forceChange = false
 			);
 
-		// Texture
+        /// @}
+        // ---------------------------------
+        /// @name Texture Unit Control Methods
+        /// @{
+                
 		static void SetActiveTextureUnit(
 			TextureUnit::Enum textureUnit = TextureUnit::Unit_0, 
 			bool forceChange = false
@@ -100,29 +140,42 @@ namespace Gdk
 			bool forceChange = false
 			);
 
-		// Scissoring
-		static void EnableScissorTest(bool enabled, bool forceChange = false);
-		static void SetScissorRect(GLint x, GLint y, GLsizei width, GLsizei height, bool forceChange = false);
-
-		// Shader
+        /// @}
+        // ---------------------------------
+        /// @name Shader Unit Control Methods
+        /// @{
+        
 		static void SetActiveShaderProgram(GLuint shaderProgramId, bool forceChange = false);
 
-		// Vertex Attributes
+		/// @}
+        // ---------------------------------
+        /// @name Vertex & Index Buffer Control Methods
+        /// @{
+        
+        /// The max number of vertex attributes supported.
 		static const int MAX_VERTEX_ATTRIBUTES = 8;
+        
 		static void EnableVertexAttribArray(int index, bool enabled, bool forceChange = false);
 		static void BindVertexBuffer(GLuint glVertexBufferId, bool forceChange = false);
 		static void BindIndexBuffer(GLuint glIndexBufferId, bool forceChange = false);
 
-		// Public: Shared\Global Uniform Values
-		// -----------------------------------
+        /// @}
+        // ---------------------------------
+        /// @name Global Uniforms
+        /// @{
 
-		// A set of shared shader uniform values, managed at the global Graphics level
+        /// @brief
+        ///     Global uniforms for sharing and binding in multiple shaders
+        /// @remarks
+        ///     This Uniform Set contains all the global uniforms for use in any shader. 
+        ///     Common shader uniforms such as WVP matrices, lights, materials, etc
+        ///     should all be in this global set & shaders themselves should bind to these values.
 		static SharedUniformValueSet GlobalUniformsSet;
 
-		// Quick accessor for various shared parameters
+		/// Provides direct access to various global uniforms
 		static struct _GlobalUniforms
 		{
-			// W/V/P matrices
+			/// W/V/P matrices
 			UniformValue* World;
 			UniformValue* View;
 			UniformValue* Projection;
@@ -130,11 +183,11 @@ namespace Gdk
 			UniformValue* WorldView;
 			UniformValue* WorldViewProjection;
 
-			// Camera
+			/// Camera
 			UniformValue* CameraPosition;
 			UniformValue* WorldUp;
 
-			// Material
+			/// Material
 			struct _Material
 			{
 				UniformValue* Emissive;
@@ -146,7 +199,7 @@ namespace Gdk
 
 			} Material;
 
-			// Lighting
+			/// Lighting
 			UniformValue* AmbientLight;
 			UniformValue* NumActiveLights;
 			UniformValue* LightPositionsAndFalloffs;
@@ -154,18 +207,31 @@ namespace Gdk
 
 		} GlobalUniforms;
 		
+        /// @}
+        
+    public:
 
-        // Public: Platform Host Interfaces
-		// -----------------------------------
+        // INTERNAL ONLY - Platform Interfaces
+		// =====================================================
+		
+        /// @cond INTERNAL
+        
+        // ---------------------------------
+        /// @name Internal Platform Methods
+        /// @{
         
         // Only the platform application should call these, they are not safe for the game code to call...
         static void Platform_SetOSFrameBuffers(GLuint frameBufferId, GLuint colorRenderBufferId, GLuint depthRenderBufferId, GLuint stencilRenderBufferId);
         
+        /// @}
+        
+        /// @endcond
+        
 	private:
 		
 		// Internal Properties
-		// -----------------------------------
-
+		// =====================================================
+        
         // OS Frame & Render buffers
         static GLuint osFrameBufferId;
         static GLuint osColorRenderBufferId;
@@ -224,6 +290,19 @@ namespace Gdk
 		static bool currentEnabledVertexAttributes[MAX_VERTEX_ATTRIBUTES];
 		static GLuint currentVertexBufferId;
 		static GLuint currentIndexBufferId;
+        
+        // Internal Methods
+		// =====================================================
+        
+		// Init / Update
+		static void Init();
+		static void InitAssetDependencies();
+		static void Update(float elapsedSeconds);
+		static void Shutdown();
+        
+        friend class Application;
 	};
+    
+    /// @}
 }
 

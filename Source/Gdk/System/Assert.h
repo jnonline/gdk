@@ -25,13 +25,34 @@
 	#define GDK_ASSERTS
 #endif
 
-
 namespace Gdk
 {
+    /// @addtogroup System
+    /// @{
+    
 	void Assert(bool condition, const char* file, int line, const wchar_t* format, ...);
     void DebugBreak();
+    
+    /// @}
 }
 
+
+/// @addtogroup System
+/// @{
+
+// =================================================================================
+///	@brief
+///		Asserts a condition is true.
+/// @remarks
+///     This macro only performs the assertion on DEBUG builds.  On RELEASE builds, the macro does nothing.
+/// @param condition
+///     A condition that evaluates to true upon success.
+/// @param format
+///     A wprintf style format string that contains the error message if the assertion fails
+/// @param ...
+///     wprintf style insertion values for the format string
+///	@see Gdk::Assert
+// =================================================================================
 #ifdef GDK_ASSERTS
 	#ifdef GDKPLATFORM_WINDOWS
 		#define ASSERT(condition, format, ...) Gdk::Assert(condition, __FILE__, __LINE__, format, __VA_ARGS__)
@@ -42,3 +63,4 @@ namespace Gdk
 	#define ASSERT(condition, format, ...)
 #endif
 
+/// @}

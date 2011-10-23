@@ -78,6 +78,8 @@ namespace Gdk
 		inline Vector3 UnitCross (const Vector3& input) const;
         inline static float Distance(const Vector3& v1, const Vector3& v2);
         
+        void GenerateOrthonormalBasis(Vector3& u, Vector3& v, Vector3& w) const;
+        
         /// @}
         // ---------------------------------
         /// @name Interpolation Methods
@@ -95,7 +97,7 @@ namespace Gdk
         /// @{
         
 		static Vector3 Parse(const char *str);
-		string ToString();
+		string ToString() const;
 
 		static Vector3 ReadFromStream(class Stream* stream);
 		void WriteToStream(class Stream* stream);

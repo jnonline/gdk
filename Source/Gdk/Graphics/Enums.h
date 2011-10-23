@@ -9,54 +9,122 @@
 
 namespace Gdk
 {
-	// ============================================================================
+    /// @addtogroup Graphics
+    /// @{
+    
+    // =================================================================================
+    ///	@brief
+    ///		Shader profiles supported by the GDK shader system
+    // =================================================================================
 	namespace ShaderProfile
 	{
 		enum Enum
 		{
+            /// This mask value will get the "Profile Type" from an enum value
 			PROFILE_TYPE_MASK = 0xF,
+            
+            /// Profile Type:  Any (shader supports all profiles)
 			Any = 0x0,
+            
+            /// Profile Type:  GLES (shader supports OpenGL ES, 2.0 or higher)
 			GLES = 0x1,
+            
+            /// Profile Type:  GLSL (shader supports OpenGL GLSL, 2.0 or higher)
 			GLSL = 0x2,
 
+            /// This mask gets the "Profile Version" from an enum value.  A version of 0 means the default lowest supported version (IE, GLSL 2.0)
 			PROFILE_VERSION_MASK = 0xF0,
+            
+            /// Profile Version:   GLSL 3.3 is required
 			GLSL_3_3 = 0x10 | GLSL,
+            
+            /// Profile Version:   GLSL 4.0 is required
 			GLSL_4_0 = 0x20 | GLSL
 		};
 	}
 
-	// ===============================================================
+	// =================================================================================
+    ///	@brief
+    ///		Pixel formats supported by the GDK.  These pixel formats are a common subset 
+    ///     that are guaranteed available on all platforms.
+    // =================================================================================
 	namespace PixelFormat
 	{
 		enum Enum
 		{
+            /// 16-Bit:  5-Red, 6-Green, 5-Blue
 			RGB_565 = 1,
-			RGB_888,	
+            
+            /// 24-Bit:  8-Red, 8-Green, 8-Blue
+			RGB_888,
+            
+            /// 16-Bit:  5-Red, 5-Green, 5-Blue, 1-Alpha
 			RGBA_5551,
+            
+            /// 16-Bit:  4-Red, 4-Green, 4-Blue, 4-Alpha
 			RGBA_4444,
+            
+            /// 32-Bit:  8-Red, 8-Green, 8-Blue, 8-Alpha
 			RGBA_8888,
+            
+            /// 16-Bit:  8-Luminance, 8-Alpha
 			LUMINANCE_ALPHA,
+            
+            /// 8-Bit:  8-Luminance
 			LUMINANCE,
+            
+            /// 8-Bit:  8-Alpha
 			ALPHA,
 		};
 
+        // *****************************************************************
+        /// @brief
+        ///     Gets the number of bytes per pixel for a given pixel format
+        // *****************************************************************
 		short GetBytesPerPixel(PixelFormat::Enum pixelFormat);
+        
+        // *****************************************************************
+        /// @brief
+        ///     Gets the GL texture format enum value for the given pixel format
+        // *****************************************************************
         GLuint GetGLTextureFormat(PixelFormat::Enum pixelFormat);
-        GLuint GetGLPixelType(PixelFormat::Enum pixelFormat);
+        
+        // *****************************************************************
+        /// @brief
+        ///     Get the GL pixel type enum value for the given pixel format
+        // *****************************************************************
+		GLuint GetGLPixelType(PixelFormat::Enum pixelFormat);
 	}
 
-	// ===============================================================
+	// =================================================================================
+    ///	@brief
+    ///		Enumeration of supported culling modes
+    // =================================================================================
 	namespace CullingMode
 	{
 		enum Enum
 		{
+            /// No backface culling, all traiangles are rendererd
 			Disabled = 0,
-			Clockwise = 1,				CW = 1,
-			CounterClockwise = 2,		CCW = 2,
+            
+            /// Faces with clockwise vertex ordering are culled
+			Clockwise = 1,				
+            
+            /// Faces with clockwise vertex ordering are culled
+            CW = 1,
+            
+            /// Faces with clockwise vertex ordering are culled
+			CounterClockwise = 2,		
+            
+            /// Faces with clockwise vertex ordering are culled
+            CCW = 2,
 		};
 	}
 
-	// ===============================================================
+	// =================================================================================
+    ///	@brief
+    ///		Enumeration of comparison functions used by the GDK graphics system
+    // =================================================================================
 	namespace CompareFunction
 	{
 		enum Enum
@@ -72,7 +140,10 @@ namespace Gdk
 		};
 	}
 
-	// ===============================================================
+	// =================================================================================
+    ///	@brief
+    ///		Enumeration of blend factors by the GDK graphics system
+    // =================================================================================
 	namespace BlendFactor
 	{
 		enum Enum
@@ -95,7 +166,10 @@ namespace Gdk
 		};
 	}
 
-	// ===============================================================
+	// =================================================================================
+    ///	@brief
+    ///		Enumeration of blend equations used by the GDK graphics system
+    // =================================================================================
 	namespace BlendEquation
 	{
 		enum Enum
@@ -106,29 +180,65 @@ namespace Gdk
 		};
 	}
 
-	// ===============================================================
+    // =================================================================================
+    ///	@brief
+    ///		Enumeration of common blending modes used by the GDK graphics system
+    /// @remarks
+    ///     The blend modes map to common setups of GL blend functions and blend equations
+    ///     The comments for each blend mode explain the math of the blending.
+    ///   @par
+    ///     Sc = Source Color
+    ///     Sa = Source Alpha
+    ///     Dc = Destination Color
+    ///     Da = Destination Alpha
+    // =================================================================================
 	namespace BlendMode
 	{
 		enum Enum
 		{
-			Normal			= 0x0000,			// D = Sc * Sa + Dc * (1 - Sa)
-			Add,								// D = Sc + Dc
-			Multiply,							// D = Sc * Dc
-			MultiplyAdd,						// D = Dc + Sc * Dc
-			Subtract,							// D = Dc - Sc
-			MultiplySubtract,					// D = Dc - Sc * Dc
+            /// Standard blending.  [Sc * Sa + Dc * (1 - Sa)]
+			Normal = 0,
+            
+            /// Additive blending.  [Sc + Dc]
+			Add,
+            
+            /// Multiplicative blending.  [Sc * Dc]
+			Multiply,
+            
+            /// Multiply & Add blending.  [Dc + Sc * Dc]
+			MultiplyAdd,
+            
+            /// Subtractive blending.  [Dc - Sc]
+			Subtract,
+            
+            /// Multiple & Subtract blending.  [Dc - Sc * Dc]
+			MultiplySubtract,
 		};
 
+        // *****************************************************************
+        /// @brief
+        ///     Gets the blend factors & blend equations that are used by a given blend mode.
+        /// @param blendMode
+        ///     The blend mode to get the functions & equations of.
+        /// @see Graphics::SetBlendMode()
+        // *****************************************************************
 		void GetBlendSettings(
 			BlendMode::Enum blendMode,
 			BlendFactor::Enum& sourceRGBFactor, BlendFactor::Enum& destRGBFactor, BlendEquation::Enum& rgbBlendEquation, 
 			BlendFactor::Enum& sourceAlphaFactor, BlendFactor::Enum& destAlphaFactor, BlendEquation::Enum& alphaBlendEquation
 			);
 
+		// *****************************************************************
+        /// @brief
+        ///     Gets a display-friendly string for the given enum value
+        // *****************************************************************
 		const char* ToString(BlendMode::Enum value);
 	}
 
-	// ===============================================================
+	// =================================================================================
+    ///	@brief
+    ///		Enumeration of the GL texture units
+    // =================================================================================
 	namespace TextureUnit
 	{
 		enum Enum
@@ -151,35 +261,61 @@ namespace Gdk
 			Unit_15 = GL_TEXTURE15,
 		};
 
-		// Converts a 0-based index to the appropriate TextureUnit identifier
+		// *****************************************************************
+        /// @brief
+        ///     Gets the the texture unit enum for a given 0-based index
+        // *****************************************************************
 		inline TextureUnit::Enum FromIndex(int index) { return (TextureUnit::Enum) (index + GL_TEXTURE0); }
+		
+        // *****************************************************************
+        /// @brief
+        ///     Gets the 0-based index of a texture unit from the enum value
+        // *****************************************************************
 		inline int ToIndex(TextureUnit::Enum textureUnit) { return (int)textureUnit - (int)GL_TEXTURE0; }
 
+		/// Maximum number of texture units usable in the GDK
 		const int MaxUnits = 16;
 	}
 
-	// ===============================================================
+	// =================================================================================
+    ///	@brief
+    ///		Enumeration of texture wrapping modes
+    // =================================================================================
 	namespace TextureWrapMode
 	{
 		enum Enum
 		{
+            /// Clamps the texture coordinates between 0 and 1, disabling wrapping
 			Clamp				= GL_CLAMP_TO_EDGE,
+            
+            /// Mirrors the texture at texture coordinate edges
 			MirroredRepeat		= GL_MIRRORED_REPEAT,
+            
+            /// Repeats the texture at texture coordinate edges
 			Repeat				= GL_REPEAT,
 		};
 	}
 
-	// ===============================================================
+	// =================================================================================
+    ///	@brief
+    ///		Enumeration of texture filtering modes
+    // =================================================================================
 	namespace TextureFilterMode
 	{
 		enum Enum
 		{
+            /// No filtering, use the nearest texel color
 			Nearest,
+            
+            /// Linear filtering
 			Linear
 		};
 	}
 
-	// ===============================================================
+	// =================================================================================
+    ///	@brief
+    ///		Enumeration of types of textures usable in GL
+    // =================================================================================
 	namespace TextureTarget
 	{
 		enum Enum
@@ -189,20 +325,6 @@ namespace Gdk
 		};
 	}
 
-	// ===============================================================
-	namespace ClearBuffers
-	{
-		enum Enum
-		{
-			Color			= GL_COLOR_BUFFER_BIT,
-			Depth			= GL_DEPTH_BUFFER_BIT,
-			Stencil			= GL_STENCIL_BUFFER_BIT,
-
-			ColorDepth		= Color + Depth,
-			ColorStencil	= Color + Stencil,
-			DepthStencil	= Depth + Stencil,
-			All				= Color + Depth + Stencil,
-		};
-	}
-
+    /// @}
+    
 } // namespace 

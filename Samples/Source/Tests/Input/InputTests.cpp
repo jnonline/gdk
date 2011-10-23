@@ -72,7 +72,7 @@ void InputTestsModule::OnDraw()
 {
 	// Clear the background
 	Graphics::Clear(
-        (ClearBuffers::Enum) (ClearBuffers::Color), 
+        true, false, false,
         Color::FromNormalized(0.1f, 0.5f, 0.4f, 1.0f),
         1.0f
         );

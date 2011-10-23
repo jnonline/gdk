@@ -9,7 +9,13 @@
 
 using namespace Gdk;
 
-// ********************************************************
+// *****************************************************************
+/// @brief
+///     Asserts that a condition is true
+/// @remarks
+///     If the condition evaluates to false, the application will halt with a 
+///     dialog or alert that contains the details of the failed assertion.
+// *****************************************************************
 void Gdk::Assert(bool condition, const char* file, int line, const wchar_t* format, ...)
 {   
 	// First, test the condition
@@ -52,10 +58,14 @@ void Gdk::Assert(bool condition, const char* file, int line, const wchar_t* form
     Gdk::DebugBreak();
 
     // TODO(P2): MAC, should show message box with alert msg
+    // TODO(P2): iOS, show an alert..
 #endif
 }
 
-// *****************************************
+// *****************************************************************
+/// @brief
+///     Causes the application to halt and attach to a debugger.
+// *****************************************************************
 void Gdk::DebugBreak()
 {
     

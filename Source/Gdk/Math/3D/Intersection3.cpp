@@ -253,43 +253,116 @@ bool Intersection3::Find(const Ray3& ray, const Box3& box, float& distance)
 
 // *****************************************************************
 /// @brief
-///     Tests if a ray and a frustrum intersect.
+///     Tests if a ray and a capsule intersect.
 /// @return
 ///     true if the primitives intersect, otherwise false.
 // *****************************************************************
-bool Intersection3::Test(const Ray3& ray, const Frustrum3& frustrum)
+bool Intersection3::Test(const Ray3& ray, const Capsule3& capsule)
 {
-    float distance;
-    return Find(ray, frustrum, distance);
+    // Get the distance from the ray to the capsule segment
+    float distance = Distance3::RayToSegment(ray, capsule.Segment);
+    
+    // Test if the distance is within the capsule radius
+    return distance <= capsule.Radius;
 }
 
 // *****************************************************************
 /// @brief
-///     Finds the intersection between a ray and a frustrum
+///     Finds the intersection between a ray and a capsule
 /// @param[in] ray
 ///     The ray component to intersect
-/// @param[in] frustrum
-///     The frustrum to intersect
+/// @param[in] capsule
+///     The capsule to intersect
 /// @param[out] distance
 ///     The distance from the origin of the ray to the nearest point of intersection.  This value is undefined if the method returns false.
 /// @return
 ///     true if the primitives intersect, otherwise false.
 // *****************************************************************
-bool Intersection3::Find(const Ray3& ray, const Frustrum3& frustrum, float& distance)
+bool Intersection3::Find(const Ray3& ray, const Capsule3& capsule, float& distance)
+{
+    // Do a line/capsule intersection
+    float t[2];
+    IntersectionType::Enum intersectionType = Intersect_Line_Capsule(ray.Origin, ray.Direction, capsule, t);
+    
+    // What type of intersection was it?
+    if(intersectionType == IntersectionType::None)
+    {
+        // No intersections
+        return false;
+    }
+    if(intersectionType == IntersectionType::Point)
+    {
+        // Single intersection, verify the intersection point is on the positive side of the ray
+        if(t[0] >= 0.0f)
+        {
+            distance = t[0];
+            return true;
+        }
+    }
+    else if(intersectionType == IntersectionType::LineSegment)
+    {
+        // Are both intersection points in front of the ray?
+        if(t[0] >= 0.0f && t[1] >= 0.0f)
+        {
+            // Return the lesser of the 2 points
+            if(t[0] < t[1])
+                distance = t[0];
+            else 
+                distance = t[1];
+            return true;
+        }
+        
+        // If one of the points is in front of the ray, the ray is originating inside the capsule
+        if(t[0] >= 0.0f || t[1] >= 0.0f)
+        {
+            distance = 0.0f;
+            return true;
+        }
+    }
+    
+    // No intersection
+    return false;    
+}
+
+// *****************************************************************
+/// @brief
+///     Tests if a ray and a frustum intersect.
+/// @return
+///     true if the primitives intersect, otherwise false.
+// *****************************************************************
+bool Intersection3::Test(const Ray3& ray, const Frustum3& frustum)
+{
+    float distance;
+    return Find(ray, frustum, distance);
+}
+
+// *****************************************************************
+/// @brief
+///     Finds the intersection between a ray and a frustum
+/// @param[in] ray
+///     The ray component to intersect
+/// @param[in] frustum
+///     The frustum to intersect
+/// @param[out] distance
+///     The distance from the origin of the ray to the nearest point of intersection.  This value is undefined if the method returns false.
+/// @return
+///     true if the primitives intersect, otherwise false.
+// *****************************************************************
+bool Intersection3::Find(const Ray3& ray, const Frustum3& frustum, float& distance)
 {
     distance = 0.0f;
     
-    // Check if the ray origin is inside the frustrum
-    if(frustrum.Contains(ray.Origin))
+    // Check if the ray origin is inside the frustum
+    if(frustum.Contains(ray.Origin))
         return true;
     
     float minValue = FLT_MIN;
     float maxValue = FLT_MAX;
     
-    // Loop through the 6 planes of the frustrum
+    // Loop through the 6 planes of the frustum
     for(int planeIndex=0; planeIndex<6; planeIndex++)
     {
-        const Plane3& plane = frustrum.Planes[planeIndex];
+        const Plane3& plane = frustum.Planes[planeIndex];
         
         // Get the dot product of the ray direction/origin and the plane normal
         float dirDotNormal = ray.Direction.Dot(plane.Normal);
@@ -336,19 +409,19 @@ bool Intersection3::Find(const Ray3& ray, const Frustrum3& frustrum, float& dist
 
 // *****************************************************************
 /// @brief
-///     Tests if a frustrum and a plane intersect.
+///     Tests if a frustum and a plane intersect.
 /// @return
 ///     true if the primitives intersect, otherwise false.
 // *****************************************************************
-bool Intersection3::Test(const Frustrum3& frustrum, const Plane3& plane)
+bool Intersection3::Test(const Frustum3& frustum, const Plane3& plane)
 {
     int sides = 0;
     
-    // Loop through the 8 corners of the frustrum
+    // Loop through the 8 corners of the frustum
 	for(int i=0; i<8; i++)
     {
         // Get the distance from the corner to the plane
-        float dist = frustrum.Corners[i].Dot(plane.Normal);
+        float dist = frustum.Corners[i].Dot(plane.Normal);
         if((dist + plane.D) > 0.0f)
            sides |= 1;  // At least 1 corner is on the front side of the plane
         else
@@ -365,16 +438,16 @@ bool Intersection3::Test(const Frustrum3& frustrum, const Plane3& plane)
 
 // *****************************************************************
 /// @brief
-///     Tests if a frustrum and a sphere intersect.
+///     Tests if a frustum and a sphere intersect.
 /// @return
 ///     true if the primitives intersect, otherwise false.
 // *****************************************************************
-bool Intersection3::Test(const Frustrum3& frustrum, const Sphere3& sphere)
+bool Intersection3::Test(const Frustum3& frustum, const Sphere3& sphere)
 {
-    // Loop through the planes of the frustrum
+    // Loop through the planes of the frustum
     for(int i=0; i<6; i++)
     {
-        const Plane3& plane = frustrum.Planes[i];
+        const Plane3& plane = frustum.Planes[i];
         
         // Make sure the sphere intersects or is behind this plane
         float dist = plane.Normal.Dot(sphere.Center) + plane.D;
@@ -382,7 +455,7 @@ bool Intersection3::Test(const Frustrum3& frustrum, const Sphere3& sphere)
             return false;
     }
     
-    // The sphere intersects or is behind all 6 frustrum planes (and thusly inside the frustrum)
+    // The sphere intersects or is behind all 6 frustum planes (and thusly inside the frustum)
     return true;
 }
 
@@ -444,6 +517,30 @@ bool Intersection3::Test(const Plane3& plane, const Box3& box)
 
 // *****************************************************************
 /// @brief
+///     Tests if a plane and a capsule intersect.
+/// @return
+///     true if the primitives intersect, otherwise false.
+// *****************************************************************
+bool Intersection3::Test(const Plane3& plane, const Capsule3& capsule)
+{
+    // Get the distances from the capsule segment endpoints to the plane
+    float dist0 = plane.DistanceTo(capsule.Segment.GetEndpoint1());
+    float dist1 = plane.DistanceTo(capsule.Segment.GetEndpoint2());
+    
+    // Are the endpoints on opposite sides of the plane?
+    if (dist0 * dist1 <= 0.0f)
+        return true;
+    
+    // Are either of the segment endpoints within the capsule radius of the plane
+    
+    if(Math::Abs(dist0) <= capsule.Radius || Math::Abs(dist1) <= capsule.Radius)
+        return true;
+    
+    return false;
+}
+
+// *****************************************************************
+/// @brief
 ///     Tests if two spheres intersect.
 /// @return
 ///     true if the primitives intersect, otherwise false.
@@ -470,6 +567,21 @@ bool Intersection3::Test(const Sphere3& sphere, const Box3& box)
     float distance = Distance3::PointToBox(sphere.Center, box);
     
     // Is the distance within the sphere radius?
+    return distance <= sphere.Radius;
+}
+
+// *****************************************************************
+/// @brief
+///     Tests if a sphere and a capsule intersect.
+/// @return
+///     true if the primitives intersect, otherwise false.
+// *****************************************************************
+bool Intersection3::Test(const Sphere3& sphere, const Capsule3& capsule)
+{
+    // Get the distance from the sphere center to the capsule
+    float distance = Distance3::PointToCapsule(sphere.Center, capsule);
+    
+    // Check if the distance is within the radius of the sphere
     return distance <= sphere.Radius;
 }
 
@@ -685,6 +797,21 @@ bool Intersection3::Test(const Box3& box1, const Box3& box2)
     return true;
 }
 
+// *****************************************************************
+/// @brief
+///     Tests if two capsule intersect.
+/// @return
+///     true if the primitives intersect, otherwise false.
+// *****************************************************************
+bool Intersection3::Test(const Capsule3& capsule1, const Capsule3& capsule2)
+{
+    // Get the distance between the two capsule segments
+    float distance = Distance3::SegmentToSegment(capsule1.Segment, capsule2.Segment);
+    
+    // Check if the distance is less than the total radii
+    float totalRadius = capsule1.Radius + capsule2.Radius;
+    return distance <= totalRadius;
+}
 
 // *****************************************************************
 /// @brief
@@ -790,4 +917,268 @@ bool Intersection3::Clip_Box_Line(float denominator, float numerator, float& t0,
     {
         return numerator <= 0.0f;
     }
+}
+
+// *****************************************************************
+/// @brief
+///     Utility method for intersecting a linear primitive and a capsule
+/// @param[in] origin
+///     A point of origin for the linear primitive
+/// @param[in] direction
+///     The vector direction for the linear primitive
+/// @param[in] box
+///     The oriented box
+/// @param[out] t[2]
+///     The result in t depends on the following intersection types:
+///     @li None - t is undefined
+///     @li Point - t[0] is the distance from the origin of the ray to the intersection point.
+///     @li LineSegment - t[0] & t[1] are the distances to the first and last points of intersection.
+/// @return
+///     The type of intersection (or non-intersection) for the two primitives
+// *****************************************************************
+IntersectionType::Enum  Intersection3::Intersect_Line_Capsule(
+    const Vector3& origin, const Vector3& direction,
+    const Capsule3& capsule,
+    float t[2]
+    )
+{
+    // Adapted from GeometricTools.com
+    
+    // Create a coordinate system for the capsule.  In this system, the
+    // capsule segment center C is the origin and the capsule axis direction
+    // W is the z-axis.  U and V are the other coordinate axis directions.
+    // If P = x*U+y*V+z*W, the cylinder containing the capsule wall is
+    // x^2 + y^2 = r^2, where r is the capsule radius.  The finite cylinder
+    // that makes up the capsule minus its hemispherical end caps has z-values
+    // |z| <= e, where e is the extent of the capsule segment.  The top
+    // hemisphere cap is x^2+y^2+(z-e)^2 = r^2 for z >= e, and the bottom
+    // hemisphere cap is x^2+y^2+(z+e)^2 = r^2 for z <= -e.
+    
+    Vector3 U, V, W;
+    capsule.Segment.Direction.GenerateOrthonormalBasis(U, V, W);
+    float rSqr = capsule.Radius * capsule.Radius;
+    
+    // Convert incoming line origin to capsule coordinates.
+    Vector3 diff = origin - capsule.Segment.Center;
+    Vector3 P(U.Dot(diff), V.Dot(diff), W.Dot(diff));
+    
+    // Get the z-value, in capsule coordinates, of the incoming line's
+    // unit-length direction.
+    float dz = W.Dot(direction);
+    if (Math::Abs(dz) >= 1.0f - Math::ZERO_TOLERANCE)
+    {
+        // The line is parallel to the capsule axis.  Determine whether the
+        // line intersects the capsule hemispheres.
+        float radialSqrDist = rSqr - P.X * P.X - P.Y * P.Y;
+        if (radialSqrDist < 0.0f)
+        {
+            // Line outside the cylinder of the capsule, no intersection.
+            return IntersectionType::None;
+        }
+        
+        // line intersects the hemispherical caps
+        float zOffset = Math::Sqrt(radialSqrDist) + capsule.Segment.Extent;
+        if (dz > 0.0f)
+        {
+            t[0] = -P.Z - zOffset;
+            t[1] = -P.Z + zOffset;
+        }
+        else
+        {
+            t[0] = P.Z - zOffset;
+            t[1] = P.Z + zOffset;
+        }
+        return IntersectionType::LineSegment;
+    }
+    
+    // Convert incoming line unit-length direction to capsule coordinates.
+    Vector3 D(U.Dot(direction), V.Dot(direction), dz);
+    
+    // Test intersection of line P+t*D with infinite cylinder x^2+y^2 = r^2.
+    // This reduces to computing the roots of a quadratic equation.  If
+    // P = (px,py,pz) and D = (dx,dy,dz), then the quadratic equation is
+    //   (dx^2+dy^2)*t^2 + 2*(px*dx+py*dy)*t + (px^2+py^2-r^2) = 0
+    float a0 = P.X * P.X + P.Y * P.Y - rSqr;
+    float a1 = P.X * D.X + P.Y * D.Y;
+    float a2 = D.X * D.X + D.Y * D.Y;
+    float discr = a1 * a1 - a0 * a2;
+    if (discr < 0.0f)
+    {
+        // Line does not intersect infinite cylinder.
+        return IntersectionType::None;
+    }
+    
+    float root, inv, tValue, zValue;
+    int quantity = 0;
+    if (discr > Math::ZERO_TOLERANCE)
+    {
+        // Line intersects infinite cylinder in two places.
+        root = Math::Sqrt(discr);
+        inv = 1.0f / a2;
+        tValue = (-a1 - root) * inv;
+        zValue = P.Z + tValue * D.Z;
+        if (Math::Abs(zValue) <= capsule.Segment.Extent)
+        {
+            t[quantity++] = tValue;
+        }
+        
+        tValue = (-a1 + root) * inv;
+        zValue = P.Z + tValue * D.Z;
+        if (Math::Abs(zValue) <= capsule.Segment.Extent)
+        {
+            t[quantity++] = tValue;
+        }
+        
+        if (quantity == 2)
+        {
+            // Line intersects capsule wall in two places.
+            return IntersectionType::LineSegment;
+        }
+    }
+    else
+    {
+        // Line is tangent to infinite cylinder.
+        tValue = -a1 / a2;
+        zValue = P.Z + tValue * D.Z;
+        if (Math::Abs(zValue) <= capsule.Segment.Extent)
+        {
+            t[0] = tValue;
+            return IntersectionType::Point;
+        }
+    }
+    
+    // Test intersection with bottom hemisphere.  The quadratic equation is
+    //   t^2 + 2*(px*dx+py*dy+(pz+e)*dz)*t + (px^2+py^2+(pz+e)^2-r^2) = 0
+    // Use the fact that currently a1 = px*dx+py*dy and a0 = px^2+py^2-r^2.
+    // The leading coefficient is a2 = 1, so no need to include in the
+    // construction.
+    float PZpE = P.Z + capsule.Segment.Extent;
+    a1 += PZpE * D.Z;
+    a0 += PZpE * PZpE;
+    discr = a1 * a1 - a0;
+    if (discr > Math::ZERO_TOLERANCE)
+    {
+        root = Math::Sqrt(discr);
+        tValue = -a1 - root;
+        zValue = P.Z + tValue * D.Z;
+        if (zValue <= -capsule.Segment.Extent)
+        {
+            t[quantity++] = tValue;
+            if (quantity == 2)
+            {
+                if (t[0] > t[1])
+                {
+                    float save = t[0];
+                    t[0] = t[1];
+                    t[1] = save;
+                }
+                return IntersectionType::LineSegment;
+            }
+        }
+        
+        tValue = -a1 + root;
+        zValue = P.Z + tValue * D.Z;
+        if (zValue <= -capsule.Segment.Extent)
+        {
+            t[quantity++] = tValue;
+            if (quantity == 2)
+            {
+                if (t[0] > t[1])
+                {
+                    float save = t[0];
+                    t[0] = t[1];
+                    t[1] = save;
+                }
+                return IntersectionType::LineSegment;
+            }
+        }
+    }
+    else if (Math::Abs(discr) <= Math::ZERO_TOLERANCE)
+    {
+        tValue = -a1;
+        zValue = P.Z + tValue * D.Z;
+        if (zValue <= -capsule.Segment.Extent)
+        {
+            t[quantity++] = tValue;
+            if (quantity == 2)
+            {
+                if (t[0] > t[1])
+                {
+                    float save = t[0];
+                    t[0] = t[1];
+                    t[1] = save;
+                }
+                return IntersectionType::LineSegment;
+            }
+        }
+    }
+    
+    // Test intersection with top hemisphere.  The quadratic equation is
+    //   t^2 + 2*(px*dx+py*dy+(pz-e)*dz)*t + (px^2+py^2+(pz-e)^2-r^2) = 0
+    // Use the fact that currently a1 = px*dx+py*dy+(pz+e)*dz and
+    // a0 = px^2+py^2+(pz+e)^2-r^2.  The leading coefficient is a2 = 1, so
+    // no need to include in the construction.
+    a1 -= 2.0f * capsule.Segment.Extent * D.Z;
+    a0 -= 4.0f * capsule.Segment.Extent * P.Z;
+    discr = a1 * a1 - a0;
+    if (discr > Math::ZERO_TOLERANCE)
+    {
+        root = Math::Sqrt(discr);
+        tValue = -a1 - root;
+        zValue = P.Z + tValue * D.Z;
+        if (zValue >= capsule.Segment.Extent)
+        {
+            t[quantity++] = tValue;
+            if (quantity == 2)
+            {
+                if (t[0] > t[1])
+                {
+                    float save = t[0];
+                    t[0] = t[1];
+                    t[1] = save;
+                }
+                return IntersectionType::LineSegment;
+            }
+        }
+        
+        tValue = -a1 + root;
+        zValue = P.Z + tValue * D.Z;
+        if (zValue >= capsule.Segment.Extent)
+        {
+            t[quantity++] = tValue;
+            if (quantity == 2)
+            {
+                if (t[0] > t[1])
+                {
+                    float save = t[0];
+                    t[0] = t[1];
+                    t[1] = save;
+                }
+                return IntersectionType::LineSegment;
+            }
+        }
+    }
+    else if (Math::Abs(discr) <= Math::ZERO_TOLERANCE)
+    {
+        tValue = -a1;
+        zValue = P.Z + tValue * D.Z;
+        if (zValue >= capsule.Segment.Extent)
+        {
+            t[quantity++] = tValue;
+            if (quantity == 2)
+            {
+                if (t[0] > t[1])
+                {
+                    float save = t[0];
+                    t[0] = t[1];
+                    t[1] = save;
+                }
+                return IntersectionType::LineSegment;
+            }
+        }
+    }
+    
+    if(quantity == 1)
+        return IntersectionType::Point;
+    return IntersectionType::None;
 }

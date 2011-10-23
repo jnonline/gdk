@@ -17,7 +17,7 @@ LogLevel::Enum Log::MaxLevel = LogLevel::Verbose;
 string Log::logFilePath;
 wchar_t* Log::msgBuffer = NULL;
 
-// ********************************************************
+// *****************************************************************
 const char* LogLevel::ToString(LogLevel::Enum logLevel)
 {
 	static const char* logLevelNames[] = 
@@ -32,7 +32,22 @@ const char* LogLevel::ToString(LogLevel::Enum logLevel)
 	return logLevelNames[logLevel];
 }
 
-// ********************************************************
+// *****************************************************************
+/// @brief 
+///     Writes a log message to the GDK log
+/// @remarks 
+///     For simplicity, use the LOG_ macros.  
+/// @param logLevel
+///     The level of the log message
+/// @param file
+///     The name of the file generating the log message (usually __FILE__)
+/// @param line
+///     The line number in the code file of the method call (usually __LINE__)
+/// @param format
+///     A wprintf style format string to be written to the log.
+/// @param ...
+///     Insertion values for the format string
+// *****************************************************************
 void Log::Write(LogLevel::Enum logLevel, const char* file, int line, const wchar_t *format, ...)
 {
 	// Is logging disabled?
@@ -124,8 +139,12 @@ void Log::Write(LogLevel::Enum logLevel, const char* file, int line, const wchar
 	GDK_END_CRITICAL_SECTION(LogWriter)
 }
 
-
-// ********************************************************
+// *****************************************************************
+/// @brief 
+///     Initializes the GDK logging system
+/// @note
+///     GDK Internal Use Only
+// *****************************************************************
 void Log::Init()
 {
     if(msgBuffer == NULL)
@@ -148,7 +167,12 @@ void Log::Init()
 	LOG_SYSTEM(L"Initialized GDK Log");
 }
 
-// ********************************************************
+// *****************************************************************
+/// @brief 
+///     Shuts down the GDK logging system
+/// @note
+///     GDK Internal Use Only
+// *****************************************************************
 void Log::Shutdown()
 {
 	// Log the shutdown

@@ -10,20 +10,30 @@
 
 namespace Gdk
 {
-	// ============================================================================
-
+	/// @addtogroup System
+    /// @{
+    /// @addtogroup Time
+    /// @{
+    
+    // =================================================================================
+    ///	@brief
+    ///		Provides static-methods to access High Resolution Timers
+    // =================================================================================
 	class HighResTimer
 	{
 	public:
-		// Publics
-		// -----------------------------
+        
+        // Public Methods
+		// =====================================================
 
-		// Gets a high-resolution time stamp
+        // *****************************************************************
+        /// @brief
+        ///     Gets a high-resolution time stamp, in seconds.
+        // *****************************************************************
 		static double GetSeconds();
-
-	private:
-		// Hidden CTor
-		HighResTimer();
 	};
+    
+    /// @}
+    /// @}
 
 } // namespace Gdk

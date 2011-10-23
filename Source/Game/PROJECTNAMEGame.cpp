@@ -23,9 +23,12 @@ bool PROJECTNAMEGame::OnLoadSettings(ApplicationSettings &settings)
 	settings.Title = L"Gdk Project: PROJECTNAME";
 	settings.Width = 640;
 	settings.Height = 480;
+    settings.AllowResize = true;
+    settings.ShowMinimizeBox = true;
+    settings.ShowMaximizeBox = true;
 	settings.FixedTimeStep = 0.02f;
 	settings.UseFixedTimeStep = false;
-	settings.AssetManagerBackgroundThreads = 2;
+	settings.AssetManagerBackgroundThreads = 0;
 
 	Application::DebugStatsColor = Color(255,255,128,255);
 
@@ -62,7 +65,7 @@ void PROJECTNAMEGame::OnDraw(float elapsedSeconds)
 { 
 	// Clear the background
 	Graphics::Clear(
-		(ClearBuffers::Enum) (ClearBuffers::Color | ClearBuffers::Depth), 
+		true, true, false, 
 		Color::FromNormalized(0.2f, 0.2f, 0.2f, 1.0f),
 		1.0f
 		);

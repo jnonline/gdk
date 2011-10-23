@@ -11,47 +11,73 @@
 
 namespace Gdk
 {
-	// ============================================================================
-
-	class Texture2D
+	/// @addtogroup Graphics
+    /// @{
+    
+    // =================================================================================
+    ///	@brief
+    ///		Manages a 2D OpenGL texture.
+    // =================================================================================
+    class Texture2D
 	{
 	public:
 
-		// Properties   (NOTE, users should NEVER change these values)
+        // Publics
+		// =====================================================
+        
+        // ---------------------------------
+        /// @name Read-only Properties
+        /// @{
+        
+		/// Width of the texture, in pixels.  [Read-only]  
 		int Width;
+        
+        /// Height of the texture, in pixels.  [Read-only]
 		int Height;
+        
+        /// Width of a single texel, in normalized 0-1 texture space.  [Read-only]
 		float TexelWidth;
+        
+        /// Height of a single texel, in normalized 0-1 texture space.  [Read-only]
 		float TexelHeight;
+        
+        /// Pixel format of the texture.  [Read-only]
 		PixelFormat::Enum Format;
+        
+        /// OpenGL id of the texture.  [Read-only]
 		GLuint GLTextureId;
 
-		// CTor/DTor
+        /// @}
+        // ---------------------------------
+        /// @name Methods
+        /// @{
+        
 		Texture2D(int width, int height, PixelFormat::Enum pixelFormat);
 		~Texture2D();
         
-        // Set image data
         void SetImageData(void* pixelData);
         
-        // Mip maps
         void GenerateMipMaps();
 
-        // Wrapping & Filtering
-		TextureWrapMode::Enum GetWrapMode()			{ return wrapMode; }
+        TextureWrapMode::Enum GetWrapMode()			{ return wrapMode; }
 		void SetWrapMode(TextureWrapMode::Enum value);
 		TextureFilterMode::Enum GetFilterMode()		{ return filterMode; }
 		void SetFilterMode(TextureFilterMode::Enum value);
-
-		// Creation methods
+        
 		static Texture2D* FromFile(const char *imageFilePath);
 		static Texture2D* FromStream(Stream* stream);
 
-		// Asset Interfaces
 		static const AssetType::Enum ASSET_TYPE = AssetType::Texture2D;
 		static Texture2D* FromAsset(AssetLoadContext* context);
 		void ReleaseChildAssets() {}
 
+        /// @}
+        
 	private:
 
+        // Privates
+		// =====================================================
+        
 		// Private Properties
 		bool hasMipMaps;
 		TextureFilterMode::Enum filterMode;
@@ -61,6 +87,8 @@ namespace Gdk
 		static int totalMemoryUsed;
 		int memoryUsed;
 	};
+    
+    /// @}
 
 } // namespace 
 

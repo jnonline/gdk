@@ -16,7 +16,18 @@ const wchar_t* StringUtilities::WEmpty = L"";
 const char* StringUtilities::Unknown = "Unknown";
 const wchar_t* StringUtilities::WUnknown = L"Unknown";
 
-// *********************************************************
+// *****************************************************************
+/// @brief
+///     Replaces any occurances of a search string within an input string
+/// @param input
+///     The source string to do the replacements in
+/// @param searchText
+///     The text to search for.  All occurances of this text will be replaced
+/// @param replacementText
+///     The text to put in place of the searchText
+/// @return 
+///     The result string with the replacements
+// *****************************************************************
 string StringUtilities::Replace(const char* input, const char* searchText, const char* replacementText)
 {
 	string source(input);
@@ -35,7 +46,18 @@ string StringUtilities::Replace(const char* input, const char* searchText, const
 	return source;
 }
 
-// *********************************************************
+// *****************************************************************
+/// @brief
+///     Replaces any occurances of a search string within an input string
+/// @param input
+///     The source string to do the replacements in
+/// @param searchText
+///     The text to search for.  All occurances of this text will be replaced
+/// @param replacementText
+///     The text to put in place of the searchText
+/// @return 
+///     The result string with the replacements
+// *****************************************************************
 wstring StringUtilities::Replace(const wchar_t* input, const wchar_t* searchText, const wchar_t* replacementText)
 {
 	wstring source(input);
@@ -54,7 +76,12 @@ wstring StringUtilities::Replace(const wchar_t* input, const wchar_t* searchText
 	return source;
 }
 
-// *********************************************************
+// *****************************************************************
+/// @brief
+///     Converts a UTF8 c-string to a UTF-16 w-string
+/// @param source
+///     The c-string to convert to UTF16
+// *****************************************************************
 wstring StringUtilities::UTF8ToUTF16(const char * source)
 {
 	// Convert the UTF-8 string to UTF-16 
@@ -66,7 +93,12 @@ wstring StringUtilities::UTF8ToUTF16(const char * source)
 	return output;
 }
 
-// *********************************************************
+// *****************************************************************
+/// @brief
+///     Converts a UTF16 w-string to a UTF-8 c-string
+/// @param source
+///     The w-string to convert to UTF8
+// *****************************************************************
 string StringUtilities::UTF16ToUTF8(const wchar_t * source)
 {
 	// Convert the UTF-16 string to UTF-8 
@@ -78,10 +110,16 @@ string StringUtilities::UTF16ToUTF8(const wchar_t * source)
 	return output;
 }
 
-// *********************************************************
-/*
- * This method generates a highly unique hash code from the given buffer
- */
+// *****************************************************************
+/// @brief
+///     Generates a highly unique hash code from a buffer of bytes
+/// @param data
+///     The buffer of bytes to hash
+/// @param len
+///     Number of bytes in the buffer
+/// @return 
+///     A hash code of the buffer bytes
+// *****************************************************************
 unsigned int StringUtilities::FastHash(const UInt8* data, int len)
 {
     #undef get16bits
@@ -135,13 +173,27 @@ unsigned int StringUtilities::FastHash(const UInt8* data, int len)
     return hash;
 }
 
-// *********************************************************
+// *****************************************************************
+/// @brief
+///     Generates a highly unique hash code of a c-string
+/// @param str
+///     The string to hash
+/// @return 
+///     A hash code of the string
+// *****************************************************************
 unsigned int StringUtilities::FastHash(const char* str)
 {
 	return FastHash((UInt8*)str, strlen(str));
 }
 
-// *********************************************************
+// *****************************************************************
+/// @brief
+///     Generates a highly unique hash code of a w-string
+/// @param str
+///     The string to hash
+/// @return 
+///     A hash code of the string
+// *****************************************************************
 unsigned int StringUtilities::FastHash(const wchar_t* str)
 {
 	return FastHash((UInt8*)str, wcslen(str) * sizeof(wchar_t));

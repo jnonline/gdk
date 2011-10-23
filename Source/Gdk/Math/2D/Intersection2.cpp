@@ -72,10 +72,10 @@ bool Intersection2::Find(const Ray2& ray1, const Ray2& ray2, float& distance)
 /// @return
 ///     true if the primitives intersect, otherwise false.
 // *****************************************************************
-bool Intersection2::Test(const Ray2& ray, const LineSegment2& lineSegment)
+bool Intersection2::Test(const Ray2& ray, const Segment2& segment)
 {
     float distance;
-    return Find(ray, lineSegment, distance);
+    return Find(ray, segment, distance);
 }
 
 // *****************************************************************
@@ -90,17 +90,13 @@ bool Intersection2::Test(const Ray2& ray, const LineSegment2& lineSegment)
 /// @return
 ///     true if the primitives intersect, otherwise false.
 // *****************************************************************
-bool Intersection2::Find(const Ray2& ray, const LineSegment2& lineSegment, float& distance)
+bool Intersection2::Find(const Ray2& ray, const Segment2& segment, float& distance)
 {
-    // Get the unit direction vector of the line segment
-    Vector2 lineSegmentDirection = lineSegment.End - lineSegment.Start;
-    float segmentLength = lineSegmentDirection.Normalize();
-    
     // Test the ray & the line segment as lines
     float t[2];
     IntersectionType::Enum intersectionType = Intersect_Line_Line(
         ray.Origin, ray.Direction, 
-        lineSegment.Start, lineSegmentDirection, 
+        segment.Center, segment.Direction, 
         t
         );
     
@@ -110,7 +106,7 @@ bool Intersection2::Find(const Ray2& ray, const LineSegment2& lineSegment, float
         // Make sure the ray is pointing towards the intersection point 
         //  & the intersection point lies on the line segment
         if (t[0] >= 0.0f && 
-            t[1] >= 0.0f && t[1] <= segmentLength)
+            t[1] >= -segment.Extent && t[1] <= segment.Extent)
         {
             // Distance along the casting ray
             distance = t[0];
