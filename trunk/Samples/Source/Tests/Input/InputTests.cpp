@@ -84,7 +84,7 @@ void InputTestsModule::OnDraw()
 	// ----------------------------------------------------------------------------------------------
     
     // "Keyboard:" header
-    Renderer2D::DrawText(SharedAssets::Fonts.Arial20, L"Keyboard:", Vector2(-9.8f, 9.7f), Color(196,255,240), Vector2(0.03f, -0.03f));
+    Renderer2D::DrawText(SharedResources::Fonts.Arial20, L"Keyboard:", Vector2(-9.8f, 9.7f), Color(196,255,240), Vector2(0.03f, -0.03f));
 
     // Draw a box for various keys, showing the status of each key
     DrawKeyStatusBox(Keys::LeftShift,    Rectangle2(-9.8f, 7.7f, 2.5f, 1.0f), L"LShift");
@@ -106,18 +106,18 @@ void InputTestsModule::OnDraw()
 	// ----------------------------------------------------------------------------------------------
 
     // "Mouse:" header
-    Renderer2D::DrawText(SharedAssets::Fonts.Arial20, L"Mouse:", Vector2(0.0f, 9.7f), Color(196,255,240), Vector2(0.03f, -0.03f));
+    Renderer2D::DrawText(SharedResources::Fonts.Arial20, L"Mouse:", Vector2(0.0f, 9.7f), Color(196,255,240), Vector2(0.03f, -0.03f));
     
     // Draw the mouse coordinates
     wchar_t temp[256];
     swprintf(temp, 256, L"Position: %d, %d", Mouse::GetX(), Mouse::GetY());
-    Renderer2D::DrawText(SharedAssets::Fonts.Arial20, temp, Vector2(0.0f, 8.8f), Color(255,224,160), Vector2(0.04f, -0.04f));
+    Renderer2D::DrawText(SharedResources::Fonts.Arial20, temp, Vector2(0.0f, 8.8f), Color(255,224,160), Vector2(0.04f, -0.04f));
 
     // Draw the mouse over state
     if(Mouse::IsMouseOverApp())
-        Renderer2D::DrawText(SharedAssets::Fonts.Arial20, L"Mouse is Inside", Vector2(0.0f, 7.8f), Color(255,224,160), Vector2(0.04f, -0.04f));
+        Renderer2D::DrawText(SharedResources::Fonts.Arial20, L"Mouse is Inside", Vector2(0.0f, 7.8f), Color(255,224,160), Vector2(0.04f, -0.04f));
     else
-        Renderer2D::DrawText(SharedAssets::Fonts.Arial20, L"Mouse is Outside", Vector2(0.0f, 7.8f), Color(255,224,160), Vector2(0.04f, -0.04f));
+        Renderer2D::DrawText(SharedResources::Fonts.Arial20, L"Mouse is Outside", Vector2(0.0f, 7.8f), Color(255,224,160), Vector2(0.04f, -0.04f));
     
     // Draw a box for the various mouse buttons, showing the status of each one
     DrawMouseButtonStatusBox(MouseButton::Left,    Rectangle2(0.0f, 5.5f, 2.5f, 1.0f), L"Left");
@@ -137,14 +137,14 @@ void InputTestsModule::OnDraw()
 	// ----------------------------------------------------------------------------------------------
     
     // "Touch:" header
-    Renderer2D::DrawText(SharedAssets::Fonts.Arial20, L"Touch:", Vector2(0.0f, 3.6f), Color(196,255,240), Vector2(0.03f, -0.03f));
+    Renderer2D::DrawText(SharedResources::Fonts.Arial20, L"Touch:", Vector2(0.0f, 3.6f), Color(196,255,240), Vector2(0.03f, -0.03f));
     
     // Get all the active touches
     vector<Touch>& touches = TouchInput::GetAllTouches();
     
     // Display the number of active touches
     swprintf(temp, 256, L"Active Touches: %d", touches.size());
-    Renderer2D::DrawText(SharedAssets::Fonts.Arial20, temp, Vector2(0.0f, 2.8f), Color(255,224,160), Vector2(0.04f, -0.04f));
+    Renderer2D::DrawText(SharedResources::Fonts.Arial20, temp, Vector2(0.0f, 2.8f), Color(255,224,160), Vector2(0.04f, -0.04f));
     
     // Draw a circle at each touch position
     for(vector<Touch>::iterator iter = touches.begin(); iter != touches.end(); iter++)
@@ -161,7 +161,7 @@ void InputTestsModule::OnDraw()
 	// ----------------------------------------------------------------------------------------------
     
     // "Motion:" header
-    Renderer2D::DrawText(SharedAssets::Fonts.Arial20, L"Motion:", Vector2(-9.8f, 3.3f), Color(196,255,240), Vector2(0.03f, -0.03f));
+    Renderer2D::DrawText(SharedResources::Fonts.Arial20, L"Motion:", Vector2(-9.8f, 3.3f), Color(196,255,240), Vector2(0.03f, -0.03f));
     
     // Get the accelerometer value
     Vector3 acceleration = MotionInput::GetAccelerometerAcceleration();
@@ -171,7 +171,7 @@ void InputTestsModule::OnDraw()
         L"Accelerometer X: %.4f\nAccelerometer Y: %.4f\nAccelerometer Z: %.4f", 
         acceleration.X, acceleration.Y, acceleration.Z
         );
-    Renderer2D::DrawText(SharedAssets::Fonts.Arial20, temp, Vector2(-9.8f, 2.5f), Color(255,224,160), Vector2(0.04f, -0.04f));
+    Renderer2D::DrawText(SharedResources::Fonts.Arial20, temp, Vector2(-9.8f, 2.5f), Color(255,224,160), Vector2(0.04f, -0.04f));
     
     // Is the device shaking?
     Vector2 shakingTextPos(-9.8f, -0.2f);
@@ -179,38 +179,38 @@ void InputTestsModule::OnDraw()
     {
         float shakeExtent = 0.06f;
         shakingTextPos += Vector2(Random::FromInterval(-shakeExtent, shakeExtent), Random::FromInterval(-shakeExtent, shakeExtent));
-        Renderer2D::DrawText(SharedAssets::Fonts.Arial20, L"SHAKING", shakingTextPos, Color(255,128,128), Vector2(0.04f, -0.04f));
+        Renderer2D::DrawText(SharedResources::Fonts.Arial20, L"SHAKING", shakingTextPos, Color(255,128,128), Vector2(0.04f, -0.04f));
     }
     else
     {
-        Renderer2D::DrawText(SharedAssets::Fonts.Arial20, L"Not Shaking", shakingTextPos, Color(224,200,80), Vector2(0.04f, -0.04f));
+        Renderer2D::DrawText(SharedResources::Fonts.Arial20, L"Not Shaking", shakingTextPos, Color(224,200,80), Vector2(0.04f, -0.04f));
     }
     
     // Device Input Tests
 	// ----------------------------------------------------------------------------------------------
     
     // "Device:" header
-    Renderer2D::DrawText(SharedAssets::Fonts.Arial20, L"Device:", Vector2(-9.8f, -1.5f), Color(196,255,240), Vector2(0.03f, -0.03f));
+    Renderer2D::DrawText(SharedResources::Fonts.Arial20, L"Device:", Vector2(-9.8f, -1.5f), Color(196,255,240), Vector2(0.03f, -0.03f));
     
     // Display the orientation
     swprintf(temp, 256, L"Orient: %hs", 
         DeviceOrientation::ToString(Device::GetOrientation())
         );
-    Renderer2D::DrawText(SharedAssets::Fonts.Arial20, temp, Vector2(-9.8f, -2.4f), Color(255,224,160), Vector2(0.03f, -0.03f));
+    Renderer2D::DrawText(SharedResources::Fonts.Arial20, temp, Vector2(-9.8f, -2.4f), Color(255,224,160), Vector2(0.03f, -0.03f));
     
     // Display the battery state
     swprintf(temp, 256, L"Battery: %hs (%d%%)", 
         DeviceBatteryState::ToString(Device::GetBatteryState()), 
         (int)(Device::GetBatteryLevel() * 100.0f)
         );
-    Renderer2D::DrawText(SharedAssets::Fonts.Arial20, temp, Vector2(-9.8f, -3.3f), Color(255,224,160), Vector2(0.03f, -0.03f));
+    Renderer2D::DrawText(SharedResources::Fonts.Arial20, temp, Vector2(-9.8f, -3.3f), Color(255,224,160), Vector2(0.03f, -0.03f));
     
     
     // Input Log
 	// ----------------------------------------------------------------------------------------------
     
     // "Motion:" header
-    Renderer2D::DrawText(SharedAssets::Fonts.Arial20, L"Input Logs:", Vector2(0.0f, 1.4f), Color(196,255,240), Vector2(0.03f, -0.03f));
+    Renderer2D::DrawText(SharedResources::Fonts.Arial20, L"Input Logs:", Vector2(0.0f, 1.4f), Color(196,255,240), Vector2(0.03f, -0.03f));
     
     // Loop through the input log lines
     float logY = 0.6f;
@@ -219,7 +219,7 @@ void InputTestsModule::OnDraw()
         // Write out this line
         InputLogLine &logLine = *logIter;
         Renderer2D::DrawText(
-             SharedAssets::Fonts.Arial20, 
+             SharedResources::Fonts.Arial20, 
              logLine.Message.c_str(), 
              Vector2(0.0f, logY), 
              logLine.Color, 
@@ -268,7 +268,7 @@ void InputTestsModule::DrawKeyStatusBox(Keys::Enum key, Rectangle2 rect, const w
         
     // Draw the display name for this key
     Vector2 textPosition = rect.Position + Vector2(0.02f, rect.Size.Y - 0.02f);
-    Renderer2D::DrawText(SharedAssets::Fonts.Arial20, name, textPosition, Color(255,224,160), Vector2(0.04f, -0.04f));
+    Renderer2D::DrawText(SharedResources::Fonts.Arial20, name, textPosition, Color(255,224,160), Vector2(0.04f, -0.04f));
 }
 
 // ***********************************************************************
@@ -284,7 +284,7 @@ void InputTestsModule::DrawMouseButtonStatusBox(MouseButton::Enum button, Rectan
     
     // Draw the display name for this button
     Vector2 textPosition = rect.Position + Vector2(0.02f, rect.Size.Y - 0.02f);
-    Renderer2D::DrawText(SharedAssets::Fonts.Arial20, name, textPosition, Color(255,224,160), Vector2(0.04f, -0.04f));
+    Renderer2D::DrawText(SharedResources::Fonts.Arial20, name, textPosition, Color(255,224,160), Vector2(0.04f, -0.04f));
 }
 
 // ***********************************************************************

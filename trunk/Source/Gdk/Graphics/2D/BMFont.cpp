@@ -4,9 +4,10 @@
  */
 
 #include "BasePCH.h"
-#include "BMFont.h"
 
 using namespace Gdk;
+
+/// @cond INTERNAL
 
 // ===============================
 // .FNT file structures
@@ -40,15 +41,26 @@ typedef struct _BMFFchar
 	unsigned char	Channel;	
 } BMFFchar;
 
+/// @endcond
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Default Constructor
+/// @remarks
+///     GDK Internal Use Only
+// *****************************************************************
 BMFontCharacter::BMFontCharacter()
 {
 	X = Y = Width = Height = XOffset = YOffset = XAdvance = Page = 0;
 }
 
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Constructs a new instance with the given property values
+/// @remarks
+///     GDK Internal Use Only
+// *****************************************************************
 BMFontCharacter::BMFontCharacter(unsigned short x, unsigned short y, unsigned short width, unsigned short height, 
 		unsigned short xOffset, unsigned short yOffset, unsigned short xAdvance, unsigned char page)
 {
@@ -62,26 +74,36 @@ BMFontCharacter::BMFontCharacter(unsigned short x, unsigned short y, unsigned sh
 	Page = page;
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Constructs a new BMFont 
+/// @remarks
+///     GDK Internal Use Only
+// *****************************************************************
 BMFont::BMFont()
 {
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Destructor
+// *****************************************************************
 BMFont::~BMFont()
 {
-	// Destroy the textures used by the pages
+	// Release the textures used by the pages
 	for(vector<Texture2D*>::iterator iter = pages.begin(); iter != pages.end(); iter++)
 	{
 		Texture2D *texture = (*iter);
-		if(texture != NULL)
-		{
-			GdkDelete(texture);
-		}
+		texture->Release();
 	}
 }
 
-// ********************************************************************
+// *****************************************************************
+/// @brief
+///     Gets the size of the given string in pixel coordinates.
+/// @param text
+///     Text to get the size of
+// *****************************************************************
 Vector2 BMFont::GetTextSize(const wchar_t *text)
 {
 	int maxXSize = 0;
@@ -124,7 +146,7 @@ Vector2 BMFont::GetTextSize(const wchar_t *text)
             else
             {
                 // Character doesnt exist
-                LOG_WARN(L"The character [%lc][%u] doesn't exist in the character map for the font [%hs]", ch, (UInt32)ch, this->Name.c_str()); 
+                LOG_WARN(L"The character [%lc][%u] doesn't exist in the character map for the font [%hs]", ch, (UInt32)ch, this->GetName().c_str()); 
             }
 		}
 
@@ -139,74 +161,19 @@ Vector2 BMFont::GetTextSize(const wchar_t *text)
 	return Vector2((float)maxXSize, (float)ySize);
 }
 
-// **************************************************************************
-class FileBMFontChildLoader : public BMFont::BMFontChildLoader
+// *****************************************************************
+/// @brief
+///     This method is called by the resource manager when the resource data is to be loaded from an asset
+/// @remarks
+///     GDK Internal Use Only
+// *****************************************************************
+void BMFont::LoadFromAsset()
 {
-public:
-	string Folder;
-	FileBMFontChildLoader(const char* folder) : Folder(folder) {}
-	Texture2D* LoadTexture(const char *textureName)
-	{
-		string fullPath = Path::Combine(Folder.c_str(), textureName);
-		fullPath.append(".gdkimage");
-		return Texture2D::FromFile(fullPath.c_str());
-	}
-};
-
-// **************************************************************************
-class ProviderBMFontChildLoader : public BMFont::BMFontChildLoader
-{
-public:
-	AssetProvider* Provider;
-	ProviderBMFontChildLoader(AssetProvider* provider) : Provider(provider) {}
-	Texture2D* LoadTexture(const char *textureName)
-	{
-		Stream* textureStream = Provider->GetStream(textureName, AssetType::Texture2D);
-		return Texture2D::FromStream(textureStream);
-	}
-};
-
-// **************************************************************************
-BMFont* BMFont::FromFile(const char *fontFilePath)
-{
-	// Get the name of the font
-	string fontName = Path::GetFileNameWithoutExtension(fontFilePath);
-
-	// Open the file as a stream
-	FileStream fileStream(fontFilePath, FileMode::Read);
-
-	// Create a loader for the child assets
-	string fontFolder = Path::GetDirectory(fontFilePath);
-	FileBMFontChildLoader childLoader(fontFolder.c_str());
-
-	// Load the font from the stream
-	BMFont* font = FromStream(fontName.c_str(), &fileStream, &childLoader);
-
-	// Close the stream
-	fileStream.Close();
-
-	// return
-	return font;
-}
-
-// **************************************************************************
-BMFont* BMFont::FromAsset(AssetLoadContext* context)
-{
-	// Create a loader for the child assets
-	ProviderBMFontChildLoader childLoader(context->Provider);
-
-	// Load the font from the stream
-	return FromStream(context->AssetName, context->AssetStream, &childLoader);
-}
-
-
-// ********************************************************************
-BMFont* BMFont::FromStream(const char *fontName, Stream* stream, BMFontChildLoader* childLoader)
-{
-	// Create the new font
-	BMFont *font = new BMFont();
-	font->Name = fontName;
-
+    // Get a stream to the asset
+    char assetPath[256];
+    GDK_SPRINTF(assetPath, 256, "%s.gdkfont", GetName().c_str());
+    Stream* stream = AssetManager::GetAssetStream(assetPath);
+    
 	// Read & parse the font file
 	//----------------------------
 
@@ -231,12 +198,12 @@ BMFont* BMFont::FromStream(const char *fontName, Stream* stream, BMFontChildLoad
 			stream->Read(commonBlock, blockSize);
 
 			// Set the font properties
-			font->lineHeight = commonBlock->LineHeight;
-			font->base = commonBlock->Base;
-			font->scaleW = commonBlock->ScaleW;
-			font->scaleH = commonBlock->ScaleH;
+			this->lineHeight = commonBlock->LineHeight;
+			this->base = commonBlock->Base;
+			this->scaleW = commonBlock->ScaleW;
+			this->scaleH = commonBlock->ScaleH;
 			numPages = commonBlock->Pages;
-			font->pages.reserve(numPages);
+			this->pages.reserve(numPages);
 
 			// Free the commonBlock
 			GdkFree(commonBlock);
@@ -256,13 +223,14 @@ BMFont* BMFont::FromStream(const char *fontName, Stream* stream, BMFontChildLoad
 				string pageFileName = Path::GetFileNameWithoutExtension(pageFile);
 
 				// Prepend the asset path
-				string pageAssetPath = Path::Combine(Path::GetDirectory(fontName).c_str(), pageFileName.c_str());
+                string assetFolder = Path::GetDirectory(GetName().c_str());
+				string pageAssetPath = Path::Combine(assetFolder.c_str(), pageFileName.c_str());
 
 				// Load this page's texture
-				Texture2D *pageTexture = childLoader->LoadTexture(pageAssetPath.c_str());
+                Texture2D *pageTexture = Texture2DManager::FromAsset(pageAssetPath.c_str());
 
 				// Add the page to the font
-				font->pages.push_back(pageTexture);
+				this->pages.push_back(pageTexture);
 			}
 			
 			// Free the pages block
@@ -290,7 +258,7 @@ BMFont* BMFont::FromStream(const char *fontName, Stream* stream, BMFontChildLoad
 					);
 
 				// Add the char to the character map
-				font->characters[charBlock[i].Id] = fontChar;
+				this->characters[charBlock[i].Id] = fontChar;
 			}
 
 			// Free the charBlock
@@ -302,7 +270,4 @@ BMFont* BMFont::FromStream(const char *fontName, Stream* stream, BMFontChildLoad
 			stream->Seek(blockSize, SeekOrigin::Current);
 		}
 	}
-
-	// Return the font!
-	return font;
 }

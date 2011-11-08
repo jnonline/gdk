@@ -5,10 +5,6 @@
 
 #pragma once
 
-
-#include "../Color.h"
-#include "../Texture2D.h"
-
 namespace Gdk
 {
 	// ===================================================

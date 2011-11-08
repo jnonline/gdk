@@ -6,16 +6,6 @@
 #pragma once
 
 
-#include "../../System/Delegates.h"
-#include "../../Math/Maths.h"
-#include "../../Math/2D/Vector2.h"
-#include "../../Math/2D/Matrix2D.h"
-#include "../../Math/2D/Rectangle2.h"
-#include "../Color.h"
-#include "../Graphics.h"
-#include "Atlas.h"
-#include "BMFont.h"
-
 namespace Gdk
 {
 	// ============================================================================

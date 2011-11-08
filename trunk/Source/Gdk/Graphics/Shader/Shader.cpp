@@ -8,7 +8,12 @@
 
 using namespace Gdk;
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Constructs a new shader
+/// @remarks
+///     GDK Internal Use Only
+// *****************************************************************
 Shader::Shader()
 {
 	this->CurrentTechnique = NULL;
@@ -209,34 +214,18 @@ namespace ShaderRenderStateFlags
     };
 }
 
-
-// ***********************************************************************
-Shader* Shader::FromFile(const char *shaderFilePath)
+// *****************************************************************
+/// @brief
+///     This method is called by the resource manager when the resource data is to be loaded from an asset
+/// @remarks
+///     GDK Internal Use Only
+// *****************************************************************
+void Shader::LoadFromAsset()
 {
-	// Open the file as a stream
-	FileStream fileStream(shaderFilePath, FileMode::Read);
-
-	// Create a shader from the stream
-	Shader* shader = FromStream(&fileStream);
-
-	// Close the stream
-	fileStream.Close();
-
-	return shader;
-}
-
-// ***********************************************************************
-Shader* Shader::FromAsset(AssetLoadContext* context)
-{
-	return FromStream(context->AssetStream);
-}		
-
-
-// ***********************************************************************
-Shader* Shader::FromStream(Stream* stream)
-{
-	// Create the shader object
-	Shader* shader = GdkNew Shader();
+    // Get a stream to the asset
+    char assetPath[256];
+    GDK_SPRINTF(assetPath, 256, "%s.gdkshader", GetName().c_str());
+    Stream* stream = AssetManager::GetAssetStream(assetPath);
 
 	// Load the version & shader flags
 	UInt16 version = stream->ReadUInt16();
@@ -251,54 +240,54 @@ Shader* Shader::FromStream(Stream* stream)
 	UInt32 renderStateFlags = stream->ReadUInt32();
 
 	// RS-Apply flags
-	shader->RenderState.ColorMask.Apply = (renderStateFlags & ShaderRenderStateFlags::ColorMaskApply) > 0;
-	shader->RenderState.Blending.Apply = (renderStateFlags & ShaderRenderStateFlags::BlendingApply) > 0;
-	shader->RenderState.Depth.Apply = (renderStateFlags & ShaderRenderStateFlags::DepthApply) > 0;
-	shader->RenderState.Culling.Apply = (renderStateFlags & ShaderRenderStateFlags::CullingApply) > 0;
+	this->RenderState.ColorMask.Apply = (renderStateFlags & ShaderRenderStateFlags::ColorMaskApply) > 0;
+	this->RenderState.Blending.Apply = (renderStateFlags & ShaderRenderStateFlags::BlendingApply) > 0;
+	this->RenderState.Depth.Apply = (renderStateFlags & ShaderRenderStateFlags::DepthApply) > 0;
+	this->RenderState.Culling.Apply = (renderStateFlags & ShaderRenderStateFlags::CullingApply) > 0;
 
 	// Color Mask
-	shader->RenderState.ColorMask.RedWriteEnabled = (renderStateFlags & ShaderRenderStateFlags::ColorRedWriteEnabled) > 0;
-	shader->RenderState.ColorMask.GreenWriteEnabled = (renderStateFlags & ShaderRenderStateFlags::ColorGreenWriteEnabled) > 0;
-	shader->RenderState.ColorMask.BlueWriteEnabled = (renderStateFlags & ShaderRenderStateFlags::ColorBlueWriteEnabled) > 0;
-	shader->RenderState.ColorMask.AlphaWriteEnabled = (renderStateFlags & ShaderRenderStateFlags::ColorAlphaWriteEnabled) > 0;
+	this->RenderState.ColorMask.RedWriteEnabled = (renderStateFlags & ShaderRenderStateFlags::ColorRedWriteEnabled) > 0;
+	this->RenderState.ColorMask.GreenWriteEnabled = (renderStateFlags & ShaderRenderStateFlags::ColorGreenWriteEnabled) > 0;
+	this->RenderState.ColorMask.BlueWriteEnabled = (renderStateFlags & ShaderRenderStateFlags::ColorBlueWriteEnabled) > 0;
+	this->RenderState.ColorMask.AlphaWriteEnabled = (renderStateFlags & ShaderRenderStateFlags::ColorAlphaWriteEnabled) > 0;
 	
 	// Blending
-	shader->RenderState.Blending.Enabled = (renderStateFlags & ShaderRenderStateFlags::BlendingEnabled) > 0;
-	shader->RenderState.Blending.ConstantColor.R = stream->ReadUInt8();
-	shader->RenderState.Blending.ConstantColor.G = stream->ReadUInt8();
-	shader->RenderState.Blending.ConstantColor.B = stream->ReadUInt8();
-	shader->RenderState.Blending.ConstantColor.A = stream->ReadUInt8();
+	this->RenderState.Blending.Enabled = (renderStateFlags & ShaderRenderStateFlags::BlendingEnabled) > 0;
+	this->RenderState.Blending.ConstantColor.R = stream->ReadUInt8();
+	this->RenderState.Blending.ConstantColor.G = stream->ReadUInt8();
+	this->RenderState.Blending.ConstantColor.B = stream->ReadUInt8();
+	this->RenderState.Blending.ConstantColor.A = stream->ReadUInt8();
 	BlendMode::Enum blendMode = (BlendMode::Enum)stream->ReadUInt16();
-	shader->RenderState.Blending.SourceRGBFactor = (BlendFactor::Enum)stream->ReadUInt16();
-	shader->RenderState.Blending.DestRGBFactor = (BlendFactor::Enum)stream->ReadUInt16();
-	shader->RenderState.Blending.RGBBlendEquation = (BlendEquation::Enum)stream->ReadUInt16();
-	shader->RenderState.Blending.SourceAlphaFactor = (BlendFactor::Enum)stream->ReadUInt16();
-	shader->RenderState.Blending.DestAlphaFactor = (BlendFactor::Enum)stream->ReadUInt16();
-	shader->RenderState.Blending.AlphaBlendEquation = (BlendEquation::Enum)stream->ReadUInt16();
+	this->RenderState.Blending.SourceRGBFactor = (BlendFactor::Enum)stream->ReadUInt16();
+	this->RenderState.Blending.DestRGBFactor = (BlendFactor::Enum)stream->ReadUInt16();
+	this->RenderState.Blending.RGBBlendEquation = (BlendEquation::Enum)stream->ReadUInt16();
+	this->RenderState.Blending.SourceAlphaFactor = (BlendFactor::Enum)stream->ReadUInt16();
+	this->RenderState.Blending.DestAlphaFactor = (BlendFactor::Enum)stream->ReadUInt16();
+	this->RenderState.Blending.AlphaBlendEquation = (BlendEquation::Enum)stream->ReadUInt16();
 	
 	// Does the shader binary use the Simple BlendMode?
 	if((renderStateFlags & ShaderRenderStateFlags::UseSimpleBlendMode) > 0)
 	{
 		BlendMode::GetBlendSettings(blendMode, 
-			shader->RenderState.Blending.SourceRGBFactor,
-			shader->RenderState.Blending.DestRGBFactor,
-			shader->RenderState.Blending.RGBBlendEquation,
-			shader->RenderState.Blending.SourceAlphaFactor,
-			shader->RenderState.Blending.DestAlphaFactor,
-			shader->RenderState.Blending.AlphaBlendEquation
+			this->RenderState.Blending.SourceRGBFactor,
+			this->RenderState.Blending.DestRGBFactor,
+			this->RenderState.Blending.RGBBlendEquation,
+			this->RenderState.Blending.SourceAlphaFactor,
+			this->RenderState.Blending.DestAlphaFactor,
+			this->RenderState.Blending.AlphaBlendEquation
 			);
 	}
 
 	// Depth 
-	shader->RenderState.Depth.TestEnabled = (renderStateFlags & ShaderRenderStateFlags::DepthTestEnabled) > 0;
-	shader->RenderState.Depth.WriteEnabled = (renderStateFlags & ShaderRenderStateFlags::DepthWriteEnabled) > 0;
-	shader->RenderState.Depth.BiasEnabled = (renderStateFlags & ShaderRenderStateFlags::DepthBiasEnabled) > 0;
-	shader->RenderState.Depth.TestFunction = (CompareFunction::Enum) stream->ReadUInt16();
-	shader->RenderState.Depth.BiasFactor = stream->ReadFloat();
-	shader->RenderState.Depth.BiasUnits = stream->ReadFloat();
+	this->RenderState.Depth.TestEnabled = (renderStateFlags & ShaderRenderStateFlags::DepthTestEnabled) > 0;
+	this->RenderState.Depth.WriteEnabled = (renderStateFlags & ShaderRenderStateFlags::DepthWriteEnabled) > 0;
+	this->RenderState.Depth.BiasEnabled = (renderStateFlags & ShaderRenderStateFlags::DepthBiasEnabled) > 0;
+	this->RenderState.Depth.TestFunction = (CompareFunction::Enum) stream->ReadUInt16();
+	this->RenderState.Depth.BiasFactor = stream->ReadFloat();
+	this->RenderState.Depth.BiasUnits = stream->ReadFloat();
   
 	// Culling
-	shader->RenderState.Culling.CullMode = (CullingMode::Enum) stream->ReadUInt16();
+	this->RenderState.Culling.CullMode = (CullingMode::Enum) stream->ReadUInt16();
 
 	// Load the attributes
 	// ===============================
@@ -324,8 +313,8 @@ Shader* Shader::FromStream(Stream* stream)
 			);
 		
 		// Store the attribute in the shader
-		shader->Attributes.push_back(attribute);
-		shader->AttributesByName.Add(attributeName.c_str(), attribute);
+		this->Attributes.push_back(attribute);
+		this->AttributesByName.Add(attributeName.c_str(), attribute);
 	}
 
 	// Load the parameters  (uniform values)
@@ -344,7 +333,7 @@ Shader* Shader::FromStream(Stream* stream)
 		UInt16 parameterArraySize = stream->ReadUInt16();
 		
 		// Create a uniform value for this parameter
-		UniformValue* parameter = shader->Parameters.Add(parameterName.c_str(), parameterType, parameterArraySize);
+		UniformValue* parameter = this->Parameters.Add(parameterName.c_str(), parameterType, parameterArraySize);
 
 		// Is this a BindToGlobal parameter?
 		if((parameterFlags & ShaderParameterFlags::BindToGlobal) > 0)
@@ -530,7 +519,7 @@ Shader* Shader::FromStream(Stream* stream)
 		glAttachShader(technique->shaderProgramId, technique->fragmentShaderId);
 
 		// Bind the attribute locations
-		for(ShaderAttributeVector::iterator iter = shader->Attributes.begin(); iter != shader->Attributes.end(); iter++)
+		for(ShaderAttributeVector::iterator iter = this->Attributes.begin(); iter != this->Attributes.end(); iter++)
 		{
 			ShaderAttribute* attribute = *iter;
 
@@ -542,23 +531,18 @@ Shader* Shader::FromStream(Stream* stream)
 		LinkProgram(technique->shaderProgramId);	
 
 		// Setup the uniforms for this technique
-		technique->SetupUniforms(&(shader->Parameters));
+		technique->SetupUniforms(&(this->Parameters));
 
 		// Add the technique to the shader
-		shader->Techniques.push_back(technique);
-		shader->TechniquesByName.Add(technique->Name.c_str(), technique);
+		this->Techniques.push_back(technique);
+		this->TechniquesByName.Add(technique->Name.c_str(), technique);
 	}
 
 	// Make sure we found at least 1 supported platform
-	ASSERT(shader->Techniques.size() > 0, L"No supported techniques were found in this shader");
+	ASSERT(this->Techniques.size() > 0, L"No supported techniques were found in this shader");
 
 	// Default the shader to the first technique
-	shader->CurrentTechnique = shader->Techniques[0];
-	
-	// ===============================
-
-	// return the shader
-	return shader;
+	this->CurrentTechnique = this->Techniques[0];
 }
 
 

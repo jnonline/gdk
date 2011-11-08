@@ -285,15 +285,17 @@ namespace Gdk
 	{
 		enum Enum
 		{
-            /// Clamps the texture coordinates between 0 and 1, disabling wrapping
-			Clamp				= GL_CLAMP_TO_EDGE,
-            
-            /// Mirrors the texture at texture coordinate edges
-			MirroredRepeat		= GL_MIRRORED_REPEAT,
-            
             /// Repeats the texture at texture coordinate edges
-			Repeat				= GL_REPEAT,
+			Wrap = 0,
+
+            /// Mirrors the texture at texture coordinate edges
+			Mirror = 1,
+            
+            /// Clamps the texture coordinates between 0 and 1, disabling wrapping
+			Clamp = 2,
 		};
+        
+        GLenum GetGLenum(TextureWrapMode::Enum wrapMode);
 	}
 
 	// =================================================================================
@@ -305,10 +307,10 @@ namespace Gdk
 		enum Enum
 		{
             /// No filtering, use the nearest texel color
-			Nearest,
+			Nearest = 0,
             
-            /// Linear filtering
-			Linear
+            /// Bi-Linear filtering
+			Bilinear = 1,
 		};
 	}
 

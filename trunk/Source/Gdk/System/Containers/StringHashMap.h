@@ -94,6 +94,20 @@ namespace Gdk
             Iterator result = Items.find(hash);
 			return result;
         }	
+        
+        // *****************************************************************
+        /// @brief
+        ///     Checks if an object with the given key exists in the map
+        /// @param key
+        ///     Unique key string
+        /// @return
+        ///     true if an item with the given key is in the map.
+        // *****************************************************************
+		bool ContainsKey(const char* key)
+		{
+			UInt32 hash = StringUtilities::FastHash(key);
+            return Items.find(hash) != Items.end();
+        }	
 
 		// *****************************************************************
         /// @brief
@@ -120,6 +134,15 @@ namespace Gdk
 		void Clear()
 		{
 			Items.clear();
+		}
+        
+        // *****************************************************************
+        /// @brief
+        ///     Gets the number of items in the map
+        // *****************************************************************
+		int Size()
+		{
+			return Items.size();
 		}
 	};
     

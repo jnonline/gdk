@@ -24,16 +24,16 @@ Simple3DTests::Simple3DTests()
     
 	// Load a test model
 	skeletalModel = NULL;
-    AssetManager* assetManager = AssetManager::GetSingleton();
-	//skeletalModel = assetManager->Load<Model>("Models/GHModels/GunHack3", &assetsPool, NULL);
+	//skeletalModel = ModelManager::LoadModel("Models/GHModels/GunHack3");
+    //resourcePool.Add(skeletalModel);
 
 }
 
 // ***********************************************************************
 Simple3DTests::~Simple3DTests()
 {
-	// Release the assets
-	assetsPool.Release();
+	// Release the resources
+	resourcePool.Release();
 
     // UnBind to input events
     TouchInput::TouchMoved.RemoveHandlerMethod(this, &Simple3DTests::OnTouchMoved);
@@ -129,8 +129,8 @@ void Simple3DTests::OnDraw()
 	// ----------------------------------------------------
 
     // Draw the TestAxis model at the origin
-	SharedAssets::Models.TestAxis->World = Matrix3D::IDENTITY;
-    SharedAssets::Models.TestAxis->Draw();
+	SharedResources::Models.TestAxis->World = Matrix3D::IDENTITY;
+    SharedResources::Models.TestAxis->Draw();
 
 	// Draw the Skeletal model slightly to the right
 	if(skeletalModel != NULL)

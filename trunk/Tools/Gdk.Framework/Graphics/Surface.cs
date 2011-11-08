@@ -17,9 +17,9 @@ namespace Gdk.Framework
     /// </summary>
     public enum TextureWrapMode
     {
-        Wrap,
-        Mirror,
-        Clamp
+        Wrap = 0,
+        Mirror = 1,
+        Clamp = 2
     }
 
     /// <summary>
@@ -27,8 +27,8 @@ namespace Gdk.Framework
     /// </summary>
     public enum TextureFilterMode
     {
-        Closest,
-        Bilinear
+        Nearest = 0,
+        Bilinear = 1
     }
 
     /// <summary>
@@ -246,7 +246,7 @@ namespace Gdk.Framework
             // Handle filtering
             switch (filterMode)
             {
-                case TextureFilterMode.Closest:
+                case TextureFilterMode.Nearest:
                     {
                         // Calculate the pixel of this texel
                         float px = u * width;
@@ -644,13 +644,29 @@ namespace Gdk.Framework
 		/// <summary>
 		/// Save the image to a compressed ZLIB file
 		/// </summary>
-		public void SaveToGdkImage(string filePath, PixelFormats pixelFormat)
+		public void SaveToGdkImage(
+			string filePath, 
+			PixelFormats pixelFormat, 
+			bool useMipMapping = true, 
+			TextureWrapMode wrapMode = TextureWrapMode.Wrap, 
+			TextureFilterMode filterMode = TextureFilterMode.Bilinear
+			)
 		{
 			// Open the file
 			System.IO.FileStream outFileStream = new System.IO.FileStream(filePath, System.IO.FileMode.Create);
-
-            // TODO(P1) implement gdk image flags (1=mipmap)
-            UInt16 flags = 0;
+			
+			// Build the flags
+			UInt16 flags = 0;
+			
+			// Bit 0 = mipmap on/off
+			if(useMipMapping)
+				flags |= 0x0001;
+			
+			// Bit 1 & 2 = wrap mode
+			flags |= (UInt16)((int)wrapMode << 1);
+			
+			// Bit 3 & 4 = filter mode
+			flags |= (UInt16)((int)filterMode << 3);
 
 			// Write the image header
 			outFileStream.Write(BitConverter.GetBytes((UInt16)Width), 0, 2);

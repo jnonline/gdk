@@ -136,3 +136,15 @@ const char* BlendMode::ToString(BlendMode::Enum value)
 
 	return StringUtilities::Unknown;
 }
+
+// ***********************************************************************
+GLenum TextureWrapMode::GetGLenum(TextureWrapMode::Enum wrapMode)
+{
+    if(wrapMode == TextureWrapMode::Clamp)
+        return GL_CLAMP_TO_EDGE;
+    if(wrapMode == TextureWrapMode::Mirror)
+        return GL_MIRRORED_REPEAT;
+    return GL_REPEAT;
+}
+
+

@@ -117,7 +117,7 @@ void BillboardRenderer::Flush()
 		Graphics::EnableVertexAttribArray(attributeIndex, false);
 
 	// Turn on the shader
-	SharedAssets::Shaders.Billboard.Textured->Apply();
+	SharedResources::Shaders.Billboard.Textured->Apply();
 
 	// Loop through the batches
 	for(BillboardRendererBatchSetIterator batchIter = batches.begin(); batchIter != batches.end(); batchIter++)
@@ -142,7 +142,7 @@ void BillboardRenderer::Flush()
 		glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, stride, (void*)((long)vertexData + sizeof(GLfloat[8]) + sizeof(GLubyte[4])) );
 
 		// Use the index buffer to draw the quads
-		glDrawElements(GL_TRIANGLES, batch->NumPrimitives * 6, GL_UNSIGNED_SHORT, SharedAssets::QuadIndexBuffer);
+		glDrawElements(GL_TRIANGLES, batch->NumPrimitives * 6, GL_UNSIGNED_SHORT, SharedResources::QuadIndexBuffer);
 	}
 
 	Graphics::EnableDepthWrite(true);

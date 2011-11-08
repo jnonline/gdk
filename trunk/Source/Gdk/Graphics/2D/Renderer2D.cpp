@@ -4,8 +4,6 @@
  */
 
 #include "BasePCH.h"
-#include "Renderer2D.h"
-#include "../../Assets/SharedAssets.h"
 
 using namespace Gdk;
 
@@ -101,7 +99,7 @@ void Renderer2D::SetTexturedShader(Shader* shader)
 {
 	// If the user passed in NULL, we default to the global shared shader
 	if(shader == NULL)
-		texturedShader = SharedAssets::Shaders.Renderer2D.Textured;
+		texturedShader = SharedResources::Shaders.Renderer2D.Textured;
 	else
 		texturedShader = shader;
 }
@@ -111,7 +109,7 @@ void Renderer2D::SetNonTexturedShader(Shader* shader)
 {
 	// If the user passed in NULL, we default to the global shared shader
 	if(shader == NULL)
-		nonTexturedShader = SharedAssets::Shaders.Renderer2D.NonTextured;
+		nonTexturedShader = SharedResources::Shaders.Renderer2D.NonTextured;
 	else
 		nonTexturedShader = shader;
 }
@@ -267,7 +265,7 @@ void Renderer2D::Flush()
 		{
 			case Renderer2DPrimitiveType::Quads:
 				// Use the index buffer to draw the quads
-				glDrawElements(GL_TRIANGLES, batch->NumPrimitives * 6, GL_UNSIGNED_SHORT, SharedAssets::QuadIndexBuffer);
+				glDrawElements(GL_TRIANGLES, batch->NumPrimitives * 6, GL_UNSIGNED_SHORT, SharedResources::QuadIndexBuffer);
 				break;
 
 			case Renderer2DPrimitiveType::Triangles:
@@ -805,7 +803,7 @@ Vector2 Renderer2D::DrawText(
             if(iter == font->characters.end())
             {
                 // Character doesnt exist in the font
-                LOG_WARN(L"The character [%lc][%u] doesn't exist in the character map for the font [%hs]", ch, (UInt32)ch, font->Name.c_str()); 
+                LOG_WARN(L"The character [%lc][%u] doesn't exist in the character map for the font [%hs]", ch, (UInt32)ch, font->GetName().c_str()); 
             }
             else
             {

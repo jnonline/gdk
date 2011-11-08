@@ -5,14 +5,16 @@
 
 #pragma once
 
-
-#include "../../Assets/AssetType.h"
-#include "../../Math/3D/Matrix3D.h"
-
 namespace Gdk
 {
-	// ===================================================
-	class Model
+	/// @addtogroup Graphics
+    /// @{
+    
+    // =================================================================================
+    ///	@brief
+    ///		Contains an entire model, including meshes, materials, and scenegraph
+    // =================================================================================	
+	class Model : public Resource
 	{
 	public:
 		// Model/Mesh/Material Properties
@@ -29,25 +31,39 @@ namespace Gdk
 		~Model();
 		class ModelInstance* CreateInstance();
 		void Draw(class ModelInstance* modelInstance = NULL);
-		
-		// Asset Interfaces
-		static const AssetType::Enum ASSET_TYPE = AssetType::Model;
-		static Model* FromAsset(AssetLoadContext* context);
-		void ReleaseChildAssets();
 
-	private:
+    protected:
+        
+        // Protected Methods
+        // =====================================================
+        
+        // ---------------------------------
+        /// @name Virtuals from Resouce
+        /// @{
+        
+        
+        /// @}
+        
+        
+    private:
+        
+        // Private Methods
+        // =====================================================
+        
+        friend class ModelManager;
+        
+        Model();
+        
+        void LoadFromAsset();
 
-		// Private CTor
-        friend class ModelGenerator;
-		Model();
-
+        
 		// Rendering Utilities
 		void DrawMesh(class ModelMesh* mesh, class ModelMeshInstance* meshInstance, class ModelInstance* modelInstance);
 		void SetupVertexAttributeChannels(class ModelMesh* mesh);
 		class Shader* DetermineShader(class ModelMesh* mesh, class ModelMaterial* material);
 
 		// References to assets that this model uses (Textures, etc)
-		vector<class AssetBase*>  ownedAssets;
+		vector<class Resource*>  childResources;
 	};
 
 } // namespace

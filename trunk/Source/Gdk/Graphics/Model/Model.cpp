@@ -14,14 +14,28 @@
 
 using namespace Gdk;
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Constructs a new model
+/// @remarks
+///     GDK Internal Use Only
+// *****************************************************************
 Model::Model()
 {
 }
 
-// ***********************************************************************
+// *****************************************************************
+/// @brief
+///     Destructor
+// *****************************************************************
 Model::~Model()
 {
+    // Release all the child resources
+    for(vector<Resource*>::iterator iter = this->childResources.begin(); iter != this->childResources.end(); iter++)
+    {
+        (*iter)->Release();
+    }
+    
 	// Delete all the nodes
 	for(vector<ModelNode*>::iterator iter = this->Nodes.begin(); iter != this->Nodes.end(); iter++)
 	{
@@ -45,18 +59,6 @@ Model::~Model()
 	{
 		GdkDelete(*iter);
 	}
-}
-
-// ***********************************************************************
-void Model::ReleaseChildAssets()
-{
-	// Release all the owned assets
-	for(vector<AssetBase*>::iterator assetIter = this->ownedAssets.begin(); assetIter != this->ownedAssets.end(); assetIter++)
-	{
-		(*assetIter)->Release();
-	}
-
-	ownedAssets.clear();
 }
 	 
 // ***********************************************************************
@@ -87,11 +89,18 @@ ModelInstance* Model::CreateInstance()
 	return instance;
 }
 
-// ***********************************************************************
-Model* Model::FromAsset(AssetLoadContext* context)
+// *****************************************************************
+/// @brief
+///     This method is called by the resource manager when the resource data is to be loaded from an asset
+/// @remarks
+///     GDK Internal Use Only
+// *****************************************************************
+void Model::LoadFromAsset()
 {
-	// Get the model file stream
-	Stream *stream = context->AssetStream;
+    // Get a stream to the asset
+    char assetPath[256];
+    GDK_SPRINTF(assetPath, 256, "%s.gdkmodel", GetName().c_str());
+    Stream* stream = AssetManager::GetAssetStream(assetPath);
 
 	// Header
 	// ---------------
@@ -106,8 +115,8 @@ Model* Model::FromAsset(AssetLoadContext* context)
 	int requiredVersion = 3;
 	if(version != requiredVersion)
 	{
-		LOG_ERROR(L"The model asset \"%hs\" is an unsupported version: %d [Expected: %d]", context->AssetName, version, requiredVersion);
-		return NULL;
+		LOG_ERROR(L"The model asset \"%hs\" is an unsupported version: %d [Expected: %d]", GetName().c_str(), version, requiredVersion);
+		return;
 	}
 
 	// Read the sub-object counts
@@ -118,14 +127,11 @@ Model* Model::FromAsset(AssetLoadContext* context)
 	UInt16 numAnimations = stream->ReadUInt16();
 	UInt16 numAnimationClips = stream->ReadUInt16();
 
-	// Create the model
-	Model* model = GdkNew Model();
-
 	// Reserve space for the child objects
-	model->Nodes.reserve(numNodes);
-	model->Materials.reserve(numMaterials);
-	model->Meshes.reserve(numMeshes);
-	model->MeshInstances.reserve(numMeshInstances);
+	this->Nodes.reserve(numNodes);
+	this->Materials.reserve(numMaterials);
+	this->Meshes.reserve(numMeshes);
+	this->MeshInstances.reserve(numMeshInstances);
 
 	// Nodes
 	// -------------------
@@ -149,24 +155,24 @@ Model* Model::FromAsset(AssetLoadContext* context)
 		{
 			// This is the root node
 			node->ParentNode = NULL;
-			model->RootNode = node;
+			this->RootNode = node;
 		}
 		else
 		{
 			// Verify the parent node index is valid
-			ASSERT(parentNodeIndex < model->Nodes.size(), L"The model asset \"%hs\" contains a node with an invalid parent node index [Expected: <%d] [Actual: %d]", context->AssetName, model->Nodes.size(), parentNodeIndex);
+			ASSERT(parentNodeIndex < this->Nodes.size(), L"The model asset \"%hs\" contains a node with an invalid parent node index [Expected: <%d] [Actual: %d]", this->GetName().c_str(), this->Nodes.size(), parentNodeIndex);
 
 			// Set this node's parent node
-			node->ParentNode = model->Nodes[parentNodeIndex];
+			node->ParentNode = this->Nodes[parentNodeIndex];
 			node->ParentNode->ChildNodes.push_back(node);
 		}
 
 		// Add the node to the model
-		model->Nodes.push_back(node);
+		this->Nodes.push_back(node);
 	}
 
 	// Update the absoulate transforms of the node tree
-	model->RootNode->UpdateAbsoluteTransforms();
+	this->RootNode->UpdateAbsoluteTransforms();
 
 	// Materials
 	// -------------------
@@ -191,11 +197,11 @@ Model* Model::FromAsset(AssetLoadContext* context)
 		{
 			// Load the asset, track it, and store the texture reference
 			string textureName = stream->ReadString();
-			string assetFolder = Path::GetDirectory(context->AssetName);
+			string assetFolder = Path::GetDirectory(GetName().c_str());
 			string textureAssetPath = Path::Combine(assetFolder.c_str(), textureName.c_str());
-			Asset<Texture2D>* diffuseTextureAsset = context->Manager->Load<Texture2D>(textureAssetPath.c_str());
-			model->ownedAssets.push_back(diffuseTextureAsset);
-			material->DiffuseTexture = diffuseTextureAsset->GetInstance();
+            
+            material->DiffuseTexture = Texture2DManager::FromAsset(textureAssetPath.c_str());
+            this->childResources.push_back(material->DiffuseTexture);
 		}
 
 		// Do we need to load a Bump texture?
@@ -203,15 +209,15 @@ Model* Model::FromAsset(AssetLoadContext* context)
 		{
 			// Load the asset, track it, and store the texture reference
 			string textureName = stream->ReadString();
-			string assetFolder = Path::GetDirectory(context->AssetName);
+			string assetFolder = Path::GetDirectory(GetName().c_str());
 			string textureAssetPath = Path::Combine(assetFolder.c_str(), textureName.c_str());
-			Asset<Texture2D>* bumpTextureAsset = context->Manager->Load<Texture2D>(textureAssetPath.c_str());
-			model->ownedAssets.push_back(bumpTextureAsset);
-			material->BumpTexture = bumpTextureAsset->GetInstance();
+            
+            material->BumpTexture = Texture2DManager::FromAsset(textureAssetPath.c_str());
+            this->childResources.push_back(material->BumpTexture);
 		}
 
 		// Add the material to the model
-		model->Materials.push_back(material);
+		this->Materials.push_back(material);
 	}
 
 	// Meshes
@@ -288,7 +294,7 @@ Model* Model::FromAsset(AssetLoadContext* context)
 		}
 
 		// Add the mesh to the model
-		model->Meshes.push_back(mesh);
+		this->Meshes.push_back(mesh);
 	}
 
 	// MeshInstances
@@ -305,7 +311,7 @@ Model* Model::FromAsset(AssetLoadContext* context)
 		meshInstance->MeshIndex = stream->ReadUInt16();
 	
 		// Get the mesh used by this instance
-		ModelMesh* mesh = model->Meshes[meshInstance->MeshIndex];
+		ModelMesh* mesh = this->Meshes[meshInstance->MeshIndex];
 
 		// Pre-size the material bindings vector to the number of mesh parts
 		size_t meshPartCount = mesh->MeshParts.size();
@@ -331,13 +337,8 @@ Model* Model::FromAsset(AssetLoadContext* context)
 		}
 
 		// Add the mesh instance to the model
-		model->MeshInstances.push_back(meshInstance);
+		this->MeshInstances.push_back(meshInstance);
 	}
-	
-	// -------------------
-
-	// Return the loaded model
-	return model;
 }	
 
 // ***********************************************************************
@@ -585,15 +586,15 @@ Shader* Model::DetermineShader(ModelMesh* mesh, ModelMaterial* material)
 	{
 		// Does the material have no diffuse texture?
 		if((material->Flags & ModelMaterialFlags::DiffuseTextured) == 0)
-			return SharedAssets::Shaders.Model.Mesh.NonTextured;
+			return SharedResources::Shaders.Model.Mesh.NonTextured;
 		else
-			return SharedAssets::Shaders.Model.Mesh.DiffuseTextured;
+			return SharedResources::Shaders.Model.Mesh.DiffuseTextured;
 	}
 	else if(skinningType == ModelMeshFlags::VertexHas4WeightedBones)
 	{
 		// Does the material have a diffuse texture?
 		if((material->Flags & ModelMaterialFlags::DiffuseTextured) > 0)
-			return SharedAssets::Shaders.Model.SkeletalMeshB4.DiffuseTextured;
+			return SharedResources::Shaders.Model.SkeletalMeshB4.DiffuseTextured;
 	}
 
 	// No suitable shader found!

@@ -28,7 +28,7 @@ namespace Gdk
 		// Public Types
 		// =====================================================
 
-		// The type for valid thread Worker() functions/methods
+		/// The type for valid thread Worker() functions/methods
 		typedef		Delegate1<void*, void*>		Delegate;
 
 		// Public Methods

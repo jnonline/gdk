@@ -35,7 +35,7 @@ protected:
     Matrix3D view;
 
 	// Assets
-	AssetPool assetsPool;
+	ResourcePool resourcePool;
 	Model* skeletalModel;
     
 	// Input event handlers

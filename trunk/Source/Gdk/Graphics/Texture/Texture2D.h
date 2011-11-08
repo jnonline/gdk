@@ -6,8 +6,8 @@
 #pragma once
 
 
-#include "Enums.h"
-#include "../Assets/Asset.h"
+#include "../Enums.h"
+#include "../../Resource/Resource.h"
 
 namespace Gdk
 {
@@ -18,7 +18,7 @@ namespace Gdk
     ///	@brief
     ///		Manages a 2D OpenGL texture.
     // =================================================================================
-    class Texture2D
+    class Texture2D : public Resource
 	{
 	public:
 
@@ -44,7 +44,7 @@ namespace Gdk
         /// Pixel format of the texture.  [Read-only]
 		PixelFormat::Enum Format;
         
-        /// OpenGL id of the texture.  [Read-only]
+        /// OpenGL ID of the texture.  [Read-only]
 		GLuint GLTextureId;
 
         /// @}
@@ -52,8 +52,7 @@ namespace Gdk
         /// @name Methods
         /// @{
         
-		Texture2D(int width, int height, PixelFormat::Enum pixelFormat);
-		~Texture2D();
+        virtual ~Texture2D();
         
         void SetImageData(void* pixelData);
         
@@ -63,19 +62,25 @@ namespace Gdk
 		void SetWrapMode(TextureWrapMode::Enum value);
 		TextureFilterMode::Enum GetFilterMode()		{ return filterMode; }
 		void SetFilterMode(TextureFilterMode::Enum value);
+
+        /// @}
         
-		static Texture2D* FromFile(const char *imageFilePath);
-		static Texture2D* FromStream(Stream* stream);
-
-		static const AssetType::Enum ASSET_TYPE = AssetType::Texture2D;
-		static Texture2D* FromAsset(AssetLoadContext* context);
-		void ReleaseChildAssets() {}
-
+    protected:
+        
+        // Protected Methods
+        // =====================================================
+        
+        // ---------------------------------
+        /// @name Virtuals from Resouce
+        /// @{
+        
+        virtual UInt32 GetMemoryUsed();
+        
         /// @}
         
 	private:
 
-        // Privates
+        // Private Properties
 		// =====================================================
         
 		// Private Properties
@@ -83,9 +88,15 @@ namespace Gdk
 		TextureFilterMode::Enum filterMode;
 		TextureWrapMode::Enum wrapMode;
 
-		// Texture Memory tracking
-		static int totalMemoryUsed;
-		int memoryUsed;
+        // Private Methods
+        // =====================================================
+        
+        friend class Texture2DManager;
+        
+        Texture2D();
+        
+        void Initialize(int width, int height, PixelFormat::Enum pixelFormat);
+        void LoadFromAsset();
 	};
     
     /// @}

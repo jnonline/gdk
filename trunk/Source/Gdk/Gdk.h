@@ -24,6 +24,7 @@
 #include "System/Threading/CriticalSection.h"
 #include "System/Threading/Mutex.h"
 #include "System/Threading/Event.h"
+#include "System/Threading/ThreadedWorkQueue.h"
 
 // System/Time
 #include "System/Time/HighResTimer.h"
@@ -41,14 +42,14 @@
 #include "IO/Directory.h"
 #include "IO/Path.h"
 
-// Asset
-#include "Assets/AssetType.h"
-#include "Assets/Asset.h"
-#include "Assets/AssetProvider.h"
-#include "Assets/AssetManager.h"
-#include "Assets/AssetPool.h"
-#include "Assets/FileAssetProvider.h"
-#include "Assets/SharedAssets.h"
+// Resource
+#include "Resource/AssetProvider.h"
+#include "Resource/FileAssetProvider.h"
+#include "Resource/AssetManager.h"
+#include "Resource/Resource.h"
+#include "Resource/ResourceManager.h"
+#include "Resource/ResourcePool.h"
+#include "Resource/SharedResources.h"
 
 // Math
 #include "Math/Maths.h"
@@ -95,8 +96,12 @@
 // Graphics
 #include "Graphics/Color.h"
 #include "Graphics/Enums.h"
-#include "Graphics/Texture2D.h"
 #include "Graphics/Graphics.h"
+#include "Graphics/VertexFormats.h"
+
+// Graphics/Texture
+#include "Graphics/Texture/Texture2D.h"
+#include "Graphics/Texture/Texture2DManager.h"
 
 // Graphics/Shader
 #include "Graphics/Shader/UniformTypes.h"
@@ -106,10 +111,13 @@
 #include "Graphics/Shader/SharedUniformValueSet.h"
 #include "Graphics/Shader/ShaderTechnique.h"
 #include "Graphics/Shader/Shader.h"
+#include "Graphics/Shader/ShaderManager.h"
 
 // Graphics/2D
 #include "Graphics/2D/Atlas.h"
+#include "Graphics/2D/AtlasManager.h"
 #include "Graphics/2D/BMFont.h"
+#include "Graphics/2D/BMFontManager.h"
 #include "Graphics/2D/Sprite.h"
 #include "Graphics/2D/ParticleSystem2D.h"
 #include "Graphics/2D/Renderer2D.h"
@@ -120,6 +128,7 @@
 
 // Graphics/Model
 #include "Graphics/Model/Model.h"
+#include "Graphics/Model/ModelManager.h"
 #include "Graphics/Model/ModelNode.h"
 #include "Graphics/Model/ModelMaterial.h"
 #include "Graphics/Model/ModelMesh.h"

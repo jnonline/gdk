@@ -160,6 +160,7 @@ protected:
     TESTMETHOD(Test_System_Memory);
     TESTMETHOD(Test_System_Containers_StringHashMap);
     TESTMETHOD(Test_System_Containers_SortedVector);
+    TESTMETHOD(Test_System_Threading_ThreadedWorkQueue);
     
     // Math Tests
     TESTMETHOD(Test_Math_Randoms);

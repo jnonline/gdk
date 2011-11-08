@@ -114,7 +114,7 @@ void Application::Update(float elapsedSeconds)
             wchar_t temp[64];
             Vector2 textScale(0.7f, 0.7f);
             swprintf(temp, 64, L"FPS: %d", CurrentFPS);
-            Renderer2D::DrawText(SharedAssets::Fonts.Arial20, temp, Vector2(width - 80.0f, 10), DebugStatsColor, textScale);
+            Renderer2D::DrawText(SharedResources::Fonts.Arial20, temp, Vector2(width - 80.0f, 10), DebugStatsColor, textScale);
             
             Renderer2D::Flush();
         }
@@ -161,7 +161,7 @@ bool Application::Platform_InitGdk()
     initialAppSettings.ShowCloseBox = true;
 	initialAppSettings.FixedTimeStep = FixedTimeStep;
 	initialAppSettings.UseFixedTimeStep = IsUsingFixedTimeStep;
-	initialAppSettings.AssetManagerBackgroundThreads = 0;
+	initialAppSettings.ResourceLoaderBackgroundThreads = 2;
 
 	// Load the application settings from the game
     Game* game = Game::GetSingleton();
@@ -175,8 +175,9 @@ bool Application::Platform_InitGdk()
 	IsUsingFixedTimeStep = initialAppSettings.UseFixedTimeStep;
 	FixedTimeStep = initialAppSettings.FixedTimeStep;
 
-	// Initialize the Singleton asset manager
-	AssetManager::InitSingleton(initialAppSettings.AssetManagerBackgroundThreads);
+	// Initialize the Resource & Asset managers
+    AssetManager::Init();
+    ResourceManager::Init(initialAppSettings.ResourceLoaderBackgroundThreads);
 
 	// Setup the application states
 	exitRequest = false;
@@ -199,8 +200,11 @@ void Application::Platform_ShutdownGdk()
 	// Destroy the game singleton
     Game::DestroySingleton();
 
-	// Shutdown GDK Systems
-	AssetManager::ShutdownSingleton();
+	// Shutdown Resource & Asset Managers
+    ResourceManager::Shutdown();
+	AssetManager::Shutdown();
+    
+    // Shutdown GDK Systems
 	Log::Shutdown();
 
 	// Shutdown GDK Memory
@@ -221,7 +225,7 @@ bool Application::Platform_InitGame()
 {
 	// Init 2nd Tier GDK Systems
 	Graphics::Init();
-	SharedAssets::Init();
+	SharedResources::Init();
 	Graphics::InitAssetDependencies();
 
 	// Init the game
@@ -249,7 +253,7 @@ void Application::Platform_ShutdownGame()
 	Game::GetSingleton()->OnShutdown();
 
 	// Shutdown 2nd Tier GDK Systems
-	SharedAssets::Shutdown();
+	SharedResources::Shutdown();
 	Graphics::Shutdown();
 }
 

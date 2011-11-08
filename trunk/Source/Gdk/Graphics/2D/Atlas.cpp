@@ -4,63 +4,77 @@
  */
 
 #include "BasePCH.h"
-#include "Atlas.h"
 
 using namespace Gdk;
 
-// ************************************************************************************************
-// AtlasImage
-// ************************************************************************************************
-
+// *****************************************************************
+/// @brief
+///     Constructs a new AtlasImage 
+// *****************************************************************
 AtlasImage::AtlasImage()
 {
 }
 
+// *****************************************************************
+/// @brief
+///     Destructor
+// *****************************************************************
 AtlasImage::~AtlasImage()
 {
 }
 
-// ************************************************************************************************
-// AtlasAnimation
-// ************************************************************************************************
-
+// *****************************************************************
+/// @brief
+///     Constructs a new ~AtlasAnimation 
+// *****************************************************************
 AtlasAnimation::AtlasAnimation()
 {
 }
 
+// *****************************************************************
+/// @brief
+///     Destructor
+// *****************************************************************
 AtlasAnimation::~AtlasAnimation()
 {
 }
 
-// ************************************************************************************************
-// AtlasSheet
-// ************************************************************************************************
-
+// *****************************************************************
+/// @brief
+///     Constructs a new AtlasSheet 
+// *****************************************************************
 AtlasSheet::AtlasSheet()
 {
 	Texture = NULL;
 }
 
+// *****************************************************************
+/// @brief
+///     Destructor
+// *****************************************************************
 AtlasSheet::~AtlasSheet()
 {
-	// Destroy the texture
+	// Releaes the texture
 	if(Texture != NULL)
 	{
-		GdkDelete(Texture);
+		Texture->Release();
 	}
 }
 
-// ************************************************************************************************
-// Atlas
-// ************************************************************************************************
-
-// -----------------------------------------
+// *****************************************************************
+/// @brief
+///     Constructs a new Atlas 
+/// @remarks
+///     GDK Internal Use Only
+// *****************************************************************
 Atlas::Atlas()
 {
 }
 
-
-// -----------------------------------------
+// *****************************************************************
+/// @brief
+///     Destructor
+// *****************************************************************
 Atlas::~Atlas()
 {
 	// Delete all the animations
@@ -92,119 +106,67 @@ Atlas::~Atlas()
 	AnimationsByName.Clear();
 }
 
-// -----------------------------------------
+// *****************************************************************
+/// @brief
+///     Gets the AtlasImage with the given name.
+/// @param name
+///     Name of the image to retrieve
+// *****************************************************************
 AtlasImage* Atlas::GetImage(const char* imageName)
 {
 	// Get the image with the given name
 	AtlasImageNameMap::Iterator iter = this->ImagesByName.Find(imageName);
 	if(iter == this->ImagesByName.End())
 	{
-		LOG_WARN(L"Unable to find the image [%hs] in the atlas [%hs]", imageName, this->Name.c_str());
+		LOG_WARN(L"Unable to find the image [%hs] in the atlas [%hs]", imageName, this->GetName().c_str());
 		return NULL;
 	}
 
 	return iter->second;
 }
 
-// -----------------------------------------
+// *****************************************************************
+/// @brief
+///     Gets the AtlasAnimation with the given name.
+/// @param name
+///     Name of the animation to retrieve
+// *****************************************************************
 AtlasAnimation* Atlas::GetAnimation(const char* animationName)
 {
 	// Get the animation with the given name
 	AtlasAnimationNameMap::Iterator iter = this->AnimationsByName.Find(animationName);
 	if(iter == this->AnimationsByName.End())
 	{
-		LOG_WARN(L"Unable to find the animation [%hs] in the atlas [%hs]", animationName, this->Name.c_str());
+		LOG_WARN(L"Unable to find the animation [%hs] in the atlas [%hs]", animationName, this->GetName().c_str());
 		return NULL;
 	}
 
 	return iter->second;
 }
 
-// **************************************************************************
-class FileAtlasChildLoader : public Atlas::AtlasChildLoader
+// *****************************************************************
+/// @brief
+///     This method is called by the resource manager when the resource data is to be loaded from an asset
+/// @remarks
+///     GDK Internal Use Only
+// *****************************************************************
+void Atlas::LoadFromAsset()
 {
-public:
-	string Folder;
-	FileAtlasChildLoader(const char* folder) : Folder(folder) {}
-	Texture2D* LoadTexture(const char *textureName)
-	{
-		string fullPath = Path::Combine(Folder.c_str(), textureName);
-		fullPath.append(".gdkimage");
-		return Texture2D::FromFile(fullPath.c_str());
-	}
-};
-
-// **************************************************************************
-class ProviderAtlasChildLoader : public Atlas::AtlasChildLoader
-{
-public:
-	AssetProvider* Provider;
-	ProviderAtlasChildLoader(AssetProvider* provider) : Provider(provider) {}
-	Texture2D* LoadTexture(const char *textureName)
-	{
-		Stream* textureStream = Provider->GetStream(textureName, AssetType::Texture2D);
-		return Texture2D::FromStream(textureStream);
-	}
-};
-
-// **************************************************************************
-Atlas* Atlas::FromFile(const char *atlasFilePath)
-{
-	// Get the name of the atlas
-	string atlasName = Path::GetFileNameWithoutExtension(atlasFilePath);
-
-	// Open the file as a stream
-	FileStream fileStream(atlasFilePath, FileMode::Read);
-
-	// Create a loader for the child assets
-	string atlasFolder = Path::GetDirectory(atlasFilePath);
-	FileAtlasChildLoader childLoader(atlasFolder.c_str());
-
-	// Load the atlas from the stream
-	Atlas* atlas = FromStream(atlasName.c_str(), &fileStream, &childLoader);
-
-	// Close the stream
-	fileStream.Close();
-
-	// return
-	return atlas;
-}
-
-// **************************************************************************
-Atlas* Atlas::FromAsset(AssetLoadContext* context)
-{
-	// Create a loader for the child assets
-	ProviderAtlasChildLoader childLoader(context->Provider);
-
-	// Load the atlas from the stream
-	return FromStream(context->AssetName, context->AssetStream, &childLoader);
-}
-
-// **************************************************************************
-namespace AtlasFlags
-{
-	enum
-	{
-		FilterModeLinear = 0x0001,		// else Nearest
-	};
-}
-
-// **************************************************************************
-Atlas* Atlas::FromStream(const char *atlasName, Stream* stream, AtlasChildLoader* childLoader)
-{
-	// Create the new atlas
-	Atlas *atlas = GdkNew Atlas();
-	atlas->Name = atlasName;
+    // Get a stream to the asset
+    char assetPath[256];
+    GDK_SPRINTF(assetPath, 256, "%s.gdkatlas", GetName().c_str());
+    Stream* stream = AssetManager::GetAssetStream(assetPath);
 
 	// Load the sheets
 	//----------------------------
 
 	// Get the number of sheets
 	short numSheets = stream->ReadInt16();
-	atlas->Sheets.reserve(numSheets);
+	this->Sheets.reserve(numSheets);
 
 	// Get the atlas flags
 	UInt16 atlasFlags = stream->ReadUInt16();
+    GDK_NOT_USED(atlasFlags);
 
 	// Load the sheets
 	for(int sheetIndex = 0; sheetIndex < numSheets; sheetIndex++)
@@ -223,20 +185,13 @@ Atlas* Atlas::FromStream(const char *atlasName, Stream* stream, AtlasChildLoader
 
 		// Build the name of the sheet texture
 		char sheetName[256];
-		GDK_SPRINTF(sheetName, 256, "%s_sheet_%d", atlasName, sheetIndex);
+		GDK_SPRINTF(sheetName, 256, "%s_sheet_%d", GetName().c_str(), sheetIndex);
 		
 		// Load the sheet texture
-		sheet->Texture = childLoader->LoadTexture(sheetName);
-
-		// Setup Texture Filtering
-		if((atlasFlags & AtlasFlags::FilterModeLinear) > 0)
-			sheet->Texture->SetFilterMode(TextureFilterMode::Linear);
-		else
-			sheet->Texture->SetFilterMode(TextureFilterMode::Nearest);
-
+        sheet->Texture = Texture2DManager::FromAsset(sheetName);
 
 		// Add the sheet to the atlas
-		atlas->Sheets.push_back(sheet);
+		this->Sheets.push_back(sheet);
 	}
 
 	// Load the images
@@ -244,7 +199,7 @@ Atlas* Atlas::FromStream(const char *atlasName, Stream* stream, AtlasChildLoader
 
 	// Get the number of images
 	short numImages = stream->ReadInt16();
-	atlas->Images.reserve(numImages);
+	this->Images.reserve(numImages);
 
 	// Loop through the images
 	for(int imageIndex = 0; imageIndex < numImages; imageIndex++)
@@ -258,7 +213,7 @@ Atlas* Atlas::FromStream(const char *atlasName, Stream* stream, AtlasChildLoader
 
 		// Get the image's associated sheet
 		short sheetIndex = stream->ReadInt16();
-		image->Sheet = atlas->Sheets[sheetIndex];
+		image->Sheet = this->Sheets[sheetIndex];
 
 		// Get the size of the image
 		image->Width = stream->ReadInt16();
@@ -294,8 +249,8 @@ Atlas* Atlas::FromStream(const char *atlasName, Stream* stream, AtlasChildLoader
 		}
 
 		// Add the image to the atlas
-		atlas->Images.push_back(image);
-		atlas->ImagesByName.Add(image->Name.c_str(), image);
+		this->Images.push_back(image);
+		this->ImagesByName.Add(image->Name.c_str(), image);
 	}
 
 	// Load the animations
@@ -303,7 +258,7 @@ Atlas* Atlas::FromStream(const char *atlasName, Stream* stream, AtlasChildLoader
 
 	// Get the number of animations
 	short numAnimations = stream->ReadInt16();
-	atlas->Animations.reserve(numAnimations);
+	this->Animations.reserve(numAnimations);
 
 	// Loop through the animations
 	for(int animIndex = 0; animIndex < numAnimations; animIndex++)
@@ -325,14 +280,12 @@ Atlas* Atlas::FromStream(const char *atlasName, Stream* stream, AtlasChildLoader
 		for(short frameIndex = 0; frameIndex < numFrames; frameIndex++)
 		{
 			short animImageIndex = stream->ReadInt16();
-			animation->Images.push_back( atlas->Images[animImageIndex] );
+			animation->Images.push_back( this->Images[animImageIndex] );
 		}
 
 		// Add the animation to the atlas
-		atlas->Animations.push_back(animation);
-		atlas->AnimationsByName.Add(animation->Name.c_str(), animation);
+		this->Animations.push_back(animation);
+		this->AnimationsByName.Add(animation->Name.c_str(), animation);
 	}
-
-	// Return the atlas!
-	return atlas;
 }
+

@@ -20,11 +20,11 @@ Simple2DTests::Simple2DTests()
 	this->textScaleTimer = 0.0f;
 	this->textSpinTimer = 0.0f;
 
-	this->sprite1 = GdkNew Sprite(SharedAssets::AtlasAnimations.Chopper);
+	this->sprite1 = GdkNew Sprite(SharedResources::AtlasAnimations.Chopper);
 	this->sprite1->Scale = Vector2(0.03f, -0.03f);
 	this->sprite1->Position = Vector2(-2.0f, -6.0f);
 
-	this->sprite2 = GdkNew Sprite(SharedAssets::AtlasAnimations.Chopper);
+	this->sprite2 = GdkNew Sprite(SharedResources::AtlasAnimations.Chopper);
 	this->sprite2->Scale = Vector2(0.04f, -0.04f);
 	this->sprite2->Position = Vector2(2.0f, -6.0f);
 	this->sprite2->BlendMode = BlendMode::Add;
@@ -32,7 +32,7 @@ Simple2DTests::Simple2DTests()
 	this->particleSystem1 = GdkNew Simple2DTestsParticleSystem();
 	this->particleSystem2 = GdkNew Simple2DTestsParticleSystem();
 	this->particleSystem2->ParticlesAreRelativeToEmitter = false;
-	this->particleSystem2->DefaultImage = SharedAssets::AtlasImages.Particle2;
+	this->particleSystem2->DefaultImage = SharedResources::AtlasImages.Particle2;
 }
 
 // ***********************************************************************
@@ -260,7 +260,7 @@ void Simple2DTests::OnDraw()
 
 	// Draw some Text
     const wchar_t* sampleText = L"Sample Text...\nNew Line...";
-	Renderer2D::DrawText(SharedAssets::Fonts.Arial20, sampleText, Vector2::ZERO, Color(255,224,160));
+	Renderer2D::DrawText(SharedResources::Fonts.Arial20, sampleText, Vector2::ZERO, Color(255,224,160));
 
 	// Images & Anims & Sprites
 	// ----------------------------------------------------
@@ -269,8 +269,8 @@ void Simple2DTests::OnDraw()
 	Renderer2D::SetWorldTransform(Matrix2D::IDENTITY);
 
 	// Test the DrawImage() methods
-	Renderer2D::DrawImage(SharedAssets::AtlasImages.Test1, Vector2(-5.0f, 0.0f), Color::WHITE, rectTimer * Math::TWO_PI, 0.04f, 0.04f);
-	Renderer2D::DrawImage(SharedAssets::AtlasImages.Test1, Vector2(-9.0f, 5.0f), Vector2(-7.0f, 2.0f), Color(196,255,196));
+	Renderer2D::DrawImage(SharedResources::AtlasImages.Test1, Vector2(-5.0f, 0.0f), Color::WHITE, rectTimer * Math::TWO_PI, 0.04f, 0.04f);
+	Renderer2D::DrawImage(SharedResources::AtlasImages.Test1, Vector2(-9.0f, 5.0f), Vector2(-7.0f, 2.0f), Color(196,255,196));
 
 	// Test sprite drawing
 	Renderer2D::DrawSprite(sprite1);
@@ -302,7 +302,7 @@ Simple2DTestsParticleSystem::Simple2DTestsParticleSystem()
 	// Set the particle defaults
 	this->DefaultLifetime = 2.0f;
 	this->DefaultColor = Color(0,0,0,0);
-	this->DefaultImage = SharedAssets::AtlasImages.Particle1;
+	this->DefaultImage = SharedResources::AtlasImages.Particle1;
 	this->DefaultSize = 0.5f;
 
 	// Init the system
