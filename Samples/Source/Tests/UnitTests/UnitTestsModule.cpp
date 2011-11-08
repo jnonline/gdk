@@ -156,6 +156,8 @@ void UnitTestsModule::BuildTestTree()
         CNODE(systemTests, systemContainerTests, L"Containers");
             TNODE(systemContainerTests, L"StringHashMap", Test_System_Containers_StringHashMap);
             TNODE(systemContainerTests, L"SortedVector", Test_System_Containers_SortedVector);
+        CNODE(systemTests, systemThreadingTests, L"Threading");
+            TNODE(systemThreadingTests, L"ThreadedWorkQueue", Test_System_Threading_ThreadedWorkQueue);
     
     // Math Tests
     // -----------------------
@@ -302,7 +304,7 @@ void UnitTestsModule::OnDraw()
         
         // Draw this log text
         Renderer2D::DrawText(
-            SharedAssets::Fonts.Arial20, 
+            SharedResources::Fonts.Arial20, 
             line->Text.c_str(), 
             Vector2(4.0f, currentTextY), 
             color, 
@@ -323,13 +325,13 @@ void UnitTestsModule::OnDraw()
     {
         // Draw the "Running: Test Name" text
         TestTreeNode* activeTestNode = this->flatTestTree[this->currentTestIndex];
-        Renderer2D::DrawText(SharedAssets::Fonts.Arial20, L"Running: ", headerBox.Position + Vector2(2,2), Color(128,255,128), textScale);
-		Renderer2D::DrawText(SharedAssets::Fonts.Arial20, activeTestNode->Name.c_str(), headerBox.Position + Vector2(62,2), Color(128,255,128), textScale);
+        Renderer2D::DrawText(SharedResources::Fonts.Arial20, L"Running: ", headerBox.Position + Vector2(2,2), Color(128,255,128), textScale);
+		Renderer2D::DrawText(SharedResources::Fonts.Arial20, activeTestNode->Name.c_str(), headerBox.Position + Vector2(62,2), Color(128,255,128), textScale);
     }
     else
     {
         // Draw the "Click here to Start" text
-        Renderer2D::DrawText(SharedAssets::Fonts.Arial20, L"Click here to start testing!", headerBox.Position + Vector2(2,2), Color(255,255,255), textScale);
+        Renderer2D::DrawText(SharedResources::Fonts.Arial20, L"Click here to start testing!", headerBox.Position + Vector2(2,2), Color(255,255,255), textScale);
 	}
 
     

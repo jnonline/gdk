@@ -5,7 +5,6 @@
 
 #include "BasePCH.h"
 #include "ParticleSystem2D.h"
-#include "Renderer2D.h"
 
 using namespace Gdk;
 
@@ -31,7 +30,7 @@ ParticleSystem2D::ParticleSystem2D()
 	this->DefaultLifetime = 5.0f;
 	this->DefaultSize = 1.0f;
 	this->DefaultColor = Color::WHITE;
-	this->DefaultImage = Gdk::SharedAssets::AtlasImages.Test1;
+	this->DefaultImage = Gdk::SharedResources::AtlasImages.Test1;
 }
 
 // ***********************************************************************

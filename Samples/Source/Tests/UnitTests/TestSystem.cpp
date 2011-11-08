@@ -159,6 +159,93 @@ TestStatus::Enum UnitTestsModule::Test_System_Containers_SortedVector(TestExecut
     return TestStatus::Pass;
 }
 
+// ##############################################################################################
+// ##############################################################################################
+
+// ***********************************************************************
+struct TestWorkItem
+{
+public:
+    int Value;
+    TestWorkItem() {}
+    TestWorkItem(int value) { Value = value; }
+};
+
+
+// ***********************************************************************
+class TestWorkQueue : public ThreadedWorkQueue<TestWorkItem*>
+{
+public:
+    TestWorkQueue() : ThreadedWorkQueue<TestWorkItem*>(4)
+    {
+    }
+    
+protected:
+    virtual void OnProcessWorkItem(TestWorkItem* item)
+    {
+        item->Value++;
+        Thread::Sleep(1);
+    }
+};
+
+// ***********************************************************************
+TestStatus::Enum UnitTestsModule::Test_System_Threading_ThreadedWorkQueue(TestExecutionContext *context)
+{
+    // Create a bunch of work items
+    TestWorkItem items[1000];
+    for(int i=0; i<1000; i++)
+        items[i].Value = i;
+    
+    context->Log->WriteLine(LogLevel::Info, L"Creating ThreadedWorkQueue");
+    
+    // Create a work queue
+    TestWorkQueue* workQueue = GdkNew TestWorkQueue();
+    
+    context->Log->WriteLine(LogLevel::Info, L"Loading queue with 1000 work items");
+    
+    // Loop through the work items
+    for(int i=0; i<1000; i++)
+    {
+        // Queue up the work items (on cycling priorities)
+        workQueue->Enqueue(&items[i], i % 8);
+        
+        // Every Nth queued item, sleep a bit
+        if(i % 100 == 0)
+            Thread::Sleep(5);
+    }
+    
+    context->Log->WriteLine(LogLevel::Info, L"Waiting for work Queue to finish");
+    
+    // Wait for the queue to finish
+    while(workQueue->GetQueueCount() > 0)
+        Thread::Sleep(5);
+
+    context->Log->WriteLine(LogLevel::Info, L"Verifying work");
+
+    // Verify the work
+    int numBadItems = 0;
+    for(int i=0; i<1000; i++)
+    {
+        if(items[i].Value != i+1)
+        {
+            numBadItems++;
+        }
+    }
+    
+    if(numBadItems > 0)
+        context->Log->WriteLine(LogLevel::Error, L"%d of 1000 work items failed to be processed correctly!!");
+    
+    context->Log->WriteLine(LogLevel::Info, L"Shutdown down work queue");
+    
+    // Shutdown & Delete the work queue
+    GdkDelete(workQueue);
+    
+    if(numBadItems > 0)
+        return TestStatus::Fail;
+    return TestStatus::Pass;
+}
+
+
 /*
 
 // ***********************************************************************

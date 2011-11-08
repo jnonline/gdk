@@ -12,8 +12,17 @@
 
 namespace Gdk
 {
-	// ============================================================================
-	class Shader
+	/// @addtogroup Graphics
+    /// @{
+    
+    // =================================================================================
+    ///	@brief
+    ///		Wraps common render state a GLSL shader.
+    /// @remarks
+    ///     Shaders can have multiple techniques, in order to use more complex
+    ///     GLSL shader code for platforms that support them 
+    // =================================================================================
+	class Shader : public Resource
 	{
 	public:
 
@@ -100,29 +109,34 @@ namespace Gdk
 		// Makes this the active shader  (All shader parameters/uniforms must have been set before calling this method)
 		void Apply();
 
-		// Creation
-		static Shader* FromStream(Stream* stream);
-		static Shader* FromFile(const char *shaderFilePath);
-
-		// Asset Interfaces
-		static const AssetType::Enum ASSET_TYPE = AssetType::Shader;
-		static Shader* FromAsset(AssetLoadContext* context);
-		void ReleaseChildAssets() {}
-
 		// Utility methods for compiling & linking GL shaders
 		static GLuint CompileGLShaderFromSource(const char *shaderSource, GLenum shaderType);
 		static void LinkProgram(GLuint programId);
 
-	protected:
+    protected:
+        
+        // Protected Methods
+        // =====================================================
+        
+        // ---------------------------------
+        /// @name Virtuals from Resouce
+        /// @{
+        
+        /// @}
 
-		// Internal Properties
-		// ------------------------------
-
-
-		// Internal Methods
-		// ------------------------------
-
-		Shader();
+        
+    private:
+    
+        // Private Methods
+        // =====================================================
+        
+        friend class ShaderManager;
+        
+        Shader();
+        
+        void LoadFromAsset();
 	};
 
+    /// @}
+    
 } // namespace 

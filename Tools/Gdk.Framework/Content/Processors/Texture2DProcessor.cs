@@ -29,10 +29,12 @@ namespace Gdk.Framework.Content
             details.FileExtensions.Add("jpeg");
             details.FileExtensions.Add("bmp");
 
-            details.AddParameter("PixelFormat", "Destination pixel format for the texture", "Texture", typeof(PixelFormats), PixelFormats.RGBA_5551);
-            details.AddParameter("ColorKey", "This color will be turned into TransparentBlack when processed", "Texture", typeof(Color), Color.TransparentBlack);
-            details.AddParameter("ImageScale", "Resizes the image by this scalar value", "Texture", typeof(float), (float)1.0);
-
+            details.AddParameter("Pixel Format", "Destination pixel format for the texture", "Texture", typeof(PixelFormats), PixelFormats.RGBA_5551);
+            details.AddParameter("Color Key", "This color will be turned into TransparentBlack when processed", "Texture", typeof(Color), Color.TransparentBlack);
+            details.AddParameter("Image Scale", "Resizes the image by this scalar value", "Texture", typeof(float), (float)1.0);
+			details.AddParameter("Generate Mipmaps", "Should the texture generate mip maps?", "Texture", typeof(bool), true);
+			details.AddParameter("Texture Wrap Mode", "The wrap mode to use for the texture", "Texture", typeof(TextureWrapMode), TextureWrapMode.Wrap);
+			details.AddParameter("Texture Filter Mode", "The filter mode to use for the texture", "Texture", typeof(TextureFilterMode), TextureFilterMode.Bilinear);
             return details;
         }
 
@@ -54,11 +56,23 @@ namespace Gdk.Framework.Content
             // -------------------------
 
             // Get the destination pixel format from the processor parameters
-            PixelFormats pixelFormat = Context.Parameters.GetEnumValue<PixelFormats>("PixelFormat", PixelFormats.RGBA_5551);
-            Context.Log("PixelFormat: " + pixelFormat.ToString());
+            PixelFormats pixelFormat = Context.Parameters.GetEnumValue<PixelFormats>("Pixel Format", PixelFormats.RGBA_5551);
+            Context.Log("Pixel Format: " + pixelFormat.ToString());
+			
+			// Get the GenerateMipmaps parameter
+            bool generateMipmaps = Context.Parameters.GetValue("Generate Mipmaps", true);
+            Context.Log("Generate Mipmaps: " + generateMipmaps.ToString());
+			
+			// Get the texture wrap mode from the processor parameters
+            TextureWrapMode wrapMode = Context.Parameters.GetEnumValue<TextureWrapMode>("Texture Wrap Mode", TextureWrapMode.Wrap);
+            Context.Log("Texture Wrap Mode: " + wrapMode.ToString());
+			
+			// Get the texture filter mode from the processor parameters
+            TextureFilterMode filterMode = Context.Parameters.GetEnumValue<TextureFilterMode>("Texture Filter Mode", TextureFilterMode.Bilinear);
+            Context.Log("Texture Filter Mode: " + filterMode.ToString());
 
             // Get the image scale
-            float imageScale = Context.Parameters.GetValue("ImageScale", 1.0f);
+            float imageScale = Context.Parameters.GetValue("Image Scale", 1.0f);
             if(imageScale != 1.0f)
             {
                 int newWidth = (int)Math.Round(surface.Width * imageScale);
@@ -72,7 +86,7 @@ namespace Gdk.Framework.Content
             }
 
             // Color key the image
-            Color colorKey = Context.Parameters.GetValue("ColorKey", Color.TransparentBlack);
+            Color colorKey = Context.Parameters.GetValue("Color Key", Color.TransparentBlack);
             if (colorKey != Color.TransparentBlack)
             {
                 Context.Log("Color keying the image");
@@ -90,7 +104,7 @@ namespace Gdk.Framework.Content
             Directory.CreateDirectory(Path.GetDirectoryName(fullDestPath));
            
             // Write the texture to a gdkimage file
-            surface.SaveToGdkImage(fullDestPath, pixelFormat);
+            surface.SaveToGdkImage(fullDestPath, pixelFormat, generateMipmaps, wrapMode, filterMode);
 
             // Track the destination file
             Context.AddOutputDependency(relativeDestPath);

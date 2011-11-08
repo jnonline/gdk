@@ -28,7 +28,7 @@ bool PROJECTNAMEGame::OnLoadSettings(ApplicationSettings &settings)
     settings.ShowMaximizeBox = true;
 	settings.FixedTimeStep = 0.02f;
 	settings.UseFixedTimeStep = false;
-	settings.AssetManagerBackgroundThreads = 0;
+	settings.ResourceLoaderBackgroundThreads = 0;
 
 	Application::DebugStatsColor = Color(255,255,128,255);
 
@@ -80,7 +80,7 @@ void PROJECTNAMEGame::OnDraw(float elapsedSeconds)
 
 	// Draw some text
 	wchar_t* sampleText = L"Sample Text";
-	Renderer2D::DrawText(SharedAssets::Fonts.Arial20, sampleText, Vector2(10,10), Color(196, 255, 128));
+	Renderer2D::DrawText(SharedResources::Fonts.Arial20, sampleText, Vector2(10,10), Color(196, 255, 128));
 
 	// Flush the 2D renderer
 	Renderer2D::Flush();

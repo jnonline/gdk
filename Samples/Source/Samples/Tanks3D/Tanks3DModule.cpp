@@ -13,11 +13,12 @@ Tanks3DModule::Tanks3DModule ()
 	// Do game initialization here!
 	// -----------------------------------------------
 
-	AssetManager* assetManager = AssetManager::GetSingleton();
-
 	// Load our test models
-	ground = assetManager->Load<Model>("Models/Ground", &assetsPool, NULL);
-	tank = assetManager->Load<Model>("Models/Tank", &assetsPool, NULL);
+	ground = ModelManager::FromAsset("Models/Ground");
+	tank = ModelManager::FromAsset("Models/Tank");
+    
+    resourcePool.Add(ground);
+    resourcePool.Add(tank);
 
 	// Setup the game objects
 	playerDirection = 0.0f;
@@ -33,7 +34,7 @@ Tanks3DModule::Tanks3DModule ()
 	}
 
 	// Create a sprite (using the Gdk's builtin test animation)
-	chopper = GdkNew Sprite(SharedAssets::AtlasAnimations.Chopper);
+	chopper = GdkNew Sprite(SharedResources::AtlasAnimations.Chopper);
 
     // Bind to input event handlers
     Mouse::MouseMove.AddHandlerMethod(this, &Tanks3DModule::OnMouseMove);
@@ -51,8 +52,8 @@ Tanks3DModule::~Tanks3DModule()
 	// Delete the sprite
 	GdkDelete(chopper);
 
-	// Release any assets in our pool
-	assetsPool.Release();
+	// Release any resources in our pool
+	resourcePool.Release();
 }
 
 // ***********************************************************************
@@ -221,9 +222,9 @@ void Tanks3DModule::OnDraw()
 	// Draw some Text
     wchar_t sampleText[256];
     swprintf(sampleText, 256, L"Sample Text...");
-    Vector2 textSize = SharedAssets::Fonts.Arial20->GetTextSize(sampleText);
+    Vector2 textSize = SharedResources::Fonts.Arial20->GetTextSize(sampleText);
     Vector2 textPosition((Application::GetWidth() - textSize.X) * 0.5f, 10);
-	Renderer2D::DrawText(SharedAssets::Fonts.Arial20, sampleText, textPosition, Color::BLUE);
+	Renderer2D::DrawText(SharedResources::Fonts.Arial20, sampleText, textPosition, Color::BLUE);
 
 	// Draw the chopper sprite
 	Renderer2D::DrawSprite(chopper);

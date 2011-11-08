@@ -14,18 +14,14 @@ using Gdk.Framework;
 
 namespace Gdk.Framework.Content
 {
-    public enum AtlasFilterMode
-    {
-        Nearest,
-        Linear
-    }
-
     public class AtlasProcessor : Processor
     {
         // Internal properties
         private float masterImageScale = 1.0f;
         private bool force32Bit = false;
-
+		private TextureFilterMode filterMode = TextureFilterMode.Bilinear;
+		private bool generateMipmaps = true;
+		
         // The maximum sized texture that the atlaser will attempt to fit images into
         private const int MAX_TEXTURE_SIZE = 1024;
 
@@ -45,8 +41,9 @@ namespace Gdk.Framework.Content
 
             // Parameters
             details.AddParameter("Image Scale", "Resizes the images prior to the atlasing process by this scalar value.  This scalar is multiplied by the scalar within the atlas file.  The images will not be scaled larger than the source images.", "Atlas", typeof(float), (float)1.0);
-            details.AddParameter("Force 32-Bit", "Forces the output atlases to use 32-bit pixel formats", "Atlas", typeof(bool), false);
-            details.AddParameter("Filtering Mode", "Type of filtering to use for these atlas resources", "Atlas", typeof(AtlasFilterMode), AtlasFilterMode.Linear);
+            details.AddParameter("Force 32-Bit", "Forces the output sheet textures to use 32-bit pixel formats", "Texture", typeof(bool), false);
+            details.AddParameter("Texture Filter Mode", "Type of filtering to use for the sheet textures", "Texture", typeof(TextureFilterMode), TextureFilterMode.Bilinear);
+			details.AddParameter("Generate Mipmaps", "Should the sheet textures have mipmaps?", "Texture", typeof(bool), true);
 
             return details;
         }
@@ -67,7 +64,9 @@ namespace Gdk.Framework.Content
             // Get the processor parameters
             this.masterImageScale = Context.Parameters.GetValue("Image Scale", 1.0f);
             this.force32Bit = Context.Parameters.GetValue("Force 32-Bit", false);
-
+			this.filterMode = Context.Parameters.GetEnumValue<TextureFilterMode>("Texture Filter Mode", TextureFilterMode.Bilinear);
+			this.generateMipmaps = Context.Parameters.GetValue("Generate Mipmaps", true);
+			
             // Open the atlas file
             XmlDocument atlasXmlDoc = new XmlDocument();
             atlasXmlDoc.Load(atlasFilePath);
@@ -1036,10 +1035,7 @@ namespace Gdk.Framework.Content
 
             // Build the atlas flags
             UInt16 atlasFlags = 0;
-            AtlasFilterMode filterMode = Context.Parameters.GetEnumValue<AtlasFilterMode>("Filtering Mode", AtlasFilterMode.Linear);
-            if (filterMode == AtlasFilterMode.Linear)
-                atlasFlags |= 0x0001;
-
+            
             // Write the flags
             writer.Write(atlasFlags);
 
@@ -1063,7 +1059,13 @@ namespace Gdk.Framework.Content
                 Context.AddOutputDependency(sheetRelPath);
 
 				// Write out the sheet image
-				sheet.Texture.SaveToGdkImage(sheetFullPath, sheet.PixelFormat);
+				sheet.Texture.SaveToGdkImage(
+					sheetFullPath, 
+					sheet.PixelFormat,
+					this.generateMipmaps,
+					TextureWrapMode.Clamp,
+					this.filterMode
+					);
 
                 sheetIndex++;
             }

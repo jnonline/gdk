@@ -70,7 +70,7 @@ namespace Gdk
         /// @name GDK System Settings
         /// @{
         
-		int AssetManagerBackgroundThreads;      ///< Number of threads used by the background asset loading system.  (0 = disable background threads [default])
+		int ResourceLoaderBackgroundThreads;      ///< Number of threads used by the background resource loading system.  (0 = disable background resource loading)
         
         /// @}
 	};

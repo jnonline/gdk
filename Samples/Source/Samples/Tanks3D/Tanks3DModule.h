@@ -31,8 +31,8 @@ protected:
 	Model* tank;
 	Model* ground;
 
-	// Pool for our assets
-	AssetPool assetsPool;
+	// Pool for our resources
+	ResourcePool resourcePool;
 
 	// 3D Game Objects 
 	// --------------------

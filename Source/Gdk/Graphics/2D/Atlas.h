@@ -6,157 +6,234 @@
 #pragma once
 
 
-#include "../../Math/2D/Vector2.h"
-#include "../../Assets/Asset.h"
-#include "../Texture2D.h"
-
 
 namespace Gdk
 {
-	// ----------------
-	class AtlasSheet;
-
-	// ============================================================================
-	// AtlasImage
-
-	class AtlasImage
+	/// @addtogroup Graphics
+    /// @{
+    
+    // =================================================================================
+    ///	@brief
+    ///		Contains information for a single image within an Atlas
+    // =================================================================================
+    class AtlasImage
 	{
 	public:
 		
-		// Properties
-		string Name;				// Name of the image
-		int Width;					// Width of the image (in pixels)
-		int Height;					// Height of the image (in pixels)
-		int Index;					// Index of the image within the atlas
-
-		int CroppedImageX;			// Position of the reduced image relative to the original
-		int CroppedImageY;			
-		int CroppedImageWidth;		// Size of the reduced image
-		int CroppedImageHeight;	
-
-		Vector2 TopLeftTexCoord;	// Texture coordinate location of the image
-		Vector2 BottomRightTexCoord;
+        // Publics
+		// =====================================================
+        
+        // ---------------------------------
+        /// @name Read-only Properties
+        /// @{
+        
+        /// Name of the image
+		string Name;
 		
-		Vector2 ReferencePoint;	// Reference point of the image (this is the location the image is oriented from)
+		/// Width of the image (in pixels)
+        int Width;
+        
+        /// Height of the image (in pixels)
+        int Height;
+        
+        /// Index of the image within the atlas
+		int Index;
+        
+        /// X-Position of the cropped image relative to the original
+		int CroppedImageX;
+        
+        /// Y-Position of the cropped image relative to the original
+		int CroppedImageY;
+        
+        /// Width of the cropped image
+		int CroppedImageWidth;
+        
+        /// Height of the cropped image
+		int CroppedImageHeight;
+
+        /// Top-left Texture coordinate of the image within the atlas sheet
+		Vector2 TopLeftTexCoord;
+        
+        /// Bottom-right Texture coordinate of the image within the atlas sheet
+        Vector2 BottomRightTexCoord;
+		
+        /// Reference point of the image (this is the location the image is oriented from when drawn as a 2d position)
+		Vector2 ReferencePoint;
+        
+        /// Child points of the image, as assigned by the atlas builder tool
 		vector<Vector2> ChildPoints;
 
-		AtlasSheet* Sheet;
+        /// The sheet that contains the actual image
+		class AtlasSheet* Sheet;
 
-		// Deconstructor
-		~AtlasImage();
+        /// @}
+        // ---------------------------------
+        /// @name Methods
+        /// @{
+        
+        AtlasImage();
+        ~AtlasImage();
 
-		// Methods
+        // *****************************************************************
+        /// @brief
+        ///     Gets a Vector2 containing the image width & height in pixels.
+        // *****************************************************************
 		Vector2 GetSize() {return Vector2((float)Width, (float)Height); }
-
-	private:
-		
-		// Private constructor
-		AtlasImage();
-
-		friend class Atlas;
+        
+        /// @}
 	};
 
+    // =================================================================================
+    ///	@brief
+    ///		A map of AtlasImage pointers by the image name
+    // =================================================================================
 	typedef StringHashMap<AtlasImage*> AtlasImageNameMap;
 
-	// ============================================================================
-	// AtlasAnimation
-
-	class AtlasAnimation
+	// =================================================================================
+    ///	@brief
+    ///		Contains information for an animation within an Atlas
+    // =================================================================================
+    class AtlasAnimation
 	{
 	public:
 
-		// Properties
+        // Publics
+		// =====================================================
+        
+        // ---------------------------------
+        /// @name Read-only Properties
+        /// @{
+        
+		/// Name of the animation
 		string Name;
+        
+        /// Frames-per-second that the animation should be played at
 		float FPS;
+        
+        /// Set of images that make up the animation
 		vector<AtlasImage*> Images;
+        
+        /// @}
+        // ---------------------------------
+        /// @name Methods
+        /// @{
 
-		// Destructor
-		~AtlasAnimation();
-
-	private:
-
-		// Private constructor
-		AtlasAnimation();
-
-		friend class Atlas;
+        AtlasAnimation();
+        ~AtlasAnimation();
+        
+        /// @}
+        
 	};
 
+    // =================================================================================
+    ///	@brief
+    ///		A map of AtlasAnimation pointers by the animation name
+    // =================================================================================
 	typedef StringHashMap<AtlasAnimation*> AtlasAnimationNameMap;
 
-	// ============================================================================
-	// AtlasSheet
-
-	class AtlasSheet
+	// =================================================================================
+    ///	@brief
+    ///		Contains a sheet of atlas images on a texture.
+    // =================================================================================
+    class AtlasSheet
 	{
 	public:
+        
+        // Publics
+		// =====================================================
+        
+        // ---------------------------------
+        /// @name Read-only Properties
+        /// @{
+    
 		
-		// Properties
+		/// Width of the sheet (in pixels)
 		int Width;
+        
+        /// Height of the sheet (in pixels)
 		int Height;
+        
+        /// Texture that contains the sheet data
 		Texture2D* Texture;
+        
+        /// @}
+        // ---------------------------------
+        /// @name Methods
+        /// @{
+        
+        AtlasSheet();
+        ~AtlasSheet();
+        
+        /// @}
 
-		// Destructor
-		~AtlasSheet();
-
-	private:
-
-		// Constructor
-		AtlasSheet();
-
-		friend class Atlas;
 	};
 
-	// ============================================================================
-	// Atlas
-	
-	class Atlas
+	// =================================================================================
+    ///	@brief
+    ///		Contains a set of images and animations compressed into a few atlas textures
+    // =================================================================================
+	class Atlas : public Resource
 	{
 	public:
-		// Constructor
-		~Atlas();
+        
+        // Publics
+		// =====================================================
+        
+        // ---------------------------------
+        /// @name Read-only Properties
+        /// @{
 
-		// Properties
-		string Name;
-
-		// Child objects
+        /// All the AtlasImage's in this Atlas
 		vector<AtlasImage*> Images;
+        
+        /// All the AtlasSheet's in this Atlas
 		vector<AtlasSheet*> Sheets;
+        
+        /// All the AtlasAnimation's in this Atlas
 		vector<AtlasAnimation*> Animations;
-
-		// Maps
+        
+		/// A map of AtlasImages by name in this atlas
 		AtlasImageNameMap ImagesByName;
+        
+        /// A map of AtlasAnimations by name in this atlas
 		AtlasAnimationNameMap AnimationsByName;
 
-		// Accessor Methods
+        /// @}
+        // ---------------------------------
+        /// @name Methods
+        /// @{
+        
+        ~Atlas();
+        
 		AtlasImage* GetImage(const char* imageName);
 		AtlasAnimation* GetAnimation(const char* animationName);
+        
+        /// @}
+        
+    protected:
+        
+        // Protected Methods
+        // =====================================================
+        
+        // ---------------------------------
+        /// @name Virtuals from Resouce
+        /// @{
+        
+        /// @} 
 
-		// Creation Methods
-		static Atlas* FromFile(const char *atlasFilePath);
-		
-		// Asset Interfaces
-		static const AssetType::Enum ASSET_TYPE = AssetType::Atlas;
-		static Atlas* FromAsset(AssetLoadContext* context);
-		void ReleaseChildAssets() {}
-	
-	public:
-
-		// Internal types
-		class AtlasChildLoader
-		{
-		public:
-			virtual Texture2D* LoadTexture(const char *textureName) = 0;
-		};
-
-	private:
-
-		// private methods
+    private:
+        
+        // Private Methods
+        // =====================================================
+        
+        friend class AtlasManager;
+        
 		Atlas();
-		static Atlas* FromStream(const char *atlasName, Stream* stream, class AtlasChildLoader* childLoader);
-		
+        
+        void LoadFromAsset();
 	};
-
-	// ----------------------------------------------------------------------------
-
+    
+    /// @}
+    
 } // namespace
 

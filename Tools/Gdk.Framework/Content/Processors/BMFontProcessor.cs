@@ -28,8 +28,11 @@ namespace Gdk.Framework.Content
             details.FileExtensions.Add("fnt");
 
             // Parameters
-            details.AddParameter("PixelFormat", "Destination pixel format for the font sheets", "Font", typeof(PixelFormats), PixelFormats.RGBA_4444);
+            details.AddParameter("Pixel Format", "Destination pixel format for the font sheets", "Texture", typeof(PixelFormats), PixelFormats.RGBA_4444);
+            details.AddParameter("Generate Mipmaps", "Should the texture generate mip maps?", "Texture", typeof(bool), true);
+			details.AddParameter("Texture Filter Mode", "The filter mode to use for the texture", "Texture", typeof(TextureFilterMode), TextureFilterMode.Bilinear);
             
+			
             return details;
         }
 
@@ -68,7 +71,13 @@ namespace Gdk.Framework.Content
 
             // Get the destination pixel format from the processor parameters
             PixelFormats pixelFormat = Context.Parameters.GetEnumValue<PixelFormats>("PixelFormat", PixelFormats.RGBA_4444);
-
+			
+			// Get the GenerateMipmaps parameter
+            bool generateMipmaps = Context.Parameters.GetValue("Generate Mipmaps", true);
+            
+			// Get the texture filter mode from the processor parameters
+            TextureFilterMode filterMode = Context.Parameters.GetEnumValue<TextureFilterMode>("Texture Filter Mode", TextureFilterMode.Bilinear);
+            
             // Get all the png's associated with this font
             string searchPattern = Path.GetFileNameWithoutExtension(fontSourcePath) + "*.png";
             string searchFolder = Path.GetDirectoryName(fontSourcePath);
@@ -90,7 +99,7 @@ namespace Gdk.Framework.Content
                 Context.Log(" - Converting PNG font sheet to gdkimage: " + destImageFile);
 
                 // Save the font sheet to a gdkimage
-                surface.SaveToGdkImage(destImagePath, pixelFormat);
+                surface.SaveToGdkImage(destImagePath, pixelFormat, generateMipmaps, TextureWrapMode.Clamp, filterMode);
 
                 // Track the dependency
                 Context.AddOutputDependency(destImagePath);

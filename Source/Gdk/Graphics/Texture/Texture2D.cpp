@@ -8,61 +8,17 @@
 
 using namespace Gdk;
 
-// Static instantiations
-int Texture2D::totalMemoryUsed = 0;
-
-// GDK Image Flags
-#define GDKIMAGE_FLAG_MIPMAP		0x01
-
 // *****************************************************************
 /// @brief
 ///     Constructs a new texture of the given size and pixel format
-/// @param width
-///     Width of the texture
-/// @param height
-///     Height of the texture 
-/// @param pixelFormat
-///     Pixel format of the texture
+/// @param name
+///     Name of the resource
 /// @remarks
-///     The texture memory will be allocated in the devices video memory.
-///     The filtering mode will default to Linear
-///     The wrap mode will default to Repeat for PoT textures and Clamp for NPoT textures
+///     GDK Internal Use Only
 // *****************************************************************
-Texture2D::Texture2D(int width, int height, PixelFormat::Enum pixelFormat)
+Texture2D::Texture2D()
 {
-	// Create the GL texture
-	GLuint glTextureId = -1;
-	glGenTextures(1, &glTextureId);
-	this->GLTextureId = glTextureId;
-
-	// Store the texture properties
-	this->Width = width;
-	this->Height = height;
-	this->TexelWidth = 1.0f / width;
-	this->TexelHeight = 1.0f / height;
-	this->Format = pixelFormat;
-	
-    // Bind the texture
-    Graphics::BindTexture(this->GLTextureId);
-
-	// Determine the GL texture format & pixel type 
-	GLuint glTextureFormat = PixelFormat::GetGLTextureFormat(pixelFormat);
-	GLuint glPixelType = PixelFormat::GetGLPixelType(pixelFormat);
-
-	// Pre-allocate the texture buffers
-	glTexImage2D(GL_TEXTURE_2D, 0, glTextureFormat, width, height, 0, glTextureFormat, glPixelType, NULL);
-
-	// Setup default wrap & filter modes
-    if(Math::IsPowerOfTwo((UInt32)this->Width) == true && Math::IsPowerOfTwo((UInt32)this->Height) == true)
-        SetWrapMode(TextureWrapMode::Repeat);
-	else
-        SetWrapMode(TextureWrapMode::Clamp);
-    SetFilterMode(TextureFilterMode::Linear);
-	
-	// Track the memory used by this texture
-	int numBytes = width * height * PixelFormat::GetBytesPerPixel(pixelFormat);
-	this->memoryUsed = numBytes;
-	Texture2D::totalMemoryUsed += this->memoryUsed;
+    this->GLTextureId = GL_INVALID_VALUE;
 }
 
 // *****************************************************************
@@ -71,11 +27,12 @@ Texture2D::Texture2D(int width, int height, PixelFormat::Enum pixelFormat)
 // *****************************************************************
 Texture2D::~Texture2D()
 {
-	// Destroy the texture
-	glDeleteTextures(1, &(this->GLTextureId));
-
-	// Decrement the used texture memory counter
-	Texture2D::totalMemoryUsed -= this->memoryUsed;
+    // Do we have a GL texture?
+    if(this->GLTextureId != GL_INVALID_VALUE)
+    {
+        // Destroy the GL texture
+        glDeleteTextures(1, &(this->GLTextureId));
+    }
 }
 
 // *****************************************************************
@@ -118,24 +75,25 @@ void Texture2D::GenerateMipMaps()
 /// @param value
 ///     The wrapping mode
 // *****************************************************************
-void Texture2D::SetWrapMode(TextureWrapMode::Enum value)
+void Texture2D::SetWrapMode(TextureWrapMode::Enum wrapMode)
 {
 	// Bind this texture
 	Graphics::BindTexture(this->GLTextureId);
     
     // Check if the user is trying to set an invalid wrap mode
-	if(value != TextureWrapMode::Clamp &&
+	if(wrapMode != TextureWrapMode::Clamp &&
        (Math::IsPowerOfTwo((UInt32)this->Width) == false || Math::IsPowerOfTwo((UInt32)this->Height) == false) )
     {
         LOG_WARN(L"Attempt to set invalid wrapping mode on a Non-PoT texture.  Reverting to Clamped");
-        value = TextureWrapMode::Clamp;
+        wrapMode = TextureWrapMode::Clamp;
     }
 	
 	// Set the wrap mode for this texture
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, (GLenum)value);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, (GLenum)value);
+    GLenum glValue = TextureWrapMode::GetGLenum(wrapMode);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, glValue);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, glValue);
 
-	this->wrapMode = value;
+	this->wrapMode = wrapMode;
 }
 
 // *****************************************************************
@@ -163,7 +121,7 @@ void Texture2D::SetFilterMode(TextureFilterMode::Enum value)
 			}
 			break;
 		
-		case TextureFilterMode::Linear:
+		case TextureFilterMode::Bilinear:
 			{
 				// Setup linear filtering
 				if(this->hasMipMaps)
@@ -181,78 +139,119 @@ void Texture2D::SetFilterMode(TextureFilterMode::Enum value)
 
 // *****************************************************************
 /// @brief
-///     Reads a GDK Image from a stream and creates a texture from the image data
-/// @param stream
-///     A stream containing a GDK image the current stream position
+///     Initializes the texture with the given width, height, and pixel format
+/// @param width
+///     Width of the texture
+/// @param height
+///     Height of the texture 
+/// @param pixelFormat
+///     Pixel format of the texture
+/// @remarks
+///     The texture memory will be allocated in the devices video memory.
+///     The filtering mode will default to Linear
+///     The wrap mode will default to Repeat for PoT textures and Clamp for NPoT textures
+///   @par
+///     GDK Internal Use Only
 // *****************************************************************
-Texture2D* Texture2D::FromStream(Stream *stream)
+void Texture2D::Initialize(int width, int height, PixelFormat::Enum pixelFormat)
 {
-	// Step 1: Load the image header & image data from the file
-	// ---------------------------------------------------------
+	// Create the GL texture
+	GLuint glTextureId = -1;
+	glGenTextures(1, &glTextureId);
+	this->GLTextureId = glTextureId;
+    
+	// Store the texture properties
+	this->Width = width;
+	this->Height = height;
+	this->TexelWidth = 1.0f / width;
+	this->TexelHeight = 1.0f / height;
+	this->Format = pixelFormat;
+	
+    // Bind the texture
+    Graphics::BindTexture(this->GLTextureId);
+    
+	// Determine the GL texture format & pixel type 
+	GLuint glTextureFormat = PixelFormat::GetGLTextureFormat(pixelFormat);
+	GLuint glPixelType = PixelFormat::GetGLPixelType(pixelFormat);
+    
+	// Pre-allocate the texture buffers
+	glTexImage2D(GL_TEXTURE_2D, 0, glTextureFormat, width, height, 0, glTextureFormat, glPixelType, NULL);
+    
+	// Setup default wrap & filter modes
+    if(Math::IsPowerOfTwo((UInt32)this->Width) == true && Math::IsPowerOfTwo((UInt32)this->Height) == true)
+        SetWrapMode(TextureWrapMode::Wrap);
+	else
+        SetWrapMode(TextureWrapMode::Clamp);
+    SetFilterMode(TextureFilterMode::Bilinear);
+}
 
+// *****************************************************************
+/// @brief
+///     This method is called by the resource manager when the resource data is to be loaded from an asset
+/// @remarks
+///     GDK Internal Use Only
+// *****************************************************************
+void Texture2D::LoadFromAsset()
+{
+    // Get a stream to the asset
+    char assetPath[256];
+    GDK_SPRINTF(assetPath, 256, "%s.gdkimage", GetName().c_str());
+    Stream* stream = AssetManager::GetAssetStream(assetPath);
+    
+	// Load the image header & image data from the file
+	// ---------------------------------------------------------
+    
 	// Read the image header
 	UInt16 width = stream->ReadUInt16();
 	UInt16 height = stream->ReadUInt16();
 	PixelFormat::Enum pixelFormat = (PixelFormat::Enum) stream->ReadUInt16();
 	UInt16 flags = stream->ReadUInt16();
-
+    
+    // Process the image flags
+    bool generateMipMaps = (flags & 0x0001) > 0;
+    TextureWrapMode::Enum wrapMode = (TextureWrapMode::Enum) ((flags >> 1) & 0x3);
+    TextureFilterMode::Enum filterMode = (TextureFilterMode::Enum) ((flags >> 3) & 0x3);
+    
+    // Initialize the texture
+    Initialize(width, height, pixelFormat);
+    
 	// Create a buffer to hold the decompressed image data
 	int numBytes = width * height * PixelFormat::GetBytesPerPixel(pixelFormat);
 	UInt8* imageData = (UInt8*) GdkAlloc(numBytes);
-
+    
 	// Create a MemoryStream around our buffer
 	MemoryStream memStream(imageData, numBytes);
-
+    
 	// Decompress the rest of the image data into the buffer
 	bool result = stream->Decompress(&memStream, CompressionType::ZLib);
 	ASSERT(result, 
-		L"Failed to decompress the image data in a GdkImage"
-		);
-
-	// Create the texture 
-	Texture2D *texture = GdkNew Texture2D(width, height, pixelFormat);
+           L"Failed to decompress the image data in a GdkImage"
+           );
     
     // Apply the image data to the texture
-    texture->SetImageData(imageData);
+    SetImageData(imageData);
     
     // Generate mipmaps if we're supposed to
-    if((flags & GDKIMAGE_FLAG_MIPMAP) > 0)
-        texture->GenerateMipMaps();
+    if(generateMipMaps)
+        GenerateMipMaps();
     
+    // Set wrap mode
+    this->SetWrapMode(wrapMode);
+    
+    // Set filter mode
+    this->SetFilterMode(filterMode);
+
     // Release the image data buffer
     GdkFree(imageData);
-	
-	return texture;
 }
 
 // *****************************************************************
 /// @brief
-///     Creates a texture from a GDK Image file
-/// @param imageFilePath
-///     Path to the GDK Image file
+///     This virtual is called by the resource manager to request the memory size of this asset
 // *****************************************************************
-Texture2D* Texture2D::FromFile(const char *imageFilePath)
+UInt32 Texture2D::GetMemoryUsed()
 {
-	// Open the file as a stream
-	FileStream fileStream(imageFilePath, FileMode::Read);
-
-	// Load the data from the stream
-	Texture2D* texture = FromStream(&fileStream);
-
-	// Close the stream
-	fileStream.Close();
-
-	return texture;
+    int numBytes = this->Width * this->Height * PixelFormat::GetBytesPerPixel(this->Format);
+    return numBytes;
 }
 
-// *****************************************************************
-/// @brief
-///     Creates a texture from a given asset
-/// @param context
-///     A buffer of pixel data with the same size & pixel format as the texture.
-// *****************************************************************
-Texture2D* Texture2D::FromAsset(AssetLoadContext* context)
-{
-	// Load the texture from the stream
-	return FromStream(context->AssetStream);
-}

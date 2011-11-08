@@ -116,7 +116,7 @@ void StarfieldSample::OnDraw()
 		{
 			// Draw the star as an image
 			Renderer2D::DrawImage(
-				SharedAssets::AtlasImages.Particle2, 
+				SharedResources::AtlasImages.Particle2, 
 				stars[i].Position, 
 				Color(stars[i].Intensity, stars[i].Intensity, stars[i].Intensity, 255),
 				0.0f,			// rotation
