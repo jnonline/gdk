@@ -1,0 +1,158 @@
+
+==================================================
+== Platform Checklist
+==================================================
+	
+Platform						Status
+--------------					-------------
+
+PC / Windows					Working
+iOS - iPad / iPhone / iPod		Working
+MAC OSX							N/A
+Android	- phone & tablet		N/A
+NaCl							N/A
+
+==================================================
+== Required Technologies Checklist
+==================================================
+
+	// -- C++ stdlib --
+	fopen() / fwrite() / fread() / fseek()
+	sprintf() / wsprintf()
+	
+	// -- stl --
+	vector
+	map
+	list
+	queue
+	
+	// -- externals --
+	pthreads
+	zlib
+	OpenGL ES 2.0
+	
+==================================================
+== Project Setup
+==================================================
+
+
+- The project files must create a standalone executable
+	- Sample app project in [Samples/Build/PLATFORM_NAME]
+	- Starter project in [BuildTemplate/PLATFORM_NAME]
+
+- The project must do the following:
+
+	- Contains all Game/App code 		in [Source/Game]
+	- Contains all Gdk code 		in [Source/Gdk]
+	- Contains all platform specific code	in [Source/Platform/PLATFORM_NAME]
+
+	- Links to external tech dependencies 	in [Source/Platform/PLATFORM_NAME/External]
+	
+	- Copes the [Assets/Build] folder to the final package
+	
+
+==================================================
+== Main Init/Update/Shutdown Loop control
+==================================================
+
+- Checkout the Windows main.cpp for a great example...
+
+
+
+	// main() - Initialize everything
+	// ------------------------------------
+	
+	Gdk::Application::Platform_InitGdk();
+	
+	... setup the platform window / view / GL context
+	
+	Gdk::Graphics::Platform_SetOSFrameBuffers()			// Tells the GDK about the GL context setup
+	Gdk::Application::Platform_InitGame();				// Inits the graphics engine & game components
+	
+	Platform_OnActive()								// Tell the GDK the app is active
+	
+	// MAIN LOOP
+	// -----------------------------
+	
+	while(  Gdk::Application::IsExitRequest() == false ) 
+	{
+		// Do an update loop
+		Gdk::Application::Platform_MainLoop()
+		
+		// Do platform rendering
+		SwapBuffers(), Display(), etc
+	}
+	
+	// Shutdown 
+	// -------------------------------
+	
+	// Tell the app it is being shutdown
+	Gdk::Application::Platform_OnTerminate();
+	
+	// Shutdown the game
+	Gdk::Application::Platform_ShutdownGame();
+	
+	// Shutdown the GDK
+	Gdk::Application::Platform_ShutdownGdk();
+	
+	
+==================================================
+== Calls the PlatformHost must make to the GDK
+==================================================
+
+	// Application Control
+	// ---------------------------
+	
+	// Called when the application is activated / deactivated.  IOW, the window/view/app has focus or loses focus.
+	Gdk::Application::Platform_OnActive();
+	Gdk::Application::Platform_OnDeactive();
+	
+	// Called when the application is paused/resumed.  IOW: someone presses the home button on IOS, or changes to a different app on android.
+	Gdk::Application::Platform_OnSuspend();
+	Gdk::Application::Platform_OnResume();
+		
+	// Called when the platofrm view/window is resized or re-oriented in any way
+	Gdk::Application::Platform_OnResize(newWidth, newHeight);
+	
+	
+	// Keyboard Input Events
+	// --------------------------
+	
+	// Called when a key is pressed / released
+	Gdk::Keyboard::Platform_ProcessKeyDown((Gdk::Keys::Enum)vkey);
+	Gdk::Keyboard::Platform_ProcessKeyUp((Gdk::Keys::Enum)vkey);
+	
+	// Called when a character is sent / pressed.  can be used to inject letters as keyboard typing
+	Gdk::Keyboard::Platform_ProcessChar((wchar_t)wParam);
+	
+	
+	// Mouse Input Events
+	// --------------------------
+	
+	Gdk::Mouse::Platform_ProcessMouseMove(x,y);
+	Gdk::Mouse::Platform_ProcessMouseWheelScroll(deltaX, deltaY, isAbsolute)
+	
+	Gdk::Mouse::Platform_ProcessMouseButtonUp(Gdk::MouseButton::Enum);
+	Gdk::Mouse::Platform_ProcessMouseButtonDown(Gdk::MouseButton::Enum)
+	
+	// Called when the mouse enters / leaves the application window
+	Gdk::Mouse::Platform_ProcessMouseEnterApp();
+	Gdk::Mouse::Platform_ProcessMouseLeaveApp();
+	
+	
+	// Touch Input Events
+	// --------------------------
+
+	// Called to tell the Gdk about a touch event	
+	Gdk::Platform_ProcessTouchUpdate(internalId, position, TouchState::Enum)
+
+
+==================================================
+== Methods to be implemented Per-Platform
+==================================================
+
+	See:  "Framework/Source/Application/PlatformInterfaces.h" 
+	
+	This file contains the prototypes of all the methods that must be implemented for each platform
+	
+	All of these methods should be implemented in the "Framework/Platform/XXX/PlatformImpl.cpp" file

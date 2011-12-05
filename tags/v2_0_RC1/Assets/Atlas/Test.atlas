@@ -1,0 +1,21 @@
+<Atlas>
+	<Images  RefPointX="Center"  RefPointY="Center"  PixelFormat="RGBA_4444">
+		<Images ImageScale="0.5" >
+			<Image Path="Test/Chopper01.png" />
+			<Image Path="Test/Chopper02.png" />
+			<Image Path="Test/Chopper03.png" />
+			<Image Path="Test/Chopper04.png" />
+			<Image Path="Test/Chopper05.png" />
+			<Image Path="Test/Chopper06.png" />
+		</Images>
+		<Image Path="Test/Fence.png" RefPointColor="0,255,0"  ChildPoint1="92,8" ChildPoint2="231,8"/>
+		<Image Path="Test/Particle1.png" />
+		<Image Path="Test/Particle2.png" />
+		<Image Path="Test/Test1.png" />
+	</Images>
+
+	<Animation Name="Chopper" FPS="10">
+		<Frame Image="Test/Chopper*" />
+	</Animation>
+
+</Atlas>

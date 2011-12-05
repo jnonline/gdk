@@ -1,0 +1,45 @@
+===================================================================================
+File Format:	.dae
+===================================================================================
+
+// Input file... COLLADA
+
+
+===================================================================================
+File Format:	.gdkmodel		(binary)
+===================================================================================
+
+	TYPE / SIZE		NAME				NOTES
+	-------------	-------------		-------------------------------
+	
+	UInt16			Version				1
+	UInt16			Flags				0x0001 = Shader format: (0)Binary | (1)Text
+	
+	UInt32			VertexFormat		0x0001 = Position2
+	
+	
+----------
+Model data:
+
+	Vertex Format
+		Position
+		Normal
+		Color,
+		TexCoord1,
+		TexCoord2,
+		BoneIndices x N
+		BoneWeights x N
+		
+	Index Data
+		UInt16[]
+		
+	Mesh Parts
+	
+		Index start / count
+		Vertex start / count
+	
+		Material
+			- Shader
+			- shader settings...
+			- Textures..
+	

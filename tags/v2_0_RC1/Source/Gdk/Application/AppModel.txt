@@ -1,0 +1,229 @@
+
+
+---	Process for resizing:
+
+	Window Drag:
+		WndProc -> resize event
+			WndProc -> resize GL window
+			PH -> OnResize();
+				App -> OnResize();
+
+	From App:
+		App->Resize(x,y);
+			PH->Resize(x,y);
+				PH->windowsImpl->Resize(x,y)
+					Generates OS Event (
+						
+
+-- GDK Platform Interface
+
+	class Application
+	{
+		SetupGDK();
+			Gdk::Memory::Init();
+			Gdk::Logging::Init();
+		Init()
+			App::Singleton = new DERIVEDApplication();
+			App::Singleton->OnInit();
+		Update(es)
+			Gdk::System::Update(es);	
+			Gdk::Input::Update(es);
+				ProcessInputEventQueues();
+				DispatchInputEvents();
+			App::Singleton::OnUpdate(es);
+			App::Singleton::OnDraw(es);
+		Shutdown
+			App::Singleton->OnShutdown();
+			Gdk::ReleaseResources;
+		ShutdownGDK
+			Gdk::Logging::Shutdown();
+			Gdk::Memory::Shutdown();
+
+
+		ProcessSuspend();
+		ProcessAppActivated();
+		ProcessClose();
+			App->OnClose();
+	}
+
+-----------------------------------
+Cross-Platform  layout
+
+
+Platform
+	File System, 
+	Input, 
+	Windowing (creation, resizing, movement)
+	OpenGL (init, reset, context management)
+	Audio (init, play/pause/stop, streaming)
+
+
+GDK Flow control			(PH = platformhost
+
+OS - main()
+	OS - create window system
+	OS - register window events
+	AppHost - InitGdk();
+	OS - configure GL
+	AppHost - InitApp();
+	-MAIN-LOOP-
+		OS - pump messages
+		OS - calc elapsed time
+		AppHost - Update()
+		GL - swap buffers
+	AppHost - ShutdownApp ();
+	OS - shutdown app / gl / threads
+	AppHost - ShutdownGdk();
+	OS - finish();
+
+OS - event threads
+	Mouse Input events
+		AppHost->ProcessMouseMove(mousemove, x, y, etc)
+	Key Input events
+		AppHost->ProcessKeyDown(key)
+		AppHost->ProcessKeyUp(key)
+		AppHost->ProcessChar(wchar char)
+	Touch Input Events
+		AppHost->ProcessTouch(id, state, x, y);
+
+	Resize
+		AppHost::Resize();
+	ContextReset
+		Application::ContextReset();
+			Gdk::ResourceManagers->ContextReset();
+				Reload lost resources (Textures, models, etc);
+
+AppHost Methods
+	Application::Resize();
+	Application::SetTitle();
+	
+
+Gdk
+	Input mappers
+		Mouse->Touch
+			InputManager::MouseToTouchMapEnabled = true;
+		
+	
+
+	
+
+
+----------------------------------------------------------------------
+
+The GDK Application Model:
+
+
+The GDK Application Model:
+
+Gdk::Application has two specific purposes
+  1) Serve as the interface between the OS-Specific application and the Game/Application
+  2) Serve as the base class for all GDK Games\Applications
+  
+Each platform must have a main.cpp, that does the following:
+	1) Initialize OS variables / properties
+	2) Create an OS specific window / view 
+	3) Initialize & Configure OpenGL for that window
+	4) Call the 5 Gdk::Application interface methods to initialize, cleanup, and dispatch flow control to the GDK Application.
+	
+=======================================================
+
+-- Platform Agnostic Application interface
+
+Gdk::Application
+	static StartupGDK()
+		-memory
+		-system
+		-Application::InitSingleton
+		-Application::Singleton::LoadAppSettings();
+	Init
+		-init graphics
+		-OnInit()
+	Update
+		-timers
+		-gdk
+		OnUpdate(es)
+		OnDraw(es)
+	Shutdown
+		-OnShutdown
+		-graphics
+	static ShutdownGDK()
+		-system
+		-memory
+
+	ProcessTouch();
+	ProcessMouseUp();
+	ProcessMouseDown();
+	ProcessMouseMove();
+	ProcessKeyUp();
+	ProcessKeyDown();
+
+	PauseGame();
+	ResumeGame();
+
+-- Sample Application Flow (windows)
+-----------------------------------
+
+	WinMain()
+		OS - Preconfiguration
+		Gdk::Application::StartupGDK();
+		OS - setup window / ui
+		OS - setup GL
+		Gdk::Application::Singleton::Init();
+
+		-loop
+		OS - peek / dispatch msgs
+		Gdk::Application::Singleton::Update()
+		OS - Flip GL buffers
+		
+		-if(quit)
+		Gdk::Application::Singleton::Shutdown();
+		Gdk::Application::ShutdownGDK();
+		OS - shutdown GL
+		OS - close window
+
+	WndProc - Mouse ButtonDown / ButtonUp / Move
+		Gdk::Application::Singleton::ProcessMouseXX();
+		- Focus gain / loss
+		Gdk::Application::Singleton::SetApplicationActive(true/false)
+
+
+-- Sample Application Flow (iPhone)
+--------------------------------
+
+	main()
+		OS - PoolInit
+		OS - UIApplicationMain()
+		OS - NSPoolRelease
+
+	initWithCoder()
+		Gdk::Application::StartupGDK();
+		OS - setup window / ui
+		OS - setup GL
+		Gdk::Application::Singleton::Init();
+
+	appDidFinishLaunching()
+		NS - configure more UI
+		App - Set timer 60fps
+
+	timerCallback
+		Gdk::Application::Singleton::Update();
+		OS - flip GL buffers
+
+	appInactive
+		App - timer = 5 fps
+		Gdk::Application::Singleton::SetApplicationActive(false)
+	appActive
+		App - timer = 60 fps
+		Gdk::Application::Singleton::SetApplicationActive(true)
+		
+	appTerminate  (app is being killed unexpectedly)
+		Gdk::Application::Singleton::Shutdown();
+		Gdk::Application::ShutdownGDK();
+
+	view.dealloc (normal app close process)
+		Gdk::Application::Singleton::Shutdown();
+		Gdk::Application::ShutdownGDK();
+		OS - shutdown GL
+	
+	touchBegan / touchEnd / touchMove / touchCancel
+		Gdk::Application::Singleton::ProcessTouch(XX)

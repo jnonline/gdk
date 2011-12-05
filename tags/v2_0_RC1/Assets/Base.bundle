@@ -1,0 +1,46 @@
+﻿<Bundle>
+	<Assets>
+		<Asset Path="Atlas/Test.atlas" Processor="AtlasProcessor">
+			<Parameters>
+				<Parameter Name="Force 32-Bit">False</Parameter>
+			</Parameters>
+		</Asset>
+		<Asset Path="Fonts/Arial20.fnt" Processor="BMFontProcessor">
+			<Parameters />
+		</Asset>
+		<Asset Path="Models/Ground.dae" Processor="ColladaModelProcessor">
+			<Parameters>
+				<Parameter Name="Default Diffuse">196,0,196,255</Parameter>
+				<Parameter Name="Diffuse PixelFormat">RGB_565</Parameter>
+			</Parameters>
+		</Asset>
+		<Asset Path="Models/Tank.dae" Processor="ColladaModelProcessor">
+			<Parameters>
+				<Parameter Name="Diffuse PixelFormat">RGB_565</Parameter>
+			</Parameters>
+		</Asset>
+		<Asset Path="Models/TestAxis.dae" Processor="ColladaModelProcessor">
+			<Parameters>
+				<Parameter Name="Diffuse PixelFormat">RGB_565</Parameter>
+			</Parameters>
+		</Asset>
+		<Asset Path="Shaders/Renderer2D/NonTextured.shader" Processor="ShaderProcessor">
+			<Parameters />
+		</Asset>
+		<Asset Path="Shaders/Renderer2D/Textured.shader" Processor="ShaderProcessor">
+			<Parameters />
+		</Asset>
+		<Asset Path="Shaders/Billboard/Textured.shader" Processor="ShaderProcessor">
+			<Parameters />
+		</Asset>
+		<Asset Path="Shaders/Model/Mesh/DiffuseTextured.shader" Processor="ShaderProcessor">
+			<Parameters />
+		</Asset>
+		<Asset Path="Shaders/Model/Mesh/NonTextured.shader" Processor="ShaderProcessor">
+			<Parameters />
+		</Asset>
+		<Asset Path="Shaders/Model/SkeletalMeshB4/DiffuseTextured.shader" Processor="ShaderProcessor">
+			<Parameters />
+		</Asset>
+	</Assets>
+</Bundle>

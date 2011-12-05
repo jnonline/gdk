@@ -1,0 +1,76 @@
+
+-----------------------------------------------------
+GDK Folder Structure 
+-----------------------------------------------------
+
+[Gdk]
+
+    CreateNewProject.cmd
+
+    [Docs]
+    [Tools]
+    [Assets]
+        [Models]
+	Assets.assets
+
+    [Source]
+        [Gdk]
+        [Game]
+        [Platform]
+	    [Windows]
+                [External]
+                    [lib]
+                    [include]
+                [Source]
+                    platformimpl.cpp
+                    main.cpp
+        
+
+    [BuildTemplate]
+        [Windows]
+            Template.Proj
+        [iOS]
+        [MACOSX]
+        [Android]
+
+    [Samples]
+	[Source]
+        [Windows]
+            Samples.Proj
+        [iOS]
+        [MACOSX]
+        [Android]
+
+--------------
+Templated Project Folder Structure
+--------------
+
+[<PROJNAME>]
+
+    [Tools]
+    [Assets]
+        [Gdk]
+	Assets.assets
+
+    [Source]
+        [Gdk]
+        [Game]
+        [Platform]
+	    [Windows]
+                [External]
+                    [lib]
+                    [include]
+                [Source]
+                    platformimpl.cpp
+                    main.cpp
+        
+
+    [PROJECTNAME]
+        [Windows]
+            PROJECTNAME.Proj
+        [iOS]
+        [MACOSX]
+        [Android]
+
+
+--------------------------------

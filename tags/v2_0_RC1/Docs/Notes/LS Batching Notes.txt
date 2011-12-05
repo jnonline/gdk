@@ -1,0 +1,97 @@
+Level Rendering:
+
+	X sprite batches..  1 PER Texture  (Sheet)
+		dictionary sorted... for log(n) queuing of quads
+	1  cube batcher
+	1  BG batcher
+	1  shared Quad IB
+
+UI:
+	Immediate mode 2d primitives
+	SpriteBatch -> DrawText  (+end, +begin)
+	SpriteBatch -> Draw2D  (end, begin)
+
+Other:
+	ParticleSystem->Draw()  
+		full flush()
+	Model->Draw()
+		full flush()
+
+----
+batchers:
+	spriteBatch2D
+		sprites
+		atlas images
+		particles (sprite based)
+		font / text
+
+	drawing2D   - (no real batching)		
+		primitives
+
+	vertexBatcher
+		cubes, BGs, level sprites...
+			
+
+---------------------------------
+
+
+Rendering flow:
+
+- frame setup();
+- clear (color & depth)
+
+foreach(object)
+	- set states (cull, depth, fog, alpha)
+	- draw model / spritebatch / cubes / 2dPrim / particles
+
+
+
+---------------------
+
+Rendering flow:
+
+- frame setup();
+- clear (color & depth)
+
+foreach( render batch )
+	- Set shaders V & P
+	- Set shader constants..
+		MVP
+		materials
+		bone weights
+		lights...
+		custom
+
+	- set pipeline states
+		vertex stream formats
+		cull, depth, fog, alpha, blend
+		
+	- set VB & IB
+	- draw primitives..
+
+----------------------
+
+Shaders
+	2D
+	2D particles..
+	3D basic
+	3D w/ 1 light
+	3D w  2 lights
+	SSH sprites
+	SSH models..
+
+Graphics manager..
+	Viewport / MVP / Camera
+	Render States (cull, depth, blend, alpha)
+	bound Textures
+	bound VB & IB
+	vertex formats / streams
+	bound shaders
+	
+	Resource management
+		Textures..
+		VB / Meshs
+		Shaders..
+	
+	
+
