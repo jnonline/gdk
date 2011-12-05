@@ -250,54 +250,58 @@
 					</File>
 				</Filter>
 				<Filter
-					Name="Assets"
+					Name="Resource"
 					>
 					<File
-						RelativePath="..\..\Source\Gdk\Assets\Asset.cpp"
+						RelativePath="..\..\Source\Gdk\Resource\AssetManager.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\Source\Gdk\Assets\Asset.h"
+						RelativePath="..\..\Source\Gdk\Resource\AssetManager.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\Source\Gdk\Assets\AssetManager.cpp"
+						RelativePath="..\..\Source\Gdk\Resource\AssetProvider.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\Source\Gdk\Assets\AssetManager.h"
+						RelativePath="..\..\Source\Gdk\Resource\FileAssetProvider.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\Source\Gdk\Assets\AssetPool.cpp"
+						RelativePath="..\..\Source\Gdk\Resource\FileAssetProvider.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\Source\Gdk\Assets\AssetPool.h"
+						RelativePath="..\..\Source\Gdk\Resource\Resource.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\Source\Gdk\Assets\AssetProvider.h"
+						RelativePath="..\..\Source\Gdk\Resource\Resource.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\Source\Gdk\Assets\AssetType.h"
+						RelativePath="..\..\Source\Gdk\Resource\ResourceManager.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\Source\Gdk\Assets\FileAssetProvider.cpp"
+						RelativePath="..\..\Source\Gdk\Resource\ResourceManager.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\Source\Gdk\Assets\FileAssetProvider.h"
+						RelativePath="..\..\Source\Gdk\Resource\ResourcePool.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\Source\Gdk\Assets\SharedAssets.cpp"
+						RelativePath="..\..\Source\Gdk\Resource\ResourcePool.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\Source\Gdk\Assets\SharedAssets.h"
+						RelativePath="..\..\Source\Gdk\Resource\SharedResources.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\Source\Gdk\Resource\SharedResources.h"
 						>
 					</File>
 				</Filter>
@@ -329,14 +333,6 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\Source\Gdk\Graphics\Texture2D.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\Source\Gdk\Graphics\Texture2D.h"
-						>
-					</File>
-					<File
 						RelativePath="..\..\Source\Gdk\Graphics\VertexFormats.h"
 						>
 					</File>
@@ -352,11 +348,27 @@
 							>
 						</File>
 						<File
+							RelativePath="..\..\Source\Gdk\Graphics\2D\AtlasManager.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Source\Gdk\Graphics\2D\AtlasManager.h"
+							>
+						</File>
+						<File
 							RelativePath="..\..\Source\Gdk\Graphics\2D\BMFont.cpp"
 							>
 						</File>
 						<File
 							RelativePath="..\..\Source\Gdk\Graphics\2D\BMFont.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Source\Gdk\Graphics\2D\BMFontManager.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Source\Gdk\Graphics\2D\BMFontManager.h"
 							>
 						</File>
 						<File
@@ -424,6 +436,14 @@
 							>
 						</File>
 						<File
+							RelativePath="..\..\Source\Gdk\Graphics\Model\ModelManager.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Source\Gdk\Graphics\Model\ModelManager.h"
+							>
+						</File>
+						<File
 							RelativePath="..\..\Source\Gdk\Graphics\Model\ModelMaterial.cpp"
 							>
 						</File>
@@ -476,6 +496,14 @@
 							>
 						</File>
 						<File
+							RelativePath="..\..\Source\Gdk\Graphics\Shader\ShaderManager.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Source\Gdk\Graphics\Shader\ShaderManager.h"
+							>
+						</File>
+						<File
 							RelativePath="..\..\Source\Gdk\Graphics\Shader\ShaderTechnique.cpp"
 							>
 						</File>
@@ -513,6 +541,26 @@
 						</File>
 						<File
 							RelativePath="..\..\Source\Gdk\Graphics\Shader\UniformValue.h"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="Texture"
+						>
+						<File
+							RelativePath="..\..\Source\Gdk\Graphics\Texture\Texture2D.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Source\Gdk\Graphics\Texture\Texture2D.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Source\Gdk\Graphics\Texture\Texture2DManager.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Source\Gdk\Graphics\Texture\Texture2DManager.h"
 							>
 						</File>
 					</Filter>
@@ -835,10 +883,6 @@
 					<Filter
 						Name="Containers"
 						>
-						<File
-							RelativePath="..\..\Source\Gdk\System\Containers\HashMap.h"
-							>
-						</File>
 						<File
 							RelativePath="..\..\Source\Gdk\System\Containers\SortedVector.h"
 							>
