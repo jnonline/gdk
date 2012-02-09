@@ -123,6 +123,7 @@ namespace Gdk
         // =====================================================
         
         friend class Renderer2D;
+        friend class Drawing2D;
         friend class BMFontManager;
         
 		BMFont();

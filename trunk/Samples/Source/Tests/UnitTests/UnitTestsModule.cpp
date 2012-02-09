@@ -303,7 +303,7 @@ void UnitTestsModule::OnDraw()
             color.A = alpha;
         
         // Draw this log text
-        Renderer2D::DrawText(
+        Drawing2D::DrawText(
             SharedResources::Fonts.Arial20, 
             line->Text.c_str(), 
             Vector2(4.0f, currentTextY), 
@@ -317,26 +317,26 @@ void UnitTestsModule::OnDraw()
     
     // Draw the header box
     Rectangle2 headerBox(2.0f, 2.0f, Application::GetWidth() - 4.0f, 22.0f);
-    Renderer2D::DrawRectangle(headerBox, Color(64,64,64));
-    Renderer2D::DrawRectangleOutline(headerBox, Color(196,196,196));
+    Drawing2D::DrawRectangle(headerBox, Color(64,64,64));
+    Drawing2D::DrawRectangleOutline(headerBox, Color(196,196,196));
     
     // Are the unit tests currently running?
     if(this->currentTestIndex >= 0)
     {
         // Draw the "Running: Test Name" text
         TestTreeNode* activeTestNode = this->flatTestTree[this->currentTestIndex];
-        Renderer2D::DrawText(SharedResources::Fonts.Arial20, L"Running: ", headerBox.Position + Vector2(2,2), Color(128,255,128), textScale);
-		Renderer2D::DrawText(SharedResources::Fonts.Arial20, activeTestNode->Name.c_str(), headerBox.Position + Vector2(62,2), Color(128,255,128), textScale);
+        Drawing2D::DrawText(SharedResources::Fonts.Arial20, L"Running: ", headerBox.Position + Vector2(2,2), Color(128,255,128), textScale);
+		Drawing2D::DrawText(SharedResources::Fonts.Arial20, activeTestNode->Name.c_str(), headerBox.Position + Vector2(62,2), Color(128,255,128), textScale);
     }
     else
     {
         // Draw the "Click here to Start" text
-        Renderer2D::DrawText(SharedResources::Fonts.Arial20, L"Click here to start testing!", headerBox.Position + Vector2(2,2), Color(255,255,255), textScale);
+        Drawing2D::DrawText(SharedResources::Fonts.Arial20, L"Click here to start testing!", headerBox.Position + Vector2(2,2), Color(255,255,255), textScale);
 	}
 
     
 	// Flush the 2D renderer
-	Renderer2D::Flush();
+	Drawing2D::Flush();
 }
 
 // ***********************************************************************

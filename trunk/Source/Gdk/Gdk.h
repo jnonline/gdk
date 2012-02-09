@@ -98,6 +98,7 @@
 #include "Graphics/Enums.h"
 #include "Graphics/Graphics.h"
 #include "Graphics/VertexFormats.h"
+#include "Graphics/GeometryBuffer.h"
 
 // Graphics/Texture
 #include "Graphics/Texture/Texture2D.h"
@@ -120,7 +121,7 @@
 #include "Graphics/2D/BMFontManager.h"
 #include "Graphics/2D/Sprite.h"
 #include "Graphics/2D/ParticleSystem2D.h"
-#include "Graphics/2D/Renderer2D.h"
+#include "Graphics/2D/Drawing2D.h"
 
 // Graphics/3D
 #include "Graphics/3D/BillboardRenderer.h"

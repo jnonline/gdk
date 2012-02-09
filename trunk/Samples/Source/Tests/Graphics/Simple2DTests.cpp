@@ -123,7 +123,7 @@ void Simple2DTests::OnDraw()
 	Matrix2D world;
 
 	// Reset the identity world transform
-	Renderer2D::SetWorldTransform(Matrix2D::IDENTITY);
+	Drawing2D::WorldTransform = Matrix2D::IDENTITY;
     
     // Lines
     {
@@ -139,9 +139,9 @@ void Simple2DTests::OnDraw()
             float t2 = (x+xStep + totalElapsedSeconds) * xScale;
             float y2 = PerlinNoise::CompoundNoise1(t2) * 2.0f;
             if(Math::Floor(t1) != Math::Floor(t2))
-                Renderer2D::DrawLine(Vector2(x, y1), Vector2(x+xStep, y2), Color::BLUE);
+                Drawing2D::DrawLine(Vector2(x, y1), Vector2(x+xStep, y2), Color::BLUE, Color::BLUE);
             else
-                Renderer2D::DrawLine(Vector2(x, y1), Vector2(x+xStep, y2), Color::PURPLE);
+                Drawing2D::DrawLine(Vector2(x, y1), Vector2(x+xStep, y2), Color::PURPLE, Color::PURPLE);
             t1 = t2;
             y1 = y2;
         }
@@ -152,11 +152,12 @@ void Simple2DTests::OnDraw()
 	for(int i = 0; i < 10; i++)
 	{
 		if(i % 2 == 0)
-			Renderer2D::DrawRectangle(Rectangle2(-10.0f + i * 2.0f, sinRectTimer * 10.0f, 1.0f, 1.0f), Color(128,0,128,255));
+			Drawing2D::DrawRectangle(Rectangle2(-10.0f + i * 2.0f, sinRectTimer * 10.0f, 1.0f, 1.0f), Color(128,0,128,255));
 		else
-			Renderer2D::DrawRectangleOutline(Rectangle2(sinRectTimer * 10.0f, -10.0f + i * 2.0f, 1.0f, 1.0f), Color(255,128,255,255));
+			Drawing2D::DrawRectangleOutline(Rectangle2(sinRectTimer * 10.0f, -10.0f + i * 2.0f, 1.0f, 1.0f), Color(255,128,255,255));
 	}
 
+    /*
 	// Diamonds
 	for(int i = 0; i < 20; i++)
 	{
@@ -166,21 +167,22 @@ void Simple2DTests::OnDraw()
 			Math::Cos((diamondTimer + 0.05f * i) * Math::TWO_PI) * 10.0f, Math::Sin((diamondTimer + 0.05f * i) * Math::TWO_PI * 2.0f) * 5.0f,
 			(circleTimer + 0.1f * i) * Math::TWO_PI
 			) * Matrix2D::CreateRotation(this->diamondTimer * Math::TWO_PI);
-		Renderer2D::SetWorldTransform(diamondTransform);
+		Drawing2D::WorldTransform = diamondTransform;
 
 		// Draw the diamonds
 		if(i % 2 == 0)
-			Renderer2D::DrawDiamond(Rectangle2(-0.5f, -0.5f, 1.0f, 1.0f), Color(128,128,128,128), BlendMode::Add);
+			Drawing2D::DrawDiamond(Rectangle2(-0.5f, -0.5f, 1.0f, 1.0f), Color(128,128,128,128), BlendMode::Add);
 		else
-			Renderer2D::DrawDiamondOutline(Rectangle2(-0.5f, -0.5f, 1.0f, 1.0f), Color(255,255,255,255), BlendMode::Add);
+			Drawing2D::DrawDiamondOutline(Rectangle2(-0.5f, -0.5f, 1.0f, 1.0f), Color(255,255,255,255), BlendMode::Add);
 	}
-    Renderer2D::SetWorldTransform(Matrix2D::IDENTITY);
+    Drawing2D::WorldTransform = Matrix2D::IDENTITY;
+    */
     
     // Circles (Outlined)
 	for(int i = 0; i < 8; i++)
 	{
 		float angle1 = (circleTimer + i * 0.1f) * Math::TWO_PI;
-		Renderer2D::DrawCircleOutline(Circle2(i * Math::Cos(angle1) + 5.0f, i * Math::Sin(angle1) + 5.0f, 0.7f), 16, Color(0,255,255,255));
+		Drawing2D::DrawCircleOutline(Circle2(i * Math::Cos(angle1) + 5.0f, i * Math::Sin(angle1) + 5.0f, 0.7f), 16, Color(0,255,255,255));
 	}
     
     // Circles
@@ -199,9 +201,9 @@ void Simple2DTests::OnDraw()
                 float z = PerlinNoise::Noise2((x + totalElapsedSeconds) * scale, y * scale);
                 
                 if(z > 0)
-                    Renderer2D::DrawCircle(Circle2(x,y,step * z), 16, Color(0,64,128,64));
+                    Drawing2D::DrawCircle(Circle2(x,y,step * z), 16, Color(0,64,128,64));
                 else
-                    Renderer2D::DrawCircle(Circle2(x,y,step * -z), 16, Color(0,128,128,64));
+                    Drawing2D::DrawCircle(Circle2(x,y,step * -z), 16, Color(0,128,128,64));
             }
         }
     }
@@ -223,7 +225,7 @@ void Simple2DTests::OnDraw()
             vertices[step] = p + Vector2(-5.0f, -5.0f);
         }
         
-        Renderer2D::DrawPolyline(vertices, steps+1, Color(64,128,0,255));
+        Drawing2D::DrawPolyline(vertices, steps+1, Color(64,128,0,255));
     }
 
 
@@ -232,23 +234,23 @@ void Simple2DTests::OnDraw()
 
 	// Stack 1
 	Matrix2D stack1 = Matrix2D::CreateTranslation(4.0f, 4.0f) * Matrix2D::CreateRotation(rectTimer * Math::TWO_PI);
-	Renderer2D::SetWorldTransform(stack1);
-	Renderer2D::DrawCircle(Circle2(0.0f, 0.0f, 1.0f), 16, Color(0,128,0,128));
+	Drawing2D::WorldTransform = stack1;
+	Drawing2D::DrawCircle(Circle2(0.0f, 0.0f, 1.0f), 16, Color(0,128,0,128));
 
 	// Stack 2
 	Matrix2D stack2 = Matrix2D::CreateTranslation(-1.6f, -1.8f) * Matrix2D::CreateRotation(rectTimer * Math::TWO_PI) * stack1;
-	Renderer2D::SetWorldTransform(stack2);
-	Renderer2D::DrawCircle(Circle2(0.0f, 0.0f, 0.8f), 16, Color(24,164,24,128));
+	Drawing2D::WorldTransform = stack2;
+	Drawing2D::DrawCircle(Circle2(0.0f, 0.0f, 0.8f), 16, Color(24,164,24,128));
 
 	// Stack 3
 	Matrix2D stack3 = Matrix2D::CreateTranslation(1.2f, 0.7f) * Matrix2D::CreateRotation(circleTimer * Math::TWO_PI) * stack2;
-	Renderer2D::SetWorldTransform(stack3);
-	Renderer2D::DrawCircle(Circle2(0.0f, 0.0f, 0.6f), 16, Color(48,196,48,128));
+	Drawing2D::WorldTransform = stack3;
+	Drawing2D::DrawCircle(Circle2(0.0f, 0.0f, 0.6f), 16, Color(48,196,48,128));
 
 	// Stack 4
 	Matrix2D stack4 = Matrix2D::CreateTranslation(-0.7f, 0.5f) * Matrix2D::CreateRotation(diamondTimer * Math::TWO_PI) * stack3;
-	Renderer2D::SetWorldTransform(stack4);
-	Renderer2D::DrawCircle(Circle2(0.0f, 0.0f, 0.4f), 16, Color(64,224,64,128));
+	Drawing2D::WorldTransform = stack4;
+	Drawing2D::DrawCircle(Circle2(0.0f, 0.0f, 0.4f), 16, Color(64,224,64,128));
 
 	// Text
 	// ----------------------------------------------------
@@ -256,25 +258,25 @@ void Simple2DTests::OnDraw()
 	// Create a spinning / scaling transform
 	float textScale = 0.03f + Math::Sin(textScaleTimer * Math::TWO_PI) * 0.01f;
 	world = Matrix2D::CreateScaleRotateTranslate(textScale, -textScale, 5.0f, -5.0f, textSpinTimer * Math::TWO_PI);
-	Renderer2D::SetWorldTransform(world);
+	Drawing2D::WorldTransform = world;
 
 	// Draw some Text
     const wchar_t* sampleText = L"Sample Text...\nNew Line...";
-	Renderer2D::DrawText(SharedResources::Fonts.Arial20, sampleText, Vector2::ZERO, Color(255,224,160));
+	Drawing2D::DrawText(SharedResources::Fonts.Arial20, sampleText, Vector2::ZERO, Color(255,224,160));
 
 	// Images & Anims & Sprites
 	// ----------------------------------------------------
 
 	// Back to the identity transform
-	Renderer2D::SetWorldTransform(Matrix2D::IDENTITY);
+	Drawing2D::WorldTransform = Matrix2D::IDENTITY;
 
 	// Test the DrawImage() methods
-	Renderer2D::DrawImage(SharedResources::AtlasImages.Test1, Vector2(-5.0f, 0.0f), Color::WHITE, rectTimer * Math::TWO_PI, 0.04f, 0.04f);
-	Renderer2D::DrawImage(SharedResources::AtlasImages.Test1, Vector2(-9.0f, 5.0f), Vector2(-7.0f, 2.0f), Color(196,255,196));
+	Drawing2D::DrawAtlasImage(SharedResources::AtlasImages.Test1, Vector2(-5.0f, 0.0f), Color::WHITE, rectTimer * Math::TWO_PI, 0.04f, 0.04f);
+	Drawing2D::DrawAtlasImage(SharedResources::AtlasImages.Test1, Rectangle2(-9.0f, 5.0f, 2.0f, -3.0f), Color(196,255,196));
 
 	// Test sprite drawing
-	Renderer2D::DrawSprite(sprite1);
-	Renderer2D::DrawSprite(sprite2);
+	Drawing2D::DrawSprite(sprite1);
+	Drawing2D::DrawSprite(sprite2);
 
 	// Particle Systems
 	// ----------------------------------------------------
@@ -283,7 +285,7 @@ void Simple2DTests::OnDraw()
 	this->particleSystem2->Draw();
     
 	// Flush the 2D renderer
-	Renderer2D::Flush();
+	Drawing2D::Flush();
 }
 
 
