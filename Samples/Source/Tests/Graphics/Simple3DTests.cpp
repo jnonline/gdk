@@ -89,7 +89,7 @@ void Simple3DTests::OnUpdate(float elapsedSeconds)
 void Simple3DTests::OnDraw()
 {
 	// Clear the background
-	Graphics::Clear(
+    Graphics::Clear(
 		true, true, false, 
 		Color::FromNormalized(0.2f, 0.2f, 0.2f, 1.0f),
 		1.0f

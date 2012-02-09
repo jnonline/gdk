@@ -102,7 +102,7 @@ void StarfieldSample::OnDraw()
 		if(stars[i].Intensity < 160)
 		{
 			// Draw this star as a point
-			Renderer2D::DrawPoint(
+			Drawing2D::DrawPoint(
 				stars[i].Position, 
 				Color(stars[i].Intensity, stars[i].Intensity, stars[i].Intensity, 255)
 				);
@@ -115,7 +115,7 @@ void StarfieldSample::OnDraw()
 		if(stars[i].Intensity >= 160)
 		{
 			// Draw the star as an image
-			Renderer2D::DrawImage(
+			Drawing2D::DrawAtlasImage(
 				SharedResources::AtlasImages.Particle2, 
 				stars[i].Position, 
 				Color(stars[i].Intensity, stars[i].Intensity, stars[i].Intensity, 255),
@@ -127,5 +127,5 @@ void StarfieldSample::OnDraw()
 	}
 
 	// Flush 2d drawing
-	Renderer2D::Flush();
+	Drawing2D::Flush();
 }

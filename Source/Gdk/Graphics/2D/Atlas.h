@@ -80,6 +80,9 @@ namespace Gdk
         // *****************************************************************
 		Vector2 GetSize() {return Vector2((float)Width, (float)Height); }
         
+        void GetQuad(VertexP2T2C4* vertices, const Color& color = Color::WHITE);
+        void GetFittedQuad(VertexP2T2C4* vertices, const Rectangle2& fitToRect, const Color& color = Color::WHITE);
+        
         /// @}
 	};
 

@@ -287,82 +287,73 @@ bool ParticleSystem2D::AreAllParticlesActive()
 // ***********************************************************************
 void ParticleSystem2D::Draw()
 {
-	// Loop through the particles
-	Particle2D *particle = this->activePool;
-
-	// Get the shader used for rendering
-	Gdk::Shader* shader = this->Shader;
-	if(shader == NULL)
-		shader = Renderer2D::GetTexturedShader();
-
-	// Create a transform matrix for the emitter
+    // Get the first particle
+    Particle2D *particle = this->activePool;
+    if(particle == NULL)
+        return; // no particles to render, so bail
+    
+    // Flush the current drawing data
+    Drawing2D::Flush();
+    
+	// Set the shader used for rendering this particle system
+    if(this->Shader == NULL)
+        Drawing2D::SetTexturedShader(this->Shader);
+    
+    // Create a transform matrix for the emitter
 	Matrix2D world;
 	world.RotateScaleTranslate(1.0f, 1.0f, this->Position.X, this->Position.Y, this->Orientation);
 
-	// We can only draw in batches small enough to fit the MAX Quads, so lets loop until we can draw all the batches
-	int numParticlesLeft = this->activePoolCount;
-	while(numParticlesLeft > 0)
-	{
-		// How many particles should we draw in this batch?
-		int batchSize = Math::Min(GDK_MAX_QUADS, numParticlesLeft);
-		numParticlesLeft -= batchSize;
+    // Get the batch for drawing the particles
+    Drawing2DBatch* batch = Drawing2D::GetBatch(
+        particle->Image->Sheet->Texture->GLTextureId,
+        0, 
+        this->BlendMode, 
+        VertexP2T2C4::Format,
+        PrimitiveTypes::IndexedTriangles
+        );
 
-		// Get a batch to draw the particles
-		Renderer2DBatchP2T2C4 batch = Renderer2D::GetBatchP2T2C4(
-			batchSize, 
-			Renderer2DPrimitiveType::Quads, 
-			particle->Image->Sheet->Texture->GLTextureId, 
-			0, 
-			this->BlendMode, 
-			this->Z, 
-			shader
-			);
 
-		// Are the particles relative to the emitter?
-		if(this->ParticlesAreRelativeToEmitter)
-		{
-			// Draw all the particles, while applying the emitter world transform
-			while(batchSize > 0)
-			{
-				// Transform the particle into world coordinates (from emitter local)
-				Vector2 worldPosition = world.TransformPoint(particle->Position);
+    // Are the particles relative to the emitter?
+    Matrix2D emitterTransform;
+    if(this->ParticlesAreRelativeToEmitter)
+    {
+        // Create a transform from emitter-to-world space
+        emitterTransform = Matrix2D::CreateRotateScaleTranslate(1.0f, 1.0f, this->Position.X, this->Position.Y, this->Orientation);
+    }
+    
+    VertexP2T2C4 quadVertices[4];
+    
+    // Loop through the particles
+    while(particle != NULL)
+    {
+        // Get teh world space position of the particle
+        Vector2 worldPosition = particle->Position;
+        if(this->ParticlesAreRelativeToEmitter)
+            emitterTransform.TransformPointInPlace(worldPosition.X, worldPosition.Y);
+        
+        // Get a quad for drawing the particle's atlas image
+        particle->Image->GetQuad(quadVertices, particle->Color);
+        
+        // Get a particle to world space transform
+        float scale = particle->Size  / particle->Image->Width;
+        Matrix2D localXForm = Matrix2D::CreateRotateScaleTranslate(scale, scale, worldPosition.X, worldPosition.Y, particle->Orientation);
+        
+        // Transform the quad to the particles
+        localXForm.TransformPointInPlace(quadVertices[0].X, quadVertices[0].Y);
+        localXForm.TransformPointInPlace(quadVertices[1].X, quadVertices[1].Y);
+        localXForm.TransformPointInPlace(quadVertices[2].X, quadVertices[2].Y);
+        localXForm.TransformPointInPlace(quadVertices[3].X, quadVertices[3].Y);
 
-				// Draw this particle
-				float scale = particle->Size  / particle->Image->Width;
-				Renderer2D::DrawImage(
-					batch,
-					particle->Image,
-					worldPosition,
-					particle->Color, 
-					particle->Orientation + this->Orientation,
-					scale, scale
-					);
-
-				// Next particle
-				particle = particle->Next;
-				batchSize--;
-			}
-		}
-		else
-		{
-			// Draw all the particles in world space
-			while(batchSize > 0)
-			{
-				// Draw this particle
-				float scale = particle->Size  / particle->Image->Width;
-				Renderer2D::DrawImage(
-					batch,
-					particle->Image,
-					particle->Position,
-					particle->Color, 
-					particle->Orientation,
-					scale, scale
-					);
-
-				// Next particle
-				particle = particle->Next;
-				batchSize--;
-			}
-		}
-	}
+        // Add this quad to the batch
+        batch->Geometry->AddQuad(quadVertices);
+        
+        // Next particle
+        particle = particle->Next;
+    }
+    
+    // Flush the drawing data
+    Drawing2D::Flush();
+    
+    // Disable the custom shader
+    Drawing2D::SetTexturedShader(NULL);
 }

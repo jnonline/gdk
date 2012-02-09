@@ -156,6 +156,7 @@ namespace Gdk
 		static const int MAX_VERTEX_ATTRIBUTES = 8;
         
 		static void EnableVertexAttribArray(int index, bool enabled, bool forceChange = false);
+        static void EnableVertexAttribArrays(int numToEnable);
 		static void BindVertexBuffer(GLuint glVertexBufferId, bool forceChange = false);
 		static void BindIndexBuffer(GLuint glIndexBufferId, bool forceChange = false);
 

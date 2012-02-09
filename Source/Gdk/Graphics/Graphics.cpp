@@ -6,9 +6,6 @@
 #include "BasePCH.h"
 #include "Graphics.h"
 
-#include "2D/Renderer2D.h"
-#include "3D/BillboardRenderer.h"
-
 using namespace Gdk;
 
 // Static globals
@@ -211,7 +208,7 @@ void Graphics::InitAssetDependencies()
 	// Initialize Graphics Sub-Managers
 	// ------------------------------------------
 
-	Renderer2D::Init();
+    Drawing2D::Init();
 	BillboardRenderer::Init();
 }
 
@@ -227,7 +224,7 @@ void Graphics::Shutdown()
 	// ------------------------------------------
 
 	BillboardRenderer::Shutdown();
-	Renderer2D::Shutdown();
+    Drawing2D::Shutdown();
 }
 
 // *****************************************************************
@@ -462,6 +459,8 @@ void Graphics::SetColorWriteMask(bool red, bool green, bool blue, bool alpha, bo
 ///     A float value that the depth render buffer will be set to, if clearDepth == true.  (default: 1.0)
 /// @param stencil
 ///     A integer value that the stencil render buffer will be set to, if clearStencil == true.  (default: 0)
+/// @remarks
+///     This method will re-enable the color mask & depth writing when clearing those buffers
 // *****************************************************************
 void Graphics::Clear(
     bool clearColor, bool clearDepth, bool clearStencil,
@@ -486,11 +485,19 @@ void Graphics::Clear(
     // Set the bits of which buffers to clear
     GLuint buffers = 0;
     if(clearColor)
+    {
+        Graphics::SetColorWriteMask(true, true, true, true);
         buffers |= GL_COLOR_BUFFER_BIT;
+    }
     if(clearDepth)
+    {
+        Graphics::EnableDepthWrite(true);
         buffers |= GL_DEPTH_BUFFER_BIT;
+    }
     if(clearStencil)
+    {
         buffers |= GL_STENCIL_BUFFER_BIT;
+    }
 
 	glClear((GLbitfield)buffers);
 }
@@ -982,7 +989,7 @@ void Graphics::SetActiveShaderProgram(GLuint shaderProgramId, bool forceChange)
 ///     underlying graphics system to be updated.  (default: false)
 /// @note
 ///     See the OpenGL documentation for glEnableVertexAttribArray() for 
-///     information on scissor testing
+///     more information
 // *****************************************************************
 void Graphics::EnableVertexAttribArray(int index, bool enabled, bool forceChange)
 {
@@ -995,6 +1002,28 @@ void Graphics::EnableVertexAttribArray(int index, bool enabled, bool forceChange
 			glDisableVertexAttribArray(index);
 		currentEnabledVertexAttributes[index] = enabled;
 	}
+}
+
+// *****************************************************************
+/// @brief
+///     Enables the first N vertex attributes arrays and disables the rest
+/// @param numToEnable
+///     Number of the vertex attribute arrays to enable
+/// @note
+///     See the OpenGL documentation for glEnableVertexAttribArray() for 
+///     more information
+// *****************************************************************
+void Graphics::EnableVertexAttribArrays(int numToEnable)
+{
+	// Only change state if we need to :)
+	EnableVertexAttribArray(0, numToEnable>0, false);
+    EnableVertexAttribArray(1, numToEnable>1, false);
+    EnableVertexAttribArray(2, numToEnable>2, false);
+    EnableVertexAttribArray(3, numToEnable>3, false);
+    EnableVertexAttribArray(4, numToEnable>4, false);
+    EnableVertexAttribArray(5, numToEnable>5, false);
+    EnableVertexAttribArray(6, numToEnable>6, false);
+    EnableVertexAttribArray(7, numToEnable>7, false);
 }
 
 // *****************************************************************

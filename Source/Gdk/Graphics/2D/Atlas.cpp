@@ -25,6 +25,61 @@ AtlasImage::~AtlasImage()
 
 // *****************************************************************
 /// @brief
+///     Gets a 4 vertex quad that can be used to render the atlas image.
+/// @param vertices
+///     An array of 4 vertices that will be initialized with the vertex data for drawing this atlas image
+/// @param color
+///     The color that will be set for each vertex
+// *****************************************************************
+void AtlasImage::GetQuad(VertexP2T2C4* vertices, const Color& color)
+{
+    // Calculate the extents of the quad, relative to the reference point
+	float extentLeft = (this->CroppedImageX - this->Width * this->ReferencePoint.X);
+	float extentRight = extentLeft + this->CroppedImageWidth;
+	float extentTop = (this->CroppedImageY - this->Height * this->ReferencePoint.Y);
+	float extentBottom = extentTop + this->CroppedImageHeight;
+    
+	float dx1 = extentLeft,		dy1 = extentTop;
+	float dx2 = extentRight,	dy2 = extentTop;
+	float dx3 = extentLeft,		dy3 = extentBottom;
+	float dx4 = extentRight,	dy4 = extentBottom;
+    
+    vertices[0] = VertexP2T2C4(dx1, dy1, this->TopLeftTexCoord.X, this->TopLeftTexCoord.Y, color.R, color.G, color.B, color.A);
+    vertices[1] = VertexP2T2C4(dx2, dy2, this->BottomRightTexCoord.X, this->TopLeftTexCoord.Y, color.R, color.G, color.B, color.A);
+    vertices[2] = VertexP2T2C4(dx3, dy3, this->TopLeftTexCoord.X, this->BottomRightTexCoord.Y, color.R, color.G, color.B, color.A);
+    vertices[3] = VertexP2T2C4(dx4, dy4, this->BottomRightTexCoord.X, this->BottomRightTexCoord.Y, color.R, color.G, color.B, color.A);
+}
+
+// *****************************************************************
+/// @brief
+///     Gets a 4 vertex quad that can be used to render the atlas image into a given rectangle
+/// @param vertices
+///     An array of 4 vertices that will be initialized with the vertex data for drawing this atlas image
+/// @param color
+///     The color that will be set for each vertex
+// *****************************************************************
+void AtlasImage::GetFittedQuad(VertexP2T2C4* vertices, const Rectangle2& fitToRect, const Color& color)
+{
+	// Calculate the positions of the cropped image within the given destination rectangle
+	float left = fitToRect.Position.X + fitToRect.Size.X * this->CroppedImageX / this->Width;
+	float right = left + fitToRect.Size.X * this->CroppedImageWidth / this->Width;
+	float top = fitToRect.Position.Y + fitToRect.Size.Y * this->CroppedImageY / this->Height;
+	float bottom = top + fitToRect.Size.Y * this->CroppedImageHeight / this->Height;
+    
+	float dx1 = left,		dy1 = top;
+	float dx2 = right,		dy2 = top;
+	float dx3 = left,		dy3 = bottom;
+	float dx4 = right,		dy4 = bottom;
+    
+    vertices[0] = VertexP2T2C4(dx1, dy1, this->TopLeftTexCoord.X, this->TopLeftTexCoord.Y, color.R, color.G, color.B, color.A);
+    vertices[1] = VertexP2T2C4(dx2, dy2, this->BottomRightTexCoord.X, this->TopLeftTexCoord.Y, color.R, color.G, color.B, color.A);
+    vertices[2] = VertexP2T2C4(dx3, dy3, this->TopLeftTexCoord.X, this->BottomRightTexCoord.Y, color.R, color.G, color.B, color.A);
+    vertices[3] = VertexP2T2C4(dx4, dy4, this->BottomRightTexCoord.X, this->BottomRightTexCoord.Y, color.R, color.G, color.B, color.A);
+}
+
+
+// *****************************************************************
+/// @brief
 ///     Constructs a new ~AtlasAnimation 
 // *****************************************************************
 AtlasAnimation::AtlasAnimation()

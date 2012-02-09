@@ -142,22 +142,22 @@ void SampleGame::OnDraw(float elapsedSeconds)
 	Graphics::GlobalUniforms.Projection->SetMatrix4(proj);
 
 	// Reset the identity world transform
-	Renderer2D::SetWorldTransform(Matrix2D::IDENTITY);
+	Drawing2D::WorldTransform = Matrix2D::IDENTITY;
 
 	 // Draw the next/previous buttons
-	Renderer2D::DrawRectangle(prevButtonRect, Color(64,64,64,128));
-	Renderer2D::DrawRectangle(nextButtonRect, Color(64,64,64,128));
-	Renderer2D::DrawRectangleOutline(prevButtonRect, Color(196,196,196,128));
-	Renderer2D::DrawRectangleOutline(nextButtonRect, Color(196,196,196,128));
-	Renderer2D::DrawText(SharedResources::Fonts.Arial20, L"<", prevButtonRect.Position + Vector2(3,0), Color(196, 255, 128));
-	Renderer2D::DrawText(SharedResources::Fonts.Arial20, L">", nextButtonRect.Position + Vector2(4,0), Color(196, 255, 128));
+	Drawing2D::DrawRectangle(prevButtonRect, Color(64,64,64,128));
+	Drawing2D::DrawRectangle(nextButtonRect, Color(64,64,64,128));
+	Drawing2D::DrawRectangleOutline(prevButtonRect, Color(196,196,196,128));
+	Drawing2D::DrawRectangleOutline(nextButtonRect, Color(196,196,196,128));
+	Drawing2D::DrawText(SharedResources::Fonts.Arial20, L"<", prevButtonRect.Position + Vector2(3,0), Color(196, 255, 128));
+	Drawing2D::DrawText(SharedResources::Fonts.Arial20, L">", nextButtonRect.Position + Vector2(4,0), Color(196, 255, 128));
 
 	// Draw the module name
 	wstring& moduleName = Module::GetRegistrations()[this->activeModuleIndex]->Name;
-	Renderer2D::DrawText(SharedResources::Fonts.Arial20, moduleName.c_str(), nameTextPosition, Color(196, 255, 128));
+	Drawing2D::DrawText(SharedResources::Fonts.Arial20, moduleName.c_str(), nameTextPosition, Color(196, 255, 128));
 
 	// Flush the 2D renderer
-	Renderer2D::Flush();
+	Drawing2D::Flush();
 }
 
 

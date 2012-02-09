@@ -224,19 +224,19 @@ void Tanks3DModule::OnDraw()
     swprintf(sampleText, 256, L"Sample Text...");
     Vector2 textSize = SharedResources::Fonts.Arial20->GetTextSize(sampleText);
     Vector2 textPosition((Application::GetWidth() - textSize.X) * 0.5f, 10);
-	Renderer2D::DrawText(SharedResources::Fonts.Arial20, sampleText, textPosition, Color::BLUE);
+	Drawing2D::DrawText(SharedResources::Fonts.Arial20, sampleText, textPosition, Color::BLUE);
 
 	// Draw the chopper sprite
-	Renderer2D::DrawSprite(chopper);
+	Drawing2D::DrawSprite(chopper);
     
     // Draw some touch circles
     vector<Touch>& touches = TouchInput::GetAllTouches();
     for(vector<Touch>::iterator touchIter = touches.begin(); touchIter != touches.end(); touchIter++)
     {
         Touch& touch = *touchIter;
-        Renderer2D::DrawCircle(Circle2(touch.GetPosition(), 20.0f), 16, Color::PURPLE);
+        Drawing2D::DrawCircle(Circle2(touch.GetPosition(), 20.0f), 16, Color::PURPLE);
     }
 
 	// Flush the 2D renderer
-	Renderer2D::Flush();
+	Drawing2D::Flush();
 }
