@@ -24,7 +24,7 @@ bool SampleGame::OnLoadSettings(ApplicationSettings &settings)
 {
 	Game::OnLoadSettings(settings);
 
-	settings.Title = L"Gdk Sample Game";
+	settings.Title = "Gdk Sample Game";
 	settings.Width = 640;
 	settings.Height = 480;
 	settings.AllowResize = true;
@@ -55,7 +55,7 @@ bool SampleGame::OnInit()
     Module::Init();
     
 	// Init the first module
-	ASSERT(Module::GetRegistrations().size() > 0, L"No Registered Modules!");
+	ASSERT(Module::GetRegistrations().size() > 0, "No Registered Modules!");
 	this->activeModuleIndex = this->changeToModuleIndex = 0;
 	this->activeModule = Module::GetRegistrations()[this->activeModuleIndex]->CreateModule();
 
@@ -109,7 +109,7 @@ void SampleGame::OnUpdate(float elapsedSeconds)
 	nextButtonRect = Rectangle2((width * 0.5f) + 100.0f, height - 20.0f, 20.0f, 20.0f);
 
 	// Calculate the position of the module name
-	wstring& moduleName = Module::GetRegistrations()[this->activeModuleIndex]->Name;
+	string& moduleName = Module::GetRegistrations()[this->activeModuleIndex]->Name;
 	Vector2 nameTextSize = Gdk::SharedResources::Fonts.Arial20->GetTextSize(moduleName.c_str());
 	nameTextPosition = Vector2(width * 0.5f - nameTextSize.X * 0.5f, height - 20.0f);
 
@@ -149,11 +149,11 @@ void SampleGame::OnDraw(float elapsedSeconds)
 	Drawing2D::DrawRectangle(nextButtonRect, Color(64,64,64,128));
 	Drawing2D::DrawRectangleOutline(prevButtonRect, Color(196,196,196,128));
 	Drawing2D::DrawRectangleOutline(nextButtonRect, Color(196,196,196,128));
-	Drawing2D::DrawText(SharedResources::Fonts.Arial20, L"<", prevButtonRect.Position + Vector2(3,0), Color(196, 255, 128));
-	Drawing2D::DrawText(SharedResources::Fonts.Arial20, L">", nextButtonRect.Position + Vector2(4,0), Color(196, 255, 128));
+	Drawing2D::DrawText(SharedResources::Fonts.Arial20, "<", prevButtonRect.Position + Vector2(3,0), Color(196, 255, 128));
+	Drawing2D::DrawText(SharedResources::Fonts.Arial20, ">", nextButtonRect.Position + Vector2(4,0), Color(196, 255, 128));
 
 	// Draw the module name
-	wstring& moduleName = Module::GetRegistrations()[this->activeModuleIndex]->Name;
+	string& moduleName = Module::GetRegistrations()[this->activeModuleIndex]->Name;
 	Drawing2D::DrawText(SharedResources::Fonts.Arial20, moduleName.c_str(), nameTextPosition, Color(196, 255, 128));
 
 	// Flush the 2D renderer

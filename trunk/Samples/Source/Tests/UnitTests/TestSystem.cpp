@@ -12,24 +12,24 @@
 // ***********************************************************************
 TestStatus::Enum UnitTestsModule::Test_System_Logging(TestExecutionContext *context)
 {
-    context->Log->WriteLine(LogLevel::Info, L"Writing to the GDK log");
+    context->Log->WriteLine(LogLevel::Info, "Writing to the GDK log");
     
     // Enable verbose logging
     Log::MaxLevel = LogLevel::Verbose;
     
     // Write some logs
-    LOG_VERBOSE(L"Verbose Log Test");
-    LOG_INFO(L"Informational Log Test");
-    LOG_WARN(L"Warning Log Test");
-    LOG_ERROR(L"Error Log Test");
+    LOG_VERBOSE("Verbose Log Test");
+    LOG_INFO("Informational Log Test");
+    LOG_WARN("Warning Log Test");
+    LOG_ERROR("Error Log Test");
     
     // Test log formatting
-    LOG_INFO(L"Log Format Test: str[%ls] int[%d] float[%f]", L"ABC", 123, 3.14f);
+    LOG_INFO("Log Format Test: str[%s] int[%d] float[%f]", "ABC", 123, 3.14f);
     
     // Test lower log levels
     Log::MaxLevel = LogLevel::Warning;
-    LOG_VERBOSE(L"TEST FAIL - Loglevel pruning isnt working if you see this");
-    LOG_INFO(L"TEST FAIL - Loglevel pruning isnt working if you see this");
+    LOG_VERBOSE("TEST FAIL - Loglevel pruning isnt working if you see this");
+    LOG_INFO("TEST FAIL - Loglevel pruning isnt working if you see this");
     
     Log::MaxLevel = LogLevel::Verbose;
     
@@ -39,11 +39,11 @@ TestStatus::Enum UnitTestsModule::Test_System_Logging(TestExecutionContext *cont
     int i = 0;
     
     // Test a valid assertion
-    ASSERT(i == 0, L"TEST FAIL - Assertions are broken if you see this");
+    ASSERT(i == 0, "TEST FAIL - Assertions are broken if you see this");
     
     // Test a failing assertion
-    //ASSERT(i == 1, L"Plain assertion  (Press NO to continue testing)");
-    //ASSERT(i == 1, L"Assertion with formating: str[%ls] int[%d] float[%f]", L"ABC", 123, 3.14f);
+    //ASSERT(i == 1, "Plain assertion  (Press NO to continue testing)");
+    //ASSERT(i == 1, "Assertion with formating: str[%s] int[%d] float[%f]", "ABC", 123, 3.14f);
     
     return TestStatus::Pass;
 }
@@ -63,34 +63,34 @@ TestStatus::Enum UnitTestsModule::Test_System_Memory(TestExecutionContext *conte
 {
     // Test Single object / default constructor
     MemTest *memTest1 = GdkNew MemTest();
-    UNIT_TEST_CHECK(memTest1 != NULL, L"Single object, default constructor");
+    UNIT_TEST_CHECK(memTest1 != NULL, "Single object, default constructor");
     memTest1->i = 1;
     GdkDelete(memTest1);
     
     // Test: Single object, parameterized constructor
-    context->Log->WriteLine(LogLevel::Info, L"Single object, parameterized constructor");
+    context->Log->WriteLine(LogLevel::Info, "Single object, parameterized constructor");
     MemTest *memTest2 = GdkNew MemTest(1);
-    UNIT_TEST_CHECK(memTest2 != NULL, L"Single object, parameterized constructor");
+    UNIT_TEST_CHECK(memTest2 != NULL, "Single object, parameterized constructor");
     memTest2->i = 2;
     GdkDelete(memTest2);
     
     // Test 1D object array
     MemTest *memTest3 = GdkNew1DArray<MemTest>(10);
-    UNIT_TEST_CHECK(memTest3 != NULL, L"1D object array");
+    UNIT_TEST_CHECK(memTest3 != NULL, "1D object array");
     memTest3[0].i = 321;
     memTest3[1].i = 123;
     GdkDelete1DArray(memTest3);
     
     // Test 2D object array
     MemTest **memTest4 = GdkNew2DArray<MemTest>(2, 3);
-    UNIT_TEST_CHECK(memTest4 != NULL, L"2D object array");
+    UNIT_TEST_CHECK(memTest4 != NULL, "2D object array");
     memTest4[0][0].i = 123;
     memTest4[1][2].i = 321;
     GdkDelete2DArray(memTest4);
     
     // Test Alloc / Free
     void* memTest5 = GdkAlloc(100);
-    UNIT_TEST_CHECK(memTest5 != NULL, L"GdkAlloc / GdkFree on 100 byte buffer");
+    UNIT_TEST_CHECK(memTest5 != NULL, "GdkAlloc / GdkFree on 100 byte buffer");
     GdkFree(memTest5);
     
     return TestStatus::Pass;
@@ -99,21 +99,21 @@ TestStatus::Enum UnitTestsModule::Test_System_Memory(TestExecutionContext *conte
 // ***********************************************************************
 TestStatus::Enum UnitTestsModule::Test_System_Containers_StringHashMap(TestExecutionContext *context)
 {
-    context->Log->WriteLine(LogLevel::Info, L"Creating StringHashMap");
+    context->Log->WriteLine(LogLevel::Info, "Creating StringHashMap");
     StringHashMap<int> hashMap;
     hashMap.Add("Foo", 3);
     hashMap.Add("Bar", 1);
-    hashMap.Add("Gil", 4);
+    hashMap.Add("Gi", 4);
     hashMap.Add("Baz", 2);
     
     // Find
-    StringHashMap<int>::Iterator iter1 = hashMap.Find("Gil");
+    StringHashMap<int>::Iterator iter1 = hashMap.Find("Gi");
     StringHashMap<int>::Iterator iter2 = hashMap.Find("Poo");
-    UNIT_TEST_CHECK(iter1 != hashMap.End(), L"Find() existing value");
-    UNIT_TEST_CHECK(iter2 == hashMap.End(), L"Find() a missing string hash");
+    UNIT_TEST_CHECK(iter1 != hashMap.End(), "Find() existing value");
+    UNIT_TEST_CHECK(iter2 == hashMap.End(), "Find() a missing string hash");
     
     // Iteration
-    context->Log->WriteLine(LogLevel::Info, L"Testing Iteration");
+    context->Log->WriteLine(LogLevel::Info, "Testing Iteration");
     for(StringHashMap<int>::Iterator iter = hashMap.Begin(); iter != hashMap.End(); iter++)
     {
         UInt32 hash = iter->first;
@@ -124,7 +124,7 @@ TestStatus::Enum UnitTestsModule::Test_System_Containers_StringHashMap(TestExecu
     }
     
     // Removal
-    context->Log->WriteLine(LogLevel::Info, L"Testing Remove() method");
+    context->Log->WriteLine(LogLevel::Info, "Testing Remove() method");
     hashMap.Remove("Baz");
     StringHashMap<int>::Iterator removalIter = hashMap.Find("Foo");
     hashMap.Remove(removalIter);
@@ -135,7 +135,7 @@ TestStatus::Enum UnitTestsModule::Test_System_Containers_StringHashMap(TestExecu
 // ***********************************************************************
 TestStatus::Enum UnitTestsModule::Test_System_Containers_SortedVector(TestExecutionContext *context)
 {
-    context->Log->WriteLine(LogLevel::Info, L"Creating SortedVector");
+    context->Log->WriteLine(LogLevel::Info, "Creating SortedVector");
     
     SortedVector<int> sv;
     
@@ -145,7 +145,7 @@ TestStatus::Enum UnitTestsModule::Test_System_Containers_SortedVector(TestExecut
     sv.AddSorted(7);
     sv.AddSorted(15);
     
-    context->Log->WriteLine(LogLevel::Info, L"Testing iteration");
+    context->Log->WriteLine(LogLevel::Info, "Testing iteration");
     for(SortedVector<int>::iterator i = sv.begin(); i < sv.end(); i++)
     {
         int val = *i;
@@ -153,8 +153,8 @@ TestStatus::Enum UnitTestsModule::Test_System_Containers_SortedVector(TestExecut
         GDK_NOT_USED(val);
     }
     
-    UNIT_TEST_CHECK(sv.front() == 2, L"Sorted vector front()");
-    UNIT_TEST_CHECK(sv.back() == 15, L"Sorted vector back()");
+    UNIT_TEST_CHECK(sv.front() == 2, "Sorted vector front()");
+    UNIT_TEST_CHECK(sv.back() == 15, "Sorted vector back()");
     
     return TestStatus::Pass;
 }
@@ -196,12 +196,12 @@ TestStatus::Enum UnitTestsModule::Test_System_Threading_ThreadedWorkQueue(TestEx
     for(int i=0; i<1000; i++)
         items[i].Value = i;
     
-    context->Log->WriteLine(LogLevel::Info, L"Creating ThreadedWorkQueue");
+    context->Log->WriteLine(LogLevel::Info, "Creating ThreadedWorkQueue");
     
     // Create a work queue
     TestWorkQueue* workQueue = GdkNew TestWorkQueue();
     
-    context->Log->WriteLine(LogLevel::Info, L"Loading queue with 1000 work items");
+    context->Log->WriteLine(LogLevel::Info, "Loading queue with 1000 work items");
     
     // Loop through the work items
     for(int i=0; i<1000; i++)
@@ -214,13 +214,13 @@ TestStatus::Enum UnitTestsModule::Test_System_Threading_ThreadedWorkQueue(TestEx
             Thread::Sleep(5);
     }
     
-    context->Log->WriteLine(LogLevel::Info, L"Waiting for work Queue to finish");
+    context->Log->WriteLine(LogLevel::Info, "Waiting for work Queue to finish");
     
     // Wait for the queue to finish
     while(workQueue->GetQueueCount() > 0)
         Thread::Sleep(5);
 
-    context->Log->WriteLine(LogLevel::Info, L"Verifying work");
+    context->Log->WriteLine(LogLevel::Info, "Verifying work");
 
     // Verify the work
     int numBadItems = 0;
@@ -233,9 +233,9 @@ TestStatus::Enum UnitTestsModule::Test_System_Threading_ThreadedWorkQueue(TestEx
     }
     
     if(numBadItems > 0)
-        context->Log->WriteLine(LogLevel::Error, L"%d of 1000 work items failed to be processed correctly!!");
+        context->Log->WriteLine(LogLevel::Error, "%d of 1000 work items failed to be processed correctly!!", numBadItems);
     
-    context->Log->WriteLine(LogLevel::Info, L"Shutdown down work queue");
+    context->Log->WriteLine(LogLevel::Info, "Shutdown down work queue");
     
     // Shutdown & Delete the work queue
     GdkDelete(workQueue);
@@ -267,7 +267,7 @@ void *ThreadTestFunction(void * arg)
 {
 	int i = (int) arg;
 	UInt32 threadId = Thread::GetCurrentThreadId();
-	LOG_INFO(L"Thread ID: %d  | arg = %d | From thread()", threadId, i);
+	LOG_INFO("Thread ID: %d  | arg = %d | From thread()", threadId, i);
     Thread::Sleep(100);
 	return (void*) i;
 }
@@ -277,51 +277,51 @@ Event *event1 = NULL;
 // ***********************************************************************
 void *EventTestFunction(void * arg)
 {
-	LOG_INFO(L"EventTestFunction():  Pre-event");
+	LOG_INFO("EventTestFunction():  Pre-event");
 
 	event1->Wait();
 
-	LOG_INFO(L"EventTestFunction():  Wait 1 finished!");
+	LOG_INFO("EventTestFunction():  Wait 1 finished!");
 
 	event1->Wait();
 
-	LOG_INFO(L"EventTestFunction():  Wait 2 finished!");
+	LOG_INFO("EventTestFunction():  Wait 2 finished!");
 
 	return 0;
 }
 
 	// ================================================================
 	{
-		WriteLine(LogLevel::Info, L"Running: Threading Tests");
+		WriteLine(LogLevel::Info, "Running: Threading Tests");
 
 		// Simple thread test
 		// ---------------------
 
-		LOG_INFO(L"-- Test: Simple Thread");
+		LOG_INFO("-- Test: Simple Thread");
 		int thread1Input = 10;
 		Thread thread1 = Thread::Create(ThreadTestFunction, (void*)thread1Input, false);
 		UInt32 thread1Id = thread1.GetId();
-		LOG_INFO(L"Thread ID: %d  | From main()", thread1Id);
+		LOG_INFO("Thread ID: %d  | From main()", thread1Id);
 		int thread1Output = (int) thread1.Join();
-		ASSERT(thread1Input == thread1Output, L"thread input != output");
+		ASSERT(thread1Input == thread1Output, "thread input != output");
 
 		// Event test
 		// ---------------------
 
-		LOG_INFO(L"-- Test: Simple Event");
+		LOG_INFO("-- Test: Simple Event");
 		event1 = Event::Create();
-		LOG_INFO(L"Creating thread");
+		LOG_INFO("Creating thread");
 		Thread thread2 = Thread::Create(EventTestFunction);
 
-		LOG_INFO(L"Sleeping 100");
+		LOG_INFO("Sleeping 100");
         Thread::Sleep(100);
-		LOG_INFO(L"Signalling event");
+		LOG_INFO("Signalling event");
 		event1->Set();
         Thread::Sleep(10);
 
-		LOG_INFO(L"Sleeping 100");
+		LOG_INFO("Sleeping 100");
         Thread::Sleep(100);
-		LOG_INFO(L"Signalling event");
+		LOG_INFO("Signalling event");
 		event1->Set();
 
 		thread2.Join();
@@ -340,7 +340,7 @@ void *EventTestFunction(void * arg)
 	}
 	
 
-	WriteLine(LogLevel::System, L"Tests Complete");
+	WriteLine(LogLevel::System, "Tests Complete");
 
 }
  */

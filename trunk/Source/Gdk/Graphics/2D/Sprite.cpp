@@ -160,7 +160,7 @@ short Sprite::GetCurrentFrame()
 // ***********************************************************************
 void Sprite::SetCurrentFrame(short index)
 {
-	ASSERT(index >= 0 && index < (short)animationSet.size(), L"Index out of range of animation set");
+	ASSERT(index >= 0 && index < (short)animationSet.size(), "Index out of range of animation set");
 	this->currentFrameIndex = index;
 	this->secondsSinceLastFrame = 0.0f;
 }

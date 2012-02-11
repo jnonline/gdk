@@ -15,7 +15,7 @@ using namespace Gdk;
 bool Log::Enabled = true;
 LogLevel::Enum Log::MaxLevel = LogLevel::Verbose;
 string Log::logFilePath;
-wchar_t* Log::msgBuffer = NULL;
+char* Log::msgBuffer = NULL;
 
 // *****************************************************************
 const char* LogLevel::ToString(LogLevel::Enum logLevel)
@@ -44,11 +44,11 @@ const char* LogLevel::ToString(LogLevel::Enum logLevel)
 /// @param line
 ///     The line number in the code file of the method call (usually __LINE__)
 /// @param format
-///     A wprintf style format string to be written to the log.
+///     A printf style format string to be written to the log.
 /// @param ...
 ///     Insertion values for the format string
 // *****************************************************************
-void Log::Write(LogLevel::Enum logLevel, const char* file, int line, const wchar_t *format, ...)
+void Log::Write(LogLevel::Enum logLevel, const char* file, int line, const char *format, ...)
 {
 	// Is logging disabled?
 	if(Log::Enabled == false)
@@ -75,9 +75,9 @@ void Log::Write(LogLevel::Enum logLevel, const char* file, int line, const wchar
 	GDK_BEGIN_CRITICAL_SECTION(LogWriter)
 	{
 		// Add the current time & log level to the msg buffer
-        int charsWritten = swprintf(
+        int charsWritten = GDK_SPRINTF(
             msgBuffer, 19500, 
-            L"[%02d/%02d/%02d %02d:%02d:%02d][%hs]:", 
+            "[%02d/%02d/%02d %02d:%02d:%02d][%s]:", 
             timeinfo->tm_mon + 1, timeinfo->tm_mday, timeinfo->tm_year % 100, 
             timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec,
             LogLevel::ToString(logLevel)
@@ -85,26 +85,24 @@ void Log::Write(LogLevel::Enum logLevel, const char* file, int line, const wchar
         
         if(charsWritten < 0)
         {
-            // If we got here, something really bad happened..
-            //   Did you use %s or %S instead of %hs & %ls???
             Gdk::DebugBreak();
         }
         
-		wchar_t *offset = msgBuffer + charsWritten;
+		char *offset = msgBuffer + charsWritten;
         
 		// Add the custom message to the log  (using variable args)
 		va_list args;
 		va_start (args, format);
-		int charsWritten2 = vswprintf(offset, 2048, format, args);
+		int charsWritten2 = GDK_VSPRINTF(offset, 2048, format, args);
 		va_end (args);
         offset += charsWritten2;
 
 		// Is there a file & line number?
         int charsWritten3 = 0;
 		if(file != NULL)
-			charsWritten3 = swprintf(offset, 2048, L"  [File: %hs][Line: %d]\n", file, line);
+			charsWritten3 = GDK_SPRINTF(offset, 2048, "  [File: %s][Line: %d]\n", file, line);
 		else // No file & line
-			charsWritten3 = swprintf(offset, 2048, L"\n");
+			charsWritten3 = GDK_SPRINTF(offset, 2048, "\n");
         
         offset += charsWritten3;
 
@@ -114,7 +112,7 @@ void Log::Write(LogLevel::Enum logLevel, const char* file, int line, const wchar
         #ifdef GDKPLATFORM_WINDOWS
 			OutputDebugString(msgBuffer);
         #else
-            wprintf(msgBuffer);
+            printf(msgBuffer);
         #endif
 		}
 
@@ -130,7 +128,7 @@ void Log::Write(LogLevel::Enum logLevel, const char* file, int line, const wchar
 			return;
 		
 		// Write the msg
-		fwprintf(logFile, msgBuffer);
+		fprintf(logFile, msgBuffer);
 		
 		// Close the log
 		fclose(logFile);
@@ -148,7 +146,7 @@ void Log::Write(LogLevel::Enum logLevel, const char* file, int line, const wchar
 void Log::Init()
 {
     if(msgBuffer == NULL)
-        msgBuffer = new wchar_t[20000];
+        msgBuffer = new char[20000];
     
 	// Get the path to the folder for the logs
 	string workingFolder = Path::GetCommonPath(CommonPaths::WorkingFolder);
@@ -163,8 +161,8 @@ void Log::Init()
 	Log::Enabled = true;
 	
 	// Log the startup
-	LOG_SYSTEM(L"-----------------------------------------------------------------------");
-	LOG_SYSTEM(L"Initialized GDK Log");
+	LOG_SYSTEM("-----------------------------------------------------------------------");
+	LOG_SYSTEM("Initialized GDK Log");
 }
 
 // *****************************************************************
@@ -176,8 +174,8 @@ void Log::Init()
 void Log::Shutdown()
 {
 	// Log the shutdown
-	LOG_SYSTEM(L"Shutdown GDK Log");
-	LOG_SYSTEM(L"-----------------------------------------------------------------------");
+	LOG_SYSTEM("Shutdown GDK Log");
+	LOG_SYSTEM("-----------------------------------------------------------------------");
     
     delete[] msgBuffer;
     msgBuffer = NULL;

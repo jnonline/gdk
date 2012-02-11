@@ -91,13 +91,13 @@ namespace Gdk
         {
             // DEBUG CHECK:  make sure the vertex type matches the current VertexFormat
             ASSERT(currentVertexFormat == TVertex::Format, 
-                   L"AddVertex called with an unexpected vertex format. [Current Format: %d][Submitted Format: %d]", 
+                   "AddVertex called with an unexpected vertex format. [Current Format: %d][Submitted Format: %d]", 
                    currentVertexFormat, 
                    TVertex::Format
                    );
             // DEBUG CHECK:  make sure we dont draw too many vertices
             ASSERT(numVertices < 65535,
-                   L"AddVertex called when the GeometryBuffer is full."
+                   "AddVertex called when the GeometryBuffer is full."
                    );
             
             // Is there not enough room for 1 more vertex?
@@ -159,18 +159,18 @@ namespace Gdk
         {
             // DEBUG CHECK:  make sure the primitive type is IndexedTriangles
             ASSERT(currentPrimitiveType == PrimitiveTypes::IndexedTriangles, 
-                   L"AddQuad called when the primitive type is NOT IndexedTriangles. [Current Type: %d]", 
+                   "AddQuad called when the primitive type is NOT IndexedTriangles. [Current Type: %d]", 
                    currentPrimitiveType
                    );
             // DEBUG CHECK:  make sure the vertex type matches the current VertexFormat
             ASSERT(currentVertexFormat == TVertex::Format, 
-                   L"AddQuad called with an unexpected vertex format. [Current Format: %d][Submitted Format: %d]", 
+                   "AddQuad called with an unexpected vertex format. [Current Format: %d][Submitted Format: %d]", 
                    currentVertexFormat, 
                    TVertex::Format
                    );
             // DEBUG CHECK:  make sure we dont draw too many vertices
             ASSERT(numVertices < 65532,
-                   L"AddQuad called when the GeometryBuffer is full."
+                   "AddQuad called when the GeometryBuffer is full."
                    );
             
             // Is there not enough room for 4 more vertices?

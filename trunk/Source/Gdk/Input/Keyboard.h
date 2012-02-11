@@ -55,7 +55,7 @@ namespace Gdk
 		typedef Gdk::MulticastDelegate1<void, Keys::Enum>	KeyboardKeyEventHandler;
         
         /// Multicast delegate type for keyboard character events
-		typedef Gdk::MulticastDelegate1<void, wchar_t>		KeyboardCharEventHandler;
+		typedef Gdk::MulticastDelegate1<void, char>         KeyboardCharEventHandler;
 
         /// @}
         
@@ -101,7 +101,7 @@ namespace Gdk
         
 		static void Platform_ProcessKeyDown(Keys::Enum key);
 		static void Platform_ProcessKeyUp(Keys::Enum key);
-		static void Platform_ProcessChar(wchar_t c);
+		static void Platform_ProcessChar(char c);
         
         static Keys::Enum Platform_ConvertScanCodeToKey(UInt8 scanCode);
 

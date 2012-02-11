@@ -84,50 +84,50 @@ void InputTestsModule::OnDraw()
 	// ----------------------------------------------------------------------------------------------
     
     // "Keyboard:" header
-    Drawing2D::DrawText(SharedResources::Fonts.Arial20, L"Keyboard:", Vector2(-9.8f, 9.7f), Color(196,255,240), Vector2(0.03f, -0.03f));
+    Drawing2D::DrawText(SharedResources::Fonts.Arial20, "Keyboard:", Vector2(-9.8f, 9.7f), Color(196,255,240), Vector2(0.03f, -0.03f));
 
     // Draw a box for various keys, showing the status of each key
-    DrawKeyStatusBox(Keys::LeftShift,    Rectangle2(-9.8f, 7.7f, 2.5f, 1.0f), L"LShift");
-    DrawKeyStatusBox(Keys::LeftAlt,      Rectangle2(-9.8f, 6.5f, 2.5f, 1.0f), L"LAlt");
-    DrawKeyStatusBox(Keys::LeftControl,  Rectangle2(-9.8f, 5.3f, 2.5f, 1.0f), L"LCtrl");
-    DrawKeyStatusBox(Keys::LeftGUI,      Rectangle2(-9.8f, 4.1f, 2.5f, 1.0f), L"LGui");
+    DrawKeyStatusBox(Keys::LeftShift,    Rectangle2(-9.8f, 7.7f, 2.5f, 1.0f), "LShift");
+    DrawKeyStatusBox(Keys::LeftAlt,      Rectangle2(-9.8f, 6.5f, 2.5f, 1.0f), "LAlt");
+    DrawKeyStatusBox(Keys::LeftControl,  Rectangle2(-9.8f, 5.3f, 2.5f, 1.0f), "LCtrl");
+    DrawKeyStatusBox(Keys::LeftGUI,      Rectangle2(-9.8f, 4.1f, 2.5f, 1.0f), "LGui");
 
-    DrawKeyStatusBox(Keys::RightShift,   Rectangle2(-7.1f, 7.7f, 2.5f, 1.0f), L"RShift");
-    DrawKeyStatusBox(Keys::RightAlt,     Rectangle2(-7.1f, 6.5f, 2.5f, 1.0f), L"RAlt");
-    DrawKeyStatusBox(Keys::RightControl, Rectangle2(-7.1f, 5.3f, 2.5f, 1.0f), L"RCtrl");
-    DrawKeyStatusBox(Keys::RightGUI,     Rectangle2(-7.1f, 4.1f, 2.5f, 1.0f), L"RGui");
+    DrawKeyStatusBox(Keys::RightShift,   Rectangle2(-7.1f, 7.7f, 2.5f, 1.0f), "RShift");
+    DrawKeyStatusBox(Keys::RightAlt,     Rectangle2(-7.1f, 6.5f, 2.5f, 1.0f), "RAlt");
+    DrawKeyStatusBox(Keys::RightControl, Rectangle2(-7.1f, 5.3f, 2.5f, 1.0f), "RCtrl");
+    DrawKeyStatusBox(Keys::RightGUI,     Rectangle2(-7.1f, 4.1f, 2.5f, 1.0f), "RGui");
 
-    DrawKeyStatusBox(Keys::Left,         Rectangle2(-4.4f, 7.7f, 2.5f, 1.0f), L"Left");
-    DrawKeyStatusBox(Keys::Right,        Rectangle2(-4.4f, 6.5f, 2.5f, 1.0f), L"Right");
-    DrawKeyStatusBox(Keys::Up,           Rectangle2(-4.4f, 5.3f, 2.5f, 1.0f), L"Up");
-    DrawKeyStatusBox(Keys::Down,         Rectangle2(-4.4f, 4.1f, 2.5f, 1.0f), L"Down");
+    DrawKeyStatusBox(Keys::Left,         Rectangle2(-4.4f, 7.7f, 2.5f, 1.0f), "Left");
+    DrawKeyStatusBox(Keys::Right,        Rectangle2(-4.4f, 6.5f, 2.5f, 1.0f), "Right");
+    DrawKeyStatusBox(Keys::Up,           Rectangle2(-4.4f, 5.3f, 2.5f, 1.0f), "Up");
+    DrawKeyStatusBox(Keys::Down,         Rectangle2(-4.4f, 4.1f, 2.5f, 1.0f), "Down");
 
     // Mouse Input Tests
 	// ----------------------------------------------------------------------------------------------
 
     // "Mouse:" header
-    Drawing2D::DrawText(SharedResources::Fonts.Arial20, L"Mouse:", Vector2(0.0f, 9.7f), Color(196,255,240), Vector2(0.03f, -0.03f));
+    Drawing2D::DrawText(SharedResources::Fonts.Arial20, "Mouse:", Vector2(0.0f, 9.7f), Color(196,255,240), Vector2(0.03f, -0.03f));
     
     // Draw the mouse coordinates
-    wchar_t temp[256];
-    swprintf(temp, 256, L"Position: %d, %d", Mouse::GetX(), Mouse::GetY());
+    char temp[256];
+    GDK_SPRINTF(temp, 256, "Position: %d, %d", Mouse::GetX(), Mouse::GetY());
     Drawing2D::DrawText(SharedResources::Fonts.Arial20, temp, Vector2(0.0f, 8.8f), Color(255,224,160), Vector2(0.04f, -0.04f));
 
     // Draw the mouse over state
     if(Mouse::IsMouseOverApp())
-        Drawing2D::DrawText(SharedResources::Fonts.Arial20, L"Mouse is Inside", Vector2(0.0f, 7.8f), Color(255,224,160), Vector2(0.04f, -0.04f));
+        Drawing2D::DrawText(SharedResources::Fonts.Arial20, "Mouse is Inside", Vector2(0.0f, 7.8f), Color(255,224,160), Vector2(0.04f, -0.04f));
     else
-        Drawing2D::DrawText(SharedResources::Fonts.Arial20, L"Mouse is Outside", Vector2(0.0f, 7.8f), Color(255,224,160), Vector2(0.04f, -0.04f));
+        Drawing2D::DrawText(SharedResources::Fonts.Arial20, "Mouse is Outside", Vector2(0.0f, 7.8f), Color(255,224,160), Vector2(0.04f, -0.04f));
     
     // Draw a box for the various mouse buttons, showing the status of each one
-    DrawMouseButtonStatusBox(MouseButton::Left,    Rectangle2(0.0f, 5.5f, 2.5f, 1.0f), L"Left");
-    DrawMouseButtonStatusBox(MouseButton::Middle,  Rectangle2(2.7f, 5.5f, 2.5f, 1.0f), L"Middle");
-    DrawMouseButtonStatusBox(MouseButton::Right,   Rectangle2(5.4f, 5.5f, 2.5f, 1.0f), L"Right");
-    DrawMouseButtonStatusBox(MouseButton::Button4, Rectangle2(0.0f, 4.3f, 1.5f, 1.0f), L"B4");
-    DrawMouseButtonStatusBox(MouseButton::Button5, Rectangle2(1.7f, 4.3f, 1.5f, 1.0f), L"B5");
-    DrawMouseButtonStatusBox(MouseButton::Button6, Rectangle2(3.4f, 4.3f, 1.5f, 1.0f), L"B6");
-    DrawMouseButtonStatusBox(MouseButton::Button7, Rectangle2(5.1f, 4.3f, 1.5f, 1.0f), L"B7");
-    DrawMouseButtonStatusBox(MouseButton::Button8, Rectangle2(6.8f, 4.3f, 1.5f, 1.0f), L"B8");
+    DrawMouseButtonStatusBox(MouseButton::Left,    Rectangle2(0.0f, 5.5f, 2.5f, 1.0f), "Left");
+    DrawMouseButtonStatusBox(MouseButton::Middle,  Rectangle2(2.7f, 5.5f, 2.5f, 1.0f), "Middle");
+    DrawMouseButtonStatusBox(MouseButton::Right,   Rectangle2(5.4f, 5.5f, 2.5f, 1.0f), "Right");
+    DrawMouseButtonStatusBox(MouseButton::Button4, Rectangle2(0.0f, 4.3f, 1.5f, 1.0f), "B4");
+    DrawMouseButtonStatusBox(MouseButton::Button5, Rectangle2(1.7f, 4.3f, 1.5f, 1.0f), "B5");
+    DrawMouseButtonStatusBox(MouseButton::Button6, Rectangle2(3.4f, 4.3f, 1.5f, 1.0f), "B6");
+    DrawMouseButtonStatusBox(MouseButton::Button7, Rectangle2(5.1f, 4.3f, 1.5f, 1.0f), "B7");
+    DrawMouseButtonStatusBox(MouseButton::Button8, Rectangle2(6.8f, 4.3f, 1.5f, 1.0f), "B8");
     
     // Draw a circle at the mouse cursor
     Vector2 mouseWorldPosition = ScreenToWorld(Mouse::GetPosition());
@@ -137,13 +137,13 @@ void InputTestsModule::OnDraw()
 	// ----------------------------------------------------------------------------------------------
     
     // "Touch:" header
-    Drawing2D::DrawText(SharedResources::Fonts.Arial20, L"Touch:", Vector2(0.0f, 3.6f), Color(196,255,240), Vector2(0.03f, -0.03f));
+    Drawing2D::DrawText(SharedResources::Fonts.Arial20, "Touch:", Vector2(0.0f, 3.6f), Color(196,255,240), Vector2(0.03f, -0.03f));
     
     // Get all the active touches
     vector<Touch>& touches = TouchInput::GetAllTouches();
     
     // Display the number of active touches
-    swprintf(temp, 256, L"Active Touches: %d", touches.size());
+    GDK_SPRINTF(temp, 256, "Active Touches: %lu", touches.size());
     Drawing2D::DrawText(SharedResources::Fonts.Arial20, temp, Vector2(0.0f, 2.8f), Color(255,224,160), Vector2(0.04f, -0.04f));
     
     // Draw a circle at each touch position
@@ -161,14 +161,14 @@ void InputTestsModule::OnDraw()
 	// ----------------------------------------------------------------------------------------------
     
     // "Motion:" header
-    Drawing2D::DrawText(SharedResources::Fonts.Arial20, L"Motion:", Vector2(-9.8f, 3.3f), Color(196,255,240), Vector2(0.03f, -0.03f));
+    Drawing2D::DrawText(SharedResources::Fonts.Arial20, "Motion:", Vector2(-9.8f, 3.3f), Color(196,255,240), Vector2(0.03f, -0.03f));
     
     // Get the accelerometer value
     Vector3 acceleration = MotionInput::GetAccelerometerAcceleration();
     
     // Display the accelerometer values
-    swprintf(temp, 256, 
-        L"Accelerometer X: %.4f\nAccelerometer Y: %.4f\nAccelerometer Z: %.4f", 
+    GDK_SPRINTF(temp, 256, 
+        "Accelerometer X: %.4f\nAccelerometer Y: %.4f\nAccelerometer Z: %.4f", 
         acceleration.X, acceleration.Y, acceleration.Z
         );
     Drawing2D::DrawText(SharedResources::Fonts.Arial20, temp, Vector2(-9.8f, 2.5f), Color(255,224,160), Vector2(0.04f, -0.04f));
@@ -179,27 +179,27 @@ void InputTestsModule::OnDraw()
     {
         float shakeExtent = 0.06f;
         shakingTextPos += Vector2(Random::FromInterval(-shakeExtent, shakeExtent), Random::FromInterval(-shakeExtent, shakeExtent));
-        Drawing2D::DrawText(SharedResources::Fonts.Arial20, L"SHAKING", shakingTextPos, Color(255,128,128), Vector2(0.04f, -0.04f));
+        Drawing2D::DrawText(SharedResources::Fonts.Arial20, "SHAKING", shakingTextPos, Color(255,128,128), Vector2(0.04f, -0.04f));
     }
     else
     {
-        Drawing2D::DrawText(SharedResources::Fonts.Arial20, L"Not Shaking", shakingTextPos, Color(224,200,80), Vector2(0.04f, -0.04f));
+        Drawing2D::DrawText(SharedResources::Fonts.Arial20, "Not Shaking", shakingTextPos, Color(224,200,80), Vector2(0.04f, -0.04f));
     }
     
     // Device Input Tests
 	// ----------------------------------------------------------------------------------------------
     
     // "Device:" header
-    Drawing2D::DrawText(SharedResources::Fonts.Arial20, L"Device:", Vector2(-9.8f, -1.5f), Color(196,255,240), Vector2(0.03f, -0.03f));
+    Drawing2D::DrawText(SharedResources::Fonts.Arial20, "Device:", Vector2(-9.8f, -1.5f), Color(196,255,240), Vector2(0.03f, -0.03f));
     
     // Display the orientation
-    swprintf(temp, 256, L"Orient: %hs", 
+    GDK_SPRINTF(temp, 256, "Orient: %s", 
         DeviceOrientation::ToString(Device::GetOrientation())
         );
     Drawing2D::DrawText(SharedResources::Fonts.Arial20, temp, Vector2(-9.8f, -2.4f), Color(255,224,160), Vector2(0.03f, -0.03f));
     
     // Display the battery state
-    swprintf(temp, 256, L"Battery: %hs (%d%%)", 
+    GDK_SPRINTF(temp, 256, "Battery: %s (%d%%)", 
         DeviceBatteryState::ToString(Device::GetBatteryState()), 
         (int)(Device::GetBatteryLevel() * 100.0f)
         );
@@ -210,7 +210,7 @@ void InputTestsModule::OnDraw()
 	// ----------------------------------------------------------------------------------------------
     
     // "Motion:" header
-    Drawing2D::DrawText(SharedResources::Fonts.Arial20, L"Input Logs:", Vector2(0.0f, 1.4f), Color(196,255,240), Vector2(0.03f, -0.03f));
+    Drawing2D::DrawText(SharedResources::Fonts.Arial20, "Input Logs:", Vector2(0.0f, 1.4f), Color(196,255,240), Vector2(0.03f, -0.03f));
     
     // Loop through the input log lines
     float logY = 0.6f;
@@ -234,7 +234,7 @@ void InputTestsModule::OnDraw()
 }
 
 // ***********************************************************************
-void InputTestsModule::WriteLog(const wchar_t* msg, Gdk::Color color)
+void InputTestsModule::WriteLog(const char* msg, Gdk::Color color)
 {
     // Add a log entry for this touch event
     inputLog.push_back(InputLogLine(msg, color));
@@ -245,7 +245,7 @@ void InputTestsModule::WriteLog(const wchar_t* msg, Gdk::Color color)
 }
 
 // ***********************************************************************
-void InputTestsModule::DrawKeyStatusBox(Keys::Enum key, Rectangle2 rect, const wchar_t* name)
+void InputTestsModule::DrawKeyStatusBox(Keys::Enum key, Rectangle2 rect, const char* name)
 {
     // Was the key just now pressed?
     if(Keyboard::IsKeyJustPressed(key))
@@ -272,7 +272,7 @@ void InputTestsModule::DrawKeyStatusBox(Keys::Enum key, Rectangle2 rect, const w
 }
 
 // ***********************************************************************
-void InputTestsModule::DrawMouseButtonStatusBox(MouseButton::Enum button, Rectangle2 rect, const wchar_t* name)
+void InputTestsModule::DrawMouseButtonStatusBox(MouseButton::Enum button, Rectangle2 rect, const char* name)
 {
     // Is the button down
     if(Mouse::IsButtonDown(button))
@@ -291,8 +291,8 @@ void InputTestsModule::DrawMouseButtonStatusBox(MouseButton::Enum button, Rectan
 void InputTestsModule::OnWheelScroll(float deltaX, float deltaY)
 {
 	// Write a log entry for this event
-	wchar_t temp[64];
-	swprintf(temp, 64, L"Mouse Wheel Scroll: %.3f%", deltaY);
+	char temp[64];
+	GDK_SPRINTF(temp, 64, "Mouse Wheel Scroll: %.3f", deltaY);
     WriteLog(temp, Color(80,224,224));
 }
 
@@ -300,21 +300,21 @@ void InputTestsModule::OnWheelScroll(float deltaX, float deltaY)
 void InputTestsModule::OnTouchBegan(Gdk::Touch *touch)
 {
     // Add a log entry for this touch event
-    WriteLog(L"Touch Began", Color(224,200,80));
+    WriteLog("Touch Began", Color(224,200,80));
 }
 
 // ***********************************************************************
 void InputTestsModule::OnTouchEnded(Gdk::Touch *touch)
 {
     // Add a log entry for this touch event
-    WriteLog(L"Touch Ended", Color(224,200,80));
+    WriteLog("Touch Ended", Color(224,200,80));
 }
 
 // ***********************************************************************
 void InputTestsModule::OnShakingBegan()
 {
     // Add a log entry for this touch event
-    WriteLog(L"Shaking Began", Color(224,120,80));
+    WriteLog("Shaking Began", Color(224,120,80));
     shakingTimer = 0.21f;   // Continue displaying the 'shaking' effect for a bit of time
 }
 
@@ -322,16 +322,14 @@ void InputTestsModule::OnShakingBegan()
 void InputTestsModule::OnShakingEnded()
 {
     // Add a log entry for this touch event
-    WriteLog(L"Shaking Ended", Color(224,120,80));
+    WriteLog("Shaking Ended", Color(224,120,80));
 }
 
 // ***********************************************************************
 void InputTestsModule::OnMediaControlAction(MediaControlActions::Enum action)
 {
     // Add a log entry for this event
-    wchar_t temp[64];
-    swprintf(temp, 64, L"%hs", MediaControlActions::ToString(action));
-    WriteLog(temp, Color(200,224,80));
+    WriteLog(MediaControlActions::ToString(action), Color(200,224,80));
 }
 
 // ***********************************************************************

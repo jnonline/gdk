@@ -37,8 +37,8 @@ UniformValue* SharedUniformValueSet::Add(const char* name, UniformTypes::Enum ty
 		UniformValue* value = iter->second;
 
 		// Check the type & size match
-		ASSERT(value->GetUniformType() == type, L"Attempting to add shared uniform value with same name, but different type");
-		ASSERT(value->GetArraySize() == arraySize, L"Attempting to add shared uniform value with same name, but different array size");
+		ASSERT(value->GetUniformType() == type, "Attempting to add shared uniform value with same name, but different type");
+		ASSERT(value->GetArraySize() == arraySize, "Attempting to add shared uniform value with same name, but different array size");
 
 		// Return the existing
 		return value;

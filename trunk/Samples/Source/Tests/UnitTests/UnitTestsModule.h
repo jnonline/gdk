@@ -12,17 +12,17 @@
 #ifdef GDKPLATFORM_WINDOWS
     #define UNIT_TEST_CHECK(condition, format, ...)   \
         if(condition) {   \
-            context->Log->WriteLine(LogLevel::Info, L"PASS: " format, __VA_ARGS__);   \
+            context->Log->WriteLine(LogLevel::Info, "PASS: " format, __VA_ARGS__);   \
         } else {   \
-            context->Log->WriteLine(LogLevel::Error, L"FAIL: " format, __VA_ARGS__);   \
+            context->Log->WriteLine(LogLevel::Error, "FAIL: " format, __VA_ARGS__);   \
             return TestStatus::Fail;   \
         }
 #else
     #define UNIT_TEST_CHECK(condition, format, args...)   \
         if(condition) {   \
-            context->Log->WriteLine(LogLevel::Info, L"PASS: " format, ##args);   \
+            context->Log->WriteLine(LogLevel::Info, "PASS: " format, ##args);   \
         } else {   \
-            context->Log->WriteLine(LogLevel::Error, L"FAIL: " format, ##args);   \
+            context->Log->WriteLine(LogLevel::Error, "FAIL: " format, ##args);   \
             return TestStatus::Fail;   \
         }
 
@@ -46,11 +46,11 @@ class TestLogLine
 {
 public:
     // Properties
-    wstring Text;
+    string Text;
     LogLevel::Enum Level;
     
     // CTor
-    TestLogLine(const wchar_t* text, LogLevel::Enum level)
+    TestLogLine(const char* text, LogLevel::Enum level)
         : Text(text), Level(level)
     {}
 };
@@ -68,7 +68,7 @@ public:
     ~TestLog();
     
     // Write methods
-    void WriteLine(Gdk::LogLevel::Enum logLevel, const wchar_t *format, ...);
+    void WriteLine(Gdk::LogLevel::Enum logLevel, const char *format, ...);
 	void Clear();
 };
 
@@ -95,7 +95,7 @@ class TestTreeNode
 {
 public:
     // Properties
-    wstring Name;
+    string Name;
     TestStatus::Enum Status;
     TestDelegate* Method;
     
@@ -103,12 +103,12 @@ public:
     list<TestTreeNode*> Children;
     
     // CTor/DTor
-    TestTreeNode(const wchar_t* name, TestDelegate* testMethod = NULL);
+    TestTreeNode(const char* name, TestDelegate* testMethod = NULL);
     ~TestTreeNode();
     
     // Adding children
     TestTreeNode* AddChild(TestTreeNode* child);
-    TestTreeNode* AddChild(const wchar_t* name, TestDelegate* testMethod = NULL);
+    TestTreeNode* AddChild(const char* name, TestDelegate* testMethod = NULL);
 };
 
 

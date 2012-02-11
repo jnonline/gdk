@@ -104,7 +104,7 @@ BMFont::~BMFont()
 /// @param text
 ///     Text to get the size of
 // *****************************************************************
-Vector2 BMFont::GetTextSize(const wchar_t *text)
+Vector2 BMFont::GetTextSize(const char *text)
 {
 	int maxXSize = 0;
 	int xSize = 0;
@@ -120,11 +120,11 @@ Vector2 BMFont::GetTextSize(const wchar_t *text)
 	ySize = this->lineHeight;
 
 	// Walk through the input text
-	const wchar_t *current = text;
+	const char *current = text;
 	while(*current != 0)
 	{
-        wchar_t ch = *current;
-		if(ch == L'\n')
+        char ch = *current;
+		if(ch == '\n')
 		{
 			// Move to the next line
 			if(xSize > maxXSize)
@@ -146,7 +146,7 @@ Vector2 BMFont::GetTextSize(const wchar_t *text)
             else
             {
                 // Character doesnt exist
-                LOG_WARN(L"The character [%lc][%u] doesn't exist in the character map for the font [%hs]", ch, (UInt32)ch, this->GetName().c_str()); 
+                LOG_WARN("The character [%c][%u] doesn't exist in the character map for the font [%s]", ch, (UInt32)ch, this->GetName().c_str()); 
             }
 		}
 
@@ -246,19 +246,28 @@ void BMFont::LoadFromAsset()
 			// Processes the chars
 			for(int i=0; i<numChars; i++)
 			{
-				BMFontCharacter fontChar(
-					charBlock[i].X,
-					charBlock[i].Y,
-					charBlock[i].Width,
-					charBlock[i].Height,
-					charBlock[i].XOffset,
-					charBlock[i].YOffset,
-					charBlock[i].XAdvance,
-					charBlock[i].Page
-					);
+                // Is this an unsupported character?
+                if(charBlock[i].Id > 255)
+                {
+                    LOG_WARN("BMFont [%s] contains non-ascii character [%d], ignoring.", GetName().c_str(), charBlock[i].Id);
+                }
+                else
+                {
+                    BMFontCharacter fontChar(
+                        charBlock[i].X,
+                        charBlock[i].Y,
+                        charBlock[i].Width,
+                        charBlock[i].Height,
+                        charBlock[i].XOffset,
+                        charBlock[i].YOffset,
+                        charBlock[i].XAdvance,
+                        charBlock[i].Page
+                        );
 
-				// Add the char to the character map
-				this->characters[charBlock[i].Id] = fontChar;
+                    // Add the char to the character map
+                    char ch = (char)charBlock[i].Id;
+                    this->characters[ch] = fontChar;
+                }
 			}
 
 			// Free the charBlock

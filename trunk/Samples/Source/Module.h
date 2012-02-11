@@ -22,11 +22,11 @@ class ModuleRegistration
 {
 public:
 	// Properties
-	wstring					Name;
+	string					Name;
 	ModuleCategory::Enum	Category;
     
 	// Methods
-	ModuleRegistration(const wchar_t* name, ModuleCategory::Enum category) : Name(name), Category(category) {}
+	ModuleRegistration(const char* name, ModuleCategory::Enum category) : Name(name), Category(category) {}
 	virtual class Module* CreateModule() = 0;
 };
 
@@ -36,7 +36,7 @@ class ModuleRegistrationT : public ModuleRegistration
 {
 public:
 	// CTor
-	ModuleRegistrationT(const wchar_t* name, ModuleCategory::Enum category) : ModuleRegistration(name, category)
+	ModuleRegistrationT(const char* name, ModuleCategory::Enum category) : ModuleRegistration(name, category)
 	{
 	}
     
@@ -82,7 +82,7 @@ private:
     
     // Methods
     template <typename TModule>
-    static void RegisterModule(const wchar_t* name, ModuleCategory::Enum category)
+    static void RegisterModule(const char* name, ModuleCategory::Enum category)
     {
         registeredModules.push_back(GdkNew ModuleRegistrationT<TModule>(name, category));
     }

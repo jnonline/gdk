@@ -75,12 +75,12 @@ void Memory::Delete (T*& data)
         }
         else
         {
-            ASSERT(false, L"Mismatch in dimensions.\n");
+            ASSERT(false, "Mismatch in dimensions.\n");
         }
     }
     else
     {
-        ASSERT(false, L"Memory block not in map.\n");
+        ASSERT(false, "Memory block not in map.\n");
     }
 
 	data = NULL;
@@ -113,12 +113,12 @@ void Memory::Delete1DArray (T*& data)
             }
             else
             {
-                ASSERT(false, L"Mismatch in dimensions.\n");
+                ASSERT(false, "Mismatch in dimensions.\n");
             }
         }
         else
         {
-            ASSERT(false, L"Memory block not in map.\n");
+            ASSERT(false, "Memory block not in map.\n");
         }
 
         data = NULL;
@@ -156,12 +156,12 @@ void Memory::Delete2DArray (T**& data)
             }
             else
             {
-                ASSERT(false, L"Mismatch in dimensions.\n");
+                ASSERT(false, "Mismatch in dimensions.\n");
             }
         }
         else
         {
-            ASSERT(false, L"Memory block not in map.\n");
+            ASSERT(false, "Memory block not in map.\n");
         }
 
         data = NULL;

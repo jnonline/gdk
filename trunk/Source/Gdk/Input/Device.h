@@ -284,7 +284,7 @@ namespace Gdk
         /// @{
         
         static DeviceType::Enum GetDeviceType();
-        static const wstring& GetDeviceDisplayName();
+        static const string& GetDeviceDisplayName();
 		static const string& GetDeviceUniqueId();
         static bool IsHandheld();
         static bool IsTablet();
@@ -357,7 +357,7 @@ namespace Gdk
 		static PlatformVersion			platformVersion;
 		static DeviceOrientation::Enum	deviceOrientation;
 
-		static wstring					deviceDisplayName;
+		static string					deviceDisplayName;
 		static string					deviceUniqueId;
         
         // Internal Methods

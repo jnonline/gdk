@@ -33,7 +33,7 @@ void Memory::Init()
 void Memory::Shutdown()
 {
 	// Assert that the map should exist
-	ASSERT(memoryMap != NULL, L"Memory::Shutdown called and the memoryMap is NULL");
+	ASSERT(memoryMap != NULL, "Memory::Shutdown called and the memoryMap is NULL");
 
 	// Log all the unfreed memory chunks
 	// ---------------------------------
@@ -116,12 +116,12 @@ void Memory::Free (void* ptr)
         }
         else
         {
-            ASSERT(false, L"Mismatch in dimensions.\n");
+            ASSERT(false, "Mismatch in dimensions.\n");
         }
     }
     else
     {
-        ASSERT(false, L"Memory block not in map.\n");
+        ASSERT(false, "Memory block not in map.\n");
     }
 }
 

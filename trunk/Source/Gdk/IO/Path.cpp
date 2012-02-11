@@ -268,7 +268,7 @@ string Path::GetCommonPath(CommonPaths::Enum path)
 	string result = _Gdk_Platform_IO_GetCommonPath(path);
 
 	// If we got here, then the path isnt defined.
-	ASSERT(result.size() > 0, L"Unable to resolve the path for the CommonPath value [%d]", (int)path); 
+	ASSERT(result.size() > 0, "Unable to resolve the path for the CommonPath value [%d]", (int)path); 
     
     return result;
 }

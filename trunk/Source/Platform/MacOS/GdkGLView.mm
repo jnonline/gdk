@@ -160,9 +160,8 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
         [[[self window] standardWindowButton:NSWindowCloseButton] setHidden:YES];
     
     // Update the window title
-    const wchar_t* title = Gdk::Application::GetTitle();
-    int numBytes = wcslen(title) * sizeof(wchar_t);
-    NSString* newTitle = [[NSString alloc] initWithBytes:title length:numBytes encoding:NSUTF32LittleEndianStringEncoding];
+    const char* title = Gdk::Application::GetTitle();
+    NSString* newTitle = [[NSString alloc] initWithUTF8String:title];
     [self window].title = newTitle;
     
     // Setup input tracking
@@ -420,7 +419,8 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
     for(int i = 0; i < [chars length]; i++)
     {
         unichar ch = [chars characterAtIndex:i];
-        Gdk::Keyboard::Platform_ProcessChar((wchar_t) ch);
+        if(ch <= 255)
+            Gdk::Keyboard::Platform_ProcessChar((char) ch);
     }
 }
 

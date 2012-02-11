@@ -20,7 +20,7 @@ bool PROJECTNAMEGame::OnLoadSettings(ApplicationSettings &settings)
 {
 	Game::OnLoadSettings(settings);
 
-	settings.Title = L"Gdk Project: PROJECTNAME";
+	settings.Title = "Gdk Project: PROJECTNAME";
 	settings.Width = 640;
 	settings.Height = 480;
     settings.AllowResize = true;
@@ -79,9 +79,9 @@ void PROJECTNAMEGame::OnDraw(float elapsedSeconds)
 	Graphics::GlobalUniforms.Projection->SetMatrix4(proj);
 
 	// Draw some text
-	wchar_t* sampleText = L"Sample Text";
-	Renderer2D::DrawText(SharedResources::Fonts.Arial20, sampleText, Vector2(10,10), Color(196, 255, 128));
+	char* sampleText = "Sample Text";
+	Drawing2D::DrawText(SharedResources::Fonts.Arial20, sampleText, Vector2(10,10), Color(196, 255, 128));
 
 	// Flush the 2D renderer
-	Renderer2D::Flush();
+	Drawing2D::Flush();
 }

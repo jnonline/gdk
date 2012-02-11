@@ -97,9 +97,9 @@ void Graphics::Init()
 	versionString.assign((const char*)glGetString(GL_VERSION));
 
 	// Log the vendor/renderer details
-	LOG_SYSTEM(L"GL Vendor: %hs", vendorString.c_str());
-	LOG_SYSTEM(L"GL Renderer: %hs", rendererString.c_str());
-	LOG_SYSTEM(L"GL Version: %hs", versionString.c_str());
+	LOG_SYSTEM("GL Vendor: %s", vendorString.c_str());
+	LOG_SYSTEM("GL Renderer: %s", rendererString.c_str());
+	LOG_SYSTEM("GL Version: %s", versionString.c_str());
 
 	// Pre-set all static properties
 	for(int i=0; i<supportedTextureUnits; i++)

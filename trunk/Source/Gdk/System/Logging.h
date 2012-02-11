@@ -13,19 +13,14 @@
 //		GdkLog::MaxLevel = GdkLogLevel::Error				- Sets the highest log level that will be written to the log file; 
 // 
 // Usage:
-//		LOG_INFO( L"Error messase", ... );
-//		LOG_ERROR( L"Error messase", ... );
+//		LOG_INFO( "Error messase", ... );
+//		LOG_ERROR( "Error messase", ... );
 //
 //
 // Format:
 //   [date : time][level] - message;
 //		[File: c:\test\test.cpp][Line: 10]		(For errors & warnings)
 //
-// Notes:
-//   Strings:   swprintf() interprets %s & %S differently between platforms (windows is non ansi)
-//   So, To be perfectly safe when logging (which uses ANSI-C wide strings) use these format specifiers:
-//      %ls  - Wide-character string
-//      %hs  - Single-byte character string
 
 #pragma once
 
@@ -97,17 +92,16 @@ namespace Gdk
         /// @name Methods
         /// @{
 
-		static void Write(LogLevel::Enum logLevel, const char* file, int line, const wchar_t *format, ...);
+		static void Write(LogLevel::Enum logLevel, const char* file, int line, const char *format, ...);
 
-        /// @}
-        
+        /// @}t        
 	private:
         
         // Private Properties
 		// =====================================================
         
         static string logFilePath;
-		static wchar_t* msgBuffer;	
+		static char* msgBuffer;	
 
 		// Private Methods
 		// =====================================================
@@ -148,7 +142,7 @@ namespace Gdk
     /// @brief 
     ///     Writes a System-level log message.
     /// @param format
-    ///     A wprintf style format string to be written to the log.
+    ///     A printf style format string to be written to the log.
     /// @param ...
     ///     Insertion values for the format string
     // *****************************************************************
@@ -156,7 +150,7 @@ namespace Gdk
     /// @brief 
     ///     Writes a Info-level log message.
     /// @param format
-    ///     A wprintf style format string to be written to the log.
+    ///     A printf style format string to be written to the log.
     /// @param ...
     ///     Insertion values for the format string
     // *****************************************************************
@@ -164,7 +158,7 @@ namespace Gdk
     /// @brief 
     ///     Writes a Verbose-level log message.
     /// @param format
-    ///     A wprintf style format string to be written to the log.
+    ///     A printf style format string to be written to the log.
     /// @param ...
     ///     Insertion values for the format string
     // *****************************************************************
@@ -172,7 +166,7 @@ namespace Gdk
     /// @brief 
     ///     Writes a Warning-level log message.
     /// @param format
-    ///     A wprintf style format string to be written to the log.
+    ///     A printf style format string to be written to the log.
     /// @param ...
     ///     Insertion values for the format string
     // *****************************************************************
@@ -180,7 +174,7 @@ namespace Gdk
     /// @brief 
     ///     Writes a Error-level log message.
     /// @param format
-    ///     A wprintf style format string to be written to the log.
+    ///     A printf style format string to be written to the log.
     /// @param ...
     ///     Insertion values for the format string
     // *****************************************************************

@@ -13,7 +13,7 @@ DeviceType::Enum                    Device::deviceType = DeviceType::Unknown;
 PlatformType::Enum                  Device::platformType = PlatformType::Unknown;  
 PlatformVersion                     Device::platformVersion;
 DeviceOrientation::Enum             Device::deviceOrientation = DeviceOrientation::Unknown;
-wstring                             Device::deviceDisplayName;
+string                             Device::deviceDisplayName;
 string                              Device::deviceUniqueId;
 
 // Events
@@ -155,18 +155,18 @@ void Device::Init()
     deviceUniqueId = _Gdk_Platform_Device_GetDeviceUniqueId();
     
 	// Verify we got platform details..
-	ASSERT(deviceType != DeviceType::Unknown, L"The device type for the platform could not been determined");
-	ASSERT(platformType != PlatformType::Unknown, L"The platform type could not been determined");
+	ASSERT(deviceType != DeviceType::Unknown, "The device type for the platform could not been determined");
+	ASSERT(platformType != PlatformType::Unknown, "The platform type could not been determined");
     
 	// Log the device details
 	LOG_SYSTEM(
-               L"Device Type: %hs", 
+               "Device Type: %s", 
                DeviceType::ToString(deviceType)
                );
     
 	// Log the platform details
 	LOG_SYSTEM(
-               L"Platform Type: %hs  [Version=%d.%d.%d]", 
+               "Platform Type: %s  [Version=%d.%d.%d]", 
                PlatformType::ToString(platformType), 
                platformVersion.MajorVersion,
                platformVersion.MinorVersion,
@@ -174,12 +174,12 @@ void Device::Init()
                );
     
     LOG_SYSTEM(
-               L"Device Name: %ls",
+               "Device Name: %s",
                GetDeviceDisplayName().c_str()
                );
     
 	LOG_SYSTEM(
-               L"Device UniqueId: %hs",
+               "Device UniqueId: %s",
                GetDeviceUniqueId().c_str()
                );
 }
@@ -229,7 +229,7 @@ PlatformVersion Device::GetPlatformVersion()
 /// @remarks
 ///     This is the user assigned name of the device.  Exampled "Bob's iPad"
 // *****************************************************************
-const wstring& Device::GetDeviceDisplayName()		
+const string& Device::GetDeviceDisplayName()		
 { 
     return deviceDisplayName; 
 }

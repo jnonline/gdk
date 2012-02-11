@@ -253,7 +253,7 @@ namespace Gdk
 
 		static Vector2 DrawText(
 			BMFont *font, 
-			const wchar_t *text, 
+			const char *text, 
 			const Vector2& position, 
 			const Color& color = Color::WHITE,
 			const Vector2& scale = Vector2::ONE,

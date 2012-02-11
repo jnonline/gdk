@@ -129,7 +129,7 @@ void Keyboard::Platform_ProcessKeyUp(Keys::Enum key)
 /// @note
 ///     GDK Internal Use Only
 // *****************************************************************
-void Keyboard::Platform_ProcessChar(wchar_t c)
+void Keyboard::Platform_ProcessChar(char c)
 {
 	// Call the event
 	CharTyped.Invoke(c);

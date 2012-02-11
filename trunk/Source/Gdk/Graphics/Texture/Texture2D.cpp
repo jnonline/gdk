@@ -84,7 +84,7 @@ void Texture2D::SetWrapMode(TextureWrapMode::Enum wrapMode)
 	if(wrapMode != TextureWrapMode::Clamp &&
        (Math::IsPowerOfTwo((UInt32)this->Width) == false || Math::IsPowerOfTwo((UInt32)this->Height) == false) )
     {
-        LOG_WARN(L"Attempt to set invalid wrapping mode on a Non-PoT texture.  Reverting to Clamped");
+        LOG_WARN("Attempt to set invalid wrapping mode on a Non-PoT texture.  Reverting to Clamped");
         wrapMode = TextureWrapMode::Clamp;
     }
 	
@@ -133,7 +133,7 @@ void Texture2D::SetFilterMode(TextureFilterMode::Enum value)
 			break;
 
 		default:
-			ASSERT(false, L"Unknown texture filter format...");
+			ASSERT(false, "Unknown texture filter format...");
 	}
 }
 
@@ -225,7 +225,7 @@ void Texture2D::LoadFromAsset()
 	// Decompress the rest of the image data into the buffer
 	bool result = stream->Decompress(&memStream, CompressionType::ZLib);
 	ASSERT(result, 
-           L"Failed to decompress the image data in a GdkImage"
+           "Failed to decompress the image data in a GdkImage"
            );
     
     // Apply the image data to the texture

@@ -91,14 +91,13 @@ void _Gdk_Platform_Resize(int width, int height)
 }
 
 // ***************************************************************
-void _Gdk_Platform_SetTitle(const wchar_t* title)
+void _Gdk_Platform_SetTitle(const char* title)
 {
     // Get the main Window
     NSWindow* window = [[NSApplication sharedApplication] mainWindow];
     
-    // Turn the wchar_T to an NSString
-    int numBytes = wcslen(title) * sizeof(wchar_t);
-    NSString* newTitle = [[NSString alloc] initWithBytes:title length:numBytes encoding:NSUTF32LittleEndianStringEncoding];
+    // Turn the char to an NSString
+    NSString* newTitle = [[NSString alloc] initWithUTF8String:title];
     window.title = newTitle;
     
     // set the title
@@ -179,13 +178,11 @@ Gdk::PlatformVersion _Gdk_Platform_Device_GetPlatformVersion()
 }
 
 // ***************************************************************
-wstring _Gdk_Platform_Device_GetDeviceDisplayName()
+string _Gdk_Platform_Device_GetDeviceDisplayName()
 {
 	// Get the device name
     NSString* deviceName = [[NSHost currentHost]  localizedName];
-
-    wchar_t* temp = (wchar_t*)[deviceName cStringUsingEncoding:NSUTF32LittleEndianStringEncoding];    
-    return wstring(temp);
+    return string([deviceName UTF8String]);
 }
 
 // ***************************************************************

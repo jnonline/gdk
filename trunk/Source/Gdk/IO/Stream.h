@@ -178,8 +178,9 @@ namespace Gdk
         ///     Reads a double value from the stream.
         inline double ReadDouble()	{double value; Read(&value, sizeof(double)); return value;}
 
+        /// @brief
+        ///     Reads a string value from the stream.
         std::string ReadString();
-        std::wstring ReadWString();
 
 		/// @}
 		// -----------------------------------------------------------------------------------------
@@ -239,8 +240,9 @@ namespace Gdk
         ///     Writes a double value to the stream.
         inline void WriteDouble(double value)	{Write(&value, sizeof(double));}
 
+        /// @brief
+        ///     Writes a string value to the stream.
         void WriteString(const char* value);
-        void WriteWString(const wchar_t* value);
 
         /// @}
 		// -----------------------------------------------------------------------------------------

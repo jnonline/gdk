@@ -16,17 +16,17 @@ using namespace Gdk;
 ///     If the condition evaluates to false, the application will halt with a 
 ///     dialog or alert that contains the details of the failed assertion.
 // *****************************************************************
-void Gdk::Assert(bool condition, const char* file, int line, const wchar_t* format, ...)
+void Gdk::Assert(bool condition, const char* file, int line, const char* format, ...)
 {   
 	// First, test the condition
 	if(condition == true)
 		return;
 
 	// Build the formatted string
-	wchar_t assertMessage[16048];
+	char assertMessage[16048];
 	va_list args;
 	va_start (args, format);
-	vswprintf(assertMessage, 16048, format, args);
+	GDK_VSPRINTF(assertMessage, 16048, format, args);
 	va_end (args);
 
 	// Log the assertion
@@ -35,12 +35,12 @@ void Gdk::Assert(bool condition, const char* file, int line, const wchar_t* form
 #ifdef GDKPLATFORM_WINDOWS
 
 	
-	wchar_t* assertDialogTitle = L"GDK Assert";
-	wchar_t messageBoxText[17000];
-	swprintf(messageBoxText, 17000, L"Gdk Assertion:\r\n\r\n%s\r\n\r\nWould you like to debug? (Cancel to exit)", assertMessage);
+	char* assertDialogTitle = "GDK Assert";
+	char messageBoxText[17000];
+	GDK_SPRINTF(messageBoxText, 17000, "Gdk Assertion:\r\n\r\n%s\r\n\r\nWould you like to debug? (Cancel to exit)", assertMessage);
 
 	// Display Message box
-	int result = MessageBoxW(0, messageBoxText, assertDialogTitle, MB_YESNOCANCEL | MB_ICONEXCLAMATION);
+	int result = MessageBoxA(0, messageBoxText, assertDialogTitle, MB_YESNOCANCEL | MB_ICONEXCLAMATION);
 
 	// Did the user hit Yes?
 	if(result == IDYES)

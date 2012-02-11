@@ -96,7 +96,7 @@ void ShaderTechnique::SetupUniforms(SharedUniformValueSet* shaderParameters)
 
 			// Bind this uniform to the corresponding shader parameter
 			UniformValue* shaderParameter = shaderParameters->Get(uniformName);
-			ASSERT(shaderParameter != NULL, L"Uniform [%hs] has no matching Shader Parameter", uniformName);
+			ASSERT(shaderParameter != NULL, "Uniform [%s] has no matching Shader Parameter", uniformName);
 			uniform->Bind(shaderParameter);
 		}
 

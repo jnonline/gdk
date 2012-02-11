@@ -19,7 +19,6 @@
 		D004C15A13AC881600797055 /* Atlas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D004C0BC13AC881600797055 /* Atlas.cpp */; };
 		D004C15B13AC881600797055 /* BMFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D004C0BE13AC881600797055 /* BMFont.cpp */; };
 		D004C15C13AC881600797055 /* ParticleSystem2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D004C0C013AC881600797055 /* ParticleSystem2D.cpp */; };
-		D004C15D13AC881600797055 /* Renderer2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D004C0C213AC881600797055 /* Renderer2D.cpp */; };
 		D004C15E13AC881600797055 /* Sprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D004C0C413AC881600797055 /* Sprite.cpp */; };
 		D004C15F13AC881600797055 /* BillboardParticleSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D004C0C713AC881600797055 /* BillboardParticleSystem.cpp */; };
 		D004C16013AC881600797055 /* BillboardRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D004C0C913AC881600797055 /* BillboardRenderer.cpp */; };
@@ -113,6 +112,9 @@
 		D087AA6914690C7100E47885 /* ResourceManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D087AA6714690C7100E47885 /* ResourceManager.cpp */; };
 		D0C8118713B27E8A0091274F /* Simple2DTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0C8118313B27E8A0091274F /* Simple2DTests.cpp */; };
 		D0C8118813B27E8A0091274F /* Simple3DTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0C8118513B27E8A0091274F /* Simple3DTests.cpp */; };
+		D0CFFBF614E72A420070DF67 /* GeometryBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0CFFBF314E72A420070DF67 /* GeometryBuffer.cpp */; };
+		D0CFFBF714E72A420070DF67 /* VertexFormats.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0CFFBF514E72A420070DF67 /* VertexFormats.cpp */; };
+		D0CFFBFA14E72A4D0070DF67 /* Drawing2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0CFFBF814E72A4D0070DF67 /* Drawing2D.cpp */; };
 		D0D3715F1453D98B002C59CA /* Segment2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0D3715D1453D98B002C59CA /* Segment2.cpp */; };
 		D0D371661453D999002C59CA /* Capsule3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0D371601453D999002C59CA /* Capsule3.cpp */; };
 		D0D371671453D999002C59CA /* Frustum3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0D371621453D999002C59CA /* Frustum3.cpp */; };
@@ -143,8 +145,6 @@
 		D004C0BF13AC881600797055 /* BMFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMFont.h; sourceTree = "<group>"; };
 		D004C0C013AC881600797055 /* ParticleSystem2D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ParticleSystem2D.cpp; sourceTree = "<group>"; };
 		D004C0C113AC881600797055 /* ParticleSystem2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParticleSystem2D.h; sourceTree = "<group>"; };
-		D004C0C213AC881600797055 /* Renderer2D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Renderer2D.cpp; sourceTree = "<group>"; };
-		D004C0C313AC881600797055 /* Renderer2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Renderer2D.h; sourceTree = "<group>"; };
 		D004C0C413AC881600797055 /* Sprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Sprite.cpp; sourceTree = "<group>"; };
 		D004C0C513AC881600797055 /* Sprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sprite.h; sourceTree = "<group>"; };
 		D004C0C713AC881600797055 /* BillboardParticleSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BillboardParticleSystem.cpp; sourceTree = "<group>"; };
@@ -331,6 +331,11 @@
 		D0C8118413B27E8A0091274F /* Simple2DTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Simple2DTests.h; sourceTree = "<group>"; };
 		D0C8118513B27E8A0091274F /* Simple3DTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Simple3DTests.cpp; sourceTree = "<group>"; };
 		D0C8118613B27E8A0091274F /* Simple3DTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Simple3DTests.h; sourceTree = "<group>"; };
+		D0CFFBF314E72A420070DF67 /* GeometryBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GeometryBuffer.cpp; sourceTree = "<group>"; };
+		D0CFFBF414E72A420070DF67 /* GeometryBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeometryBuffer.h; sourceTree = "<group>"; };
+		D0CFFBF514E72A420070DF67 /* VertexFormats.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VertexFormats.cpp; sourceTree = "<group>"; };
+		D0CFFBF814E72A4D0070DF67 /* Drawing2D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Drawing2D.cpp; sourceTree = "<group>"; };
+		D0CFFBF914E72A4D0070DF67 /* Drawing2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Drawing2D.h; sourceTree = "<group>"; };
 		D0D3715D1453D98B002C59CA /* Segment2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Segment2.cpp; sourceTree = "<group>"; };
 		D0D3715E1453D98B002C59CA /* Segment2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Segment2.h; sourceTree = "<group>"; };
 		D0D371601453D999002C59CA /* Capsule3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Capsule3.cpp; sourceTree = "<group>"; };
@@ -444,6 +449,9 @@
 		D004C0BA13AC881600797055 /* Graphics */ = {
 			isa = PBXGroup;
 			children = (
+				D0CFFBF314E72A420070DF67 /* GeometryBuffer.cpp */,
+				D0CFFBF414E72A420070DF67 /* GeometryBuffer.h */,
+				D0CFFBF514E72A420070DF67 /* VertexFormats.cpp */,
 				D087AA12145DF5A000E47885 /* Texture */,
 				D004C0BB13AC881600797055 /* 2D */,
 				D004C0C613AC881600797055 /* 3D */,
@@ -463,6 +471,8 @@
 		D004C0BB13AC881600797055 /* 2D */ = {
 			isa = PBXGroup;
 			children = (
+				D0CFFBF814E72A4D0070DF67 /* Drawing2D.cpp */,
+				D0CFFBF914E72A4D0070DF67 /* Drawing2D.h */,
 				D087AA2E145DF5EF00E47885 /* AtlasManager.cpp */,
 				D087AA2F145DF5EF00E47885 /* AtlasManager.h */,
 				D087AA30145DF5EF00E47885 /* BMFontManager.cpp */,
@@ -473,8 +483,6 @@
 				D004C0BF13AC881600797055 /* BMFont.h */,
 				D004C0C013AC881600797055 /* ParticleSystem2D.cpp */,
 				D004C0C113AC881600797055 /* ParticleSystem2D.h */,
-				D004C0C213AC881600797055 /* Renderer2D.cpp */,
-				D004C0C313AC881600797055 /* Renderer2D.h */,
 				D004C0C413AC881600797055 /* Sprite.cpp */,
 				D004C0C513AC881600797055 /* Sprite.h */,
 			);
@@ -939,7 +947,6 @@
 				D004C15A13AC881600797055 /* Atlas.cpp in Sources */,
 				D004C15B13AC881600797055 /* BMFont.cpp in Sources */,
 				D004C15C13AC881600797055 /* ParticleSystem2D.cpp in Sources */,
-				D004C15D13AC881600797055 /* Renderer2D.cpp in Sources */,
 				D004C15E13AC881600797055 /* Sprite.cpp in Sources */,
 				D004C15F13AC881600797055 /* BillboardParticleSystem.cpp in Sources */,
 				D004C16013AC881600797055 /* BillboardRenderer.cpp in Sources */,
@@ -1031,6 +1038,9 @@
 				D087AA33145DF5EF00E47885 /* BMFontManager.cpp in Sources */,
 				D087AA6814690C7100E47885 /* Resource.cpp in Sources */,
 				D087AA6914690C7100E47885 /* ResourceManager.cpp in Sources */,
+				D0CFFBF614E72A420070DF67 /* GeometryBuffer.cpp in Sources */,
+				D0CFFBF714E72A420070DF67 /* VertexFormats.cpp in Sources */,
+				D0CFFBFA14E72A4D0070DF67 /* Drawing2D.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

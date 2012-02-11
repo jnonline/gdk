@@ -17,7 +17,7 @@
 string _Gdk_Platform_IO_GetCommonPath(Gdk::CommonPaths::Enum commonPath);
 
 // Window/Application
-extern void _Gdk_Platform_SetTitle(const wchar_t* title);
+extern void _Gdk_Platform_SetTitle(const char* title);
 extern void _Gdk_Platform_Resize(int width, int height);
 
 // Mouse
@@ -28,7 +28,7 @@ extern void _Gdk_Platform_Mouse_ShowCursor(bool show);
 extern Gdk::DeviceType::Enum			_Gdk_Platform_Device_GetDeviceType();
 extern Gdk::PlatformType::Enum			_Gdk_Platform_Device_GetPlatformType();
 extern Gdk::PlatformVersion				_Gdk_Platform_Device_GetPlatformVersion();
-extern wstring                          _Gdk_Platform_Device_GetDeviceDisplayName();
+extern string                           _Gdk_Platform_Device_GetDeviceDisplayName();
 extern string							_Gdk_Platform_Device_GetDeviceUniqueId();
 extern Gdk::DeviceBatteryState::Enum	_Gdk_Platform_Device_GetBatteryState();
 extern float							_Gdk_Platform_Device_GetBatteryLevel();
