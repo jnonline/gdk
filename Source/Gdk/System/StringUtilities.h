@@ -10,12 +10,6 @@
 
 using namespace std;
 
-// Note on strings:
-//
-//  When using sprintf or swprintf (or some variation)
-//  DO NOT use %s or %S (they are not cross-platform friendly).  
-//      instead use [%ls] (wide) or [%hs] (single-byte)
-//            also, [%lc] (wide) or [%hc] (single-byte) for characters
 
 namespace Gdk
 {
@@ -43,14 +37,8 @@ namespace Gdk
 		/// An empty c-string ""
 		static const char* Empty;
         
-        /// An empty w-string L""
-		static const wchar_t* WEmpty;
-        
         /// The c-string "Unknown"
 		static const char* Unknown;
-        
-        /// The w-string L"Unknown"
-		static const wchar_t* WUnknown;
         
         /// @}
 
@@ -62,15 +50,6 @@ namespace Gdk
         /// @{
         
 		static string Replace(const char* input, const char* searchText, const char* replacementText);
-		static wstring Replace(const wchar_t* input, const wchar_t* searchText, const wchar_t* replacementText);
-
-        /// @}
-        // ---------------------------------
-        /// @name UTF8 to UTF16 conversions
-        /// @{
-        
-		static wstring UTF8ToUTF16(const char* source);
-		static string UTF16ToUTF8(const wchar_t* source);
 
         /// @}
         // ---------------------------------
@@ -79,7 +58,6 @@ namespace Gdk
 
 		static unsigned int FastHash(const UInt8* data, int len);
 		static unsigned int FastHash(const char* str);
-		static unsigned int FastHash(const wchar_t* str);
         
         /// @}
 	};

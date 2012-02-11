@@ -173,7 +173,7 @@ AtlasImage* Atlas::GetImage(const char* imageName)
 	AtlasImageNameMap::Iterator iter = this->ImagesByName.Find(imageName);
 	if(iter == this->ImagesByName.End())
 	{
-		LOG_WARN(L"Unable to find the image [%hs] in the atlas [%hs]", imageName, this->GetName().c_str());
+		LOG_WARN("Unable to find the image [%s] in the atlas [%s]", imageName, this->GetName().c_str());
 		return NULL;
 	}
 
@@ -192,7 +192,7 @@ AtlasAnimation* Atlas::GetAnimation(const char* animationName)
 	AtlasAnimationNameMap::Iterator iter = this->AnimationsByName.Find(animationName);
 	if(iter == this->AnimationsByName.End())
 	{
-		LOG_WARN(L"Unable to find the animation [%hs] in the atlas [%hs]", animationName, this->GetName().c_str());
+		LOG_WARN("Unable to find the animation [%s] in the atlas [%s]", animationName, this->GetName().c_str());
 		return NULL;
 	}
 

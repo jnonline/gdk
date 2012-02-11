@@ -65,7 +65,7 @@ void _Gdk_Platform_Resize(int width, int height)
 }
 
 // ***************************************************************
-void _Gdk_Platform_SetTitle(wchar_t const*)
+void _Gdk_Platform_SetTitle(char const*)
 {
     // Do Nothing, no window title on an iOS device
 }
@@ -163,13 +163,11 @@ Gdk::PlatformVersion _Gdk_Platform_Device_GetPlatformVersion()
 }
 
 // ***************************************************************
-wstring _Gdk_Platform_Device_GetDeviceDisplayName()
+string _Gdk_Platform_Device_GetDeviceDisplayName()
 {
 	// Get the device name
     NSString* deviceName = [[UIDevice currentDevice] name];
-    
-    wchar_t* temp = (wchar_t*)[deviceName cStringUsingEncoding:NSUTF32LittleEndianStringEncoding];    
-    return wstring(temp);
+    return string([deviceName UTF8String]);
 }
 
 // ***************************************************************

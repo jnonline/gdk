@@ -11,10 +11,7 @@ using namespace Gdk;
 
 // Common String Literals
 const char* StringUtilities::Empty = "";
-const wchar_t* StringUtilities::WEmpty = L"";
-
 const char* StringUtilities::Unknown = "Unknown";
-const wchar_t* StringUtilities::WUnknown = L"Unknown";
 
 // *****************************************************************
 /// @brief
@@ -44,70 +41,6 @@ string StringUtilities::Replace(const char* input, const char* searchText, const
 	}
 
 	return source;
-}
-
-// *****************************************************************
-/// @brief
-///     Replaces any occurances of a search string within an input string
-/// @param input
-///     The source string to do the replacements in
-/// @param searchText
-///     The text to search for.  All occurances of this text will be replaced
-/// @param replacementText
-///     The text to put in place of the searchText
-/// @return 
-///     The result string with the replacements
-// *****************************************************************
-wstring StringUtilities::Replace(const wchar_t* input, const wchar_t* searchText, const wchar_t* replacementText)
-{
-	wstring source(input);
-
-	// Get the length of the search string
-	size_t searchLen = wcslen(searchText);
-	size_t pos;
-
-	// Loop while the search text is found in the input
-	while( (pos = source.find(searchText)) != wstring::npos)
-	{
-		// We found the search string, so let's replace it
-		source.replace(pos, searchLen, replacementText);
-	}
-
-	return source;
-}
-
-// *****************************************************************
-/// @brief
-///     Converts a UTF8 c-string to a UTF-16 w-string
-/// @param source
-///     The c-string to convert to UTF16
-// *****************************************************************
-wstring StringUtilities::UTF8ToUTF16(const char * source)
-{
-	// Convert the UTF-8 string to UTF-16 
-	string input(source);
-	wstring output;
-
-	utf8::unchecked::utf8to16(input.begin(), input.end(), back_inserter(output));
-
-	return output;
-}
-
-// *****************************************************************
-/// @brief
-///     Converts a UTF16 w-string to a UTF-8 c-string
-/// @param source
-///     The w-string to convert to UTF8
-// *****************************************************************
-string StringUtilities::UTF16ToUTF8(const wchar_t * source)
-{
-	// Convert the UTF-16 string to UTF-8 
-	wstring input(source);
-	string output;
-
-	utf8::unchecked::utf16to8(input.begin(), input.end(), back_inserter(output));
-
-	return output;
 }
 
 // *****************************************************************
@@ -186,16 +119,4 @@ unsigned int StringUtilities::FastHash(const char* str)
 	return FastHash((UInt8*)str, strlen(str));
 }
 
-// *****************************************************************
-/// @brief
-///     Generates a highly unique hash code of a w-string
-/// @param str
-///     The string to hash
-/// @return 
-///     A hash code of the string
-// *****************************************************************
-unsigned int StringUtilities::FastHash(const wchar_t* str)
-{
-	return FastHash((UInt8*)str, wcslen(str) * sizeof(wchar_t));
-}
 

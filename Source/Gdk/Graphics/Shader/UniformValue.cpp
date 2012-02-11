@@ -37,8 +37,8 @@ UniformValue::~UniformValue()
 // ***********************************************************************
 // Utility macro to easily check that the array index & type are valid for the current instance
 #define CHECK_SIZE_AND_TYPE(arrayIndex, type) \
-	ASSERT(this->uniformType == type, L"Incorrect uniform type [Attempted: %hs][Actual: %hs]", UniformTypes::ToString(type), UniformTypes::ToString(this->uniformType)); \
-	ASSERT(arrayIndex >= 0 && arrayIndex < this->arraySize, L"Array index out of bounds on uniform value");
+	ASSERT(this->uniformType == type, "Incorrect uniform type [Attempted: %s][Actual: %s]", UniformTypes::ToString(type), UniformTypes::ToString(this->uniformType)); \
+	ASSERT(arrayIndex >= 0 && arrayIndex < this->arraySize, "Array index out of bounds on uniform value");
 
 // ===================================================================================================
 // Get Methods
@@ -265,8 +265,8 @@ void UniformValue::GetMatrix4(Matrix3D* output, int arrayIndex)
 Int32 UniformValue::GetSampler(int arrayIndex)	
 {
 	ASSERT(this->uniformType == UniformTypes::Sampler2D || this->uniformType == UniformTypes::SamplerCube, 
-		L"Incorrect shader uniform value type [Attempted: Sampler***][Actual: %hs]", UniformTypes::ToString(this->uniformType));
-	ASSERT(arrayIndex >= 0 && arrayIndex < this->arraySize, L"Array index out of bounds attempting to get shader uniform value");
+		"Incorrect shader uniform value type [Attempted: Sampler***][Actual: %s]", UniformTypes::ToString(this->uniformType));
+	ASSERT(arrayIndex >= 0 && arrayIndex < this->arraySize, "Array index out of bounds attempting to get shader uniform value");
 
 	return ((Int32*)valueBuffer)[arrayIndex];
 }
@@ -697,8 +697,8 @@ void UniformValue::SetMatrix4(const Matrix3D& value, int arrayIndex)
 void UniformValue::SetSampler(Int32 textureUnitIndex, int arrayIndex)
 {
 	ASSERT(this->uniformType == UniformTypes::Sampler2D || this->uniformType == UniformTypes::SamplerCube, 
-		L"Incorrect shader uniform value type [Attempted: Sampler***][Actual: %hs]", UniformTypes::ToString(this->uniformType));
-	ASSERT(arrayIndex >= 0 && arrayIndex < this->arraySize, L"Array index out of bounds attempting to get shader uniform value");
+		"Incorrect shader uniform value type [Attempted: Sampler***][Actual: %s]", UniformTypes::ToString(this->uniformType));
+	ASSERT(arrayIndex >= 0 && arrayIndex < this->arraySize, "Array index out of bounds attempting to get shader uniform value");
 
 	Int32* buffer = (Int32*)valueBuffer + arrayIndex;
 
@@ -799,11 +799,11 @@ void UniformValue::Bind(UniformValue* uniformValue)
 	}
 
 	// Verify the type & size match
-	ASSERT(uniformValue->uniformType == this->uniformType, L"Attempt to bind to shared uniform value with mismatched types. [Binding: %hs] [This: %hs]",
+	ASSERT(uniformValue->uniformType == this->uniformType, "Attempt to bind to shared uniform value with mismatched types. [Binding: %s] [This: %s]",
 		UniformTypes::ToString(uniformValue->uniformType), 
 		UniformTypes::ToString(this->uniformType)
 		);
-	ASSERT(uniformValue->arraySize == this->arraySize, L"Attempt to bind to shared uniform value with mismatched array size. [Binding: %d] [This: %d]",
+	ASSERT(uniformValue->arraySize == this->arraySize, "Attempt to bind to shared uniform value with mismatched array size. [Binding: %d] [This: %d]",
 		uniformValue->arraySize, 
 		this->arraySize
 		);

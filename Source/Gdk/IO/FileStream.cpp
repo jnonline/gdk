@@ -36,14 +36,14 @@ FileStream::FileStream(const char *filePath, FileMode::Enum mode)
 		#ifdef GDK_ASSERTS
 		char errString[256];
 		strerror_s(errString, 256, errno);
-		ASSERT(result == 0 && file != NULL, L"Failed to open the file [%hs] Result(%d) Error(%d): %hs", filePath, result, errno, errString);
+		ASSERT(result == 0 && file != NULL, "Failed to open the file [%s] Result(%d) Error(%d): %s", filePath, result, errno, errString);
 		#endif
 	#else
 		
 		file = fopen(filePath, fopenMode);
 
 		// Asset the file opened
-		ASSERT(file != NULL, L"Failed to open the file [%hs] Error(%d): %hs", filePath, errno, sys_errlist[errno]);
+		ASSERT(file != NULL, "Failed to open the file [%s] Error(%d): %s", filePath, errno, sys_errlist[errno]);
 
 	#endif
         

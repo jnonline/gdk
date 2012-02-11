@@ -38,7 +38,7 @@ namespace Gdk
 		UInt16 Height;
 
         /// Title of the application.  Displayed in the application window title bar.
-		wstring Title;
+		string Title;
 
         /// True if the application window can be resized.  Ignored on mobile platforms
 		bool AllowResize;
@@ -140,8 +140,8 @@ namespace Gdk
         
 		static int GetWidth();
 		static int GetHeight();
-		static const wchar_t* GetTitle();
-		static void SetTitle(const wchar_t* title);
+		static const char* GetTitle();
+		static void SetTitle(const char* title);
 		static void Resize(int width, int height);
 
         /// @}
@@ -240,7 +240,7 @@ namespace Gdk
 		static bool exitRequest;
 		static bool appIsActive;
 		static bool appIsSuspended;
-		static wstring title;
+		static string title;
         
 		// Update loop timers
 		static float secondsSinceLastUpdate;

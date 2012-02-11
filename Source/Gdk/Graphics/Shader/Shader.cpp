@@ -80,7 +80,7 @@ void Shader::Apply()
 {
 	// Get the current technique in use
 	ShaderTechnique* technique = this->CurrentTechnique;
-	ASSERT(technique != NULL, L"Shader::Apply called with a NULL CurrentTechnique");
+	ASSERT(technique != NULL, "Shader::Apply called with a NULL CurrentTechnique");
 
 	// Bind the shader program
 	Graphics::SetActiveShaderProgram(technique->shaderProgramId);
@@ -341,7 +341,7 @@ void Shader::LoadFromAsset()
 			// Get the global parameter that we're binding to
 			string parameterBinding = stream->ReadString();
 			UniformValue* sharedUniformValue = Graphics::GlobalUniformsSet.Get(parameterBinding.c_str());
-			ASSERT(sharedUniformValue != NULL, L"Unable to bind shader parameter [%hs] to the shared global uniform [%hs]", parameterName.c_str(), parameterBinding.c_str());
+			ASSERT(sharedUniformValue != NULL, "Unable to bind shader parameter [%s] to the shared global uniform [%s]", parameterName.c_str(), parameterBinding.c_str());
 
 			// Bind!
 			parameter->Bind(sharedUniformValue);
@@ -504,7 +504,7 @@ void Shader::LoadFromAsset()
 		else
 		{
 			// TODO(P2): Binary shader loading
-			ASSERT(false, L"Binary shader loading is not implemented");
+			ASSERT(false, "Binary shader loading is not implemented");
 		}
 
 		// Create & Link Shader Program
@@ -512,7 +512,7 @@ void Shader::LoadFromAsset()
 
 		// Create a program
 		technique->shaderProgramId = glCreateProgram();
-		ASSERT(technique->shaderProgramId != 0, L"glCreateProgram() failed");
+		ASSERT(technique->shaderProgramId != 0, "glCreateProgram() failed");
 
 		// Attach the shaders to the program
 		glAttachShader(technique->shaderProgramId, technique->vertexShaderId);
@@ -539,7 +539,7 @@ void Shader::LoadFromAsset()
 	}
 
 	// Make sure we found at least 1 supported platform
-	ASSERT(this->Techniques.size() > 0, L"No supported techniques were found in this shader");
+	ASSERT(this->Techniques.size() > 0, "No supported techniques were found in this shader");
 
 	// Default the shader to the first technique
 	this->CurrentTechnique = this->Techniques[0];
@@ -572,14 +572,14 @@ void Shader::LinkProgram(GLuint shaderProgramId)
 			glGetProgramInfoLog(shaderProgramId, infoLen, NULL, infoLog);
 
 			// ASSERT the failure
-			ASSERT(false, L"Shader linking failed:  %hs", infoLog);
+			ASSERT(false, "Shader linking failed:  %s", infoLog);
 			
 			GdkFree(infoLog);
 		}
 		else
 		{
 			// ASSERT
-			ASSERT(false, L"Shader linking Failed:  Generic Failure");
+			ASSERT(false, "Shader linking Failed:  Generic Failure");
 		}
 	}
 }
@@ -589,7 +589,7 @@ GLuint Shader::CompileGLShaderFromSource(const char *shaderSource, GLenum shader
 {
 	// Create the shader object
 	GLuint shaderId = glCreateShader(shaderType);
-	ASSERT(shaderId != 0, L"glCreateShader() failed");
+	ASSERT(shaderId != 0, "glCreateShader() failed");
 
 	// Is this not a GL ES platform?
 	#ifndef GDK_OPENGL_ES
@@ -643,14 +643,14 @@ GLuint Shader::CompileGLShaderFromSource(const char *shaderSource, GLenum shader
 			glGetShaderInfoLog(shaderId, infoLen, NULL, infoLog);
 
 			// ASSERT the failure
-			ASSERT(false, L"Shader compilation failed:  %hs \nShader text: %hs", infoLog, shaderSource);
+			ASSERT(false, "Shader compilation failed:  %s \nShader text: %s", infoLog, shaderSource);
 			
 			GdkFree(infoLog);
 		}
 		else
 		{
 			// ASSERT
-			ASSERT(false, L"Shader Compilation Failed: Generic Failure");
+			ASSERT(false, "Shader Compilation Failed: Generic Failure");
 		}
 	}
 

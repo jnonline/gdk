@@ -28,7 +28,7 @@ int Application::height = 0;
 bool Application::exitRequest = false;
 bool Application::appIsActive = false;
 bool Application::appIsSuspended = false;
-wstring Application::title = L"";
+string Application::title = "";
 float Application::secondsSinceLastUpdate = 0.0f;
 
 double Application::lastUpdateTime = 0.0f;
@@ -111,9 +111,9 @@ void Application::Update(float elapsedSeconds)
             Graphics::GlobalUniforms.Projection->SetMatrix4(proj);
 
             // Draw the FPS string
-            wchar_t temp[64];
+            char temp[64];
             Vector2 textScale(0.7f, 0.7f);
-            swprintf(temp, 64, L"FPS: %d", CurrentFPS);
+            GDK_SPRINTF(temp, 64, "FPS: %d", CurrentFPS);
             Drawing2D::DrawText(SharedResources::Fonts.Arial20, temp, Vector2(width - 80.0f, 10), DebugStatsColor, textScale);
             
             Drawing2D::Flush();
@@ -154,7 +154,7 @@ bool Application::Platform_InitGdk()
 	// Setup the default application settings
 	initialAppSettings.Width = 480;
 	initialAppSettings.Height = 320;
-	initialAppSettings.Title = L"GDK Application";
+	initialAppSettings.Title = "GDK Application";
 	initialAppSettings.AllowResize = true;
 	initialAppSettings.ShowMinimizeBox = true;
 	initialAppSettings.ShowMaximizeBox = true;
@@ -438,7 +438,7 @@ int Application::GetHeight()
 /// @brief
 ///     Gets the text displayed in the application window title
 // *****************************************************************
-const wchar_t* Application::GetTitle()
+const char* Application::GetTitle()
 {
 	return title.c_str();
 }
@@ -449,7 +449,7 @@ const wchar_t* Application::GetTitle()
 /// @param title
 ///     Text title to be displayed in the application window title bar
 // *****************************************************************
-void Application::SetTitle(const wchar_t* title)
+void Application::SetTitle(const char* title)
 {
 	// Call the platform specific "SetTitle" method
 	_Gdk_Platform_SetTitle(title);

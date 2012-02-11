@@ -115,7 +115,7 @@ void Model::LoadFromAsset()
 	int requiredVersion = 3;
 	if(version != requiredVersion)
 	{
-		LOG_ERROR(L"The model asset \"%hs\" is an unsupported version: %d [Expected: %d]", GetName().c_str(), version, requiredVersion);
+		LOG_ERROR("The model asset \"%s\" is an unsupported version: %d [Expected: %d]", GetName().c_str(), version, requiredVersion);
 		return;
 	}
 
@@ -160,7 +160,7 @@ void Model::LoadFromAsset()
 		else
 		{
 			// Verify the parent node index is valid
-			ASSERT(parentNodeIndex < this->Nodes.size(), L"The model asset \"%hs\" contains a node with an invalid parent node index [Expected: <%d] [Actual: %d]", this->GetName().c_str(), this->Nodes.size(), parentNodeIndex);
+			ASSERT(parentNodeIndex < this->Nodes.size(), "The model asset \"%s\" contains a node with an invalid parent node index [Expected: <%d] [Actual: %d]", this->GetName().c_str(), this->Nodes.size(), parentNodeIndex);
 
 			// Set this node's parent node
 			node->ParentNode = this->Nodes[parentNodeIndex];
@@ -441,7 +441,7 @@ void Model::SetupVertexAttributeChannels(ModelMesh* mesh)
 	}
 
 	// Make sure the stride matches the vertex offset (DEBUG CHECK)
-	ASSERT(vertexStride == vertexOffset, L"Vertex Stride did not match calculated vertex data size");
+	ASSERT(vertexStride == vertexOffset, "Vertex Stride did not match calculated vertex data size");
 }
 	
 // ***********************************************************************
@@ -598,6 +598,6 @@ Shader* Model::DetermineShader(ModelMesh* mesh, ModelMaterial* material)
 	}
 
 	// No suitable shader found!
-	ASSERT(false, L"Unable to find a suitable Shader for rendering the mesh \"%hs\" with the material \"%hs\"", mesh->Name.c_str(), material->Name.c_str());
+	ASSERT(false, "Unable to find a suitable Shader for rendering the mesh \"%s\" with the material \"%s\"", mesh->Name.c_str(), material->Name.c_str());
 	return NULL;
 }

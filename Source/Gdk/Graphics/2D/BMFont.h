@@ -72,7 +72,7 @@ namespace Gdk
     ///	@brief
     ///		A map of BMFontCharacter instances for the corresponding wide character
     // =================================================================================
-    typedef map<wchar_t, BMFontCharacter> BMFontCharacterMap;
+    typedef map<char, BMFontCharacter> BMFontCharacterMap;
     
 	
     // =================================================================================
@@ -92,7 +92,7 @@ namespace Gdk
         
 		~BMFont();
 
-		Vector2 GetTextSize(const wchar_t *text);
+		Vector2 GetTextSize(const char *text);
 
         /// @}
         

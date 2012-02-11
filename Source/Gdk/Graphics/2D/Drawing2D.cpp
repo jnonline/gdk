@@ -840,7 +840,7 @@ void Drawing2D::DrawSprite(Sprite* sprite)
 // ********************************************************************************
 Vector2 Drawing2D::DrawText(
 	BMFont *font, 
-	const wchar_t *text, 
+	const char *text, 
 	const Vector2& position, 
 	const Color& color, 
 	const Vector2& scale, 
@@ -851,11 +851,11 @@ Vector2 Drawing2D::DrawText(
 
     
 	// Walk through the input text
-	const wchar_t *current = text;
+	const char *current = text;
 	while(*current != 0)
 	{
-        wchar_t ch = *current;
-		if(ch == L'\n')
+        char ch = *current;
+		if(ch == '\n')
 		{
 			// Move to the next line
 			drawPos.X = position.X;
@@ -868,7 +868,7 @@ Vector2 Drawing2D::DrawText(
             if(iter == font->characters.end())
             {
                 // Character doesnt exist in the font
-                LOG_WARN(L"The character [%lc][%u] doesn't exist in the character map for the font [%hs]", ch, (UInt32)ch, font->GetName().c_str()); 
+                LOG_WARN("The character [%c][%u] doesn't exist in the character map for the font [%s]", ch, (UInt32)ch, font->GetName().c_str()); 
             }
             else
             {

@@ -38,23 +38,23 @@ void TestLog::Clear()
 }
 
 // ***********************************************************************
-void TestLog::WriteLine(Gdk::LogLevel::Enum logLevel, const wchar_t *format, ...)
+void TestLog::WriteLine(Gdk::LogLevel::Enum logLevel, const char *format, ...)
 {
-	wchar_t temp[2048];
-    wchar_t *buf = temp;
+	char temp[2048];
+    char *buf = temp;
     
     // Add the indent
     for(int i = 0; i < this->Indent; i++)
     {
-        temp[i*2  ] = L' ';
-        temp[i*2+1] = L' ';
+        temp[i*2  ] = ' ';
+        temp[i*2+1] = ' ';
     }
     buf += (this->Indent * 2);
     
 	// Build the full string from the format and args
 	va_list args;
 	va_start (args, format);
-	vswprintf(buf, 2048 - this->Indent*2, format, args);
+	GDK_VSPRINTF(buf, 2048 - this->Indent*2, format, args);
 	va_end (args);
     
     // Push the new item onto the queue
@@ -66,7 +66,7 @@ void TestLog::WriteLine(Gdk::LogLevel::Enum logLevel, const wchar_t *format, ...
 // ###########################################################################################################
 
 // ***********************************************************************
-TestTreeNode::TestTreeNode(const wchar_t* name, TestDelegate* testMethod)
+TestTreeNode::TestTreeNode(const char* name, TestDelegate* testMethod)
     : Name(name)
 {
     this->Parent = NULL;
@@ -91,7 +91,7 @@ TestTreeNode* TestTreeNode::AddChild(TestTreeNode* child)
 
 
 // ***********************************************************************
-TestTreeNode* TestTreeNode::AddChild(const wchar_t* name, TestDelegate* testMethod)
+TestTreeNode* TestTreeNode::AddChild(const char* name, TestDelegate* testMethod)
 {
     // Create the child node
     TestTreeNode* child = GdkNew TestTreeNode(name, testMethod);
@@ -145,30 +145,30 @@ void UnitTestsModule::BuildTestTree()
     #define TNODE(parent, name, method) parent->AddChild( GdkNew TestTreeNode(name, TestDelegate::FromMethod( this, &UnitTestsModule::method) ) );
     
     // Create the root test tree node
-    this->rootNode = GdkNew TestTreeNode(L"Unit Tests", NULL);
+    this->rootNode = GdkNew TestTreeNode("Unit Tests", NULL);
     
     // System Tests
     // -----------------------
  
-    CNODE(this->rootNode, systemTests, L"System Tests");
-        TNODE(systemTests, L"Logging", Test_System_Logging);
-        TNODE(systemTests, L"Memory", Test_System_Memory);
-        CNODE(systemTests, systemContainerTests, L"Containers");
-            TNODE(systemContainerTests, L"StringHashMap", Test_System_Containers_StringHashMap);
-            TNODE(systemContainerTests, L"SortedVector", Test_System_Containers_SortedVector);
-        CNODE(systemTests, systemThreadingTests, L"Threading");
-            TNODE(systemThreadingTests, L"ThreadedWorkQueue", Test_System_Threading_ThreadedWorkQueue);
+    CNODE(this->rootNode, systemTests, "System Tests");
+        TNODE(systemTests, "Logging", Test_System_Logging);
+        TNODE(systemTests, "Memory", Test_System_Memory);
+        CNODE(systemTests, systemContainerTests, "Containers");
+            TNODE(systemContainerTests, "StringHashMap", Test_System_Containers_StringHashMap);
+            TNODE(systemContainerTests, "SortedVector", Test_System_Containers_SortedVector);
+        CNODE(systemTests, systemThreadingTests, "Threading");
+            TNODE(systemThreadingTests, "ThreadedWorkQueue", Test_System_Threading_ThreadedWorkQueue);
     
     // Math Tests
     // -----------------------
     
-    CNODE(this->rootNode, mathTests, L"Math Tests");
-        TNODE(mathTests, L"Randoms", Test_Math_Randoms);
-        TNODE(mathTests, L"Vectors", Test_Math_Vectors);
-        TNODE(mathTests, L"Distance 2D", Test_Math_Distance2D);
-        TNODE(mathTests, L"Intersection 2D", Test_Math_Intersection2D);
-        TNODE(mathTests, L"Distance 3D", Test_Math_Distance3D);
-        TNODE(mathTests, L"Intersection 3D", Test_Math_Intersection3D);
+    CNODE(this->rootNode, mathTests, "Math Tests");
+        TNODE(mathTests, "Randoms", Test_Math_Randoms);
+        TNODE(mathTests, "Vectors", Test_Math_Vectors);
+        TNODE(mathTests, "Distance 2D", Test_Math_Distance2D);
+        TNODE(mathTests, "Intersection 2D", Test_Math_Intersection2D);
+        TNODE(mathTests, "Distance 3D", Test_Math_Distance3D);
+        TNODE(mathTests, "Intersection 3D", Test_Math_Intersection3D);
     
     // -----------------------
     
@@ -212,7 +212,7 @@ void UnitTestsModule::OnUpdate(float elapsedSeconds)
         // Write the node header log & set the log depth
         this->log.Indent = depth;
         size_t headerLogIndex = this->log.Lines.size();
-        this->log.WriteLine(LogLevel::System, L"NODE: %ls", activeTestNode->Name.c_str());
+        this->log.WriteLine(LogLevel::System, "NODE: %s", activeTestNode->Name.c_str());
         this->log.Indent = depth+1;
         
         // Does the active node have a test method?
@@ -325,13 +325,13 @@ void UnitTestsModule::OnDraw()
     {
         // Draw the "Running: Test Name" text
         TestTreeNode* activeTestNode = this->flatTestTree[this->currentTestIndex];
-        Drawing2D::DrawText(SharedResources::Fonts.Arial20, L"Running: ", headerBox.Position + Vector2(2,2), Color(128,255,128), textScale);
+        Drawing2D::DrawText(SharedResources::Fonts.Arial20, "Running: ", headerBox.Position + Vector2(2,2), Color(128,255,128), textScale);
 		Drawing2D::DrawText(SharedResources::Fonts.Arial20, activeTestNode->Name.c_str(), headerBox.Position + Vector2(62,2), Color(128,255,128), textScale);
     }
     else
     {
         // Draw the "Click here to Start" text
-        Drawing2D::DrawText(SharedResources::Fonts.Arial20, L"Click here to start testing!", headerBox.Position + Vector2(2,2), Color(255,255,255), textScale);
+        Drawing2D::DrawText(SharedResources::Fonts.Arial20, "Click here to start testing!", headerBox.Position + Vector2(2,2), Color(255,255,255), textScale);
 	}
 
     

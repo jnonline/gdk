@@ -50,7 +50,7 @@ MemoryStream::MemoryStream(int initialSize)
 	this->bufferOwner = true;
 	
 	// Verify the allocation
-	ASSERT(this->buffer != NULL, L"Memorystream Allocation Failed: Bytes[%d]", initialSize);
+	ASSERT(this->buffer != NULL, "Memorystream Allocation Failed: Bytes[%d]", initialSize);
 }
 
 // *****************************************************************
@@ -138,7 +138,7 @@ void MemoryStream::Seek(int offset, SeekOrigin::Enum origin)
 		this->position += offset;
 
 	// Verify user didnt jump outside the stream
-	ASSERT(this->position >= 0 && this->position <= this->streamLength, L"Seek has jumped outside the stream");
+	ASSERT(this->position >= 0 && this->position <= this->streamLength, "Seek has jumped outside the stream");
 }
 
 // *****************************************************************
@@ -281,7 +281,7 @@ void MemoryStream::Resize(int newSize)
 	// Is this NOT an autogrow buffer?
 	if(this->autoGrow == false)
 	{
-		ASSERT(false, L"Resize called on a non-growing MemoryStream");
+		ASSERT(false, "Resize called on a non-growing MemoryStream");
 	}
 
 	// Allocate a new buffer

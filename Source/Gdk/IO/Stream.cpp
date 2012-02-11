@@ -56,34 +56,10 @@ string Stream::ReadString()
 
 // *****************************************************************
 /// @brief
-///     Reads a wchar_t* wide character string from the stream
-/// @remarks
-///     wchar_t* strings are stored as a 2-byte string length, followed by
-///     the 16-bit characters of the string, NOT including the NULL terminator.
-// *****************************************************************
-wstring Stream::ReadWString()
-{
-	// Read the string length
-	wstring::size_type length = ReadUInt16();
-	wstring result;
-	result.reserve(length + 1);
-
-	// Read the string characters
-	for(wstring::size_type i=0; i<length; i++) 
-	{ 
-		wchar_t c = ReadUInt16();
-		result.push_back(c); 
-	}
-
-	return result;
-}
-
-// *****************************************************************
-/// @brief
 ///     Writes a char* string to the stream
 /// @remarks
-///     wchar_t* strings are stored as a 2-byte string length, followed by
-///     the 16-bit characters of the string, NOT including the NULL terminator.
+///     char* strings are stored as a 2-byte string length, followed by
+///     the 8-bit characters of the string, NOT including the NULL terminator.
 // *****************************************************************
 void Stream::WriteString(const char* value)
 {
@@ -93,23 +69,6 @@ void Stream::WriteString(const char* value)
 	
 	// Add the string characters
 	Write((Byte*)value, length);
-}
-
-// *****************************************************************
-/// @brief
-///     Writes a wchar_t* wide character string to the stream
-/// @remarks
-///     wchar_t* strings are stored as a 2-byte string length, followed by
-///     the 16-bit characters of the string, NOT including the NULL terminator.
-// *****************************************************************
-void Stream::WriteWString(const wchar_t* value)
-{
-	// Add the string length
-	UInt16 length = wcslen(value);
-	WriteUInt16(length);
-	
-    for(int i=0; i<length; i++)
-	WriteUInt16(value[i]);
 }
 
 // *****************************************************************

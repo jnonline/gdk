@@ -261,7 +261,7 @@ void Simple2DTests::OnDraw()
 	Drawing2D::WorldTransform = world;
 
 	// Draw some Text
-    const wchar_t* sampleText = L"Sample Text...\nNew Line...";
+    const char* sampleText = "Sample Text...\nNew Line...";
 	Drawing2D::DrawText(SharedResources::Fonts.Arial20, sampleText, Vector2::ZERO, Color(255,224,160));
 
 	// Images & Anims & Sprites

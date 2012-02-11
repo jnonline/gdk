@@ -137,7 +137,7 @@ Resource* ResourceManager::CreateResource(const char* name)
     resourceMapMutex->Lock();
     
     // Make sure no resource with the given name exists
-    ASSERT(resourcesByName.ContainsKey(name) == false, L"A resource with the given name already exists");
+    ASSERT(resourcesByName.ContainsKey(name) == false, "A resource with the given name already exists");
     
     // Create a new resource intance
     Resource* resource = OnCreateNewResourceInstance();
@@ -263,7 +263,7 @@ Resource* ResourceManager::LoadUtility(const char *name, bool async, int asyncPr
         if(resource->State == ResourceState::Loading)
         {
             // TODO(P2): Use proper eventing to signal the completion   [Note: this only happens when Load() is called on a resource already queued & being processed by a LoadAsync() call]
-            LOG_WARN(L"LoadUtility() was called to sync load a resource already queued for async loading.  RESOURCE: \"%hs\"" , name);
+            LOG_WARN("LoadUtility() was called to sync load a resource already queued for async loading.  RESOURCE: \"%s\"" , name);
             
             // Wait for the resource to finish loading
             while(resource->State != ResourceState::Ready)

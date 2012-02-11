@@ -222,11 +222,13 @@ using namespace std;
 
 	#define GDK_SPRINTF(buffer, bufferSize, format, ...)		sprintf_s(buffer, bufferSize, format, __VA_ARGS__ )
 	#define GDK_SSCANF(buffer, format, ...)						sscanf_s(buffer, format, __VA_ARGS__ )
+	#define GDK_VSPRINTF(buffer, bufferSize, format, valist)	vsprintf_s(buffer, bufferSize, format, valist)
 
 #else
 
 	#define GDK_SPRINTF(buffer, bufferSize, format, args...)	sprintf(buffer, format, ##args)
 	#define GDK_SSCANF(buffer, format, args...)					sscanf(buffer, format, ##args)
+	#define GDK_VSPRINTF(buffer, bufferSize, format, valist)	vsprintf(buffer, format, valist)
 
 #endif
 

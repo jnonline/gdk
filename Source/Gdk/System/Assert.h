@@ -30,7 +30,7 @@ namespace Gdk
     /// @addtogroup System
     /// @{
     
-	void Assert(bool condition, const char* file, int line, const wchar_t* format, ...);
+	void Assert(bool condition, const char* file, int line, const char* format, ...);
     void DebugBreak();
     
     /// @}

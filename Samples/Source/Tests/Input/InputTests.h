@@ -12,9 +12,9 @@
 struct InputLogLine
 {
     Gdk::Color Color;
-    wstring Message;
+    string Message;
     
-    InputLogLine(const wchar_t* msg, Gdk::Color color) : Message(msg), Color(color) {}
+    InputLogLine(const char* msg, Gdk::Color color) : Message(msg), Color(color) {}
 };
 
 // *******************************************************************
@@ -33,13 +33,13 @@ protected:
     
     // Input log
     list<InputLogLine> inputLog;
-    void WriteLog(const wchar_t* msg, Gdk::Color color = Color(255,224,160));
+    void WriteLog(const char* msg, Gdk::Color color = Color(255,224,160));
     
     // Keyboard Utilities
-    void DrawKeyStatusBox(Keys::Enum key, Rectangle2 rect, const wchar_t* name);
+    void DrawKeyStatusBox(Keys::Enum key, Rectangle2 rect, const char* name);
 	
     // Mouse Utilities
-    void DrawMouseButtonStatusBox(MouseButton::Enum button, Rectangle2 rect, const wchar_t* name);
+    void DrawMouseButtonStatusBox(MouseButton::Enum button, Rectangle2 rect, const char* name);
 	void OnWheelScroll(float deltaX, float deltaY);
     
     // Touch Utilities

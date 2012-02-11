@@ -41,7 +41,7 @@ Game::~Game ()
 bool Game::OnLoadSettings(ApplicationSettings &settings)
 {
 	// Default implementation, Sets some default values for Games
-	settings.Title = L"Gdk Game";
+	settings.Title = "Gdk Game";
 	settings.Width = 640;
 	settings.Height = 480;
 

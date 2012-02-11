@@ -220,8 +220,8 @@ void Tanks3DModule::OnDraw()
 	Graphics::GlobalUniforms.Projection->SetMatrix4(proj);
 
 	// Draw some Text
-    wchar_t sampleText[256];
-    swprintf(sampleText, 256, L"Sample Text...");
+    char sampleText[256];
+    GDK_SPRINTF(sampleText, 256, "Sample Text...");
     Vector2 textSize = SharedResources::Fonts.Arial20->GetTextSize(sampleText);
     Vector2 textPosition((Application::GetWidth() - textSize.X) * 0.5f, 10);
 	Drawing2D::DrawText(SharedResources::Fonts.Arial20, sampleText, textPosition, Color::BLUE);
