@@ -110,7 +110,7 @@ void Log::Write(LogLevel::Enum logLevel, const char* file, int line, const char 
 		if( logLevel <= LogLevel::Info )
 		{
         #ifdef GDKPLATFORM_WINDOWS
-			OutputDebugString(msgBuffer);
+			OutputDebugStringA(msgBuffer);
         #else
             printf(msgBuffer);
         #endif

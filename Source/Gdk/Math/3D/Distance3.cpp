@@ -667,8 +667,8 @@ float Distance3::SegmentToSegment(const Gdk::Segment3 &segment1, const Gdk::Segm
         // ensure symmetry of the function.  That is, dist(seg0,seg1) and
         // dist(seg1,seg0) should produce the same number.
         float e0pe1 = segment1.Extent + segment2.Extent;
-        float sign = (a01 > 0 ? -1 : 1);
-        float b0Avr = (0.5)*(b0 - sign*b1);
+        float sign = (float)(a01 > 0 ? -1 : 1);
+        float b0Avr = (0.5f)*(b0 - sign*b1);
         float lambda = -b0Avr;
         if (lambda < -e0pe1)
         {

@@ -157,34 +157,32 @@ void Simple2DTests::OnDraw()
 			Drawing2D::DrawRectangleOutline(Rectangle2(sinRectTimer * 10.0f, -10.0f + i * 2.0f, 1.0f, 1.0f), Color(255,128,255,255));
 	}
 
-    /*
-	// Diamonds
+	// Rects 2
 	for(int i = 0; i < 20; i++)
 	{
-		// Setup a world transform for the diamond
-		Matrix2D diamondTransform = Matrix2D::CreateRotateScaleTranslate(
+		// Setup a world transform for the rect
+		Matrix2D transform = Matrix2D::CreateRotateScaleTranslate(
 			1.0f, 1.0f, 
 			Math::Cos((diamondTimer + 0.05f * i) * Math::TWO_PI) * 10.0f, Math::Sin((diamondTimer + 0.05f * i) * Math::TWO_PI * 2.0f) * 5.0f,
 			(circleTimer + 0.1f * i) * Math::TWO_PI
 			) * Matrix2D::CreateRotation(this->diamondTimer * Math::TWO_PI);
-		Drawing2D::WorldTransform = diamondTransform;
+		Drawing2D::WorldTransform = transform;
 
-		// Draw the diamonds
+		// Draw the rects
 		if(i % 2 == 0)
-			Drawing2D::DrawDiamond(Rectangle2(-0.5f, -0.5f, 1.0f, 1.0f), Color(128,128,128,128), BlendMode::Add);
+			Drawing2D::DrawRectangle(Rectangle2(-0.5f, -0.5f, 1.0f, 1.0f), Color(128,128,128,128), BlendMode::Add);
 		else
-			Drawing2D::DrawDiamondOutline(Rectangle2(-0.5f, -0.5f, 1.0f, 1.0f), Color(255,255,255,255), BlendMode::Add);
+			Drawing2D::DrawRectangleOutline(Rectangle2(-0.5f, -0.5f, 1.0f, 1.0f), Color(255,255,255,255), BlendMode::Add);
 	}
     Drawing2D::WorldTransform = Matrix2D::IDENTITY;
-    */
-    
+
     // Circles (Outlined)
 	for(int i = 0; i < 8; i++)
 	{
 		float angle1 = (circleTimer + i * 0.1f) * Math::TWO_PI;
 		Drawing2D::DrawCircleOutline(Circle2(i * Math::Cos(angle1) + 5.0f, i * Math::Sin(angle1) + 5.0f, 0.7f), 16, Color(0,255,255,255));
 	}
-    
+
     // Circles
     {
         float scale = 0.25f;
@@ -201,13 +199,17 @@ void Simple2DTests::OnDraw()
                 float z = PerlinNoise::Noise2((x + totalElapsedSeconds) * scale, y * scale);
                 
                 if(z > 0)
-                    Drawing2D::DrawCircle(Circle2(x,y,step * z), 16, Color(0,64,128,64));
+				{
+					Drawing2D::DrawCircle(Circle2(x,y,step * z), 16, Color(0,64,128,64));
+				}
                 else
+				{
                     Drawing2D::DrawCircle(Circle2(x,y,step * -z), 16, Color(0,128,128,64));
+				}
             }
         }
     }
-    
+
     // Polyline
     {
         Vector2 vertices[201];
@@ -225,9 +227,8 @@ void Simple2DTests::OnDraw()
             vertices[step] = p + Vector2(-5.0f, -5.0f);
         }
         
-        Drawing2D::DrawPolyline(vertices, steps+1, Color(64,128,0,255));
+        Drawing2D::DrawPolyline(vertices, steps+1, Color(64,128,0,255), false);
     }
-
 
 	// Transform Stack test
 	// ----------------------------------------------------
@@ -283,7 +284,7 @@ void Simple2DTests::OnDraw()
 
 	this->particleSystem1->Draw();
 	this->particleSystem2->Draw();
-    
+
 	// Flush the 2D renderer
 	Drawing2D::Flush();
 }

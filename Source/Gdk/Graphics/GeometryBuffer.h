@@ -5,6 +5,9 @@
 
 #pragma once
 
+// Uncomment this for some extra debug checking in the geometry buffer code.
+//  This code often kills framerate on PC
+// #define GEOMETRY_BUFFER_DEBUG_CHECKS
 
 namespace Gdk
 {
@@ -87,18 +90,22 @@ namespace Gdk
         ///     This method appends a vertex to the geometry buffer.
         // *****************************************************************
         template <typename TVertex>
-        inline UInt16 AddVertex(const TVertex& v)
+        UInt16 AddVertex(const TVertex& v)
         {
-            // DEBUG CHECK:  make sure the vertex type matches the current VertexFormat
-            ASSERT(currentVertexFormat == TVertex::Format, 
-                   "AddVertex called with an unexpected vertex format. [Current Format: %d][Submitted Format: %d]", 
-                   currentVertexFormat, 
-                   TVertex::Format
-                   );
-            // DEBUG CHECK:  make sure we dont draw too many vertices
-            ASSERT(numVertices < 65535,
-                   "AddVertex called when the GeometryBuffer is full."
-                   );
+			#ifdef GEOMETRY_BUFFER_DEBUG_CHECKS
+
+				// DEBUG CHECK:  make sure the vertex type matches the current VertexFormat
+				ASSERT(currentVertexFormat == TVertex::Format, 
+					   "AddVertex called with an unexpected vertex format. [Current Format: %d][Submitted Format: %d]", 
+					   currentVertexFormat, 
+					   TVertex::Format
+					   );
+				// DEBUG CHECK:  make sure we dont draw too many vertices
+				ASSERT(numVertices < 65535,
+					   "AddVertex called when the GeometryBuffer is full."
+					   );
+
+			#endif
             
             // Is there not enough room for 1 more vertex?
             TVertex* temp = (TVertex*)vertexBufferCurrent;
@@ -128,7 +135,7 @@ namespace Gdk
         /// @param index
         ///     The index value to add to the index buffer
         // *****************************************************************
-        inline void AddIndex(UInt16 index)
+        void AddIndex(UInt16 index)
         {
             // Is there not enough room for 1 more index?
             if((indexBufferCurrent + 1) >= indexBufferEnd)
@@ -155,24 +162,28 @@ namespace Gdk
         ///     Pointer to 4 vertices that will be added to the buffer
         // *****************************************************************
         template <typename TVertex>
-        inline void AddQuad(const TVertex* vertices)
+        void AddQuad(const TVertex* vertices)
         {
-            // DEBUG CHECK:  make sure the primitive type is IndexedTriangles
-            ASSERT(currentPrimitiveType == PrimitiveTypes::IndexedTriangles, 
-                   "AddQuad called when the primitive type is NOT IndexedTriangles. [Current Type: %d]", 
-                   currentPrimitiveType
-                   );
-            // DEBUG CHECK:  make sure the vertex type matches the current VertexFormat
-            ASSERT(currentVertexFormat == TVertex::Format, 
-                   "AddQuad called with an unexpected vertex format. [Current Format: %d][Submitted Format: %d]", 
-                   currentVertexFormat, 
-                   TVertex::Format
-                   );
-            // DEBUG CHECK:  make sure we dont draw too many vertices
-            ASSERT(numVertices < 65532,
-                   "AddQuad called when the GeometryBuffer is full."
-                   );
-            
+			#ifdef GEOMETRY_BUFFER_DEBUG_CHECKS
+
+				// DEBUG CHECK:  make sure the primitive type is IndexedTriangles
+				ASSERT(currentPrimitiveType == PrimitiveTypes::IndexedTriangles, 
+					   "AddQuad called when the primitive type is NOT IndexedTriangles. [Current Type: %d]", 
+					   currentPrimitiveType
+					   );
+				// DEBUG CHECK:  make sure the vertex type matches the current VertexFormat
+				ASSERT(currentVertexFormat == TVertex::Format, 
+					   "AddQuad called with an unexpected vertex format. [Current Format: %d][Submitted Format: %d]", 
+					   currentVertexFormat, 
+					   TVertex::Format
+					   );
+				// DEBUG CHECK:  make sure we dont draw too many vertices
+				ASSERT(numVertices < 65532,
+					   "AddQuad called when the GeometryBuffer is full."
+					   );
+			
+			#endif
+
             // Is there not enough room for 4 more vertices?
             TVertex* temp = (TVertex*)vertexBufferCurrent;
             if((temp + 4) >= vertexBufferEnd)
