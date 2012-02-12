@@ -21,7 +21,7 @@ void UpdateLoop();
 
 // Globals
 HWND g_hWnd;
-const wchar_t* g_className = L"GDK Windows Application";
+const char* g_className = "GDK Windows Application";
 bool g_mouseInClient = false;
 
 // ******************************************************************************
@@ -30,7 +30,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 {
 	MSG msg;
 	bool quit = false;
-	wchar_t errorMsg[256];
+	char errorMsg[256];
 
 	// Start up the GDK
 	if(Gdk::Application::Platform_InitGdk() == false)
@@ -43,7 +43,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	// ------------------------------------------------------
 
 	// Register window class
-	WNDCLASS wc;
+	WNDCLASSA wc;
 	wc.style = CS_OWNDC | CS_VREDRAW | CS_HREDRAW;
 	wc.lpfnWndProc = WndProc;
 	wc.cbClsExtra = 0;
@@ -54,7 +54,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	wc.hbrBackground = (HBRUSH)GetStockObject( BLACK_BRUSH );
 	wc.lpszMenuName = NULL;
 	wc.lpszClassName = g_className;
-	RegisterClass( &wc );
+	RegisterClassA( &wc );
 	
 	// Determine the window styles to use for this window
 	DWORD windowStyle = WS_CAPTION | WS_SYSMENU | WS_VISIBLE;
@@ -67,7 +67,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	/* NOTE: use: WS_POPUPWINDOW for fullscreen */
 
 	// Create main window
-	g_hWnd = CreateWindow(
+	g_hWnd = CreateWindowA(
 		g_className, Gdk::Application::GetTitle(), 
 		windowStyle, 
 		10, 10, 
@@ -117,8 +117,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	if( RegisterRawInputDevices(rawInputDevices, 2, sizeof(RAWINPUTDEVICE)) == FALSE)
 	{
 		// Failed to register
-		swprintf(errorMsg, 256, L"Failed to register for raw input: 0x%8H", GetLastError());
-		MessageBox(g_hWnd, errorMsg, L"Raw Input Setup Failed", MB_OK);
+		sprintf_s(errorMsg, 256, "Failed to register for raw input: 0x%8H", GetLastError());
+		MessageBoxA(g_hWnd, errorMsg, "Raw Input Setup Failed", MB_OK);
 		return 0;
 	}
 
@@ -155,14 +155,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	GLuint pixelFormat = ChoosePixelFormat(hDC, &pfd);
 	if (pixelFormat == 0)
 	{
-		MessageBox(g_hWnd, L"No valid Pixel Formats available", L"OpenGL Init Failed", MB_OK);
+		MessageBoxA(g_hWnd, "No valid Pixel Formats available", "OpenGL Init Failed", MB_OK);
 		return 0;
 	}
 
 	// Set the pixel format for our window
 	if (SetPixelFormat(hDC, pixelFormat, &pfd) == FALSE)
 	{
-		MessageBox(g_hWnd, L"Failed to set the pixel format", L"OpenGL Init Failed", MB_OK);
+		MessageBoxA(g_hWnd, "Failed to set the pixel format", "OpenGL Init Failed", MB_OK);
 		return 0;
 	}
 
@@ -170,14 +170,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	HGLRC hRC = wglCreateContext(hDC);
 	if (hRC == 0)
 	{
-		MessageBox(g_hWnd, L"Failed to Create the OpenGL Context", L"OpenGL Init Failed", MB_OK);
+		MessageBoxA(g_hWnd, "Failed to Create the OpenGL Context", "OpenGL Init Failed", MB_OK);
 		return 0;
 	}
 
 	// Make The Rendering Context Our Current Rendering Context
 	if (wglMakeCurrent(hDC, hRC) == FALSE)
 	{
-		MessageBox(g_hWnd, L"Failed to Set the OpenGL Rendering Context", L"OpenGL Init Failed", MB_OK);
+		MessageBoxA(g_hWnd, "Failed to Set the OpenGL Rendering Context", "OpenGL Init Failed", MB_OK);
 		return 0;
 	}
 
@@ -185,22 +185,22 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	GLenum err = glewInit();
 	if (GLEW_OK != err)
 	{
-		swprintf(errorMsg, 256, L"Failed to initiliaze GLEW: %S", glewGetErrorString(err));
-		MessageBox(g_hWnd, errorMsg, L"GLEW Init Failed", MB_OK);
+		sprintf_s(errorMsg, 256, "Failed to initiliaze GLEW: %S", glewGetErrorString(err));
+		MessageBoxA(g_hWnd, errorMsg, "GLEW Init Failed", MB_OK);
 		return 0;
 	}
 
 	// Verify GL 2.1 is supported
 	if (glewIsSupported("GL_VERSION_2_1") == 0)
 	{
-		MessageBox(g_hWnd, L"OpenGL 2.1 Not Supported", L"OpenGL Init Failed", MB_OK);
+		MessageBoxA(g_hWnd, "OpenGL 2.1 Not Supported", "OpenGL Init Failed", MB_OK);
 		return 0;
 	}
 
 	// Verify the necessary GL extensions are supported
 	if(!GLEW_EXT_framebuffer_object)
 	{
-		MessageBox(g_hWnd, L"OpenGL Framebuffers Extension Not Supported", L"OpenGL Init Failed", MB_OK);
+		MessageBoxA(g_hWnd, "OpenGL Framebuffers Extension Not Supported", "OpenGL Init Failed", MB_OK);
 		return 0;
 	}
 
@@ -275,8 +275,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	catch (exception& ex)
 	{
 		// Log the exception
-		LOG_ERROR(L"C++ Exception caught!!");
-		LOG_ERROR(L"C++ Exception: %S", ex.what());
+		LOG_ERROR("C++ Exception caught!!");
+		LOG_ERROR("C++ Exception: %s", ex.what());
 
 		#if !defined(DEBUG)
 			GDK_NOT_USED(ex);
@@ -285,7 +285,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	catch(...)
 	{
 		// Log the exception
-		LOG_ERROR(L"Unknown Exception caught!!");
+		LOG_ERROR("Unknown Exception caught!!");
 	}
 
 	// Shutdown GDK
@@ -352,7 +352,7 @@ void ProcessRawInput(HRAWINPUT hRawInput)
 	UINT actualSize = GetRawInputData(hRawInput, RID_INPUT, rawInput, &size, sizeof(RAWINPUTHEADER));
 	if(actualSize != size)
 	{
-		LOG_ERROR(L"Raw input was processed with an invalid size!!!");
+		LOG_ERROR("Raw input was processed with an invalid size!!!");
 		return;
 	}
 
@@ -452,7 +452,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		return 0;
 
 	case WM_CHAR:
-		Gdk::Keyboard::Platform_ProcessChar((wchar_t)wParam);
+		if(wParam <= 255)
+		{
+			Gdk::Keyboard::Platform_ProcessChar((char)wParam);
+		}
 		break;
 	
 		// Mouse Processing

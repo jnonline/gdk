@@ -108,7 +108,7 @@ size_t ResourceManager::GetTotalMemoryUsed()
     // lock the resource map mutex
     resourceMapMutex->Lock();
     
-    size_t totalMemoryUsed;
+    size_t totalMemoryUsed = 0;
     
     // Loop through the resources
     for(ResourcesByNameMap::Iterator resourceIter = resourcesByName.Begin(); resourceIter != resourcesByName.End(); resourceIter++)

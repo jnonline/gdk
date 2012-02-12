@@ -63,9 +63,9 @@ string _Gdk_Platform_IO_GetCommonPath(CommonPaths::Enum commonPath)
 ///
 /// ===========================================================
 
-void _Gdk_Platform_SetTitle(const wchar_t* title)
+void _Gdk_Platform_SetTitle(const char* title)
 {
-	SetWindowTextW(g_hWnd, title);
+	SetWindowTextA(g_hWnd, title);
 }
 
 // ---------------------------------------------------
@@ -156,25 +156,16 @@ Gdk::PlatformVersion _Gdk_Platform_Device_GetPlatformVersion()
 }
 
 // ---------------------------------------------------
-wstring _Gdk_Platform_Device_GetDeviceDisplayName()
+string _Gdk_Platform_Device_GetDeviceDisplayName()
 {
-	// Get the server name information
-	wstring displayName(StringUtilities::WUnknown);
-	LPSERVER_INFO_101 pBuf = NULL;
-	if (NetServerGetInfo(NULL, 101, (LPBYTE*)&pBuf) == NERR_Success)
+	char computerName[MAX_COMPUTERNAME_LENGTH + 1];
+	DWORD size = MAX_COMPUTERNAME_LENGTH + 1;
+	if(GetComputerNameA(computerName, &size) == TRUE)
 	{
-		// Get the system 'comment'  (which is the friendly display name)
-		if(pBuf->sv101_comment != NULL && pBuf->sv101_comment[0] != 0)
-			displayName = wstring(pBuf->sv101_comment);
-		// Fallback to the Netbios name
-		else if(pBuf->sv101_name != NULL && pBuf->sv101_name[0] != 0)
-			displayName = wstring(pBuf->sv101_name);
-
-		// Release the buffer from the OS call
-		NetApiBufferFree(pBuf);
+		return string(computerName);
 	}
 
-	return displayName;
+	return StringUtilities::Unknown;
 }
 
 // ---------------------------------------------------

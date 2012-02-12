@@ -334,7 +334,6 @@ void UnitTestsModule::OnDraw()
         Drawing2D::DrawText(SharedResources::Fonts.Arial20, "Click here to start testing!", headerBox.Position + Vector2(2,2), Color(255,255,255), textScale);
 	}
 
-    
 	// Flush the 2D renderer
 	Drawing2D::Flush();
 }
