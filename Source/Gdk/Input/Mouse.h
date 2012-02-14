@@ -88,6 +88,9 @@ namespace Gdk
 		static bool IsButtonDown(MouseButton::Enum button);
 		static bool IsMouseOverApp();
         
+        static bool IsButtonJustPressed(MouseButton::Enum button);
+		static bool IsButtonJustReleased(MouseButton::Enum button);
+        
 		static void SetPosition(int x, int y);
 		static void ShowCursor(bool show);		
         
@@ -180,7 +183,8 @@ namespace Gdk
         
         // Current state
 		static int mouseX, mouseY;
-		static bool buttonsDown[MouseButton::MAX_BUTTONS];
+		static bool buttonDown[MouseButton::MAX_BUTTONS];
+        static bool buttonStateChanged[MouseButton::MAX_BUTTONS];
 		static bool mouseIsOverApp;
         
         // Internal Methods
@@ -188,7 +192,8 @@ namespace Gdk
         
 		static void Init();
 		static void Update(float elapsedSeconds);
-	    
+	    static void PostUpdate(float elapsedSeconds);
+        
 		friend class Application;
 
 	};

@@ -365,7 +365,68 @@ ShaderProfile::Enum Graphics::GetShaderProfile()
 
 // *****************************************************************
 /// @brief
+///     Sets the Global Projection matrix to a screen-space based
+///     orthographic projection matrix.
+/// @remarks
+///     Screen top left = 0,0
+///     Screen bottom right = current resolution (Ex: 800,600)
+// *****************************************************************
+void Graphics::SetProjectionToScreenOrtho()
+{
+    // Setup a 2D projection matrix to draw in screen coordinates
+    Matrix3D proj = Matrix3D::CreateOrthoOffCenter(
+        0, (float) Application::GetWidth(),					// left / right
+        (float) Application::GetHeight(), 0,				// bottom / top
+        -1.0f, 1.0f											// far / near
+        );
+	Graphics::GlobalUniforms.Projection->SetMatrix4(proj);
+}
+
+// *****************************************************************
+/// @brief
+///     Sets the Global Projection matrix to a unit-space based
+///     orthographic projection matrix.
+/// @note
+///     In screen space TopLeft = (0,0) and BottomRight = (Screen.Width, Screen.Height)
+///     In unit space TopLeft = (0,0) and BottomRight = (1,1)
+// *****************************************************************
+void Graphics::SetProjectionToUnitOrtho()
+{
+    // Setup a 2D projection matrix to draw in screen coordinates
+    Matrix3D proj = Matrix3D::CreateOrthoOffCenter(
+        0.0f, 1.0f,             // left / right
+        1.0f, 0.0f,				// bottom / top
+        -1.0f, 1.0f				// far / near
+        );
+	Graphics::GlobalUniforms.Projection->SetMatrix4(proj);
+}
+
+// *****************************************************************
+/// @brief
+///     Sets the Global Projection matrix to a symmetric-space based
+///     orthographic projection matrix.
+/// @note
+///     In screen space TopLeft = (0,0) and BottomRight = (Screen.Width, Screen.Height)
+///     In symmetric space TopLeft = (-1,1) and BottomRight = (1,-1)
+///     Notice the Y in symmetric space is inverted from screen space
+// *****************************************************************
+void Graphics::SetProjectionToSymmetricOrtho()
+{
+    // Setup a 2D projection matrix to draw in screen coordinates
+    Matrix3D proj = Matrix3D::CreateOrthoOffCenter(
+        -1.0f, 1.0f,			// left / right
+        -1.0f, 1.0f,			// bottom / top
+        -1.0f, 1.0f			// far / near
+        );
+	Graphics::GlobalUniforms.Projection->SetMatrix4(proj);
+}
+
+// *****************************************************************
+/// @brief
 ///     Converts a screen coordinate to [0 to 1] unit space
+/// @note
+///     In screen space TopLeft = (0,0) and BottomRight = (Screen.Width, Screen.Height)
+///     In unit space TopLeft = (0,0) and BottomRight = (1,1)
 // *****************************************************************
 Vector2 Graphics::ScreenToUnit(Vector2 screenCoordinate)
 {
@@ -379,6 +440,10 @@ Vector2 Graphics::ScreenToUnit(Vector2 screenCoordinate)
 // *****************************************************************
 /// @brief
 ///     Converts a screen coordinate to [-1 to 1] symmetric space
+/// @note
+///     In screen space TopLeft = (0,0) and BottomRight = (Screen.Width, Screen.Height)
+///     In symmetric space TopLeft = (-1,1) and BottomRight = (1,-1)
+///     Notice the Y in symmetric space is inverted from screen space
 // *****************************************************************
 Vector2 Graphics::ScreenToSymmetric(Vector2 screenCoordinate)
 {
@@ -392,6 +457,9 @@ Vector2 Graphics::ScreenToSymmetric(Vector2 screenCoordinate)
 // *****************************************************************
 /// @brief
 ///     Converts a unit coordinate [0 to 1] to screen space
+/// @note
+///     In screen space TopLeft = (0,0) and BottomRight = (Screen.Width, Screen.Height)
+///     In unit space TopLeft = (0,0) and BottomRight = (1,1)
 // *****************************************************************
 Vector2 Graphics::UnitToScreen(Vector2 unitCoordinate)
 {
@@ -405,13 +473,17 @@ Vector2 Graphics::UnitToScreen(Vector2 unitCoordinate)
 // *****************************************************************
 /// @brief
 ///     Converts a symmetric coordinate [-1 to 1] to screen space
+/// @note
+///     In screen space TopLeft = (0,0) and BottomRight = (Screen.Width, Screen.Height)
+///     In symmetric space TopLeft = (-1,1) and BottomRight = (1,-1)
+///     Notice the Y in symmetric space is inverted from screen space
 // *****************************************************************
 Vector2 Graphics::SymmetricToScreen(Vector2 symmetricCoordinate)
 {
-	// Convert the (-1 to 1) symmetric coordinate to pixel space
+	// Convert the (-1 to 1) symmetric coordinate to screen space
 	return Vector2(
 		(0.5f * symmetricCoordinate.X + 0.5f) * Application::GetWidth(),
-		(0.5f * symmetricCoordinate.Y + 0.5f) * Application::GetHeight()
+		(0.5f - 0.5f * symmetricCoordinate.Y) * Application::GetHeight()
 		);
 }
 

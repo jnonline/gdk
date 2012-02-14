@@ -11,7 +11,8 @@ using namespace Gdk;
 // Static instantiations
 int Mouse::mouseX = 0;
 int Mouse::mouseY = 0;
-bool Mouse::buttonsDown[MouseButton::MAX_BUTTONS];
+bool Mouse::buttonDown[MouseButton::MAX_BUTTONS];
+bool Mouse::buttonStateChanged[MouseButton::MAX_BUTTONS];
 bool Mouse::mouseIsOverApp = false;
 
 // Events
@@ -32,17 +33,37 @@ void Mouse::Init()
 {
 	// Set the mouse buttons to all up
 	for(int i=0; i<MouseButton::MAX_BUTTONS; i++)
-		Mouse::buttonsDown[i] = false;
+    {
+        Mouse::buttonStateChanged[i] = false;
+		Mouse::buttonDown[i] = false;
+    }
 }
 
 // *****************************************************************
 /// @brief
-///     Tells the GDK to update any internal mouse states in the GDK
+///     Tells the GDK to update any internal mouse states
 /// @note
 ///     GDK Internal Use Only
 // *****************************************************************
 void Mouse::Update(float elapsedSeconds)
 {
+
+}
+
+// *****************************************************************
+/// @brief
+///     Tells the GDK to update any post-game-update internal mouse states
+/// @note
+///     GDK Internal Use Only
+// *****************************************************************
+void Mouse::PostUpdate(float elapsedSeconds)
+{
+    // Loop through the mouse buttons
+    for(int i=0; i<MouseButton::MAX_BUTTONS; i++)
+    {
+        // Unset the state-changed flag
+        buttonStateChanged[i] = false;
+	}
 }
 
 // *****************************************************************
@@ -71,7 +92,10 @@ void Mouse::Platform_ProcessMouseMove(int x, int y)
 // *****************************************************************
 void Mouse::Platform_ProcessMouseButtonDown(MouseButton::Enum button)
 {
-	buttonsDown[(int)button] = true;
+    // Did the state change?
+    if(buttonDown[(int)button] == false)
+        buttonStateChanged[(int)button] = true;
+	buttonDown[(int)button] = true;
 
 	// Call the event
 	MouseButtonDown.Invoke(button);
@@ -85,7 +109,10 @@ void Mouse::Platform_ProcessMouseButtonDown(MouseButton::Enum button)
 // *****************************************************************
 void Mouse::Platform_ProcessMouseButtonUp(MouseButton::Enum button)
 {
-	buttonsDown[(int)button] = false;
+    // Did the state change?
+    if(buttonDown[(int)button] == true)
+        buttonStateChanged[(int)button] = true;
+	buttonDown[(int)button] = false;
 
 	// Call the event
 	MouseButtonUp.Invoke(button);
@@ -176,7 +203,7 @@ int Mouse::GetY()
 // *****************************************************************
 bool Mouse::IsButtonDown(MouseButton::Enum button)
 {
-	return buttonsDown[(int)button];
+	return buttonDown[(int)button];
 }
 
 // *****************************************************************
@@ -186,6 +213,26 @@ bool Mouse::IsButtonDown(MouseButton::Enum button)
 bool Mouse::IsMouseOverApp()
 {
 	return mouseIsOverApp;
+}
+
+// *****************************************************************
+/// @brief
+///     Returns true if the specified mouse button was just pressed
+// *****************************************************************
+bool Mouse::IsButtonJustPressed(MouseButton::Enum button)
+{
+    return buttonDown[(int)button] == true && 
+           buttonStateChanged[(int)button] == true;
+}
+
+// *****************************************************************
+/// @brief
+///     Returns true if the specified mouse button was just released
+// *****************************************************************
+bool Mouse::IsButtonJustReleased(MouseButton::Enum button)
+{
+    return buttonDown[(int)button] == false && 
+           buttonStateChanged[(int)button] == true;
 }
 
 // *****************************************************************

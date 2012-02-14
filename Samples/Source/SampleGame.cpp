@@ -133,13 +133,8 @@ void SampleGame::OnDraw(float elapsedSeconds)
 	// Draw the Next & Previous button & the module name
 	// -------------------------------------------------------------------
 
-	// Setup a 2D projection matrix to draw in screen coordinates
-    Matrix3D proj = Matrix3D::CreateOrthoOffCenter(
-        0, (float) Application::GetWidth(),					// left / right
-		(float) Application::GetHeight(), 0,				// bottom / top
-		-1.0f, 1.0f											// far / near
-		);
-	Graphics::GlobalUniforms.Projection->SetMatrix4(proj);
+	// Setup the projection matrix to draw in screen coordinates
+    Graphics::SetProjectionToScreenOrtho();
 
 	// Reset the identity world transform
 	Drawing2D::WorldTransform = Matrix2D::IDENTITY;

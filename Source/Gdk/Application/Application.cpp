@@ -124,6 +124,7 @@ void Application::Update(float elapsedSeconds)
 	// ----------------------
 
 	Keyboard::PostUpdate(elapsedSeconds);
+    Mouse::PostUpdate(elapsedSeconds);
 }
 
 // *****************************************************************

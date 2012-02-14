@@ -10,7 +10,7 @@ using namespace Gdk;
 
 #define KBFLAG_KEY_DOWN		0x01		// The key is Down
 #define KBFLAG_KEY_TOGGLED	0x02		// The key is Toggled
-#define KBFLAG_KEY_CHANGED	0x04		// The key up/dow state just changed
+#define KBFLAG_KEY_CHANGED	0x04		// The key up/down state just changed
 
 // Static Instantiation
 UInt8 Keyboard::keyStates[256];

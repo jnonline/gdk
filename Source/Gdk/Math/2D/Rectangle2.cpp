@@ -240,4 +240,30 @@ Rectangle2 Rectangle2::Merge(const Rectangle2& r1, const Rectangle2& r2)
 	return FromPoints(4, points);
 }
 
+// *****************************************************************
+/// @brief
+///     Calculates the rectangular region where two rectangles intersect.
+/// @note
+///     If the rectangles do not intersect, the method returns Rectangle2::ZERO
+// *****************************************************************
+Rectangle2 Rectangle2::Intersection(const Rectangle2& r1, const Rectangle2& r2)
+{
+    // Get the bottom/right locations of the rectangles
+    float r1Right = r1.Position.X + r1.Size.X;
+    float r1Bottom = r1.Position.Y + r1.Size.Y;
+    float r2Right = r2.Position.X + r2.Size.X;
+    float r2Bottom = r2.Position.Y + r2.Size.Y;
+    
+    // Get the inner most extents of the 2 rectangles
+    float left = r1.Position.X < r2.Position.X ? r2.Position.X : r1.Position.X;
+    float top = r1.Position.Y < r2.Position.Y ? r2.Position.Y : r1.Position.Y;
+    float right = r1Right > r2Right ? r2Right : r1Right;
+    float bottom = r1Bottom > r2Bottom ? r2Bottom : r1Bottom;
+    
+    // Are either of the extents on opposite sides?   (which means the rectangles dont intersect)
+    if(left > right || top > bottom)
+        return Rectangle2::ZERO;
+    
+    return Rectangle2(left, top, right-left, bottom-top);
+}
 

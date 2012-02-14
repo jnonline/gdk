@@ -249,14 +249,9 @@ void UnitTestsModule::OnDraw()
 		1.0f
 		);
 	
-	// Setup a 2D projection matrix to draw in screen coordinates
-    Matrix3D proj = Matrix3D::CreateOrthoOffCenter(
-		0, (float) Application::GetWidth(),					// left / right
-		(float) Application::GetHeight(), 0,				// bottom / top
-		-1.0f, 1.0f											// far / near
-		);
-	Graphics::GlobalUniforms.Projection->SetMatrix4(proj);
-
+	// Setup the projection matrix to draw in screen coordinates
+    Graphics::SetProjectionToScreenOrtho();
+    
 	Vector2 textScale(0.7f, 0.7f);
 	float textHeight = 14.0f;
 

@@ -61,8 +61,12 @@ namespace Gdk
         
         /// @}
         // ---------------------------------
-        /// @name Pixel Coordinate Conversions Methods
+        /// @name Pixel Coordinate Methods
         /// @{
+        
+        static void SetProjectionToScreenOrtho();
+        static void SetProjectionToUnitOrtho();
+        static void SetProjectionToSymmetricOrtho();
         
 		static Vector2 ScreenToUnit(Vector2 screenCoordinate);			// Converts a screen coordinate to [0 to 1] unit space
 		static Vector2 ScreenToSymmetric(Vector2 screenCoordinate);		// Converts a screen coordinate to [-1 to 1] symmetric space

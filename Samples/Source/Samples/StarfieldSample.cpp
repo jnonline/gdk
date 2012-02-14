@@ -84,13 +84,8 @@ void StarfieldSample::OnDraw()
 		1.0f
 		);
 	
-	// Setup a 2D projection matrix to draw in screen coordinates
-    Matrix3D proj = Matrix3D::CreateOrthoOffCenter(
-		0, (float) Application::GetWidth(),					// left / right
-		(float) Application::GetHeight(), 0,				// bottom / top
-		-1.0f, 1.0f											// far / near
-		);
-	Graphics::GlobalUniforms.Projection->SetMatrix4(proj);
+	// Setup the projection matrix to draw in screen coordinates
+    Graphics::SetProjectionToScreenOrtho();
 
 	// For demonstration purposes, we will draw the less intense stars as points and the 
 	// brigher stars as images (Textured Quads).   We seperate the drawing into two 
