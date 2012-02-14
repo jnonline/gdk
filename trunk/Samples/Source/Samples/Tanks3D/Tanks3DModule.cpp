@@ -211,13 +211,8 @@ void Tanks3DModule::OnDraw()
 	// 2D Rendering
 	// -------------------------------------------------------------------
 
-	// Setup a 2D projection matrix to draw in screen coordinates
-    proj = Matrix3D::CreateOrthoOffCenter(
-		0, (float) Application::GetWidth(),					// left / right
-		(float) Application::GetHeight(), 0,				// bottom / top
-		-1.0f, 1.0f											// far / near
-		);
-	Graphics::GlobalUniforms.Projection->SetMatrix4(proj);
+	// Setup the projection matrix to draw in screen coordinates
+    Graphics::SetProjectionToScreenOrtho();
 
 	// Draw some Text
     char sampleText[256];

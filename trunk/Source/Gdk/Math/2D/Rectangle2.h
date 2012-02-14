@@ -82,6 +82,7 @@ namespace Gdk
         
         static Rectangle2 FromPoints(size_t numPoints, const Vector2* points);
 		static Rectangle2 Merge(const Rectangle2& r1, const Rectangle2& r2);
+        static Rectangle2 Intersection(const Rectangle2& r1, const Rectangle2& r2);
         
         /// @}
 
