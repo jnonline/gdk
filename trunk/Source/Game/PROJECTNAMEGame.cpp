@@ -78,6 +78,8 @@ void PROJECTNAMEGame::OnDraw(float elapsedSeconds)
 		);
 	Graphics::GlobalUniforms.Projection->SetMatrix4(proj);
 
+	Drawing2D::WorldTransform = Matrix2D::IDENTITY;
+
 	// Draw some text
 	char* sampleText = "Sample Text";
 	Drawing2D::DrawText(SharedResources::Fonts.Arial20, sampleText, Vector2(10,10), Color(196, 255, 128));
