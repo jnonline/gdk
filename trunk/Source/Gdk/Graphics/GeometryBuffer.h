@@ -63,12 +63,15 @@ namespace Gdk
         int GetVertexCount() const;
         int GetIndexCount() const;
         int GetPrimitiveCount() const;
+        void* GetVertexDataPtr() const;
+        UInt16* GetIndexDataPtr() const;
         
         void Setup(VertexFormat::Enum vertexFormat, PrimitiveTypes::Enum primitiveType);
         void Clear();
         
         void Draw();
         void Bind();
+        
         
         /// @}
         
@@ -150,6 +153,61 @@ namespace Gdk
             
             // Increment the number of indices
             numIndices++;
+        }
+        
+        // *****************************************************************
+        /// @brief
+        ///     Adds 2 indices to the geometry buffer
+        /// @param index1
+        ///     The first index value to add to the index buffer
+        /// @param index2
+        ///     The second index value to add to the index buffer
+        // *****************************************************************
+        void AddIndices(UInt16 index1, UInt16 index2)
+        {
+            // Is there not enough room for 1 more index?
+            if((indexBufferCurrent + 2) >= indexBufferEnd)
+            {
+                // Grow the index buffer
+                ExpandIndexBuffer();
+            }
+            
+            // Assign the indices at the current position in the index buffer
+            indexBufferCurrent[0] = index1;
+            indexBufferCurrent[1] = index2;
+            indexBufferCurrent+=2;
+            
+            // Increment the number of indices
+            numIndices+=2;
+        }
+
+        // *****************************************************************
+        /// @brief
+        ///     Adds 2 indices to the geometry buffer
+        /// @param index1
+        ///     The first index value to add to the index buffer
+        /// @param index2
+        ///     The second index value to add to the index buffer
+        /// @param index3
+        ///     The third index value to add to the index buffer
+        // *****************************************************************
+        void AddIndices(UInt16 index1, UInt16 index2, UInt16 index3)
+        {
+            // Is there not enough room for 1 more index?
+            if((indexBufferCurrent + 3) >= indexBufferEnd)
+            {
+                // Grow the index buffer
+                ExpandIndexBuffer();
+            }
+            
+            // Assign the indices at the current position in the index buffer
+            indexBufferCurrent[0] = index1;
+            indexBufferCurrent[1] = index2;
+            indexBufferCurrent[2] = index3;
+            indexBufferCurrent+=3;
+            
+            // Increment the number of indices
+            numIndices+=3;
         }
 
         // *****************************************************************
