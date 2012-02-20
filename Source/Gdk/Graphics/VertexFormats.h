@@ -59,21 +59,6 @@ namespace Gdk
         {
         }
         
-		// ******************************************************
-		inline static void AppendToBuffer(void*& buffer, GLfloat x, GLfloat y, GLfloat tx, GLfloat ty, UInt8 r, UInt8 g, UInt8 b, UInt8 a)
-		{
-			VertexP2T2C4* vertex = (VertexP2T2C4*) buffer;
-			vertex->X = x;
-			vertex->Y = y;
-			vertex->TX = tx;
-			vertex->TY = ty;
-			vertex->R = r;
-			vertex->G = g;
-			vertex->B = b;
-			vertex->A = a;
-			buffer = (void*)(vertex+1);
-		}
-        
         // *******************************************************
         static const VertexFormat::Enum Format = (VertexFormat::Enum)
             (
@@ -98,19 +83,6 @@ namespace Gdk
         {
         }
         
-		// ******************************************************
-		inline static void AppendToBuffer(void*& buffer, GLfloat x, GLfloat y, UInt8 r, UInt8 g, UInt8 b, UInt8 a)
-		{
-			VertexP2C4* vertex = (VertexP2C4*) buffer;
-			vertex->X = x;
-			vertex->Y = y;
-			vertex->R = r;
-			vertex->G = g;
-			vertex->B = b;
-			vertex->A = a;
-			buffer = (void*)(vertex+1);
-		}
-        
         // *******************************************************
         static const VertexFormat::Enum Format = (VertexFormat::Enum)
             (
@@ -118,6 +90,55 @@ namespace Gdk
             VertexFormat::Color4
             );
 	};
+
+    // ============================================================================
+	struct VertexP3C4
+	{
+		GLfloat X, Y, Z;
+		GLubyte R, G, B, A;
+        
+        // ******************************************************
+        VertexP3C4() {}
+        
+        // ******************************************************
+        VertexP3C4(float x, float y, float z, GLubyte r, GLubyte g, GLubyte b, GLubyte a)
+        : X(x), Y(y), Z(z), R(r), G(g), B(b), A(a)
+        {
+        }
+        
+        // *******************************************************
+        static const VertexFormat::Enum Format = (VertexFormat::Enum)
+            (
+            VertexFormat::Position3 | 
+            VertexFormat::Color4
+            );
+	};
+    
+    // ============================================================================
+	struct VertexP3N3C4
+	{
+		GLfloat X, Y, Z;
+        GLfloat NX, NY, NZ;
+		GLubyte R, G, B, A;
+        
+        // ******************************************************
+        VertexP3N3C4() {}
+        
+        // ******************************************************
+        VertexP3N3C4(float x, float y, float z, float nx, float ny, float nz, GLubyte r, GLubyte g, GLubyte b, GLubyte a)
+        : X(x), Y(y), Z(z), NX(nx), NY(ny), NZ(nz), R(r), G(g), B(b), A(a)
+        {
+        }
+        
+        // *******************************************************
+        static const VertexFormat::Enum Format = (VertexFormat::Enum)
+        (
+         VertexFormat::Position3 |
+         VertexFormat::Normal3 |
+         VertexFormat::Color4
+         );
+	};
+
 
 	/*
 	// ============================================================================

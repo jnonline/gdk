@@ -143,7 +143,7 @@ void GeometryBuffer::ExpandIndexBuffer()
     memcpy(newIndexBuffer, indexBuffer, indexBufferSize);
     
     // Setup the new end & current pointers
-    indexBufferCurrent = ((UInt8*)indexBufferCurrent - (UInt8*)indexBuffer) + newIndexBuffer;
+    indexBufferCurrent = (UInt16*) (((UInt8*)indexBufferCurrent - (UInt8*)indexBuffer) + (UInt8*)newIndexBuffer);
     indexBufferEnd = (UInt16*)((UInt8*) newIndexBuffer + newSize);
     
     // Release the old buffer
@@ -212,6 +212,25 @@ int GeometryBuffer::GetPrimitiveCount() const
     }
     return 0;
 }
+
+// *****************************************************************
+/// @brief
+///     Gets a pointer to the internal vertex data buffer 
+// *****************************************************************
+void* GeometryBuffer::GetVertexDataPtr() const
+{
+    return vertexBuffer;
+}
+
+// *****************************************************************
+/// @brief
+///     Gets a pointer to the internal vertex data buffer 
+// *****************************************************************
+UInt16* GeometryBuffer::GetIndexDataPtr() const
+{
+    return indexBuffer;
+}
+
 
 // *****************************************************************
 /// @brief
